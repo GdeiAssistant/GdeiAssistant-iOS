@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Build artifacts
+build/
+DerivedData/
+.swiftpm/
+
+# Local working notes / one-off tools
+Docs/
+Tools/
+AGENTS.md
