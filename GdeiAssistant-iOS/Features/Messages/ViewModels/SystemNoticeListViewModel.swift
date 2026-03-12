@@ -2,19 +2,19 @@ import Foundation
 import Combine
 
 @MainActor
-final class ReadingViewModel: ObservableObject {
-    @Published var items: [ReadingItem] = []
+final class SystemNoticeListViewModel: ObservableObject {
+    @Published var items: [AppNotificationItem] = []
     @Published var isLoading = false
     @Published var isLoadingMore = false
     @Published var canLoadMore = true
     @Published var errorMessage: String?
     @Published var loadMoreErrorMessage: String?
 
-    private let repository: any ReadingRepository
-    private let pageSize = 3
+    private let repository: any MessagesRepository
+    private let pageSize = 5
     private var nextStart = 0
 
-    init(repository: any ReadingRepository) {
+    init(repository: any MessagesRepository) {
         self.repository = repository
     }
 
@@ -30,19 +30,20 @@ final class ReadingViewModel: ObservableObject {
         nextStart = 0
         canLoadMore = true
         defer { isLoading = false }
+
         do {
-            let page = try await repository.fetchReadings(start: 0, size: pageSize)
+            let page = try await repository.fetchAnnouncementPage(start: 0, size: pageSize)
             items = page
             nextStart = page.count
             canLoadMore = page.count == pageSize
         } catch {
             items = []
             canLoadMore = false
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "专题阅读加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
         }
     }
 
-    func loadMoreIfNeeded(currentItem item: ReadingItem) async {
+    func loadMoreIfNeeded(currentItem item: AppNotificationItem) async {
         guard canLoadMore, !isLoadingMore, items.last?.id == item.id else { return }
 
         isLoadingMore = true
@@ -50,12 +51,12 @@ final class ReadingViewModel: ObservableObject {
         defer { isLoadingMore = false }
 
         do {
-            let page = try await repository.fetchReadings(start: nextStart, size: pageSize)
+            let page = try await repository.fetchAnnouncementPage(start: nextStart, size: pageSize)
             items.append(contentsOf: page)
             nextStart += page.count
             canLoadMore = page.count == pageSize
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? "专题阅读加载失败"
+            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
         }
     }
 }

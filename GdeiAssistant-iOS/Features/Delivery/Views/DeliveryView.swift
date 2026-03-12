@@ -143,6 +143,9 @@ struct DeliveryDetailView: View {
     @ObservedObject var viewModel: DeliveryViewModel
     let orderID: String
     let dismissAfterMutation: Bool
+    let notificationTargetType: String?
+    let notificationTargetSubID: String?
+    let notificationID: String?
 
     @Environment(\.dismiss) private var dismiss
     @State private var detail: DeliveryOrderDetail?
@@ -151,6 +154,22 @@ struct DeliveryDetailView: View {
     @State private var resultMessage: String?
     @State private var confirmFinish = false
     @State private var isSubmitting = false
+
+    init(
+        viewModel: DeliveryViewModel,
+        orderID: String,
+        dismissAfterMutation: Bool,
+        notificationTargetType: String? = nil,
+        notificationTargetSubID: String? = nil,
+        notificationID: String? = nil
+    ) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        self.orderID = orderID
+        self.dismissAfterMutation = dismissAfterMutation
+        self.notificationTargetType = notificationTargetType
+        self.notificationTargetSubID = notificationTargetSubID
+        self.notificationID = notificationID
+    }
 
     var body: some View {
         Group {
@@ -164,6 +183,11 @@ struct DeliveryDetailView: View {
                 List {
                     Section {
                         VStack(alignment: .leading, spacing: 8) {
+                            if let notificationSummaryText {
+                                Text(notificationSummaryText)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.primary)
+                            }
                             Text(detail.order.state.title)
                                 .font(.headline)
                                 .foregroundStyle(statusTint(for: detail.order.state))
@@ -325,6 +349,29 @@ struct DeliveryDetailView: View {
         case .completed:
             return DSColor.secondary
         }
+    }
+
+    private var notificationSummaryText: String? {
+        guard notificationID != nil else { return nil }
+
+        switch normalizedNotificationTargetType {
+        case "published":
+            if let notificationTargetSubID {
+                return "来自互动消息：订单已被接单，交易号 \(notificationTargetSubID)"
+            }
+            return "来自互动消息：订单已被接单"
+        case "accepted":
+            if let notificationTargetSubID {
+                return "来自互动消息：订单已完成，交易号 \(notificationTargetSubID)"
+            }
+            return "来自互动消息：订单已完成"
+        default:
+            return "来自互动消息"
+        }
+    }
+
+    private var normalizedNotificationTargetType: String? {
+        RemoteMapperSupport.sanitizedText(notificationTargetType)
     }
 }
 

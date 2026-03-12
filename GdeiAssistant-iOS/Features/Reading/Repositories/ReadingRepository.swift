@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 protocol ReadingRepository {
-    func fetchReadings() async throws -> [ReadingItem]
+    func fetchReadings(start: Int, size: Int) async throws -> [ReadingItem]
 }
 
 @MainActor
@@ -17,8 +17,8 @@ final class SwitchingReadingRepository: ReadingRepository {
         self.mockRepository = mockRepository
     }
 
-    func fetchReadings() async throws -> [ReadingItem] {
-        try await currentRepository.fetchReadings()
+    func fetchReadings(start: Int, size: Int) async throws -> [ReadingItem] {
+        try await currentRepository.fetchReadings(start: start, size: size)
     }
 
     private var currentRepository: any ReadingRepository {

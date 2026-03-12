@@ -8,26 +8,37 @@ final class RemoteMessagesRepository: MessagesRepository {
         self.apiClient = apiClient
     }
 
-    func fetchNotifications() async throws -> [AppNotificationItem] {
-        let announcement: AnnouncementRemoteDTO? = try? await apiClient.get("/announcement", requiresAuth: true)
-        let information: InformationRemoteDTO? = try? await apiClient.get("/information/list", requiresAuth: true)
-        let interactionItems: [InteractionNotificationRemoteDTO] = (try? await apiClient.get(
-            "/message/interaction/start/0/size/20",
+    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        let announcements: [AnnouncementRemoteDTO] = try await apiClient.get(
+            "/announcement/start/\(max(start, 0))/size/\(max(size, 1))",
             requiresAuth: true
-        )) ?? []
-        return MessagesRemoteMapper.mapNotifications(
-            announcement: announcement,
-            information: information,
-            interactionItems: interactionItems
         )
+        return MessagesRemoteMapper.mapAnnouncementItems(announcements)
     }
 
-    func fetchThreads() async throws -> [InteractionThreadItem] {
-        let dtos: [DatingMessageDTO] = (try? await apiClient.get("/dating/message/start/0", requiresAuth: true)) ?? []
-        return MessagesRemoteMapper.mapThreads(dtos)
+    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        let items: [InteractionNotificationRemoteDTO] = try await apiClient.get(
+            "/message/interaction/start/\(max(start, 0))/size/\(max(size, 1))",
+            requiresAuth: true
+        )
+        return MessagesRemoteMapper.mapInteractionItems(items)
     }
 
-    func markThreadRead(threadID: String) async throws {
-        let _: EmptyPayload = try await apiClient.post("/dating/message/id/\(threadID)/read", requiresAuth: true)
+    func fetchInteractionUnreadCount() async throws -> Int {
+        let unreadCount: Int = try await apiClient.get("/message/unread", requiresAuth: true)
+        return max(unreadCount, 0)
+    }
+
+    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
+        let dto: AnnouncementRemoteDTO = try await apiClient.get("/announcement/id/\(id)", requiresAuth: true)
+        return MessagesRemoteMapper.mapAnnouncementDetail(dto)
+    }
+
+    func markNotificationRead(notificationID: String) async throws {
+        let _: EmptyPayload = try await apiClient.post("/message/id/\(notificationID)/read", requiresAuth: true)
+    }
+
+    func markAllNotificationsRead() async throws {
+        let _: EmptyPayload = try await apiClient.post("/message/readall", requiresAuth: true)
     }
 }

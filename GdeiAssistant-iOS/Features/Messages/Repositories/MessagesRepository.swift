@@ -2,9 +2,12 @@ import Foundation
 
 @MainActor
 protocol MessagesRepository {
-    func fetchNotifications() async throws -> [AppNotificationItem]
-    func fetchThreads() async throws -> [InteractionThreadItem]
-    func markThreadRead(threadID: String) async throws
+    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem]
+    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem]
+    func fetchInteractionUnreadCount() async throws -> Int
+    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem
+    func markNotificationRead(notificationID: String) async throws
+    func markAllNotificationsRead() async throws
 }
 
 @MainActor
@@ -23,16 +26,28 @@ final class SwitchingMessagesRepository: MessagesRepository {
         self.mockRepository = mockRepository
     }
 
-    func fetchNotifications() async throws -> [AppNotificationItem] {
-        try await currentRepository.fetchNotifications()
+    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        try await currentRepository.fetchAnnouncementPage(start: start, size: size)
     }
 
-    func fetchThreads() async throws -> [InteractionThreadItem] {
-        try await currentRepository.fetchThreads()
+    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        try await currentRepository.fetchInteractionNotifications(start: start, size: size)
     }
 
-    func markThreadRead(threadID: String) async throws {
-        try await currentRepository.markThreadRead(threadID: threadID)
+    func fetchInteractionUnreadCount() async throws -> Int {
+        try await currentRepository.fetchInteractionUnreadCount()
+    }
+
+    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
+        try await currentRepository.fetchAnnouncementDetail(id: id)
+    }
+
+    func markNotificationRead(notificationID: String) async throws {
+        try await currentRepository.markNotificationRead(notificationID: notificationID)
+    }
+
+    func markAllNotificationsRead() async throws {
+        try await currentRepository.markAllNotificationsRead()
     }
 
     private var currentRepository: any MessagesRepository {

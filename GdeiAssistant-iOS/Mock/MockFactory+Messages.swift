@@ -5,7 +5,7 @@ extension MockFactory {
         MockSeedData.notifications
     }
 
-    static func makeInteractionThreads() -> [InteractionThreadItem] {
-        MockSeedData.interactionThreads
+    static func makeAnnouncementDetailsByID() -> [String: AnnouncementDetailItem] {
+        MockSeedData.announcementDetailsByID
     }
 }

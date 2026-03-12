@@ -101,12 +101,29 @@ private struct TopicPostRow: View {
 struct TopicDetailView: View {
     @ObservedObject var viewModel: TopicViewModel
     let postID: String
+    let notificationTargetType: String?
+    let notificationTargetSubID: String?
+    let notificationID: String?
 
     @State private var detail: TopicPostDetail?
     @State private var selectedImageIndex = 0
     @State private var isLoading = true
     @State private var errorMessage: String?
     @State private var isLiking = false
+
+    init(
+        viewModel: TopicViewModel,
+        postID: String,
+        notificationTargetType: String? = nil,
+        notificationTargetSubID: String? = nil,
+        notificationID: String? = nil
+    ) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        self.postID = postID
+        self.notificationTargetType = notificationTargetType
+        self.notificationTargetSubID = notificationTargetSubID
+        self.notificationID = notificationID
+    }
 
     var body: some View {
         Group {
@@ -120,6 +137,12 @@ struct TopicDetailView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         DSCard {
+                            if let notificationContextText {
+                                Text(notificationContextText)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.primary)
+                            }
+
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text("#\(detail.post.topic)")
@@ -175,6 +198,7 @@ struct TopicDetailView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(isLiking || detail.post.isLiked)
+                        .tint(isLikeNotification ? DSColor.primary : .accentColor)
                     }
                     .padding(16)
                 }
@@ -221,6 +245,15 @@ struct TopicDetailView: View {
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "点赞失败"
         }
+    }
+
+    private var notificationContextText: String? {
+        guard notificationID != nil else { return nil }
+        return isLikeNotification ? "来自互动消息：有人点赞了这条话题" : "来自互动消息"
+    }
+
+    private var isLikeNotification: Bool {
+        RemoteMapperSupport.sanitizedText(notificationTargetType) == "like" && notificationID != nil
     }
 }
 

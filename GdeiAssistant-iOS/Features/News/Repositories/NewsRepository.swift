@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 protocol NewsRepository {
-    func fetchNews(category: NewsCategory, start: Int, size: Int) async throws -> [NewsItem]
+    func fetchNews(start: Int, size: Int) async throws -> [NewsItem]
 }
 
 @MainActor
@@ -17,8 +17,8 @@ final class SwitchingNewsRepository: NewsRepository {
         self.mockRepository = mockRepository
     }
 
-    func fetchNews(category: NewsCategory, start: Int, size: Int) async throws -> [NewsItem] {
-        try await currentRepository.fetchNews(category: category, start: start, size: size)
+    func fetchNews(start: Int, size: Int) async throws -> [NewsItem] {
+        try await currentRepository.fetchNews(start: start, size: size)
     }
 
     private var currentRepository: any NewsRepository {

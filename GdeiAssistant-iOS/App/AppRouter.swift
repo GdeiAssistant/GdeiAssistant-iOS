@@ -464,29 +464,25 @@ final class AppContainer: ObservableObject {
         PublishSecretViewModel()
     }
 
-    func makeDatingViewModel() -> DatingViewModel {
-        DatingViewModel(repository: datingRepository)
-    }
-
-    func makePublishDatingViewModel() -> PublishDatingViewModel {
-        PublishDatingViewModel(repository: datingRepository)
-    }
-
-    func makeDatingCenterViewModel(
-        initialTab: DatingCenterTab = .received,
-        focusedPickID: String? = nil,
-        focusedProfileID: String? = nil
-    ) -> DatingCenterViewModel {
-        let viewModel = DatingCenterViewModel(
-            repository: datingRepository,
-            focusedPickID: focusedPickID,
-            focusedProfileID: focusedProfileID
-        )
+    func makeDatingCenterViewModel(initialTab: DatingCenterTab = .received) -> DatingCenterViewModel {
+        let viewModel = DatingCenterViewModel(repository: datingRepository)
         viewModel.selectedTab = initialTab
         return viewModel
     }
 
     func makeMessagesViewModel() -> MessagesViewModel {
-        MessagesViewModel(repository: messagesRepository)
+        MessagesViewModel(
+            newsRepository: newsRepository,
+            readingRepository: readingRepository,
+            messagesRepository: messagesRepository
+        )
+    }
+
+    func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel {
+        SystemNoticeListViewModel(repository: messagesRepository)
+    }
+
+    func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel {
+        InteractionMessageListViewModel(repository: messagesRepository)
     }
 }

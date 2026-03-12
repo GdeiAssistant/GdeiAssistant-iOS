@@ -1,43 +1,43 @@
 import SwiftUI
 
-struct NewsView: View {
-    @StateObject private var viewModel: NewsViewModel
+struct SystemNoticeListView: View {
+    @StateObject private var viewModel: SystemNoticeListViewModel
 
-    init(viewModel: NewsViewModel) {
+    init(viewModel: SystemNoticeListViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载新闻通知...")
+                DSLoadingView(text: "正在加载系统通知公告...")
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "newspaper", title: "暂无新闻通知", message: "当前没有可展示的资讯内容")
+                DSEmptyStateView(icon: "megaphone", title: "暂无系统通知公告", message: "稍后再来查看最新公告")
             } else {
                 List {
                     ForEach(viewModel.items) { item in
                         NavigationLink {
                             AnnouncementDetailView(
-                                navigationTitleText: "新闻通知",
-                                announcementID: item.id,
+                                navigationTitleText: "系统通知公告",
+                                announcementID: item.targetID ?? item.id,
                                 fallbackTitle: item.title,
-                                fallbackContent: item.content,
-                                fallbackCreatedAt: item.publishDate
+                                fallbackContent: item.message,
+                                fallbackCreatedAt: item.createdAt
                             )
                         } label: {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(item.title)
                                     .font(.headline)
                                     .foregroundStyle(DSColor.title)
-                                Text(item.content)
+                                Text(item.message)
                                     .font(.subheadline)
                                     .foregroundStyle(DSColor.subtitle)
                                     .lineLimit(3)
-                                Text(item.publishDate)
+                                Text(item.createdAt)
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
                             }
@@ -65,7 +65,7 @@ struct NewsView: View {
                 }
             }
         }
-        .navigationTitle("新闻通知")
+        .navigationTitle("系统通知公告")
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -101,7 +101,9 @@ struct NewsView: View {
 
 #Preview {
     NavigationStack {
-        NewsView(viewModel: NewsViewModel(repository: MockNewsRepository()))
-            .environmentObject(AppContainer.preview)
+        SystemNoticeListView(
+            viewModel: SystemNoticeListViewModel(repository: MockMessagesRepository())
+        )
+        .environmentObject(AppContainer.preview)
     }
 }

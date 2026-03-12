@@ -31,7 +31,7 @@ struct ScheduleView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     PhotosPicker(selection: $selectedBackgroundItem, matching: .images) {
-                        Label("选择背景图", systemImage: "photo")
+                        Label(backgroundImage == nil ? "选择背景图" : "更换背景图", systemImage: "photo")
                     }
 
                     if backgroundImage != nil {
@@ -40,7 +40,7 @@ struct ScheduleView: View {
                         }
                     }
                 } label: {
-                    Image(systemName: "photo.on.rectangle.angled")
+                    Image(systemName: backgroundImage == nil ? "photo.on.rectangle.angled" : "photo.on.rectangle.angled.fill")
                 }
             }
         }
@@ -150,6 +150,8 @@ struct ScheduleView: View {
 
     private func importBackground(from item: PhotosPickerItem?) async {
         guard let item else { return }
+        defer { selectedBackgroundItem = nil }
+
         do {
             guard let data = try await item.loadTransferable(type: Data.self),
                   let image = UIImage(data: data),
@@ -178,6 +180,7 @@ private struct ScheduleGridView: View {
     private let headerHeight: CGFloat = 42
     private let blockInset: CGFloat = 3
     private let sectionCount = 10
+    private let gridCornerRadius: CGFloat = 12
 
     var body: some View {
         GeometryReader { proxy in
@@ -225,7 +228,17 @@ private struct ScheduleGridView: View {
                                 .scaledToFill()
                                 .frame(width: dayColumnWidth * CGFloat(schedule.days.count), height: totalHeight)
                                 .clipped()
-                                .opacity(0.14)
+                                .overlay {
+                                    LinearGradient(
+                                        colors: [
+                                            Color.white.opacity(0.12),
+                                            Color.white.opacity(0.24)
+                                        ],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                }
+                                .opacity(0.52)
                         }
 
                         HStack(spacing: 0) {
@@ -234,7 +247,11 @@ private struct ScheduleGridView: View {
                             }
                         }
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: gridCornerRadius, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: gridCornerRadius, style: .continuous)
+                            .stroke(Color(.separator).opacity(0.2), lineWidth: 0.8)
+                    }
                 }
             }
         }
@@ -250,7 +267,7 @@ private struct ScheduleGridView: View {
             VStack(spacing: 0) {
                 ForEach(1...sectionCount, id: \.self) { _ in
                     Rectangle()
-                        .fill(isToday(day.dayOfWeek) ? DSColor.primary.opacity(0.05) : Color(.tertiarySystemGroupedBackground).opacity(0.9))
+                        .fill(backgroundFillColor(for: day.dayOfWeek))
                         .frame(width: dayColumnWidth, height: cellHeight)
                         .overlay(
                             Rectangle().stroke(Color(.separator).opacity(0.35), lineWidth: 0.5)
@@ -272,6 +289,18 @@ private struct ScheduleGridView: View {
             }
         }
         .frame(width: dayColumnWidth, height: totalHeight)
+    }
+
+    private func backgroundFillColor(for dayOfWeek: Int) -> Color {
+        if backgroundImage != nil {
+            return isToday(dayOfWeek)
+                ? DSColor.primary.opacity(0.18)
+                : Color.white.opacity(0.36)
+        }
+
+        return isToday(dayOfWeek)
+            ? DSColor.primary.opacity(0.05)
+            : Color(.tertiarySystemGroupedBackground).opacity(0.9)
     }
 
     private func isToday(_ dayOfWeek: Int) -> Bool {
@@ -400,8 +429,8 @@ private enum ScheduleBackgroundStore {
         guard let url = fileURL() else { return nil }
         do {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-            let normalizedImage = image.normalizedImage()
-            guard let data = normalizedImage.jpegData(compressionQuality: 0.85) else {
+            let preparedImage = image.preparedScheduleBackgroundImage()
+            guard let data = preparedImage.jpegData(compressionQuality: 0.82) else {
                 return nil
             }
             try data.write(to: url, options: .atomic)
@@ -429,6 +458,24 @@ private extension UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { _ in
             draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+
+    func preparedScheduleBackgroundImage(maxDimension: CGFloat = 1600) -> UIImage {
+        let normalized = normalizedImage()
+        let longestSide = max(normalized.size.width, normalized.size.height)
+        guard longestSide > maxDimension else { return normalized }
+
+        let scale = maxDimension / longestSide
+        let scaledSize = CGSize(
+            width: normalized.size.width * scale,
+            height: normalized.size.height * scale
+        )
+        let format = UIGraphicsImageRendererFormat.default()
+        format.opaque = true
+
+        return UIGraphicsImageRenderer(size: scaledSize, format: format).image { _ in
+            normalized.draw(in: CGRect(origin: .zero, size: scaledSize))
         }
     }
 }

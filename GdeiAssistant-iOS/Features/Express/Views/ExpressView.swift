@@ -97,6 +97,9 @@ private struct ExpressPostRow: View {
 struct ExpressDetailView: View {
     @ObservedObject var viewModel: ExpressViewModel
     let postID: String
+    let notificationTargetType: String?
+    let notificationTargetSubID: String?
+    let notificationID: String?
     var onPostChanged: ((ExpressPostDetail) -> Void)? = nil
 
     @State private var detail: ExpressPostDetail?
@@ -107,6 +110,22 @@ struct ExpressDetailView: View {
     @State private var isLoading = true
     @State private var isSubmitting = false
     @State private var errorMessage: String?
+
+    init(
+        viewModel: ExpressViewModel,
+        postID: String,
+        notificationTargetType: String? = nil,
+        notificationTargetSubID: String? = nil,
+        notificationID: String? = nil,
+        onPostChanged: ((ExpressPostDetail) -> Void)? = nil
+    ) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        self.postID = postID
+        self.notificationTargetType = notificationTargetType
+        self.notificationTargetSubID = notificationTargetSubID
+        self.notificationID = notificationID
+        self.onPostChanged = onPostChanged
+    }
 
     var body: some View {
         Group {
@@ -120,6 +139,12 @@ struct ExpressDetailView: View {
                 List {
                     Section {
                         VStack(alignment: .leading, spacing: 12) {
+                            if let notificationContextText {
+                                Text(notificationContextText)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.primary)
+                            }
+
                             HStack {
                                 Text(detail.post.nickname)
                                     .font(.headline)
@@ -166,6 +191,7 @@ struct ExpressDetailView: View {
                                 }
                                 .buttonStyle(.bordered)
                                 .disabled(detail.post.isLiked || isSubmitting)
+                                .tint(actionTint(for: "like"))
 
                                 if detail.post.canGuess {
                                     TextField("输入你猜的名字", text: $guessName)
@@ -175,6 +201,7 @@ struct ExpressDetailView: View {
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .disabled(isSubmitting || !FormValidationSupport.hasText(guessName))
+                                    .tint(actionTint(for: "guess"))
                                 }
                             }
                         }
@@ -308,6 +335,28 @@ struct ExpressDetailView: View {
         detail = latestDetail
         viewModel.replacePost(latestDetail.post)
         onPostChanged?(latestDetail)
+    }
+
+    private var normalizedNotificationTargetType: String? {
+        RemoteMapperSupport.sanitizedText(notificationTargetType)
+    }
+
+    private var notificationContextText: String? {
+        guard notificationID != nil else { return nil }
+        switch normalizedNotificationTargetType {
+        case "comment":
+            return "来自互动消息：有新评论，打开详情即可查看"
+        case "like":
+            return "来自互动消息：有人点赞了这条表白"
+        case "guess":
+            return "来自互动消息：有人参与了猜名字"
+        default:
+            return "来自互动消息"
+        }
+    }
+
+    private func actionTint(for type: String) -> Color {
+        normalizedNotificationTargetType == type && notificationID != nil ? DSColor.primary : .accentColor
     }
 }
 

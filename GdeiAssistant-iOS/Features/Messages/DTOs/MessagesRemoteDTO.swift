@@ -22,6 +22,7 @@ struct FestivalRemoteDTO: Decodable {
 
 struct InformationRemoteDTO: Decodable {
     let notice: AnnouncementRemoteDTO?
+    let notices: [AnnouncementRemoteDTO]?
     let topics: [ReadingTopicRemoteDTO]?
     let festival: FestivalRemoteDTO?
 }

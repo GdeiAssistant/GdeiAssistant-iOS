@@ -66,7 +66,7 @@ extension HomeEntryConfig {
         HomeEntryConfig(destination: .delivery, subtitle: "发跑腿需求，也能顺手接单赚点零花"),
         HomeEntryConfig(destination: .lostFound, subtitle: "丢东西、捡东西都先来这里看看"),
         HomeEntryConfig(destination: .secret, subtitle: "不想公开说的话，就匿名留在这里"),
-        HomeEntryConfig(destination: .dating, subtitle: "看看资料，发起卖室友互动"),
+        HomeEntryConfig(destination: .dating, subtitle: "处理收到的撩、我发出的和我的发布"),
         HomeEntryConfig(destination: .express, subtitle: "想表白、想留言，都可以写在这里"),
         HomeEntryConfig(destination: .topic, subtitle: "最近校园里在聊什么，这里一眼能看见"),
         HomeEntryConfig(destination: .photograph, subtitle: "看看同学镜头里拍下的校园瞬间")

@@ -116,6 +116,9 @@ private struct PhotographPostRow: View {
 struct PhotographDetailView: View {
     @ObservedObject var viewModel: PhotographViewModel
     let postID: String
+    let notificationTargetType: String?
+    let notificationTargetSubID: String?
+    let notificationID: String?
     var onPostChanged: ((PhotographPostDetail) -> Void)? = nil
 
     @State private var detail: PhotographPostDetail?
@@ -126,6 +129,22 @@ struct PhotographDetailView: View {
     @State private var isSubmitting = false
     @State private var errorMessage: String?
     @State private var resultMessage: String?
+
+    init(
+        viewModel: PhotographViewModel,
+        postID: String,
+        notificationTargetType: String? = nil,
+        notificationTargetSubID: String? = nil,
+        notificationID: String? = nil,
+        onPostChanged: ((PhotographPostDetail) -> Void)? = nil
+    ) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        self.postID = postID
+        self.notificationTargetType = notificationTargetType
+        self.notificationTargetSubID = notificationTargetSubID
+        self.notificationID = notificationID
+        self.onPostChanged = onPostChanged
+    }
 
     var body: some View {
         Group {
@@ -138,6 +157,12 @@ struct PhotographDetailView: View {
             } else if let detail {
                 List {
                     Section {
+                        if let notificationContextText {
+                            Text(notificationContextText)
+                                .font(.caption)
+                                .foregroundStyle(DSColor.primary)
+                        }
+
                         HStack(spacing: 20) {
                             statItem("照片", value: detail.imageURLs.count)
                             statItem("评论", value: max(detail.post.commentCount, comments.count))
@@ -189,6 +214,7 @@ struct PhotographDetailView: View {
                         }
                         .buttonStyle(.bordered)
                         .disabled(detail.post.isLiked || isSubmitting)
+                        .tint(isLikeNotification ? DSColor.primary : .accentColor)
                     } header: {
                         Text("互动状态")
                     }
@@ -305,6 +331,26 @@ struct PhotographDetailView: View {
         comments = latestDetail.comments.isEmpty ? (try await viewModel.fetchComments(postID: postID)) : latestDetail.comments
         viewModel.replacePost(latestDetail.post)
         onPostChanged?(latestDetail)
+    }
+
+    private var normalizedNotificationTargetType: String? {
+        RemoteMapperSupport.sanitizedText(notificationTargetType)
+    }
+
+    private var notificationContextText: String? {
+        guard notificationID != nil else { return nil }
+        switch normalizedNotificationTargetType {
+        case "comment":
+            return "来自互动消息：有新评论，打开详情即可查看"
+        case "like":
+            return "来自互动消息：有人点赞了这个作品"
+        default:
+            return "来自互动消息"
+        }
+    }
+
+    private var isLikeNotification: Bool {
+        normalizedNotificationTargetType == "like" && notificationID != nil
     }
 }
 

@@ -132,7 +132,7 @@ struct HomeView: View {
         case .secret:
             SecretView(viewModel: container.makeSecretViewModel())
         case .dating:
-            DatingView(viewModel: container.makeDatingViewModel())
+            DatingView(viewModel: container.makeDatingCenterViewModel())
         }
     }
 }

@@ -8,11 +8,25 @@ final class RemoteNewsRepository: NewsRepository {
         self.apiClient = apiClient
     }
 
-    func fetchNews(category: NewsCategory, start: Int, size: Int) async throws -> [NewsItem] {
-        let dtos: [NewsRemoteDTO] = try await apiClient.get(
-            "/news/type/\(category.rawValue)/start/\(max(start, 0))/size/\(max(size, 1))",
-            requiresAuth: false
+    func fetchNews(start: Int, size: Int) async throws -> [NewsItem] {
+        let information: InformationRemoteDTO = try await apiClient.get(
+            "/information/list",
+            requiresAuth: true
         )
-        return NewsRemoteMapper.mapItems(dtos, category: category)
+
+        let sourceItems: [AnnouncementRemoteDTO]
+        if let notices = information.notices, !notices.isEmpty {
+            sourceItems = notices
+        } else if let notice = information.notice {
+            sourceItems = [notice]
+        } else {
+            sourceItems = []
+        }
+
+        let mappedItems = NewsRemoteMapper.mapItems(sourceItems)
+        let safeStart = max(start, 0)
+        let safeSize = max(size, 1)
+        guard safeStart < mappedItems.count else { return [] }
+        return Array(mappedItems.dropFirst(safeStart).prefix(safeSize))
     }
 }

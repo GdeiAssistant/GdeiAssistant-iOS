@@ -8,7 +8,17 @@ final class MockDeliveryRepository: DeliveryRepository {
     ]
 
     private var accepted: [DeliveryOrder] = [
-        DeliveryOrder(orderID: "delivery_003", username: "20230009", name: "代收", pickupCode: "30011223344", contactPhone: "13700001111", price: 5.00, company: "菜鸟驿站", address: "教学楼 B201", state: .delivering, remarks: "上课前送到", orderTime: "今天 09:20")
+        DeliveryOrder(orderID: "delivery_003", username: "20230009", name: "代收", pickupCode: "30011223344", contactPhone: "13700001111", price: 5.00, company: "菜鸟驿站", address: "教学楼 B201", state: .delivering, remarks: "上课前送到", orderTime: "今天 09:20"),
+        DeliveryOrder(orderID: "delivery_004", username: "20230025", name: "代拿", pickupCode: "99001122334", contactPhone: "13600001234", price: 7.00, company: "北门驿站", address: "北苑 8 栋 101", state: .completed, remarks: "放到宿舍阿姨处即可", orderTime: "昨天 18:40")
+    ]
+
+    private var publishedTradesByOrderID: [String: DeliveryTrade] = [
+        "delivery_002": DeliveryTrade(tradeID: "trade_001", orderID: "delivery_002", username: "runner_a", createTime: "22分钟前", state: 0)
+    ]
+
+    private var acceptedTradesByOrderID: [String: DeliveryTrade] = [
+        "delivery_003": DeliveryTrade(tradeID: "trade_002", orderID: "delivery_003", username: "me", createTime: "今天 09:25", state: 0),
+        "delivery_004": DeliveryTrade(tradeID: "trade_004", orderID: "delivery_004", username: "me", createTime: "昨天 18:55", state: 1)
     ]
 
     func fetchOrders(start: Int, size: Int) async throws -> [DeliveryOrder] {
@@ -23,12 +33,12 @@ final class MockDeliveryRepository: DeliveryRepository {
         if let order = orders.first(where: { $0.orderID == orderID }) {
             return DeliveryOrderDetail(
                 order: order,
-                detailType: order.state == .completed ? 1 : 0,
-                trade: order.state == .delivering ? DeliveryTrade(tradeID: "trade_001", orderID: orderID, username: "runner_a", createTime: "刚刚", state: 0) : nil
+                detailType: 0,
+                trade: publishedTradesByOrderID[orderID]
             )
         }
         if let order = accepted.first(where: { $0.orderID == orderID }) {
-            return DeliveryOrderDetail(order: order, detailType: 3, trade: DeliveryTrade(tradeID: "trade_002", orderID: orderID, username: "me", createTime: "刚刚", state: 0))
+            return DeliveryOrderDetail(order: order, detailType: 3, trade: acceptedTradesByOrderID[orderID])
         }
         throw NetworkError.noData
     }
@@ -58,12 +68,22 @@ final class MockDeliveryRepository: DeliveryRepository {
         let updated = DeliveryOrder(orderID: order.orderID, username: order.username, name: order.name, pickupCode: order.pickupCode, contactPhone: order.contactPhone, price: order.price, company: order.company, address: order.address, state: .delivering, remarks: order.remarks, orderTime: order.orderTime)
         orders[index] = updated
         accepted.insert(updated, at: 0)
+        let trade = DeliveryTrade(tradeID: "trade_mock_\(UUID().uuidString)", orderID: orderID, username: "me", createTime: "刚刚", state: 0)
+        publishedTradesByOrderID[orderID] = trade
+        acceptedTradesByOrderID[orderID] = trade
     }
 
     func finishTrade(tradeID: String) async throws {
-        guard let index = orders.firstIndex(where: { $0.state == .delivering }) else { return }
-        let order = orders[index]
-        let updated = DeliveryOrder(orderID: order.orderID, username: order.username, name: order.name, pickupCode: order.pickupCode, contactPhone: order.contactPhone, price: order.price, company: order.company, address: order.address, state: .completed, remarks: order.remarks, orderTime: order.orderTime)
-        orders[index] = updated
+        if let orderIndex = orders.firstIndex(where: { publishedTradesByOrderID[$0.orderID]?.tradeID == tradeID }) {
+            let order = orders[orderIndex]
+            let updated = DeliveryOrder(orderID: order.orderID, username: order.username, name: order.name, pickupCode: order.pickupCode, contactPhone: order.contactPhone, price: order.price, company: order.company, address: order.address, state: .completed, remarks: order.remarks, orderTime: order.orderTime)
+            orders[orderIndex] = updated
+        }
+
+        if let orderIndex = accepted.firstIndex(where: { acceptedTradesByOrderID[$0.orderID]?.tradeID == tradeID }) {
+            let order = accepted[orderIndex]
+            let updated = DeliveryOrder(orderID: order.orderID, username: order.username, name: order.name, pickupCode: order.pickupCode, contactPhone: order.contactPhone, price: order.price, company: order.company, address: order.address, state: .completed, remarks: order.remarks, orderTime: order.orderTime)
+            accepted[orderIndex] = updated
+        }
     }
 }

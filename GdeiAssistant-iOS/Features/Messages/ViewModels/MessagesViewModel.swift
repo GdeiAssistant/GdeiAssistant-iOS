@@ -3,68 +3,158 @@ import Combine
 
 @MainActor
 final class MessagesViewModel: ObservableObject {
-    @Published var notifications: [AppNotificationItem] = []
-    @Published var threads: [InteractionThreadItem] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published var newsItems: [NewsItem] = []
+    @Published var readingItems: [ReadingItem] = []
+    @Published var systemNoticeItems: [AppNotificationItem] = []
+    @Published var interactionNoticeItems: [AppNotificationItem] = []
 
-    private let repository: any MessagesRepository
+    @Published var isNewsLoading = false
+    @Published var isReadingLoading = false
+    @Published var isSystemLoading = false
+    @Published var isInteractionLoading = false
 
-    init(repository: any MessagesRepository) {
-        self.repository = repository
+    @Published var newsErrorMessage: String?
+    @Published var readingErrorMessage: String?
+    @Published var systemErrorMessage: String?
+    @Published var interactionErrorMessage: String?
+
+    @Published var interactionUnreadCount = 0
+
+    private let newsRepository: any NewsRepository
+    private let readingRepository: any ReadingRepository
+    private let messagesRepository: any MessagesRepository
+    private let overviewLimit = 3
+
+    init(
+        newsRepository: any NewsRepository,
+        readingRepository: any ReadingRepository,
+        messagesRepository: any MessagesRepository
+    ) {
+        self.newsRepository = newsRepository
+        self.readingRepository = readingRepository
+        self.messagesRepository = messagesRepository
     }
 
-    var campusInfoItems: [AppNotificationItem] {
-        notifications.filter { $0.category == .service }
+    var isInitialLoading: Bool {
+        if hasAnyContent {
+            return false
+        }
+        return isNewsLoading || isReadingLoading || isSystemLoading || isInteractionLoading
     }
 
-    var systemNoticeItems: [AppNotificationItem] {
-        notifications.filter { $0.category == .system }
+    var hasAnyError: Bool {
+        newsErrorMessage != nil || readingErrorMessage != nil || systemErrorMessage != nil || interactionErrorMessage != nil
     }
 
-    var interactionNoticeItems: [AppNotificationItem] {
-        notifications.filter { $0.category == .interaction || $0.category == .comment || $0.category == .like }
+    var primaryErrorMessage: String {
+        newsErrorMessage
+            ?? readingErrorMessage
+            ?? systemErrorMessage
+            ?? interactionErrorMessage
+            ?? "加载资讯信息失败"
+    }
+
+    var hasAnyContent: Bool {
+        !newsItems.isEmpty || !readingItems.isEmpty || !systemNoticeItems.isEmpty || !interactionNoticeItems.isEmpty
     }
 
     func loadIfNeeded() async {
-        guard notifications.isEmpty && threads.isEmpty else { return }
+        guard !hasAnyContent else { return }
         await refresh()
     }
 
     func refresh() async {
-        isLoading = true
-        errorMessage = nil
-
-        defer { isLoading = false }
-
-        do {
-            async let notificationsTask = repository.fetchNotifications()
-            async let threadsTask = repository.fetchThreads()
-            notifications = try await notificationsTask
-            threads = try await threadsTask
-        } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载资讯信息失败"
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { await self.refreshNews() }
+            group.addTask { await self.refreshReading() }
+            group.addTask { await self.refreshSystemNotices() }
+            group.addTask { await self.refreshInteractionItems() }
         }
     }
 
-    func markThreadRead(threadID: String) async {
-        guard let index = threads.firstIndex(where: { $0.id == threadID }), !threads[index].isRead else { return }
+    func refreshNews() async {
+        isNewsLoading = true
+        newsErrorMessage = nil
+        defer { isNewsLoading = false }
 
         do {
-            try await repository.markThreadRead(threadID: threadID)
-            let current = threads[index]
-            threads[index] = InteractionThreadItem(
-                id: current.id,
-                title: current.title,
-                lastMessage: current.lastMessage,
-                updatedAt: current.updatedAt,
-                unreadCount: 0,
-                isRead: true,
-                avatarURL: current.avatarURL,
-                destinationTab: current.destinationTab
-            )
+            newsItems = try await newsRepository.fetchNews(start: 0, size: overviewLimit)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+            newsItems = []
+            newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻通知加载失败"
+        }
+    }
+
+    func refreshReading() async {
+        isReadingLoading = true
+        readingErrorMessage = nil
+        defer { isReadingLoading = false }
+
+        do {
+            readingItems = try await readingRepository.fetchReadings(start: 0, size: overviewLimit)
+        } catch {
+            readingItems = []
+            readingErrorMessage = (error as? LocalizedError)?.errorDescription ?? "专题阅读加载失败"
+        }
+    }
+
+    func refreshSystemNotices() async {
+        isSystemLoading = true
+        systemErrorMessage = nil
+        defer { isSystemLoading = false }
+
+        do {
+            systemNoticeItems = try await messagesRepository.fetchAnnouncementPage(start: 0, size: overviewLimit)
+        } catch {
+            systemNoticeItems = []
+            systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
+        }
+    }
+
+    func refreshInteractionItems() async {
+        isInteractionLoading = true
+        interactionErrorMessage = nil
+        defer { isInteractionLoading = false }
+
+        do {
+            async let itemsTask = messagesRepository.fetchInteractionNotifications(start: 0, size: overviewLimit)
+            async let unreadTask = messagesRepository.fetchInteractionUnreadCount()
+
+            let items = try await itemsTask
+            interactionNoticeItems = items
+            interactionUnreadCount = (try? await unreadTask) ?? items.filter { !$0.isRead }.count
+        } catch {
+            interactionNoticeItems = []
+            interactionUnreadCount = 0
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "互动消息加载失败"
+        }
+    }
+
+    func markNotificationRead(notificationID: String) async {
+        guard let index = interactionNoticeItems.firstIndex(where: { $0.id == notificationID && !$0.isRead }) else {
+            return
+        }
+
+        do {
+            try await messagesRepository.markNotificationRead(notificationID: notificationID)
+            interactionNoticeItems[index] = interactionNoticeItems[index].updatingReadState(true)
+            interactionUnreadCount = max(0, interactionUnreadCount - 1)
+        } catch {
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+        }
+    }
+
+    func markAllInteractionNotificationsRead() async {
+        guard interactionUnreadCount > 0 else { return }
+
+        do {
+            try await messagesRepository.markAllNotificationsRead()
+            interactionNoticeItems = interactionNoticeItems.map { item in
+                item.isInteractionItem ? item.updatingReadState(true) : item
+            }
+            interactionUnreadCount = 0
+        } catch {
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
         }
     }
 }

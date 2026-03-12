@@ -17,30 +17,46 @@ struct ReadingView: View {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "newspaper", title: "暂无专题阅读", message: "稍后再来看看最新内容")
+                DSEmptyStateView(icon: "book.pages", title: "暂无专题阅读", message: "稍后再来看看最新内容")
             } else {
-                List(viewModel.items) { item in
-                    Button {
-                        if let url = URL(string: item.link), !item.link.isEmpty {
-                            openURL(url)
+                List {
+                    ForEach(viewModel.items) { item in
+                        Button {
+                            if let url = URL(string: item.link), !item.link.isEmpty {
+                                openURL(url)
+                            }
+                        } label: {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(item.title)
+                                    .font(.headline)
+                                    .foregroundStyle(DSColor.title)
+                                Text(item.summary)
+                                    .font(.subheadline)
+                                    .foregroundStyle(DSColor.subtitle)
+                                    .lineLimit(3)
+                                Text(item.createdAt)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.subtitle)
+                            }
+                            .padding(.vertical, 6)
                         }
-                    } label: {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(item.title)
-                                .font(.headline)
-                                .foregroundStyle(DSColor.title)
-                            Text(item.summary)
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.subtitle)
-                                .lineLimit(2)
-                            Text(item.createdAt)
-                                .font(.caption)
-                                .foregroundStyle(DSColor.subtitle)
+                        .buttonStyle(.plain)
+                        .task {
+                            await viewModel.loadMoreIfNeeded(currentItem: item)
                         }
-                        .padding(.vertical, 4)
                     }
-                    .buttonStyle(.plain)
+
+                    if viewModel.isLoadingMore {
+                        loadingMoreRow
+                    } else if let loadMoreErrorMessage = viewModel.loadMoreErrorMessage {
+                        loadMoreErrorRow(message: loadMoreErrorMessage) {
+                            if let lastItem = viewModel.items.last {
+                                Task { await viewModel.loadMoreIfNeeded(currentItem: lastItem) }
+                            }
+                        }
+                    }
                 }
+                .listStyle(.insetGrouped)
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -50,6 +66,33 @@ struct ReadingView: View {
         .task {
             await viewModel.loadIfNeeded()
         }
+    }
+
+    private var loadingMoreRow: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+                .padding(.vertical, 8)
+            Spacer()
+        }
+        .listRowSeparator(.hidden)
+    }
+
+    private func loadMoreErrorRow(message: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(DSColor.subtitle)
+                Text("点击重试")
+                    .font(.caption)
+                    .foregroundStyle(DSColor.primary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+        }
+        .buttonStyle(.plain)
+        .listRowSeparator(.hidden)
     }
 }
 

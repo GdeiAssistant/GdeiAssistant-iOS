@@ -126,6 +126,9 @@ private struct SecretPostCard: View {
 struct SecretDetailView: View {
     @ObservedObject var viewModel: SecretViewModel
     let postID: String
+    let notificationTargetType: String?
+    let notificationTargetSubID: String?
+    let notificationID: String?
 
     @State private var detail: SecretPostDetail?
     @State private var isLoading = true
@@ -133,6 +136,20 @@ struct SecretDetailView: View {
     @State private var commentText = ""
     @State private var isSubmittingComment = false
     @State private var isSubmittingLike = false
+
+    init(
+        viewModel: SecretViewModel,
+        postID: String,
+        notificationTargetType: String? = nil,
+        notificationTargetSubID: String? = nil,
+        notificationID: String? = nil
+    ) {
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        self.postID = postID
+        self.notificationTargetType = notificationTargetType
+        self.notificationTargetSubID = notificationTargetSubID
+        self.notificationID = notificationID
+    }
 
     var body: some View {
         Group {
@@ -148,6 +165,12 @@ struct SecretDetailView: View {
                         themedDetailCard(detail)
 
                         DSCard {
+                            if let notificationContextText {
+                                Text(notificationContextText)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.primary)
+                            }
+
                             Text("评论")
                                 .font(.headline)
                                 .foregroundStyle(DSColor.title)
@@ -195,10 +218,10 @@ struct SecretDetailView: View {
                                 }
                             }
                         }
+                        .padding(16)
                     }
-                    .padding(16)
+                    .background(DSColor.background)
                 }
-                .background(DSColor.background)
             }
         }
         .navigationTitle("匿名详情")
@@ -257,6 +280,10 @@ struct SecretDetailView: View {
                     .foregroundStyle(theme.textColor.opacity(0.82))
             }
             .font(.subheadline)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            .background(actionHighlightBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -308,6 +335,28 @@ struct SecretDetailView: View {
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "点赞操作失败"
         }
+    }
+
+    private var normalizedNotificationTargetType: String? {
+        RemoteMapperSupport.sanitizedText(notificationTargetType)
+    }
+
+    private var notificationContextText: String? {
+        guard notificationID != nil else { return nil }
+        switch normalizedNotificationTargetType {
+        case "comment":
+            return "来自互动消息：有新评论，打开详情即可查看"
+        case "like":
+            return "来自互动消息：有人点赞了这条树洞"
+        default:
+            return "来自互动消息"
+        }
+    }
+
+    private var actionHighlightBackground: Color {
+        normalizedNotificationTargetType == "like" && notificationID != nil
+            ? DSColor.primary.opacity(0.12)
+            : .clear
     }
 }
 

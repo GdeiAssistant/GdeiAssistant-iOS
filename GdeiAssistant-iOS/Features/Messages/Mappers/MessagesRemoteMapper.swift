@@ -1,125 +1,53 @@
 import Foundation
 
 enum MessagesRemoteMapper {
-    nonisolated static func mapNotifications(
-        announcement: AnnouncementRemoteDTO?,
-        information: InformationRemoteDTO?,
-        interactionItems: [InteractionNotificationRemoteDTO]
-    ) -> [AppNotificationItem] {
-        var items = [AppNotificationItem]()
-
-        if let announcement {
-            items.append(
-                AppNotificationItem(
-                    id: RemoteMapperSupport.firstNonEmpty(announcement.id, UUID().uuidString),
-                    category: .system,
-                    title: RemoteMapperSupport.firstNonEmpty(announcement.title, "系统公告"),
-                    message: RemoteMapperSupport.firstNonEmpty(announcement.content, "暂无公告内容"),
-                    createdAt: RemoteMapperSupport.dateText(announcement.publishTime, fallback: "刚刚"),
-                    isRead: false,
-                    destination: nil,
-                    targetType: nil,
-                    targetID: nil,
-                    targetSubID: nil
-                )
-            )
-        }
-
-        if let festival = information?.festival {
-            let festivalMessage = ([festival.name] + (festival.description ?? [])).compactMap { value in
-                let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                return trimmed.isEmpty ? nil : trimmed
-            }.joined(separator: " · ")
-            if !festivalMessage.isEmpty {
-                items.append(
-                    AppNotificationItem(
-                        id: "festival_notice",
-                        category: .system,
-                        title: "服务提醒",
-                        message: festivalMessage,
-                        createdAt: "刚刚",
-                        isRead: false,
-                        destination: nil,
-                        targetType: nil,
-                        targetID: nil,
-                        targetSubID: nil
-                    )
-                )
-            }
-        }
-
-        for topic in information?.topics?.prefix(2) ?? [] {
-            items.append(
-                AppNotificationItem(
-                    id: RemoteMapperSupport.firstNonEmpty(topic.id, UUID().uuidString),
-                    category: .service,
-                    title: RemoteMapperSupport.firstNonEmpty(topic.title, "专题阅读"),
-                    message: RemoteMapperSupport.firstNonEmpty(topic.description, "查看学校整理的专题内容"),
-                    createdAt: RemoteMapperSupport.dateText(topic.createTime, fallback: "最近更新"),
-                    isRead: true,
-                    destination: .reading,
-                    targetType: nil,
-                    targetID: nil,
-                    targetSubID: nil
-                )
-            )
-        }
-
-        items.append(contentsOf: mapInteractionNotifications(interactionItems))
-        return items
+    nonisolated static func mapAnnouncementItems(_ items: [AnnouncementRemoteDTO]) -> [AppNotificationItem] {
+        items.map(mapAnnouncement)
     }
 
-    nonisolated static func mapThreads(_ dtos: [DatingMessageDTO]) -> [InteractionThreadItem] {
-        dtos.map { item in
-            let pick = item.datingPick ?? item.roommatePick
-            let profile = pick?.datingProfile ?? pick?.roommateProfile
-            let isRead = (item.state ?? 0) != 0
-            let title = RemoteMapperSupport.firstNonEmpty(profile?.nickname, pick?.username, item.username, "互动消息")
-            let content = RemoteMapperSupport.firstNonEmpty(pick?.content, messageTypeText(item.type), "收到一条新的互动消息")
-
-            return InteractionThreadItem(
-                id: String(item.messageId ?? item.roommatePick?.pickId ?? Int.random(in: 1...999_999)),
-                title: title,
-                lastMessage: content,
-                updatedAt: RemoteMapperSupport.firstNonEmpty(RemoteMapperSupport.dateText(RemoteFlexibleString(item.createTime ?? ""), fallback: ""), "最近更新"),
-                unreadCount: isRead ? 0 : 1,
-                isRead: isRead,
-                avatarURL: RemoteMapperSupport.sanitizedText(profile?.pictureURL),
-                destinationTab: destinationTab(item.type)
-            )
-        }
-    }
-
-    nonisolated private static func messageTypeText(_ value: Int?) -> String {
-        switch value {
-        case 0:
-            return "收到新的卖室友互动"
-        case 1:
-            return "你的卖室友互动状态已更新"
-        default:
-            return "新的互动消息"
-        }
-    }
-
-    nonisolated private static func mapInteractionNotifications(_ items: [InteractionNotificationRemoteDTO]) -> [AppNotificationItem] {
-        items.compactMap { item in
-            guard let destination = interactionDestination(module: item.module, targetType: item.targetType) else {
-                return nil
-            }
-
+    nonisolated static func mapInteractionItems(_ items: [InteractionNotificationRemoteDTO]) -> [AppNotificationItem] {
+        items.map { item in
+            let module = normalizedInteractionModule(item.module)
             return AppNotificationItem(
                 id: RemoteMapperSupport.firstNonEmpty(item.id, UUID().uuidString),
                 category: notificationCategory(item.type),
-                title: RemoteMapperSupport.firstNonEmpty(item.title, interactionTitle(module: item.module)),
+                module: module,
+                title: RemoteMapperSupport.firstNonEmpty(item.title, interactionTitle(module: module)),
                 message: RemoteMapperSupport.firstNonEmpty(item.content, "你有一条新的互动消息"),
                 createdAt: RemoteMapperSupport.dateText(item.createdAt, fallback: "刚刚"),
                 isRead: item.isRead ?? false,
-                destination: destination,
+                destination: interactionDestination(module: module),
                 targetType: RemoteMapperSupport.sanitizedText(item.targetType),
                 targetID: RemoteMapperSupport.sanitizedText(item.targetId),
                 targetSubID: RemoteMapperSupport.sanitizedText(item.targetSubId)
             )
         }
+    }
+
+    nonisolated static func mapAnnouncementDetail(_ dto: AnnouncementRemoteDTO) -> AnnouncementDetailItem {
+        AnnouncementDetailItem(
+            id: RemoteMapperSupport.firstNonEmpty(dto.id, UUID().uuidString),
+            title: RemoteMapperSupport.firstNonEmpty(dto.title, "系统公告"),
+            content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无公告内容"),
+            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚")
+        )
+    }
+
+    nonisolated private static func mapAnnouncement(_ announcement: AnnouncementRemoteDTO) -> AppNotificationItem {
+        let targetID = RemoteMapperSupport.sanitizedText(announcement.id)
+        return AppNotificationItem(
+            id: RemoteMapperSupport.firstNonEmpty(announcement.id, UUID().uuidString),
+            category: .system,
+            module: nil,
+            title: RemoteMapperSupport.firstNonEmpty(announcement.title, "系统公告"),
+            message: RemoteMapperSupport.firstNonEmpty(announcement.content, "暂无公告内容"),
+            createdAt: RemoteMapperSupport.dateText(announcement.publishTime, fallback: "刚刚"),
+            isRead: false,
+            destination: targetID == nil ? nil : .announcement,
+            targetType: nil,
+            targetID: targetID,
+            targetSubID: nil
+        )
     }
 
     nonisolated private static func notificationCategory(_ type: String?) -> NotificationCategory {
@@ -134,7 +62,7 @@ enum MessagesRemoteMapper {
     }
 
     nonisolated private static func interactionTitle(module: String?) -> String {
-        switch RemoteMapperSupport.sanitizedText(module) {
+        switch module {
         case "secret":
             return "树洞互动"
         case "express":
@@ -156,8 +84,8 @@ enum MessagesRemoteMapper {
         }
     }
 
-    nonisolated private static func interactionDestination(module: String?, targetType: String?) -> MessageNavigationTarget? {
-        switch RemoteMapperSupport.sanitizedText(module) {
+    nonisolated private static func interactionDestination(module: String?) -> MessageNavigationTarget? {
+        switch module {
         case "secret":
             return .secret
         case "express":
@@ -168,23 +96,23 @@ enum MessagesRemoteMapper {
             return .photograph
         case "delivery":
             return .delivery
-        case "marketplace":
-            return .marketplace
-        case "lostandfound":
-            return .lostFound
         case "dating":
-            return RemoteMapperSupport.sanitizedText(targetType) == "sent" ? .datingSent : .datingReceived
+            return .datingCenter
         default:
             return nil
         }
     }
 
-    nonisolated private static func destinationTab(_ value: Int?) -> DatingCenterTab {
-        switch value {
-        case 1:
-            return .sent
+    nonisolated private static func normalizedInteractionModule(_ value: String?) -> String? {
+        switch RemoteMapperSupport.sanitizedText(value) {
+        case "ershou", "secondhand":
+            return "marketplace"
+        case "lost_found", "lostfound":
+            return "lostandfound"
+        case "roommate":
+            return "dating"
         default:
-            return .received
+            return RemoteMapperSupport.sanitizedText(value)
         }
     }
 }
