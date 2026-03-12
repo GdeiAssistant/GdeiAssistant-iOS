@@ -84,16 +84,16 @@ final class AuthManager: ObservableObject {
         }
 
         let request = LoginRequest(username: username, password: password)
+        let response = try await repository.login(request: request)
+        try tokenStorage.saveToken(response.token)
+        cachedToken = response.token
 
         do {
-            let response = try await repository.login(request: request)
-            try tokenStorage.saveToken(response.token)
-            cachedToken = response.token
-
             let profile = try await repository.fetchProfile()
             sessionState.markLoggedIn(user: profile)
             return profile
         } catch {
+            clearToken()
             throw error
         }
     }

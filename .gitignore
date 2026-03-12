@@ -15,3 +15,7 @@ DerivedData/
 Docs/
 Tools/
 AGENTS.md
+
+# Local test assets
+GdeiAssistant-iOSTests/
+GdeiAssistant-iOS.xcodeproj/xcshareddata/xcschemes/GdeiAssistant-iOS.xcscheme

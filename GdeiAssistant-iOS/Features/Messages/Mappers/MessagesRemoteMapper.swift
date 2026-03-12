@@ -17,7 +17,7 @@ enum MessagesRemoteMapper {
                 createdAt: RemoteMapperSupport.dateText(item.createdAt, fallback: "刚刚"),
                 isRead: item.isRead ?? false,
                 destination: interactionDestination(module: module),
-                targetType: RemoteMapperSupport.sanitizedText(item.targetType),
+                targetType: normalizedKeyword(item.targetType),
                 targetID: RemoteMapperSupport.sanitizedText(item.targetId),
                 targetSubID: RemoteMapperSupport.sanitizedText(item.targetSubId)
             )
@@ -51,7 +51,7 @@ enum MessagesRemoteMapper {
     }
 
     nonisolated private static func notificationCategory(_ type: String?) -> NotificationCategory {
-        switch RemoteMapperSupport.sanitizedText(type) {
+        switch normalizedKeyword(type) {
         case "comment":
             return .comment
         case "like":
@@ -104,7 +104,7 @@ enum MessagesRemoteMapper {
     }
 
     nonisolated private static func normalizedInteractionModule(_ value: String?) -> String? {
-        switch RemoteMapperSupport.sanitizedText(value) {
+        switch normalizedKeyword(value) {
         case "ershou", "secondhand":
             return "marketplace"
         case "lost_found", "lostfound":
@@ -112,7 +112,11 @@ enum MessagesRemoteMapper {
         case "roommate":
             return "dating"
         default:
-            return RemoteMapperSupport.sanitizedText(value)
+            return normalizedKeyword(value)
         }
+    }
+
+    nonisolated private static func normalizedKeyword(_ value: String?) -> String? {
+        RemoteMapperSupport.sanitizedText(value)?.lowercased()
     }
 }
