@@ -6,7 +6,7 @@ struct CardQueryRequestDTO: Codable {
     let date: Int
 }
 
-struct CardLossRemoteDTO {
+struct CardLossRemoteDTO: Encodable {
     let cardPassword: String
 }
 

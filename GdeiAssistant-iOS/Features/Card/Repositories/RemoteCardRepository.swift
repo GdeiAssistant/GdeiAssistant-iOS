@@ -25,10 +25,9 @@ final class RemoteCardRepository: CardRepository {
 
     func reportLoss(request: CardLossRequest) async throws {
         let dto = CardRemoteMapper.mapLossRequest(request)
-        let queryItems = CardRemoteMapper.mapLossQueryItems(dto)
         let _: EmptyPayload = try await apiClient.post(
             "/card/lost",
-            queryItems: queryItems,
+            body: dto,
             requiresAuth: true
         )
     }

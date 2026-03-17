@@ -14,10 +14,6 @@ enum CardRemoteMapper {
         CardLossRemoteDTO(cardPassword: FormValidationSupport.trimmed(request.cardPassword))
     }
 
-    nonisolated static func mapLossQueryItems(_ dto: CardLossRemoteDTO) -> [URLQueryItem] {
-        [URLQueryItem(name: "cardPassword", value: dto.cardPassword)]
-    }
-
     nonisolated static func mapDashboard(
         infoDTO: CardInfoDTO,
         queryDTO: CardQueryResultDTO?
