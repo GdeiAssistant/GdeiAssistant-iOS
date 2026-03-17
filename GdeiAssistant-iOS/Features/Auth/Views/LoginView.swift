@@ -28,7 +28,7 @@ struct LoginView: View {
                     .padding(.bottom, 20)
                 }
             }
-            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 
