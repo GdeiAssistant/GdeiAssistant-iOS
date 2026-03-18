@@ -146,7 +146,10 @@ final class BindEmailViewModel: ObservableObject {
     func sendCode() async {
         let normalizedEmail = FormValidationSupport.trimmed(email)
         email = normalizedEmail
-        guard normalizedEmail.contains("@") else {
+        guard normalizedEmail.contains("@"), normalizedEmail.contains("."),
+              let atIndex = normalizedEmail.firstIndex(of: "@"),
+              normalizedEmail[normalizedEmail.startIndex..<atIndex].count >= 1,
+              normalizedEmail[normalizedEmail.index(after: atIndex)...].contains(".") else {
             submitState = .failure("请输入正确的邮箱地址")
             return
         }
@@ -164,7 +167,9 @@ final class BindEmailViewModel: ObservableObject {
     func bind() async {
         let normalizedEmail = FormValidationSupport.trimmed(email)
         email = normalizedEmail
-        guard normalizedEmail.contains("@"), FormValidationSupport.hasText(randomCode) else {
+        guard normalizedEmail.contains("@"), normalizedEmail.contains("."),
+              normalizedEmail.firstIndex(of: "@").map({ normalizedEmail[$0...].contains(".") }) == true,
+              FormValidationSupport.hasText(randomCode) else {
             submitState = .failure("请填写邮箱和验证码")
             return
         }

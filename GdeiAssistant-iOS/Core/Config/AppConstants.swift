@@ -18,7 +18,8 @@ enum AppConstants {
 
     enum API {
         static let defaultBaseURLString = "http://localhost:8080/api"
-        static let defaultBaseURL = URL(string: defaultBaseURLString) ?? URL(string: "http://localhost:8080/api")!
+        // swiftlint:disable:next force_unwrapping
+        static let defaultBaseURL = URL(string: defaultBaseURLString)!
 
         static let authorizationHeader = "Authorization"
         static let clientTypeHeader = "X-Client-Type"
