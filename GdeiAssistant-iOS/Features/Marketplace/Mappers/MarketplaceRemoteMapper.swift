@@ -121,8 +121,8 @@ enum MarketplaceRemoteMapper {
             nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, "二手用户"),
             introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, "这个人很懒，什么都没写_(:3 」∠)_"),
             doing: (dto.doing ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
-            sold: (dto.sold ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
-            off: (dto.off ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) }
+            sold: (dto.off ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
+            off: (dto.sold ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) }
         )
     }
 
