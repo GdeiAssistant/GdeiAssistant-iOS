@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 final class RemoteNewsRepository: NewsRepository {
-    private let categoryTypes = [1, 2, 3, 4, 5]
+    private let categoryTypes = [1, 2, 3, 4]
     private let apiClient: APIClient
 
     init(apiClient: APIClient) {

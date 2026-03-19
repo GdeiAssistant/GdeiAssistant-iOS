@@ -331,11 +331,24 @@ struct MessagesView: View {
     }
 
     private func newsRow(_ item: NewsItem) -> some View {
-        standardTextRow(
-            title: item.title,
-            summary: item.content,
-            dateText: item.publishDate
-        )
+        VStack(alignment: .leading, spacing: 8) {
+            Text(item.sourceTitle)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(DSColor.primary)
+            Text(item.title)
+                .font(.headline)
+                .foregroundStyle(DSColor.title)
+            Text(item.content)
+                .font(.subheadline)
+                .foregroundStyle(DSColor.subtitle)
+                .lineLimit(3)
+            Text(item.publishDate)
+                .font(.caption)
+                .foregroundStyle(DSColor.subtitle)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, Layout.overviewHeaderHorizontalInset)
+        .padding(.vertical, Layout.sectionRowVerticalPadding)
     }
 
     private func readingRow(_ item: ReadingItem) -> some View {

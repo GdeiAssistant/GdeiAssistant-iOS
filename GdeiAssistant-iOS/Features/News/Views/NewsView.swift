@@ -30,6 +30,9 @@ struct NewsView: View {
                             )
                         } label: {
                             VStack(alignment: .leading, spacing: 8) {
+                                Text(item.sourceTitle)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(DSColor.primary)
                                 Text(item.title)
                                     .font(.headline)
                                     .foregroundStyle(DSColor.title)

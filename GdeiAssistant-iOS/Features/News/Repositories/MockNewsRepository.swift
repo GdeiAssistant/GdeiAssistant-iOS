@@ -3,12 +3,12 @@ import Foundation
 @MainActor
 final class MockNewsRepository: NewsRepository {
     private let items = [
-        NewsItem(id: "news_1", title: "下周《移动应用开发》实验课教室调整", publishDate: "2026-03-08", content: "实验课将调整到教学楼 B402，请同学们提前查看课表通知。"),
-        NewsItem(id: "news_2", title: "大学英语六级模拟考试安排发布", publishDate: "2026-03-07", content: "模拟考试将于本周六上午 9 点进行，地点见准考证。"),
-        NewsItem(id: "news_3", title: "白云校区图书馆临时闭馆维护", publishDate: "2026-03-06", content: "因设备维护，图书馆将于周日 8:00-12:00 暂停开放。"),
-        NewsItem(id: "news_4", title: "春季校园招聘双选会报名开启", publishDate: "2026-03-05", content: "双选会将于体育馆举行，报名截止至周四中午。"),
-        NewsItem(id: "news_5", title: "体育馆临时借用安排更新", publishDate: "2026-03-04", content: "本周末体育馆将优先保障校级活动，部分场地借用时间已调整。"),
-        NewsItem(id: "news_6", title: "宿舍区热水系统例行检修", publishDate: "2026-03-03", content: "北区宿舍热水系统将于明晚分时段检修，请提前安排洗漱时间。")
+        NewsItem(id: "news_1", type: 1, title: "学校高质量发展大会暨 2026 年工作会议召开", publishDate: "2026-03-03", content: "学校召开高质量发展大会，系统总结上一阶段重点工作，并部署年度改革发展任务。"),
+        NewsItem(id: "news_2", type: 2, title: "管理学院召开教职工思想教育会议", publishDate: "2026-03-19", content: "管理学院围绕师德师风建设与年度重点工作召开专题会议。"),
+        NewsItem(id: "news_3", type: 3, title: "关于网站群管理平台升级切换的通知", publishDate: "2026-01-22", content: "学校主页及部分二级网站将在指定时间窗口内短暂停止访问。"),
+        NewsItem(id: "news_4", type: 4, title: "美术学院举办高层次科研项目申报学术讲座", publishDate: "2026-03-09", content: "讲座围绕高层次科研项目选题、申报书撰写和团队协作展开。"),
+        NewsItem(id: "news_5", type: 1, title: "学校启动春季学期教学巡查工作", publishDate: "2026-02-26", content: "学校启动春季学期教学巡查，持续关注课堂秩序与教学保障。"),
+        NewsItem(id: "news_6", type: 4, title: "教育学院开展人工智能赋能教学专题分享", publishDate: "2026-02-24", content: "专题分享聚焦生成式人工智能在教学设计与学习评价中的应用。")
     ]
 
     func fetchNews(start: Int, size: Int) async throws -> [NewsItem] {
