@@ -18,7 +18,6 @@ struct MessagesView: View {
 
     @StateObject private var viewModel: MessagesViewModel
     @EnvironmentObject private var container: AppContainer
-    @Environment(\.openURL) private var openURL
 
     init(viewModel: MessagesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -48,7 +47,6 @@ struct MessagesView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 newsPanel
-                readingPanel
                 systemNoticePanel
                 interactionPanel
             }
@@ -92,56 +90,16 @@ struct MessagesView: View {
                             cardDivider(leadingInset: Layout.overviewHeaderHorizontalInset)
                         }
                         NavigationLink {
-                            AnnouncementDetailView(
-                                navigationTitleText: "新闻通知",
-                                announcementID: item.id,
+                            NewsDetailView(
+                                newsID: item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.content,
-                                fallbackCreatedAt: item.publishDate
+                                fallbackPublishDate: item.publishDate,
+                                fallbackType: item.type,
+                                fallbackSourceURL: item.sourceURL
                             )
                         } label: {
                             newsRow(item)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-        }
-    }
-
-    private var readingPanel: some View {
-        overviewSectionCard(
-            title: "阅读",
-            systemImage: "book.pages.fill",
-            tint: DSColor.secondary
-        ) {
-            NavigationLink {
-                ReadingView(viewModel: container.makeReadingViewModel())
-            } label: {
-                moreChip
-            }
-            .buttonStyle(.plain)
-        } content: {
-            if viewModel.isReadingLoading && viewModel.readingItems.isEmpty {
-                sectionLoadingRow()
-            } else if let errorMessage = viewModel.readingErrorMessage, viewModel.readingItems.isEmpty {
-                sectionRetryRow(message: errorMessage) {
-                    Task { await viewModel.refreshReading() }
-                }
-            } else if viewModel.readingItems.isEmpty {
-                sectionEmptyRow(title: "暂无阅读内容", systemImage: "tray")
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(Array(viewModel.readingItems.enumerated()), id: \.element.id) { index, item in
-                        if index > 0 {
-                            cardDivider(leadingInset: Layout.overviewHeaderHorizontalInset)
-                        }
-                        Button {
-                            if let url = URL(string: item.link), !item.link.isEmpty {
-                                openURL(url)
-                            }
-                        } label: {
-                            readingRow(item)
                         }
                         .buttonStyle(.plain)
                     }
@@ -349,14 +307,6 @@ struct MessagesView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, Layout.overviewHeaderHorizontalInset)
         .padding(.vertical, Layout.sectionRowVerticalPadding)
-    }
-
-    private func readingRow(_ item: ReadingItem) -> some View {
-        standardTextRow(
-            title: item.title,
-            summary: item.summary,
-            dateText: item.createdAt
-        )
     }
 
     private func systemNoticeRow(_ item: AppNotificationItem) -> some View {

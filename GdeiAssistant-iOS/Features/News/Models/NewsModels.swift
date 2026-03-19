@@ -1,24 +1,34 @@
 import Foundation
 
+enum NewsCategoryType: Int, CaseIterable {
+    case schoolHeadlines = 1
+    case collegeNotices = 2
+    case campusNotices = 3
+    case academicUpdates = 4
+
+    var title: String {
+        switch self {
+        case .schoolHeadlines:
+            return "学校要闻"
+        case .collegeNotices:
+            return "院部通知"
+        case .campusNotices:
+            return "通知公告"
+        case .academicUpdates:
+            return "学术动态"
+        }
+    }
+}
+
 struct NewsItem: Identifiable, Hashable {
     let id: String
     let type: Int
     let title: String
     let publishDate: String
     let content: String
+    let sourceURL: String?
 
     var sourceTitle: String {
-        switch type {
-        case 1:
-            return "学校要闻"
-        case 2:
-            return "院部通知"
-        case 3:
-            return "通知公告"
-        case 4:
-            return "学术动态"
-        default:
-            return "新闻通知"
-        }
+        NewsCategoryType(rawValue: type)?.title ?? "新闻通知"
     }
 }

@@ -6,4 +6,5 @@ struct NewsRemoteDTO: Decodable {
     let title: String?
     let publishDate: String?
     let content: String?
+    let sourceUrl: String?
 }

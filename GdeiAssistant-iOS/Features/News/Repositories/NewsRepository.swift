@@ -3,6 +3,7 @@ import Foundation
 @MainActor
 protocol NewsRepository {
     func fetchNews(start: Int, size: Int) async throws -> [NewsItem]
+    func fetchNewsDetail(id: String) async throws -> NewsItem
 }
 
 @MainActor
@@ -19,6 +20,10 @@ final class SwitchingNewsRepository: NewsRepository {
 
     func fetchNews(start: Int, size: Int) async throws -> [NewsItem] {
         try await currentRepository.fetchNews(start: start, size: size)
+    }
+
+    func fetchNewsDetail(id: String) async throws -> NewsItem {
+        try await currentRepository.fetchNewsDetail(id: id)
     }
 
     private var currentRepository: any NewsRepository {

@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 final class RemoteNewsRepository: NewsRepository {
-    private let categoryTypes = [1, 2, 3, 4]
+    private let categoryTypes = NewsCategoryType.allCases.map(\.rawValue)
     private let apiClient: APIClient
 
     init(apiClient: APIClient) {
@@ -21,7 +21,7 @@ final class RemoteNewsRepository: NewsRepository {
         for type in categoryTypes {
             let dtos: [NewsRemoteDTO] = try await apiClient.get(
                 "/news/type/\(type)/start/0/size/\(perCategorySize)",
-                requiresAuth: true
+                requiresAuth: false
             )
             for item in NewsRemoteMapper.mapItems(dtos) {
                 if seenIDs.insert(item.id).inserted {
@@ -35,5 +35,17 @@ final class RemoteNewsRepository: NewsRepository {
         }
         guard safeStart < sortedItems.count else { return [] }
         return Array(sortedItems.dropFirst(safeStart).prefix(safeSize))
+    }
+
+    func fetchNewsDetail(id: String) async throws -> NewsItem {
+        let dto: NewsRemoteDTO = try await apiClient.get(
+            "/news/id/\(id)",
+            requiresAuth: false
+        )
+        let items = NewsRemoteMapper.mapItems([dto])
+        guard let item = items.first else {
+            throw NetworkError.server(code: 404, message: "新闻通知不存在")
+        }
+        return item
     }
 }

@@ -13,7 +13,8 @@ DerivedData/
 
 # Local working notes / one-off tools
 Docs/
-Tools/
+Tools/*
+!Tools/build_simulator.sh
 AGENTS.md
 
 # Local test assets

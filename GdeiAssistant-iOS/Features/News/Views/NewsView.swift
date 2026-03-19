@@ -21,12 +21,13 @@ struct NewsView: View {
                 List {
                     ForEach(viewModel.items) { item in
                         NavigationLink {
-                            AnnouncementDetailView(
-                                navigationTitleText: "新闻通知",
-                                announcementID: item.id,
+                            NewsDetailView(
+                                newsID: item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.content,
-                                fallbackCreatedAt: item.publishDate
+                                fallbackPublishDate: item.publishDate,
+                                fallbackType: item.type,
+                                fallbackSourceURL: item.sourceURL
                             )
                         } label: {
                             VStack(alignment: .leading, spacing: 8) {

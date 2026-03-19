@@ -8,7 +8,8 @@ enum NewsRemoteMapper {
                 type: dto.type ?? 1,
                 title: RemoteMapperSupport.firstNonEmpty(dto.title, "新闻通知"),
                 publishDate: RemoteMapperSupport.firstNonEmpty(dto.publishDate, "今日"),
-                content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无详细内容")
+                content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无详细内容"),
+                sourceURL: dto.sourceUrl
             )
         }
     }
