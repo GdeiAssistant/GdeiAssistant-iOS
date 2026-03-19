@@ -38,7 +38,6 @@ final class AppContainer: ObservableObject {
     let cardRepository: any CardRepository
     let libraryRepository: any LibraryRepository
     let cetRepository: any CETRepository
-    let readingRepository: any ReadingRepository
     let evaluateRepository: any EvaluateRepository
     let spareRepository: any SpareRepository
     let graduateExamRepository: any GraduateExamRepository
@@ -186,14 +185,6 @@ final class AppContainer: ObservableObject {
             environment: environment,
             remoteRepository: remoteCETRepository,
             mockRepository: mockCETRepository
-        )
-
-        let remoteReadingRepository = RemoteReadingRepository(apiClient: apiClient)
-        let mockReadingRepository = MockReadingRepository()
-        self.readingRepository = SwitchingReadingRepository(
-            environment: environment,
-            remoteRepository: remoteReadingRepository,
-            mockRepository: mockReadingRepository
         )
 
         let remoteEvaluateRepository = RemoteEvaluateRepository(apiClient: apiClient)
@@ -420,10 +411,6 @@ final class AppContainer: ObservableObject {
         CETViewModel(repository: cetRepository)
     }
 
-    func makeReadingViewModel() -> ReadingViewModel {
-        ReadingViewModel(repository: readingRepository)
-    }
-
     func makeEvaluateViewModel() -> EvaluateViewModel {
         EvaluateViewModel(repository: evaluateRepository)
     }
@@ -473,7 +460,6 @@ final class AppContainer: ObservableObject {
     func makeMessagesViewModel() -> MessagesViewModel {
         MessagesViewModel(
             newsRepository: newsRepository,
-            readingRepository: readingRepository,
             messagesRepository: messagesRepository
         )
     }

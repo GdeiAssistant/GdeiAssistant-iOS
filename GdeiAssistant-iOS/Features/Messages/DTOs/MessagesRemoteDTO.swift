@@ -7,14 +7,6 @@ struct AnnouncementRemoteDTO: Decodable {
     let publishTime: RemoteFlexibleString?
 }
 
-struct ReadingTopicRemoteDTO: Decodable {
-    let id: String?
-    let title: String?
-    let description: String?
-    let link: String?
-    let createTime: RemoteFlexibleString?
-}
-
 struct FestivalRemoteDTO: Decodable {
     let name: String?
     let description: [String]?
@@ -23,7 +15,6 @@ struct FestivalRemoteDTO: Decodable {
 struct InformationRemoteDTO: Decodable {
     let notice: AnnouncementRemoteDTO?
     let notices: [AnnouncementRemoteDTO]?
-    let topics: [ReadingTopicRemoteDTO]?
     let festival: FestivalRemoteDTO?
 }
 

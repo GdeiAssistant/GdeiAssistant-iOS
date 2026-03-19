@@ -26,8 +26,6 @@ struct MessageNavigationDestinationView: View {
             )
         case .news:
             NewsView(viewModel: container.makeNewsViewModel())
-        case .reading:
-            ReadingView(viewModel: container.makeReadingViewModel())
         case .marketplace:
             if let targetID = item.targetID {
                 MarketplaceDetailView(viewModel: container.makeMarketplaceViewModel(), itemID: targetID)

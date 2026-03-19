@@ -520,8 +520,6 @@ struct MessagesView: View {
             return NotificationIconSpec(systemImage: "megaphone.fill", tint: DSColor.warning)
         case .news:
             return NotificationIconSpec(systemImage: "newspaper.fill", tint: DSColor.primary)
-        case .reading:
-            return NotificationIconSpec(systemImage: "book.pages.fill", tint: DSColor.secondary)
         case .marketplace:
             return NotificationIconSpec(systemImage: "bag.fill", tint: DSColor.warning)
         case .lostFound:

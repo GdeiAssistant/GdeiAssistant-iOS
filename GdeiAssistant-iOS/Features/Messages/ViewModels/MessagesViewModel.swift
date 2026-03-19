@@ -4,34 +4,28 @@ import Combine
 @MainActor
 final class MessagesViewModel: ObservableObject {
     @Published var newsItems: [NewsItem] = []
-    @Published var readingItems: [ReadingItem] = []
     @Published var systemNoticeItems: [AppNotificationItem] = []
     @Published var interactionNoticeItems: [AppNotificationItem] = []
 
     @Published var isNewsLoading = false
-    @Published var isReadingLoading = false
     @Published var isSystemLoading = false
     @Published var isInteractionLoading = false
 
     @Published var newsErrorMessage: String?
-    @Published var readingErrorMessage: String?
     @Published var systemErrorMessage: String?
     @Published var interactionErrorMessage: String?
 
     @Published var interactionUnreadCount = 0
 
     private let newsRepository: any NewsRepository
-    private let readingRepository: any ReadingRepository
     private let messagesRepository: any MessagesRepository
     private let overviewLimit = 3
 
     init(
         newsRepository: any NewsRepository,
-        readingRepository: any ReadingRepository,
         messagesRepository: any MessagesRepository
     ) {
         self.newsRepository = newsRepository
-        self.readingRepository = readingRepository
         self.messagesRepository = messagesRepository
     }
 
@@ -39,23 +33,22 @@ final class MessagesViewModel: ObservableObject {
         if hasAnyContent {
             return false
         }
-        return isNewsLoading || isReadingLoading || isSystemLoading || isInteractionLoading
+        return isNewsLoading || isSystemLoading || isInteractionLoading
     }
 
     var hasAnyError: Bool {
-        newsErrorMessage != nil || readingErrorMessage != nil || systemErrorMessage != nil || interactionErrorMessage != nil
+        newsErrorMessage != nil || systemErrorMessage != nil || interactionErrorMessage != nil
     }
 
     var primaryErrorMessage: String {
         newsErrorMessage
-            ?? readingErrorMessage
             ?? systemErrorMessage
             ?? interactionErrorMessage
             ?? "加载资讯信息失败"
     }
 
     var hasAnyContent: Bool {
-        !newsItems.isEmpty || !readingItems.isEmpty || !systemNoticeItems.isEmpty || !interactionNoticeItems.isEmpty
+        !newsItems.isEmpty || !systemNoticeItems.isEmpty || !interactionNoticeItems.isEmpty
     }
 
     func loadIfNeeded() async {
@@ -66,7 +59,6 @@ final class MessagesViewModel: ObservableObject {
     func refresh() async {
         await withTaskGroup(of: Void.self) { group in
             group.addTask { await self.refreshNews() }
-            group.addTask { await self.refreshReading() }
             group.addTask { await self.refreshSystemNotices() }
             group.addTask { await self.refreshInteractionItems() }
         }
@@ -82,19 +74,6 @@ final class MessagesViewModel: ObservableObject {
         } catch {
             newsItems = []
             newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻通知加载失败"
-        }
-    }
-
-    func refreshReading() async {
-        isReadingLoading = true
-        readingErrorMessage = nil
-        defer { isReadingLoading = false }
-
-        do {
-            readingItems = try await readingRepository.fetchReadings(start: 0, size: overviewLimit)
-        } catch {
-            readingItems = []
-            readingErrorMessage = (error as? LocalizedError)?.errorDescription ?? "专题阅读加载失败"
         }
     }
 

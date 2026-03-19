@@ -30,7 +30,6 @@
 ### 资讯信息
 
 - 新闻通知
-- 阅读
 - 系统通知公告
 - 互动消息
 
@@ -91,8 +90,7 @@ GdeiAssistant-iOS/
 │   ├── GraduateExam/
 │   ├── Spare/
 │   ├── Evaluate/
-│   ├── News/
-│   └── Reading/
+│   └── News/
 └── Mock/
 ```
 

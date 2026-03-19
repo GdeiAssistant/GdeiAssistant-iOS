@@ -113,8 +113,6 @@ struct HomeView: View {
             LibraryView(viewModel: container.makeLibraryViewModel())
         case .cet:
             CETView(viewModel: container.makeCETViewModel())
-        case .reading:
-            ReadingView(viewModel: container.makeReadingViewModel())
         case .evaluate:
             EvaluateView(viewModel: container.makeEvaluateViewModel())
         case .spare:

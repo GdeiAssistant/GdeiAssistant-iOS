@@ -11,7 +11,6 @@ enum AppDestination: Hashable {
     case card
     case library
     case cet
-    case reading
     case evaluate
     case spare
     case graduateExam
@@ -46,8 +45,6 @@ extension AppDestination {
             return "library"
         case .cet:
             return "cet"
-        case .reading:
-            return "reading"
         case .evaluate:
             return "evaluate"
         case .spare:
@@ -91,8 +88,6 @@ extension AppDestination {
             return "图书馆"
         case .cet:
             return "四六级查询"
-        case .reading:
-            return "阅读"
         case .evaluate:
             return "教学评价"
         case .spare:
@@ -136,8 +131,6 @@ extension AppDestination {
             return "books.vertical"
         case .cet:
             return "doc.text.magnifyingglass"
-        case .reading:
-            return "book.pages"
         case .evaluate:
             return "checkmark.seal"
         case .spare:

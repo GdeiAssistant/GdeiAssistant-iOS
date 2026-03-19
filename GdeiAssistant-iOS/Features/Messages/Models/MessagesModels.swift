@@ -31,7 +31,6 @@ enum NotificationCategory: String, Codable, CaseIterable, Identifiable {
 enum MessageNavigationTarget: String, Codable, Hashable {
     case announcement
     case news
-    case reading
     case marketplace
     case lostFound
     case delivery
@@ -70,8 +69,6 @@ struct AppNotificationItem: Codable, Identifiable, Hashable {
             return "公告"
         case .news:
             return "新闻"
-        case .reading:
-            return "阅读"
         default:
             break
         }
