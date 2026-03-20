@@ -1,6 +1,82 @@
 import Foundation
 
 enum DatingRemoteMapper {
+    nonisolated static func mapProfile(_ dto: DatingProfileDTO, isMine: Bool = false) -> DatingProfile {
+        let faculty = RemoteMapperSupport.firstNonEmpty(dto.faculty, "未填写学院")
+        let hometown = RemoteMapperSupport.firstNonEmpty(dto.hometown, "未填写家乡")
+        let grade = gradeText(dto.grade)
+        let area = DatingArea(rawValue: dto.area ?? 0) ?? .girl
+        return DatingProfile(
+            id: dto.profileId.map(String.init) ?? UUID().uuidString,
+            nickname: RemoteMapperSupport.firstNonEmpty(dto.nickname, "匿名"),
+            headline: "\(grade) · \(faculty)",
+            college: faculty,
+            major: hometown,
+            grade: grade,
+            tags: [
+                DatingTag(id: "area", title: area.title),
+                DatingTag(id: "hometown", title: hometown)
+            ],
+            bio: RemoteMapperSupport.firstNonEmpty(dto.content, "这个人还没有留下更多介绍。"),
+            imageURL: RemoteMapperSupport.sanitizedText(dto.pictureURL),
+            hometown: hometown,
+            qq: RemoteMapperSupport.sanitizedText(dto.qq),
+            wechat: RemoteMapperSupport.sanitizedText(dto.wechat),
+            isContactVisible: false,
+            area: area
+        )
+    }
+
+    nonisolated static func mapProfileDetail(_ dto: DatingProfileDetailDTO) -> DatingProfileDetail {
+        let profileDTO = dto.profile ?? DatingProfileDTO(
+            profileId: nil,
+            username: nil,
+            nickname: nil,
+            grade: nil,
+            faculty: nil,
+            hometown: nil,
+            content: nil,
+            qq: nil,
+            wechat: nil,
+            area: nil,
+            state: nil,
+            pictureURL: nil
+        )
+        var profile = mapProfile(profileDTO)
+        profile = DatingProfile(
+            id: profile.id,
+            nickname: profile.nickname,
+            headline: profile.headline,
+            college: profile.college,
+            major: profile.major,
+            grade: profile.grade,
+            tags: profile.tags,
+            bio: profile.bio,
+            imageURL: RemoteMapperSupport.firstNonEmpty(dto.pictureURL, profile.imageURL),
+            hometown: profile.hometown,
+            qq: profile.qq,
+            wechat: profile.wechat,
+            isContactVisible: dto.isContactVisible == true,
+            area: profile.area
+        )
+        return DatingProfileDetail(
+            profile: profile,
+            isPickNotAvailable: dto.isPickNotAvailable == true
+        )
+    }
+
+    nonisolated static func multipartFiles(from image: UploadImageAsset?) -> [MultipartFormFile] {
+        guard let image else { return [] }
+        return [
+            MultipartFormFile(
+                name: "image",
+                fileName: image.fileName,
+                mimeType: image.mimeType,
+                data: image.data
+            )
+        ]
+    }
+
     nonisolated static func mapReceivedPick(_ dto: DatingPickDTO) -> DatingReceivedPick {
         let profile = dto.roommateProfile
         return DatingReceivedPick(
@@ -27,16 +103,16 @@ enum DatingRemoteMapper {
     }
 
     nonisolated static func mapMyPost(_ dto: DatingProfileDTO) -> DatingMyPost {
-        let area = DatingArea(rawValue: dto.area ?? 0) ?? .girl
+        let profile = mapProfile(dto, isMine: true)
         return DatingMyPost(
-            id: dto.profileId.map(String.init) ?? UUID().uuidString,
-            name: RemoteMapperSupport.firstNonEmpty(dto.nickname, "匿名"),
-            imageURL: RemoteMapperSupport.sanitizedText(dto.pictureURL),
+            id: profile.id,
+            name: profile.nickname,
+            imageURL: profile.imageURL,
             publishTime: "已发布",
-            grade: gradeText(dto.grade),
-            faculty: RemoteMapperSupport.firstNonEmpty(dto.faculty, "未填写专业"),
-            hometown: RemoteMapperSupport.firstNonEmpty(dto.hometown, "未填写家乡"),
-            area: area,
+            grade: profile.grade,
+            faculty: profile.college,
+            hometown: profile.hometown,
+            area: profile.area,
             state: dto.state ?? 1
         )
     }

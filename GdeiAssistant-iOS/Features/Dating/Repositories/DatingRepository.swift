@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 protocol DatingRepository {
+    func fetchProfiles(filter: DatingFilter) async throws -> [DatingProfile]
+    func fetchProfileDetail(profileID: String) async throws -> DatingProfileDetail
+    func publishProfile(draft: DatingPublishDraft) async throws
+    func submitPick(profileID: String, content: String) async throws
     func fetchReceivedPicks() async throws -> [DatingReceivedPick]
     func fetchSentPicks() async throws -> [DatingSentPick]
     func fetchMyPosts() async throws -> [DatingMyPost]
@@ -23,6 +27,22 @@ final class SwitchingDatingRepository: DatingRepository {
         self.environment = environment
         self.remoteRepository = remoteRepository
         self.mockRepository = mockRepository
+    }
+
+    func fetchProfiles(filter: DatingFilter) async throws -> [DatingProfile] {
+        try await currentRepository.fetchProfiles(filter: filter)
+    }
+
+    func fetchProfileDetail(profileID: String) async throws -> DatingProfileDetail {
+        try await currentRepository.fetchProfileDetail(profileID: profileID)
+    }
+
+    func publishProfile(draft: DatingPublishDraft) async throws {
+        try await currentRepository.publishProfile(draft: draft)
+    }
+
+    func submitPick(profileID: String, content: String) async throws {
+        try await currentRepository.submitPick(profileID: profileID, content: content)
     }
 
     func fetchReceivedPicks() async throws -> [DatingReceivedPick] {

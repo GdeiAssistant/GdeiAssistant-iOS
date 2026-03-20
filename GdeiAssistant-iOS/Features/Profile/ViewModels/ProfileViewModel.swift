@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class ProfileViewModel: ObservableObject {
     @Published var profile: UserProfile?
+    @Published var profileOptions = ProfileFormSupport.defaultOptions
     @Published var locationRegions: [ProfileLocationRegion] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -22,6 +23,7 @@ final class ProfileViewModel: ObservableObject {
     private let repository: any ProfileRepository
     private let sessionState: SessionState
     private var cancellables = Set<AnyCancellable>()
+    private var hasLoadedProfileOptions = false
     private var locationSelection: ProfileLocationSelection?
     private var hometownSelection: ProfileLocationSelection?
 
@@ -37,19 +39,19 @@ final class ProfileViewModel: ObservableObject {
     }
 
     var facultyOptions: [String] {
-        ProfileFormSupport.facultyOptions
+        profileOptions.facultyOptions
     }
 
     var majorOptions: [String] {
-        ProfileFormSupport.majorOptions(for: college)
+        profileOptions.majorOptions(for: college)
     }
 
     var enrollmentOptions: [String] {
-        ["未选择"] + ProfileFormSupport.enrollmentOptions
+        [ProfileFormSupport.unselectedOption] + ProfileFormSupport.enrollmentOptions
     }
 
     var canSelectMajor: Bool {
-        ProfileFormSupport.canSelectMajor(for: college)
+        profileOptions.canSelectMajor(for: college)
     }
 
     var isFormValid: Bool {
@@ -63,6 +65,9 @@ final class ProfileViewModel: ObservableObject {
     func loadIfNeeded() async {
         if profile == nil {
             await loadProfile()
+        }
+        if !hasLoadedProfileOptions {
+            await loadProfileOptions()
         }
         if locationRegions.isEmpty {
             await loadLocationRegions()
@@ -95,6 +100,20 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
+    func loadProfileOptions() async {
+        do {
+            profileOptions = try await repository.fetchProfileOptions()
+            hasLoadedProfileOptions = true
+            if !isEditing, let displayProfile {
+                syncDraft(with: displayProfile)
+            }
+        } catch {
+            if profile == nil {
+                errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载资料选项失败"
+            }
+        }
+    }
+
     func startEditing() {
         guard let displayProfile else { return }
         syncDraft(with: displayProfile)
@@ -114,7 +133,7 @@ final class ProfileViewModel: ObservableObject {
         college = value
         let options = majorOptions
         if !options.contains(major) {
-            major = "未选择"
+            major = ProfileFormSupport.unselectedOption
         }
     }
 
@@ -127,7 +146,7 @@ final class ProfileViewModel: ObservableObject {
     }
 
     func selectEnrollment(_ value: String) {
-        grade = value == "未选择" ? "" : value
+        grade = value == ProfileFormSupport.unselectedOption ? "" : value
     }
 
     func updateBirthday(date: Date) {
@@ -160,8 +179,8 @@ final class ProfileViewModel: ObservableObject {
 
         let request = ProfileUpdateRequest(
             nickname: FormValidationSupport.trimmed(nickname),
-            college: FormValidationSupport.trimmed(college).isEmpty ? "未选择" : FormValidationSupport.trimmed(college),
-            major: FormValidationSupport.trimmed(major).isEmpty ? "未选择" : FormValidationSupport.trimmed(major),
+            college: FormValidationSupport.trimmed(college).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(college),
+            major: FormValidationSupport.trimmed(major).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(major),
             grade: FormValidationSupport.trimmed(grade),
             bio: FormValidationSupport.trimmed(bio),
             birthday: FormValidationSupport.trimmed(birthday),
@@ -184,8 +203,10 @@ final class ProfileViewModel: ObservableObject {
 
     private func syncDraft(with profile: UserProfile) {
         nickname = profile.nickname
-        college = profile.college.isEmpty ? "未选择" : profile.college
-        major = profile.major.isEmpty ? "未选择" : profile.major
+        let normalizedCollege = profile.college.isEmpty ? ProfileFormSupport.unselectedOption : profile.college
+        let validMajors = profileOptions.majorOptions(for: normalizedCollege)
+        college = facultyOptions.contains(normalizedCollege) ? normalizedCollege : ProfileFormSupport.unselectedOption
+        major = validMajors.contains(profile.major) ? profile.major : ProfileFormSupport.unselectedOption
         grade = profile.grade
         bio = profile.bio
         birthday = profile.birthday

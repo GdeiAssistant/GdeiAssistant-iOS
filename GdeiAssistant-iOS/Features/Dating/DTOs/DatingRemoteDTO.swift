@@ -15,6 +15,13 @@ struct DatingProfileDTO: Decodable {
     let pictureURL: String?
 }
 
+struct DatingProfileDetailDTO: Decodable {
+    let profile: DatingProfileDTO?
+    let pictureURL: String?
+    let isContactVisible: Bool?
+    let isPickNotAvailable: Bool?
+}
+
 struct DatingPickDTO: Decodable {
     let pickId: Int?
     let roommateProfile: DatingProfileDTO?

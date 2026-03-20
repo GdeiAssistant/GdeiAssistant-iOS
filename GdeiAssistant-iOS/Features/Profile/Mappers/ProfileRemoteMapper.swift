@@ -29,8 +29,6 @@ struct ProfileRemoteUpdatePlan {
 }
 
 enum ProfileRemoteMapper {
-    static let facultyOptions: [String] = ProfileFormSupport.facultyOptions
-
     static func mapProfile(_ dto: UserProfileDTO) -> UserProfile {
         UserProfile(
             id: dto.username,
@@ -80,8 +78,35 @@ enum ProfileRemoteMapper {
         .sorted(by: localizedChineseOrder)
     }
 
-    static func makeUpdatePlan(from request: ProfileUpdateRequest) throws -> ProfileRemoteUpdatePlan {
-        guard let facultyCode = facultyCode(for: request.college) else {
+    static func mapProfileOptions(_ dto: ProfileOptionsDTO) -> ProfileOptions {
+        let faculties = (dto.faculties ?? []).compactMap { faculty -> ProfileFacultyOption? in
+            guard let code = faculty.code, let label = sanitized(faculty.label) else {
+                return nil
+            }
+
+            let majors = (faculty.majors ?? [])
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { !$0.isEmpty }
+
+            return ProfileFacultyOption(
+                code: code,
+                label: label,
+                majors: majors.isEmpty ? [ProfileFormSupport.unselectedOption] : majors
+            )
+        }
+
+        let defaultOptions = ProfileFormSupport.defaultOptions
+
+        return ProfileOptions(
+            faculties: faculties.isEmpty ? defaultOptions.faculties : faculties,
+            marketplaceItemTypes: mapDictionaryOptions(dto.marketplaceItemTypes, fallback: defaultOptions.marketplaceItemTypes),
+            lostFoundItemTypes: mapDictionaryOptions(dto.lostFoundItemTypes, fallback: defaultOptions.lostFoundItemTypes),
+            lostFoundModes: mapDictionaryOptions(dto.lostFoundModes, fallback: defaultOptions.lostFoundModes)
+        )
+    }
+
+    static func makeUpdatePlan(from request: ProfileUpdateRequest, options: ProfileOptions) throws -> ProfileRemoteUpdatePlan {
+        guard let facultyCode = facultyCode(for: request.college, options: options) else {
             throw ProfileRemoteMapperError.unsupportedCollege(request.college)
         }
 
@@ -100,9 +125,8 @@ enum ProfileRemoteMapper {
         )
     }
 
-    static func facultyCode(for college: String) -> Int? {
-        let normalizedCollege = normalize(college)
-        return facultyOptions.firstIndex(where: { normalize($0) == normalizedCollege })
+    static func facultyCode(for college: String, options: ProfileOptions) -> Int? {
+        options.facultyCode(for: college)
     }
 
     static func enrollmentYear(from grade: String?) throws -> Int? {
@@ -162,6 +186,19 @@ enum ProfileRemoteMapper {
         return trimmed.isEmpty ? nil : trimmed
     }
 
+    private static func mapDictionaryOptions(
+        _ values: [ProfileDictionaryOptionDTO]?,
+        fallback: [ProfileDictionaryOption]
+    ) -> [ProfileDictionaryOption] {
+        let mapped = (values ?? []).compactMap { option -> ProfileDictionaryOption? in
+            guard let code = option.code, let label = sanitized(option.label) else {
+                return nil
+            }
+            return ProfileDictionaryOption(code: code, label: label)
+        }
+        return mapped.isEmpty ? fallback : mapped
+    }
+
     private static func normalize(_ value: String) -> String {
         value
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -171,7 +208,7 @@ enum ProfileRemoteMapper {
 
     private static func normalizeOptionalSelection(_ value: String) -> String? {
         let trimmedValue = trimmed(value)
-        if trimmedValue.isEmpty || trimmedValue == "未选择" {
+        if trimmedValue.isEmpty || trimmedValue == ProfileFormSupport.unselectedOption {
             return nil
         }
         return trimmedValue

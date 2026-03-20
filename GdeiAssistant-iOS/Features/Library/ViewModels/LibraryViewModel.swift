@@ -5,9 +5,13 @@ import Combine
 final class LibraryViewModel: ObservableObject {
     @Published var keyword: String = ""
     @Published var books: [LibraryBook] = []
+    @Published var borrowPassword: String = ""
     @Published var borrowRecords: [BorrowRecord] = []
     @Published var isLoading = false
+    @Published var isBorrowLoading = false
+    @Published var hasLoadedBorrowRecords = false
     @Published var errorMessage: String?
+    @Published var borrowErrorMessage: String?
     @Published var submitState: SubmitState = .idle
 
     private let repository: any LibraryRepository
@@ -17,24 +21,15 @@ final class LibraryViewModel: ObservableObject {
     }
 
     func loadIfNeeded() async {
-        if books.isEmpty && borrowRecords.isEmpty {
-            await refreshAll()
+        if books.isEmpty {
+            await searchBooks()
         }
     }
 
     func refreshAll() async {
-        isLoading = true
-        errorMessage = nil
-
-        defer { isLoading = false }
-
-        do {
-            async let searchTask = repository.searchBooks(keyword: keyword)
-            async let borrowTask = repository.fetchBorrowRecords()
-            books = try await searchTask
-            borrowRecords = try await borrowTask
-        } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "图书馆数据加载失败"
+        await searchBooks()
+        if hasLoadedBorrowRecords && !FormValidationSupport.trimmed(borrowPassword).isEmpty {
+            await fetchBorrowRecords()
         }
     }
 
@@ -55,6 +50,27 @@ final class LibraryViewModel: ObservableObject {
         try await repository.fetchBookDetail(bookID: bookID)
     }
 
+    func fetchBorrowRecords() async {
+        let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
+        guard !normalizedPassword.isEmpty else {
+            borrowErrorMessage = "请输入图书馆密码"
+            return
+        }
+
+        isBorrowLoading = true
+        borrowErrorMessage = nil
+
+        defer { isBorrowLoading = false }
+
+        do {
+            borrowRecords = try await repository.fetchBorrowRecords(password: normalizedPassword)
+            borrowPassword = normalizedPassword
+            hasLoadedBorrowRecords = true
+        } catch {
+            borrowErrorMessage = (error as? LocalizedError)?.errorDescription ?? "借阅记录加载失败"
+        }
+    }
+
     func renewBorrow(record: BorrowRecord, password: String) async {
         guard
             let sn = record.sn,
@@ -65,13 +81,21 @@ final class LibraryViewModel: ObservableObject {
             return
         }
 
+        let normalizedPassword = FormValidationSupport.trimmed(password)
+        guard !normalizedPassword.isEmpty else {
+            submitState = .failure("请输入图书馆密码")
+            return
+        }
+
         submitState = .submitting
 
         do {
             try await repository.renewBorrow(
-                request: LibraryRenewRequest(sn: sn, code: code, password: password)
+                request: LibraryRenewRequest(sn: sn, code: code, password: normalizedPassword)
             )
-            borrowRecords = try await repository.fetchBorrowRecords()
+            borrowPassword = normalizedPassword
+            borrowRecords = try await repository.fetchBorrowRecords(password: normalizedPassword)
+            hasLoadedBorrowRecords = true
             submitState = .success("续借申请已提交")
         } catch {
             submitState = .failure((error as? LocalizedError)?.errorDescription ?? "续借失败")

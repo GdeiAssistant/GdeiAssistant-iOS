@@ -2,7 +2,7 @@ import Foundation
 
 enum LibraryRemoteMapper {
     nonisolated static func mapBooks(_ dto: BookSearchResponseDTO) -> [LibraryBook] {
-        (dto.list ?? []).map { item in
+        (dto.collectionList ?? []).map { item in
             LibraryBook(
                 id: RemoteMapperSupport.firstNonEmpty(item.detailURL, UUID().uuidString),
                 title: RemoteMapperSupport.firstNonEmpty(item.bookname, "未命名图书"),

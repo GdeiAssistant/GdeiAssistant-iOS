@@ -4,6 +4,7 @@ import Foundation
 protocol ProfileRepository {
     func fetchProfile() async throws -> UserProfile
     func fetchLocationRegions() async throws -> [ProfileLocationRegion]
+    func fetchProfileOptions() async throws -> ProfileOptions
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile
 }
 
@@ -29,6 +30,10 @@ final class SwitchingProfileRepository: ProfileRepository {
 
     func fetchLocationRegions() async throws -> [ProfileLocationRegion] {
         try await currentRepository.fetchLocationRegions()
+    }
+
+    func fetchProfileOptions() async throws -> ProfileOptions {
+        try await currentRepository.fetchProfileOptions()
     }
 
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {

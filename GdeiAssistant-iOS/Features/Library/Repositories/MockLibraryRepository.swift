@@ -14,8 +14,15 @@ final class MockLibraryRepository: LibraryRepository {
         return MockFactory.makeLibraryBookDetail(bookID: bookID)
     }
 
-    func fetchBorrowRecords() async throws -> [BorrowRecord] {
+    func fetchBorrowRecords(password: String) async throws -> [BorrowRecord] {
         try await Task.sleep(nanoseconds: 200_000_000)
+        let normalizedPassword = FormValidationSupport.trimmed(password)
+        guard !normalizedPassword.isEmpty else {
+            throw NetworkError.server(code: 400, message: "请输入图书馆密码")
+        }
+        guard normalizedPassword == "library123" || normalizedPassword == "123456" else {
+            throw NetworkError.server(code: 400, message: "模拟查询失败：图书馆密码不正确")
+        }
         return MockFactory.makeBorrowRecords(renewedRecordIDs: renewedRecordIDs)
     }
 

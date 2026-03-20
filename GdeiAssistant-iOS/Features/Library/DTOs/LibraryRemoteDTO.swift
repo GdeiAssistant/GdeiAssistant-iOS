@@ -1,7 +1,7 @@
 import Foundation
 
 struct BookSearchResponseDTO: Decodable {
-    let list: [LibraryCollectionDTO]?
+    let collectionList: [LibraryCollectionDTO]?
     let sumPage: Int?
 }
 

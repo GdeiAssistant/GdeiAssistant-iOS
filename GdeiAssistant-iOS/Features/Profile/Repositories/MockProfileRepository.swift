@@ -14,6 +14,11 @@ final class MockProfileRepository: ProfileRepository {
         return ProfileLocationCatalog.regions
     }
 
+    func fetchProfileOptions() async throws -> ProfileOptions {
+        try await Task.sleep(nanoseconds: 80_000_000)
+        return ProfileFormSupport.defaultOptions
+    }
+
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {
         try await Task.sleep(nanoseconds: 280_000_000)
 

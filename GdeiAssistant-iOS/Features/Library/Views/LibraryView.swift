@@ -148,41 +148,78 @@ struct MyBorrowView: View {
     @ObservedObject var viewModel: LibraryViewModel
 
     var body: some View {
-        Group {
-            if viewModel.borrowRecords.isEmpty {
-                DSEmptyStateView(icon: "book.closed", title: "暂无借阅记录", message: "你还没有借阅图书")
-            } else {
-                List(viewModel.borrowRecords) { record in
-                    NavigationLink {
-                        BorrowRecordDetailView(viewModel: viewModel, record: record)
-                    } label: {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(record.bookTitle)
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(DSColor.title)
+        List {
+            Section {
+                SecureField("请输入图书馆密码", text: $viewModel.borrowPassword)
+                    .textContentType(.password)
 
-                            Text("借阅：\(record.borrowDate)  到期：\(record.dueDate)")
-                                .font(.caption)
-                                .foregroundStyle(DSColor.subtitle)
+                DSButton(
+                    title: viewModel.hasLoadedBorrowRecords ? "刷新借阅记录" : "查询借阅记录",
+                    icon: "arrow.clockwise",
+                    isLoading: viewModel.isBorrowLoading
+                ) {
+                    Task { await viewModel.fetchBorrowRecords() }
+                }
 
-                            HStack {
-                                Text(record.status)
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.secondary)
+                Text("我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。")
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.subtitle)
+            }
 
-                                Spacer()
-
-                                Text(record.renewable ? "可续借" : "不可续借")
-                                    .font(.caption)
-                                    .foregroundStyle(record.renewable ? DSColor.primary : DSColor.subtitle)
-                            }
-                        }
-                        .padding(.vertical, 4)
+            if let borrowErrorMessage = viewModel.borrowErrorMessage {
+                Section {
+                    DSErrorStateView(message: borrowErrorMessage) {
+                        Task { await viewModel.fetchBorrowRecords() }
                     }
                 }
-                .listStyle(.plain)
+            }
+
+            if viewModel.isBorrowLoading && viewModel.borrowRecords.isEmpty {
+                Section {
+                    DSLoadingView(text: "正在加载借阅记录...")
+                }
+            } else if !viewModel.hasLoadedBorrowRecords {
+                Section {
+                    DSEmptyStateView(icon: "book.closed", title: "还没有开始查询", message: "输入图书馆密码后即可查看当前借阅记录")
+                }
+            } else if viewModel.borrowRecords.isEmpty {
+                Section {
+                    DSEmptyStateView(icon: "book.closed", title: "暂无借阅记录", message: "当前没有可展示的借阅记录")
+                }
+            } else {
+                Section("借阅列表") {
+                    ForEach(viewModel.borrowRecords) { record in
+                        NavigationLink {
+                            BorrowRecordDetailView(viewModel: viewModel, record: record)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(record.bookTitle)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(DSColor.title)
+
+                                Text("借阅：\(record.borrowDate)  到期：\(record.dueDate)")
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.subtitle)
+
+                                HStack {
+                                    Text(record.status)
+                                        .font(.caption)
+                                        .foregroundStyle(DSColor.secondary)
+
+                                    Spacer()
+
+                                    Text(record.renewable ? "可续借" : "不可续借")
+                                        .font(.caption)
+                                        .foregroundStyle(record.renewable ? DSColor.primary : DSColor.subtitle)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
             }
         }
+        .listStyle(.insetGrouped)
         .navigationTitle("我的借阅")
     }
 }
@@ -224,6 +261,8 @@ struct BorrowRecordDetailView: View {
                         isLoading: viewModel.submitState.isSubmitting,
                         isDisabled: !record.renewable
                     ) {
+                        viewModel.clearSubmitState()
+                        password = viewModel.borrowPassword
                         showPasswordSheet = true
                     }
                 }
@@ -232,7 +271,10 @@ struct BorrowRecordDetailView: View {
         }
         .background(DSColor.background)
         .navigationTitle("借阅详情")
-        .sheet(isPresented: $showPasswordSheet, onDismiss: { password = "" }) {
+        .sheet(isPresented: $showPasswordSheet, onDismiss: {
+            password = ""
+            viewModel.clearSubmitState()
+        }) {
             PasswordInputSheet(
                 title: "图书续借",
                 message: "请输入图书馆密码完成续借校验。续借需要后端同时校验借阅凭据和账号密码。",
@@ -246,6 +288,7 @@ struct BorrowRecordDetailView: View {
                 }(),
                 password: $password,
                 onCancel: {
+                    viewModel.clearSubmitState()
                     showPasswordSheet = false
                 },
                 onConfirm: {

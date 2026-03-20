@@ -180,7 +180,7 @@ struct CommunityFeedView: View {
         case .secret:
             SecretView(viewModel: container.makeSecretViewModel())
         case .dating:
-            DatingView(viewModel: container.makeDatingCenterViewModel())
+            DatingView(viewModel: container.makeDatingViewModel())
         case .schedule:
             ScheduleView(viewModel: container.makeScheduleViewModel())
         case .grade:

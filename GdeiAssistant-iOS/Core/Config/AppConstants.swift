@@ -17,9 +17,9 @@ enum AppConstants {
     }
 
     enum API {
-        static let defaultBaseURLString = "http://localhost:8080/api"
-        // swiftlint:disable:next force_unwrapping
-        static let defaultBaseURL = URL(string: defaultBaseURLString)!
+        static let devBaseURLString = "http://localhost:8080/api"
+        static let stagingBaseURLString = "https://gdeiassistant.azurewebsites.net/api"
+        static let prodBaseURLString = "https://gdeiassistant.azurewebsites.net/api"
 
         static let authorizationHeader = "Authorization"
         static let clientTypeHeader = "X-Client-Type"
@@ -35,5 +35,6 @@ enum AppConstants {
 
     enum UserDefaultsKeys {
         static let useMockData = "use_mock_data"
+        static let networkEnvironment = "network_environment"
     }
 }

@@ -25,6 +25,10 @@ final class SettingsViewModel: ObservableObject {
         environment.baseURL.absoluteString
     }
 
+    var networkEnvironmentText: String {
+        environment.networkEnvironment.displayName
+    }
+
     var clientTypeText: String {
         environment.clientType
     }
@@ -33,11 +37,23 @@ final class SettingsViewModel: ObservableObject {
         environment.dataSourceMode == .mock
     }
 
+    var selectedNetworkEnvironment: NetworkEnvironment {
+        environment.networkEnvironment
+    }
+
     func updateMockEnabled(_ isEnabled: Bool) {
         guard environment.isDebug else { return }
 
         preferences.setUseMockData(isEnabled)
         environment.updateDataSourceMode(isEnabled ? .mock : .remote)
+        showReloadHint = true
+    }
+
+    func updateNetworkEnvironment(_ environment: NetworkEnvironment) {
+        guard self.environment.isDebug else { return }
+
+        preferences.setNetworkEnvironment(environment)
+        self.environment.updateNetworkEnvironment(environment)
         showReloadHint = true
     }
 }

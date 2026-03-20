@@ -26,8 +26,25 @@ struct SettingsView: View {
                 Text("调试数据源")
             }
 
+            Section {
+                Picker("接口环境", selection: networkEnvironmentBinding) {
+                    ForEach(NetworkEnvironment.allCases, id: \.self) { environment in
+                        Text(environment.displayName).tag(environment)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .disabled(!viewModel.isDebug)
+
+                Text(viewModel.isDebug ? "真实接口支持 dev / staging / prod 三档切换，方便本地联调和灰度验证。" : "当前为 Release 环境，不允许切换接口环境。")
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.subtitle)
+            } header: {
+                Text("接口环境")
+            }
+
             if viewModel.isDebug {
                 Section {
+                    infoRow(title: "networkEnvironment", value: viewModel.networkEnvironmentText)
                     infoRow(title: "baseURL", value: viewModel.baseURLText)
                     infoRow(title: "dataSourceMode", value: viewModel.modeDisplayText)
                     infoRow(title: "X-Client-Type", value: viewModel.clientTypeText)
@@ -61,6 +78,15 @@ struct SettingsView: View {
             get: { viewModel.useMockData },
             set: { newValue in
                 viewModel.updateMockEnabled(newValue)
+            }
+        )
+    }
+
+    private var networkEnvironmentBinding: Binding<NetworkEnvironment> {
+        Binding(
+            get: { viewModel.selectedNetworkEnvironment },
+            set: { newValue in
+                viewModel.updateNetworkEnvironment(newValue)
             }
         )
     }

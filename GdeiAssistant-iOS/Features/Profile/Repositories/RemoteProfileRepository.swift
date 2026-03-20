@@ -14,12 +14,20 @@ final class RemoteProfileRepository: ProfileRepository {
     }
 
     func fetchLocationRegions() async throws -> [ProfileLocationRegion] {
-        let dtos: [ProfileLocationRegionDTO] = try await apiClient.get("/locationList", requiresAuth: true)
+        let dtos: [ProfileLocationRegionDTO] = try await apiClient.get("/profile/locations", requiresAuth: true)
         return ProfileRemoteMapper.mapLocationRegions(dtos)
     }
 
+    func fetchProfileOptions() async throws -> ProfileOptions {
+        let dto: ProfileOptionsDTO = try await apiClient.get("/profile/options", requiresAuth: true)
+        return ProfileRemoteMapper.mapProfileOptions(dto)
+    }
+
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {
-        let updatePlan = try ProfileRemoteMapper.makeUpdatePlan(from: request)
+        let updatePlan = try ProfileRemoteMapper.makeUpdatePlan(
+            from: request,
+            options: try await fetchProfileOptions()
+        )
 
         let _: EmptyPayload = try await apiClient.post("/profile/nickname", body: updatePlan.nickname, requiresAuth: true)
         let _: EmptyPayload = try await apiClient.post("/profile/faculty", body: updatePlan.faculty, requiresAuth: true)

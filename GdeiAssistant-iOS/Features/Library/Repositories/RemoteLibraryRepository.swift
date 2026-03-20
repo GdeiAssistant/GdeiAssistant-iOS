@@ -10,7 +10,7 @@ final class RemoteLibraryRepository: LibraryRepository {
 
     func searchBooks(keyword: String) async throws -> [LibraryBook] {
         let dto: BookSearchResponseDTO = try await apiClient.get(
-            "/book/search",
+            "/library/search",
             queryItems: [
                 URLQueryItem(name: "keyword", value: keyword),
                 URLQueryItem(name: "page", value: "1")
@@ -22,22 +22,26 @@ final class RemoteLibraryRepository: LibraryRepository {
 
     func fetchBookDetail(bookID: String) async throws -> LibraryBookDetail {
         let dto: LibraryCollectionDetailDTO = try await apiClient.get(
-            "/book/detail",
+            "/library/detail",
             queryItems: [URLQueryItem(name: "detailURL", value: bookID)],
             requiresAuth: true
         )
         return LibraryRemoteMapper.mapBookDetail(bookID: bookID, dto: dto)
     }
 
-    func fetchBorrowRecords() async throws -> [BorrowRecord] {
-        let dtos: [BorrowBookDTO] = try await apiClient.get("/book/borrow", requiresAuth: true)
+    func fetchBorrowRecords(password: String) async throws -> [BorrowRecord] {
+        let dtos: [BorrowBookDTO] = try await apiClient.get(
+            "/library/borrow",
+            queryItems: [URLQueryItem(name: "password", value: password)],
+            requiresAuth: true
+        )
         return LibraryRemoteMapper.mapBorrowRecords(dtos)
     }
 
     func renewBorrow(request: LibraryRenewRequest) async throws {
         let dto = LibraryRemoteMapper.mapRenewRequest(request)
         let _: EmptyPayload = try await apiClient.post(
-            "/book/renew",
+            "/library/renew",
             body: dto,
             requiresAuth: true
         )

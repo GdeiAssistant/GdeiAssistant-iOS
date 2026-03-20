@@ -66,3 +66,21 @@ struct ProfileLocationRegionDTO: Decodable {
     let aliasesName: String?
     let stateMap: [String: ProfileLocationStateDTO]?
 }
+
+struct ProfileDictionaryOptionDTO: Decodable {
+    let code: Int?
+    let label: String?
+}
+
+struct ProfileFacultyOptionDTO: Decodable {
+    let code: Int?
+    let label: String?
+    let majors: [String]?
+}
+
+struct ProfileOptionsDTO: Decodable {
+    let faculties: [ProfileFacultyOptionDTO]?
+    let marketplaceItemTypes: [ProfileDictionaryOptionDTO]?
+    let lostFoundItemTypes: [ProfileDictionaryOptionDTO]?
+    let lostFoundModes: [ProfileDictionaryOptionDTO]?
+}

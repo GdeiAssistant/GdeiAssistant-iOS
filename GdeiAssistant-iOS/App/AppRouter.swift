@@ -57,7 +57,10 @@ final class AppContainer: ObservableObject {
     ) {
         self.router = AppRouter()
         self.userPreferences = userPreferences
-        self.environment = AppEnvironment(dataSourceMode: userPreferences.currentDataSourceMode)
+        self.environment = AppEnvironment(
+            networkEnvironment: userPreferences.currentNetworkEnvironment,
+            dataSourceMode: userPreferences.currentDataSourceMode
+        )
         self.sessionState = SessionState()
 
         let authManager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
@@ -447,8 +450,16 @@ final class AppContainer: ObservableObject {
         SecretViewModel(repository: secretRepository)
     }
 
+    func makeDatingViewModel() -> DatingHallViewModel {
+        DatingHallViewModel(repository: datingRepository)
+    }
+
     func makePublishSecretViewModel() -> PublishSecretViewModel {
         PublishSecretViewModel()
+    }
+
+    func makePublishDatingViewModel() -> PublishDatingViewModel {
+        PublishDatingViewModel(profileRepository: profileRepository)
     }
 
     func makeDatingCenterViewModel(initialTab: DatingCenterTab = .received) -> DatingCenterViewModel {
