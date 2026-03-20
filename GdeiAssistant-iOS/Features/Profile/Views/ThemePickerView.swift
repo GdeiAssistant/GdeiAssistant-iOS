@@ -40,3 +40,11 @@ struct ThemePickerView: View {
         .navigationTitle("主题设置")
     }
 }
+
+#Preview {
+    let container = AppContainer.preview
+    NavigationStack {
+        ThemePickerView()
+    }
+    .environmentObject(container.userPreferences)
+}

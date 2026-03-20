@@ -3,6 +3,7 @@ import SwiftUI
 struct AppRootView: View {
     @EnvironmentObject private var container: AppContainer
     @EnvironmentObject private var environment: AppEnvironment
+    @EnvironmentObject private var preferences: UserPreferences
     @EnvironmentObject private var sessionState: SessionState
     @EnvironmentObject private var router: AppRouter
 
@@ -41,6 +42,7 @@ struct AppRootView: View {
                 router.resetAfterLogout()
             }
         }
+        .id(preferences.selectedThemeKey)
         .alert("提示", isPresented: $showAuthAlert) {
             Button("知道了") {
                 sessionState.authErrorMessage = nil

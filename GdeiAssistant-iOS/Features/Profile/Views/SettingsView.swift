@@ -121,4 +121,5 @@ struct SettingsView: View {
         SettingsView(viewModel: SettingsViewModel(environment: container.environment, preferences: container.userPreferences))
     }
     .environmentObject(container)
+    .environmentObject(container.userPreferences)
 }
