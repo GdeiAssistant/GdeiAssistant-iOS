@@ -70,6 +70,7 @@ struct HomeView: View {
                                     Image(systemName: entry.icon)
                                         .font(.system(size: 20))
                                         .foregroundStyle(DSColor.primary)
+                                        .accessibilityHidden(true)
                                 }
 
                                 Text(entry.title)
@@ -77,6 +78,7 @@ struct HomeView: View {
                                     .lineLimit(1)
                                     .foregroundStyle(DSColor.title)
                             }
+                            .accessibilityElement(children: .combine)
                         }
                         .buttonStyle(.plain)
                     }

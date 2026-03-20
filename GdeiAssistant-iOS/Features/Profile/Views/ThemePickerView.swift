@@ -16,6 +16,7 @@ struct ThemePickerView: View {
                             Circle()
                                 .fill(theme.primaryColor)
                                 .frame(width: 28, height: 28)
+                                .accessibilityLabel(theme.displayName)
 
                             Text(theme.displayName)
                                 .foregroundStyle(DSColor.title)

@@ -16,9 +16,9 @@ struct DSCard<Content: View>: View {
         .padding(padding)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(DSColor.cardBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(DSColor.divider.opacity(0.12), lineWidth: 1)
         )
     }
