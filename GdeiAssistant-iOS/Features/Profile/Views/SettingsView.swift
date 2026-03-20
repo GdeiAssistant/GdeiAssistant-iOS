@@ -10,6 +10,16 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
+                NavigationLink {
+                    ThemePickerView()
+                } label: {
+                    Label("主题色", systemImage: "paintpalette")
+                }
+            } header: {
+                Text("外观")
+            }
+
+            Section {
                 Toggle("使用模拟测试数据", isOn: mockBinding)
                     .disabled(!viewModel.isDebug)
 

@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.colorScheme) private var colorScheme
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -23,9 +24,7 @@ struct HomeView: View {
                     if !section.entries.isEmpty {
                         sectionCard(
                             section: section.section,
-                            entries: section.entries,
-                            columns: 3,
-                            tint: section.section == .campusServices ? DSColor.primary : DSColor.secondary
+                            entries: section.entries
                         )
                     }
                 }
@@ -41,12 +40,10 @@ struct HomeView: View {
 
     private func sectionCard(
         section: HomeSection,
-        entries: [HomeEntryConfig],
-        columns: Int,
-        tint: Color
+        entries: [HomeEntryConfig]
     ) -> some View {
         DSCard {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(section.title)
                         .font(.headline)
@@ -57,31 +54,29 @@ struct HomeView: View {
                 }
 
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns),
-                    spacing: 10
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4),
+                    spacing: 16
                 ) {
                     ForEach(entries) { entry in
                         NavigationLink {
                             destinationView(for: entry.destination)
                         } label: {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Image(systemName: entry.icon)
-                                    .font(.title3)
-                                    .foregroundStyle(tint)
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(DSColor.primary.opacity(colorScheme == .dark ? 0.12 : 0.08))
+                                        .frame(width: 44, height: 44)
+
+                                    Image(systemName: entry.icon)
+                                        .font(.system(size: 20))
+                                        .foregroundStyle(DSColor.primary)
+                                }
 
                                 Text(entry.title)
-                                    .font(.subheadline.weight(.semibold))
+                                    .font(.system(size: 11))
+                                    .lineLimit(1)
                                     .foregroundStyle(DSColor.title)
-
-                                Text(entry.subtitle)
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.subtitle)
-                                    .lineLimit(2)
                             }
-                            .frame(maxWidth: .infinity, minHeight: 108, alignment: .topLeading)
-                            .padding(12)
-                            .background(Color(.tertiarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
                         .buttonStyle(.plain)
                     }

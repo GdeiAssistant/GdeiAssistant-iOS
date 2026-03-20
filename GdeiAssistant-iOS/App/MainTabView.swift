@@ -8,19 +8,19 @@ struct MainTabView: View {
         TabView(selection: $router.selectedTab) {
             HomeView(viewModel: container.makeHomeViewModel())
                 .tabItem {
-                    Label("功能主页", systemImage: "house")
+                    Label("首页", systemImage: "house")
                 }
                 .tag(AppTab.home)
 
             MessagesView(viewModel: container.makeMessagesViewModel())
                 .tabItem {
-                    Label("资讯信息", systemImage: "bell.badge")
+                    Label("资讯", systemImage: "bell.badge")
                 }
                 .tag(AppTab.messages)
 
             ProfileView(viewModel: container.makeProfileViewModel())
                 .tabItem {
-                    Label("个人中心", systemImage: "person.crop.circle")
+                    Label("我的", systemImage: "person.crop.circle")
                 }
                 .tag(AppTab.profile)
         }
