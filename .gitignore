@@ -16,7 +16,3 @@ Docs/
 Tools/*
 !Tools/build_simulator.sh
 AGENTS.md
-
-# Local test assets
-GdeiAssistant-iOSTests/
-GdeiAssistant-iOS.xcodeproj/xcshareddata/xcschemes/GdeiAssistant-iOS.xcscheme
