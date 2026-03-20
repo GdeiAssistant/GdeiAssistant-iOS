@@ -9,6 +9,9 @@ final class UserPreferences: ObservableObject {
     @Published var networkEnvironment: NetworkEnvironment {
         didSet { persistNetworkEnvironmentIfNeeded() }
     }
+    @Published var selectedThemeKey: String {
+        didSet { persistThemeIfNeeded() }
+    }
 
     private let defaults: UserDefaults
     private var hasInitialized = false
@@ -28,7 +31,16 @@ final class UserPreferences: ObservableObject {
         } else {
             self.networkEnvironment = .prod
         }
+        if let storedTheme = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedTheme) {
+            self.selectedThemeKey = storedTheme
+        } else {
+            self.selectedThemeKey = DSTheme.campusGreen.rawValue
+        }
         hasInitialized = true
+    }
+
+    var currentTheme: DSTheme {
+        DSTheme(rawValue: selectedThemeKey) ?? .campusGreen
     }
 
     var currentDataSourceMode: DataSourceMode {
@@ -55,5 +67,10 @@ final class UserPreferences: ObservableObject {
     private func persistNetworkEnvironmentIfNeeded() {
         guard hasInitialized else { return }
         defaults.set(networkEnvironment.rawValue, forKey: AppConstants.UserDefaultsKeys.networkEnvironment)
+    }
+
+    private func persistThemeIfNeeded() {
+        guard hasInitialized else { return }
+        defaults.set(selectedThemeKey, forKey: AppConstants.UserDefaultsKeys.selectedTheme)
     }
 }

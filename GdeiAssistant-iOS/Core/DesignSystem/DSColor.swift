@@ -21,7 +21,16 @@ enum DSColor {
     static let background = Color(.systemGroupedBackground)
     static let cardBackground = Color(.secondarySystemGroupedBackground)
 
-    static let primary = Color(dsLight: 0x1E6FEA, dark: 0x6FA9FF)
+    static var primary: Color {
+        let key = UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedTheme) ?? DSTheme.campusGreen.rawValue
+        return (DSTheme(rawValue: key) ?? .campusGreen).primaryColor
+    }
+
+    static var onPrimary: Color {
+        let key = UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedTheme) ?? DSTheme.campusGreen.rawValue
+        return (DSTheme(rawValue: key) ?? .campusGreen).onPrimaryColor
+    }
+
     static let secondary = Color(dsLight: 0x0FA67A, dark: 0x39C79D)
     static let warning = Color(dsLight: 0xF2A93B, dark: 0xFFC56B)
     static let danger = Color(dsLight: 0xD94A4A, dark: 0xFF7C7C)
