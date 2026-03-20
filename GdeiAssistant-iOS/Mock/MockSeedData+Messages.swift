@@ -123,7 +123,7 @@ extension MockSeedData {
             id: "msg_interaction_001",
             category: .interaction,
             module: "dating",
-            title: "卖室友互动",
+            title: "卖室友",
             message: "你发出的卖室友申请已被对方查看，去 sent 页看看最新状态。",
             createdAt: "刚刚",
             isRead: false,

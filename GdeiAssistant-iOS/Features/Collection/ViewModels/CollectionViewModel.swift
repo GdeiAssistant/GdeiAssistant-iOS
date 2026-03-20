@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class CollectionViewModel: ObservableObject {
     @Published var keyword = ""
+    @Published var borrowPassword = ""
     @Published var searchPage = CollectionSearchPage(items: [], sumPage: 0)
     @Published var selectedDetail: CollectionDetailInfo?
     @Published var borrowedBooks: [CollectionBorrowItem] = []
@@ -12,6 +13,7 @@ final class CollectionViewModel: ObservableObject {
     @Published var isDetailLoading = false
     @Published var errorMessage: String?
     @Published var borrowMessage: String?
+    @Published var hasLoadedBorrowedBooks = false
     @Published var submitState: SubmitState = .idle
 
     private let repository: any CollectionRepository
@@ -47,22 +49,38 @@ final class CollectionViewModel: ObservableObject {
         }
     }
 
-    func loadBorrowedBooks(password: String?) async {
+    func loadBorrowedBooks() async {
+        let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
+        guard !normalizedPassword.isEmpty else {
+            borrowMessage = "请输入图书馆密码"
+            hasLoadedBorrowedBooks = false
+            borrowedBooks = []
+            return
+        }
         isBorrowLoading = true
         borrowMessage = nil
         defer { isBorrowLoading = false }
         do {
-            borrowedBooks = try await repository.fetchBorrowedBooks(password: password)
+            borrowedBooks = try await repository.fetchBorrowedBooks(password: normalizedPassword)
+            borrowPassword = normalizedPassword
+            hasLoadedBorrowedBooks = true
         } catch {
+            hasLoadedBorrowedBooks = false
+            borrowedBooks = []
             borrowMessage = (error as? LocalizedError)?.errorDescription ?? "借阅信息加载失败"
         }
     }
 
     func renewBorrow(item: CollectionBorrowItem) async {
+        let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
+        guard !normalizedPassword.isEmpty else {
+            submitState = .failure("请输入图书馆密码")
+            return
+        }
         submitState = .submitting
         do {
-            try await repository.renewBorrow(sn: item.sn, code: item.code)
-            await loadBorrowedBooks(password: nil)
+            try await repository.renewBorrow(sn: item.sn, code: item.code, password: normalizedPassword)
+            await loadBorrowedBooks()
             submitState = .success("已提交续借请求")
         } catch {
             submitState = .failure((error as? LocalizedError)?.errorDescription ?? "续借失败")

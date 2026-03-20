@@ -183,7 +183,7 @@ enum MockSeedData {
         case "公告":
             return CommunityTopic(id: topicID, title: "#公告", summary: "校内设施维护、时间变更与官方提醒。")
         case "图书馆":
-            return CommunityTopic(id: topicID, title: "#图书馆", summary: "馆藏查询、借阅经验和自习空间动态。")
+            return CommunityTopic(id: topicID, title: "#图书馆", summary: "馆藏检索、借阅经验和自习空间动态。")
         default:
             return CommunityTopic(id: topicID, title: "#\(topicID)", summary: "校园社区话题讨论。")
         }

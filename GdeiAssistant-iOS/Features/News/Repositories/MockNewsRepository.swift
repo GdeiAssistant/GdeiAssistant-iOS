@@ -24,6 +24,6 @@ final class MockNewsRepository: NewsRepository {
         if let item = items.first(where: { $0.id == id }) {
             return item
         }
-        throw NetworkError.server(code: 404, message: "新闻通知不存在")
+        throw NetworkError.server(code: 404, message: "新闻不存在")
     }
 }

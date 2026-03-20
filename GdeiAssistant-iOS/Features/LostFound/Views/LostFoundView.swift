@@ -311,22 +311,22 @@ private enum LostFoundProfileTab: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .lost:
-            return "失物"
+            return "寻物"
         case .found:
             return "招领"
         case .didFound:
-            return "确认寻回"
+            return "已找回"
         }
     }
 
     var emptyTitle: String {
         switch self {
         case .lost:
-            return "暂无失物信息"
+            return "暂无寻物信息"
         case .found:
             return "暂无招领信息"
         case .didFound:
-            return "暂无确认寻回信息"
+            return "暂无已找回信息"
         }
     }
 

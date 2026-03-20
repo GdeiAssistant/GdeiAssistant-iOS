@@ -20,7 +20,7 @@ final class MessagesRemoteMapperTests: XCTestCase {
 
         XCTAssertEqual(mapped.category, .comment)
         XCTAssertEqual(mapped.module, "dating")
-        XCTAssertEqual(mapped.title, "卖室友互动")
+        XCTAssertEqual(mapped.title, "卖室友")
         XCTAssertEqual(mapped.message, "你有一条新的互动消息")
         XCTAssertEqual(mapped.createdAt, "2024-01-01 08:00")
         XCTAssertEqual(mapped.destination, .datingCenter)

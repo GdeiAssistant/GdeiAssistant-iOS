@@ -46,4 +46,26 @@ final class LibraryRemoteMapperTests: XCTestCase {
         XCTAssertEqual(dto.code, "code-1")
         XCTAssertEqual(dto.password, "library-pass")
     }
+
+    @MainActor
+    func testMockLibraryRepositoryUsesSamePasswordRulesForBorrowAndRenew() async throws {
+        let repository = MockLibraryRepository()
+
+        let initialRecords = try await repository.fetchBorrowRecords(password: "123456")
+        let renewableRecord = try XCTUnwrap(initialRecords.first(where: { $0.id == "borrow_001" }))
+        XCTAssertTrue(renewableRecord.renewable)
+
+        try await repository.renewBorrow(
+            request: LibraryRenewRequest(
+                sn: "borrow_001",
+                code: "code_001",
+                password: "123456"
+            )
+        )
+
+        let updatedRecords = try await repository.fetchBorrowRecords(password: "123456")
+        let updatedRecord = try XCTUnwrap(updatedRecords.first(where: { $0.id == "borrow_001" }))
+        XCTAssertFalse(updatedRecord.renewable)
+        XCTAssertEqual(updatedRecord.status, "已续借一次")
+    }
 }

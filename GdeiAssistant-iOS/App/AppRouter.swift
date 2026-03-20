@@ -50,10 +50,12 @@ final class AppContainer: ObservableObject {
     let messagesRepository: any MessagesRepository
 
     private var hasBootstrapped = false
+    private let shouldSkipBootstrap: Bool
 
     init(
         userPreferences: UserPreferences,
-        tokenStorage: TokenStorage
+        tokenStorage: TokenStorage,
+        shouldSkipBootstrap: Bool = false
     ) {
         self.router = AppRouter()
         self.userPreferences = userPreferences
@@ -62,6 +64,7 @@ final class AppContainer: ObservableObject {
             dataSourceMode: userPreferences.currentDataSourceMode
         )
         self.sessionState = SessionState()
+        self.shouldSkipBootstrap = shouldSkipBootstrap
 
         let authManager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
         self.authManager = authManager
@@ -296,9 +299,28 @@ final class AppContainer: ObservableObject {
         return container
     }
 
+    @MainActor
+    static var testing: AppContainer {
+        let suiteName = "gdeiassistant.tests.defaults"
+        let testDefaults = UserDefaults(suiteName: suiteName) ?? .standard
+        testDefaults.removePersistentDomain(forName: suiteName)
+        let preferences = UserPreferences(defaults: testDefaults)
+        let container = AppContainer(
+            userPreferences: preferences,
+            tokenStorage: InMemoryTokenStorage(),
+            shouldSkipBootstrap: true
+        )
+        container.sessionState.markLoggedOut()
+        return container
+    }
+
     func bootstrapIfNeeded(force: Bool = false) async {
         guard force || !hasBootstrapped else { return }
         hasBootstrapped = true
+        guard !shouldSkipBootstrap else {
+            sessionState.markLoggedOut()
+            return
+        }
         await authManager.restoreSession()
     }
 

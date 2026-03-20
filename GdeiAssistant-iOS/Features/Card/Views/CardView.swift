@@ -24,7 +24,7 @@ struct CardView: View {
                 DSEmptyStateView(icon: "creditcard", title: "暂无校园卡信息", message: "请稍后重试")
             }
         }
-        .navigationTitle("我的校园卡")
+        .navigationTitle("校园卡")
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -104,7 +104,7 @@ struct CardView: View {
 
                 DSCard {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("消费查询")
+                        Text("消费记录")
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 

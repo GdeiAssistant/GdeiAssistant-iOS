@@ -12,7 +12,7 @@ struct LibraryView: View {
             searchBar
             content
         }
-        .navigationTitle("我的图书馆")
+        .navigationTitle("图书馆")
         .toolbar {
             NavigationLink("我的借阅") {
                 MyBorrowView(viewModel: viewModel)

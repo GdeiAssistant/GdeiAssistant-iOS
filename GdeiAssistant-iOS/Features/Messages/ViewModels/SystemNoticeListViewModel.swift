@@ -39,7 +39,7 @@ final class SystemNoticeListViewModel: ObservableObject {
         } catch {
             items = []
             canLoadMore = false
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "系统公告加载失败"
         }
     }
 
@@ -56,7 +56,7 @@ final class SystemNoticeListViewModel: ObservableObject {
             nextStart += page.count
             canLoadMore = page.count == pageSize
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
+            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统公告加载失败"
         }
     }
 }

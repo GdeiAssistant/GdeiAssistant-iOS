@@ -95,7 +95,7 @@ extension AppDestination {
         case .graduateExam:
             return "考研查询"
         case .news:
-            return "新闻通知"
+            return "新闻"
         case .dataCenter:
             return "数据查询"
         case .marketplace:

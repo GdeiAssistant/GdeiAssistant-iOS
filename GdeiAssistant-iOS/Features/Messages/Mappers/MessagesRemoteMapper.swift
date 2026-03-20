@@ -78,7 +78,7 @@ enum MessagesRemoteMapper {
         case "lostandfound":
             return "失物招领提醒"
         case "dating":
-            return "卖室友互动"
+            return "卖室友"
         default:
             return "互动消息"
         }
@@ -86,6 +86,10 @@ enum MessagesRemoteMapper {
 
     nonisolated private static func interactionDestination(module: String?) -> MessageNavigationTarget? {
         switch module {
+        case "marketplace":
+            return .marketplace
+        case "lostandfound":
+            return .lostFound
         case "secret":
             return .secret
         case "express":

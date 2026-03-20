@@ -18,7 +18,7 @@ struct MessageNavigationDestinationView: View {
         switch destination {
         case .announcement:
             AnnouncementDetailView(
-                navigationTitleText: "系统通知公告",
+                navigationTitleText: "系统公告",
                 announcementID: item.targetID ?? item.id,
                 fallbackTitle: item.title,
                 fallbackContent: item.message,
