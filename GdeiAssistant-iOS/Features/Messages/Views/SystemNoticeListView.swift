@@ -10,19 +10,19 @@ struct SystemNoticeListView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载系统通知公告...")
+                DSLoadingView(text: "正在加载系统公告...")
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "megaphone", title: "暂无系统通知公告", message: "稍后再来查看最新公告")
+                DSEmptyStateView(icon: "megaphone", title: "暂无系统公告", message: "稍后再来查看最新公告")
             } else {
                 List {
                     ForEach(viewModel.items) { item in
                         NavigationLink {
                             AnnouncementDetailView(
-                                navigationTitleText: "系统通知公告",
+                                navigationTitleText: "系统公告",
                                 announcementID: item.targetID ?? item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.message,
@@ -65,7 +65,7 @@ struct SystemNoticeListView: View {
                 }
             }
         }
-        .navigationTitle("系统通知公告")
+        .navigationTitle("系统公告")
         .task {
             await viewModel.loadIfNeeded()
         }

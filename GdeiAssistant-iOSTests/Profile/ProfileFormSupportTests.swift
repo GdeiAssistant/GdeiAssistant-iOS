@@ -20,4 +20,16 @@ final class ProfileFormSupportTests: XCTestCase {
             "中国 广东 广州"
         )
     }
+
+    @MainActor
+    func testMockProfileRepositorySharesCanonicalProfileOptions() async throws {
+        let repository = MockProfileRepository()
+
+        let options = try await repository.fetchProfileOptions()
+
+        XCTAssertEqual(options.faculties.count, ProfileFormSupport.defaultOptions.faculties.count)
+        XCTAssertEqual(options.facultyCode(for: "中文系"), 3)
+        XCTAssertEqual(options.marketplaceItemTypes.first?.label, "校园代步")
+        XCTAssertEqual(options.lostFoundModes.last?.label, "失物招领")
+    }
 }

@@ -4,8 +4,8 @@ import Foundation
 protocol CollectionRepository {
     func search(keyword: String, page: Int) async throws -> CollectionSearchPage
     func fetchDetail(detailURL: String) async throws -> CollectionDetailInfo
-    func fetchBorrowedBooks(password: String?) async throws -> [CollectionBorrowItem]
-    func renewBorrow(sn: String, code: String) async throws
+    func fetchBorrowedBooks(password: String) async throws -> [CollectionBorrowItem]
+    func renewBorrow(sn: String, code: String, password: String) async throws
 }
 
 @MainActor
@@ -28,12 +28,12 @@ final class SwitchingCollectionRepository: CollectionRepository {
         try await currentRepository.fetchDetail(detailURL: detailURL)
     }
 
-    func fetchBorrowedBooks(password: String?) async throws -> [CollectionBorrowItem] {
+    func fetchBorrowedBooks(password: String) async throws -> [CollectionBorrowItem] {
         try await currentRepository.fetchBorrowedBooks(password: password)
     }
 
-    func renewBorrow(sn: String, code: String) async throws {
-        try await currentRepository.renewBorrow(sn: sn, code: code)
+    func renewBorrow(sn: String, code: String, password: String) async throws {
+        try await currentRepository.renewBorrow(sn: sn, code: code, password: password)
     }
 
     private var currentRepository: any CollectionRepository {

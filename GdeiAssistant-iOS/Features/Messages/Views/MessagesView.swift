@@ -64,7 +64,7 @@ struct MessagesView: View {
 
     private var newsPanel: some View {
         overviewSectionCard(
-            title: "新闻通知",
+            title: "新闻",
             systemImage: "newspaper.fill",
             tint: DSColor.primary
         ) {
@@ -82,7 +82,7 @@ struct MessagesView: View {
                     Task { await viewModel.refreshNews() }
                 }
             } else if viewModel.newsItems.isEmpty {
-                sectionEmptyRow(title: "暂无新闻通知", systemImage: "tray")
+                sectionEmptyRow(title: "暂无新闻", systemImage: "tray")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(viewModel.newsItems.enumerated()), id: \.element.id) { index, item in
@@ -110,7 +110,7 @@ struct MessagesView: View {
 
     private var systemNoticePanel: some View {
         overviewSectionCard(
-            title: "系统通知公告",
+            title: "系统公告",
             systemImage: "megaphone.fill",
             tint: DSColor.warning
         ) {
@@ -128,7 +128,7 @@ struct MessagesView: View {
                     Task { await viewModel.refreshSystemNotices() }
                 }
             } else if viewModel.systemNoticeItems.isEmpty {
-                sectionEmptyRow(title: "暂无系统通知公告", systemImage: "tray")
+                sectionEmptyRow(title: "暂无系统公告", systemImage: "tray")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(viewModel.systemNoticeItems.enumerated()), id: \.element.id) { index, item in
@@ -137,7 +137,7 @@ struct MessagesView: View {
                         }
                         NavigationLink {
                             AnnouncementDetailView(
-                                navigationTitleText: "系统通知公告",
+                                navigationTitleText: "系统公告",
                                 announcementID: item.targetID ?? item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.message,

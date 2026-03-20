@@ -29,6 +29,6 @@ struct NewsItem: Identifiable, Hashable {
     let sourceURL: String?
 
     var sourceTitle: String {
-        NewsCategoryType(rawValue: type)?.title ?? "新闻通知"
+        NewsCategoryType(rawValue: type)?.title ?? "新闻"
     }
 }

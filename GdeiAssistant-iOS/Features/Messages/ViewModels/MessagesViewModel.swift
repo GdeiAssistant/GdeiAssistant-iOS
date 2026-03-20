@@ -73,7 +73,7 @@ final class MessagesViewModel: ObservableObject {
             newsItems = try await newsRepository.fetchNews(start: 0, size: overviewLimit)
         } catch {
             newsItems = []
-            newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻通知加载失败"
+            newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻加载失败"
         }
     }
 
@@ -86,7 +86,7 @@ final class MessagesViewModel: ObservableObject {
             systemNoticeItems = try await messagesRepository.fetchAnnouncementPage(start: 0, size: overviewLimit)
         } catch {
             systemNoticeItems = []
-            systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统通知公告加载失败"
+            systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统公告加载失败"
         }
     }
 

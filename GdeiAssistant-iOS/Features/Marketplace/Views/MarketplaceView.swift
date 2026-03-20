@@ -216,9 +216,9 @@ private struct MarketplaceProfileView: View {
         case .doing:
             return [.edit, .offShelf, .sold]
         case .sold:
-            return [.edit, .putBack]
-        case .off:
             return []
+        case .off:
+            return [.edit, .putBack]
         }
     }
 
@@ -393,7 +393,7 @@ private enum MarketplaceProfileTab: String, CaseIterable, Identifiable {
         case .doing:
             return "正在出售"
         case .sold:
-            return "已出售"
+            return "已售出"
         case .off:
             return "已下架"
         }
@@ -404,7 +404,7 @@ private enum MarketplaceProfileTab: String, CaseIterable, Identifiable {
         case .doing:
             return "暂无正在出售的商品"
         case .sold:
-            return "暂无已出售的商品"
+            return "暂无已售出的商品"
         case .off:
             return "暂无已下架的商品"
         }

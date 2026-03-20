@@ -2,6 +2,7 @@ import Foundation
 
 @MainActor
 final class MockLibraryRepository: LibraryRepository {
+    private let validPasswords: Set<String> = ["library123", "123456"]
     private var renewedRecordIDs: Set<String> = []
 
     func searchBooks(keyword: String) async throws -> [LibraryBook] {
@@ -20,7 +21,7 @@ final class MockLibraryRepository: LibraryRepository {
         guard !normalizedPassword.isEmpty else {
             throw NetworkError.server(code: 400, message: "请输入图书馆密码")
         }
-        guard normalizedPassword == "library123" || normalizedPassword == "123456" else {
+        guard validPasswords.contains(normalizedPassword) else {
             throw NetworkError.server(code: 400, message: "模拟查询失败：图书馆密码不正确")
         }
         return MockFactory.makeBorrowRecords(renewedRecordIDs: renewedRecordIDs)
@@ -33,7 +34,7 @@ final class MockLibraryRepository: LibraryRepository {
         guard !password.isEmpty else {
             throw NetworkError.server(code: 400, message: "请输入图书馆密码")
         }
-        guard password == "library123" else {
+        guard validPasswords.contains(password) else {
             throw NetworkError.server(code: 400, message: "模拟续借失败：图书馆密码不正确")
         }
 

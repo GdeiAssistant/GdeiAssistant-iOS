@@ -44,7 +44,7 @@ final class RemoteNewsRepository: NewsRepository {
         )
         let items = NewsRemoteMapper.mapItems([dto])
         guard let item = items.first else {
-            throw NetworkError.server(code: 404, message: "新闻通知不存在")
+            throw NetworkError.server(code: 404, message: "新闻不存在")
         }
         return item
     }

@@ -103,7 +103,7 @@ struct NewsDetailView: View {
             detail = try await container.newsRepository.fetchNewsDetail(id: newsID)
         } catch {
             detail = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻通知加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻加载失败"
         }
     }
 }

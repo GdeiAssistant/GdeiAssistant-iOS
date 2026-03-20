@@ -3,7 +3,6 @@ import SwiftUI
 struct CollectionView: View {
     @StateObject private var viewModel: CollectionViewModel
     @State private var showBorrowSheet = false
-    @State private var borrowPassword = ""
 
     init(viewModel: CollectionViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -34,7 +33,6 @@ struct CollectionView: View {
             Section {
                 Button {
                     showBorrowSheet = true
-                    Task { await viewModel.loadBorrowedBooks(password: nil) }
                 } label: {
                     Label("我的借阅", systemImage: "books.vertical")
                 }
@@ -75,7 +73,7 @@ struct CollectionView: View {
                 }
             }
         }
-        .navigationTitle("馆藏")
+        .navigationTitle("图书馆")
         .overlay {
             if viewModel.isDetailLoading {
                 DSLoadingView(text: "正在加载详情...")
@@ -91,27 +89,34 @@ struct CollectionView: View {
             NavigationStack {
                 List {
                     Section {
-                        SecureFormField(title: "图书馆密码（选填）", placeholder: "用于真实账号查询", text: $borrowPassword)
-                        Button("刷新借阅记录") {
-                            Task { await viewModel.loadBorrowedBooks(password: borrowPassword) }
+                        SecureFormField(title: "图书馆密码", placeholder: "请输入图书馆密码", text: $viewModel.borrowPassword)
+                        Button(viewModel.hasLoadedBorrowedBooks ? "刷新借阅记录" : "查询借阅记录") {
+                            Task { await viewModel.loadBorrowedBooks() }
                         }
                         .disabled(viewModel.isBorrowLoading)
+                        Text("我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。")
+                            .font(.footnote)
+                            .foregroundStyle(DSColor.subtitle)
                         if let borrowMessage = viewModel.borrowMessage {
                             Text(borrowMessage)
                                 .font(.footnote)
                                 .foregroundStyle(DSColor.danger)
                         }
                     } header: {
-                        Text("借阅查询")
+                        Text("我的借阅")
                     }
 
                     if viewModel.isBorrowLoading {
                         Section {
                             DSLoadingView(text: "正在加载借阅记录...")
                         }
+                    } else if !viewModel.hasLoadedBorrowedBooks {
+                        Section {
+                            DSEmptyStateView(icon: "books.vertical", title: "还没有开始查询", message: "输入图书馆密码后即可查看当前借阅记录")
+                        }
                     } else if viewModel.borrowedBooks.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "books.vertical", title: "暂无借阅记录", message: "可重新加载或稍后再试")
+                            DSEmptyStateView(icon: "books.vertical", title: "暂无借阅记录", message: "当前没有可展示的借阅记录")
                         }
                     } else {
                         Section {

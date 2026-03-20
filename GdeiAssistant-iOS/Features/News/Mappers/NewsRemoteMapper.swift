@@ -6,7 +6,7 @@ enum NewsRemoteMapper {
             NewsItem(
                 id: RemoteMapperSupport.firstNonEmpty(dto.id, UUID().uuidString),
                 type: dto.type ?? 1,
-                title: RemoteMapperSupport.firstNonEmpty(dto.title, "新闻通知"),
+                title: RemoteMapperSupport.firstNonEmpty(dto.title, "新闻"),
                 publishDate: RemoteMapperSupport.firstNonEmpty(dto.publishDate, "今日"),
                 content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无详细内容"),
                 sourceURL: dto.sourceUrl

@@ -10,7 +10,7 @@ final class RemoteCollectionRepository: CollectionRepository {
 
     func search(keyword: String, page: Int) async throws -> CollectionSearchPage {
         let dto: CollectionSearchResponseDTO = try await apiClient.get(
-            "/collection/search",
+            "/library/search",
             queryItems: [
                 URLQueryItem(name: "keyword", value: keyword),
                 URLQueryItem(name: "page", value: String(max(page, 1)))
@@ -22,34 +22,31 @@ final class RemoteCollectionRepository: CollectionRepository {
 
     func fetchDetail(detailURL: String) async throws -> CollectionDetailInfo {
         let dto: CollectionDetailDTO = try await apiClient.get(
-            "/collection/detail",
+            "/library/detail",
             queryItems: [URLQueryItem(name: "detailURL", value: detailURL)],
             requiresAuth: true
         )
         return CollectionRemoteMapper.mapDetail(dto)
     }
 
-    func fetchBorrowedBooks(password: String?) async throws -> [CollectionBorrowItem] {
-        let queryItems: [URLQueryItem] = {
-            guard let password, FormValidationSupport.hasText(password) else {
-                return []
-            }
-            return [URLQueryItem(name: "password", value: password)]
-        }()
+    func fetchBorrowedBooks(password: String) async throws -> [CollectionBorrowItem] {
+        let normalizedPassword = FormValidationSupport.trimmed(password)
         let dtos: [CollectionBorrowDTO] = try await apiClient.get(
-            "/collection/borrow",
-            queryItems: queryItems,
+            "/library/borrow",
+            queryItems: [URLQueryItem(name: "password", value: normalizedPassword)],
             requiresAuth: true
         )
         return CollectionRemoteMapper.mapBorrowItems(dtos)
     }
 
-    func renewBorrow(sn: String, code: String) async throws {
+    func renewBorrow(sn: String, code: String, password: String) async throws {
+        let normalizedPassword = FormValidationSupport.trimmed(password)
         let _: EmptyPayload = try await apiClient.post(
-            "/collection/renew",
+            "/library/renew",
             queryItems: [
                 URLQueryItem(name: "sn", value: sn),
-                URLQueryItem(name: "code", value: code)
+                URLQueryItem(name: "code", value: code),
+                URLQueryItem(name: "password", value: normalizedPassword)
             ],
             requiresAuth: true
         )
