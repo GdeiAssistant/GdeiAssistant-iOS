@@ -6,19 +6,63 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0A177ECCDC40F719D4D9F46F /* AuthTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */; };
+		23FC56E702BCF7B97FD9012D /* RemoteMapperSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */; };
+		3E24033623B018F07571CC25 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 452569A4EA1E4E426F6F3E6D /* Foundation.framework */; };
+		45CD090CF159FFACA7D91AD4 /* ProfileFormSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */; };
+		8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */; };
+		C64B15DF5C6F7CCC0E32B37B /* DatingRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */; };
+		E21B05F43CAE6846A9EC26D1 /* AuthManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */; };
+		E9FC3B2241EB8C322C48A5EF /* MultipartFormDataBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112842602259B0422B1CBD1 /* MultipartFormDataBuilderTests.swift */; };
+		F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */; };
+		FFDDE89AE80431D0303BCEB4 /* MessagesRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6C5F704645B485111969D145 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D72127082F5D506E00AE6A6F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D721270F2F5D506E00AE6A6F;
+			remoteInfo = "GdeiAssistant-iOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessagesRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Messages/MessagesRemoteMapperTests.swift"; sourceTree = "<group>"; };
+		3112842602259B0422B1CBD1 /* MultipartFormDataBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultipartFormDataBuilderTests.swift; path = "GdeiAssistant-iOSTests/Networking/MultipartFormDataBuilderTests.swift"; sourceTree = "<group>"; };
+		346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteMapperSupportTests.swift; path = "GdeiAssistant-iOSTests/Utils/RemoteMapperSupportTests.swift"; sourceTree = "<group>"; };
+		373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthTestDoubles.swift; path = "GdeiAssistant-iOSTests/Support/AuthTestDoubles.swift"; sourceTree = "<group>"; };
+		452569A4EA1E4E426F6F3E6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		69DC5B58D2579C0F23D05428 /* GdeiAssistant-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GdeiAssistant-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LibraryRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Library/LibraryRemoteMapperTests.swift"; sourceTree = "<group>"; };
+		A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileFormSupportTests.swift; path = "GdeiAssistant-iOSTests/Profile/ProfileFormSupportTests.swift"; sourceTree = "<group>"; };
+		CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequestBuilderTests.swift; path = "GdeiAssistant-iOSTests/Networking/RequestBuilderTests.swift"; sourceTree = "<group>"; };
+		D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DatingRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Dating/DatingRemoteMapperTests.swift"; sourceTree = "<group>"; };
 		D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GdeiAssistant-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthManagerTests.swift; path = "GdeiAssistant-iOSTests/Auth/AuthManagerTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D72127122F5D506E00AE6A6F /* GdeiAssistant-iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "GdeiAssistant-iOS";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8466B0D7E14C0E31B9873EFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E24033623B018F07571CC25 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D721270D2F5D506E00AE6A6F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,10 +73,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B752CBE355AF537D4C15456 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A54EDFE4F52195C725F3B810 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A54EDFE4F52195C725F3B810 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				452569A4EA1E4E426F6F3E6D /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		D72127072F5D506E00AE6A6F = {
 			isa = PBXGroup;
 			children = (
+				6B752CBE355AF537D4C15456 /* Frameworks */,
 				D72127122F5D506E00AE6A6F /* GdeiAssistant-iOS */,
+				DEECEB8674DE18A2B5A46637 /* GdeiAssistant-iOSTests */,
 				D72127112F5D506E00AE6A6F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,13 +103,48 @@
 			isa = PBXGroup;
 			children = (
 				D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */,
+				69DC5B58D2579C0F23D05428 /* GdeiAssistant-iOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DEECEB8674DE18A2B5A46637 /* GdeiAssistant-iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */,
+				373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */,
+				D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */,
+				A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */,
+				2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */,
+				3112842602259B0422B1CBD1 /* MultipartFormDataBuilderTests.swift */,
+				A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */,
+				346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */,
+				CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */,
+			);
+			name = "GdeiAssistant-iOSTests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		93B29C575A2CE29135D37165 /* GdeiAssistant-iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2AC8EB4A6C616F6E8199634 /* Build configuration list for PBXNativeTarget "GdeiAssistant-iOSTests" */;
+			buildPhases = (
+				A728B1AF4FD797A8240800CA /* Sources */,
+				8466B0D7E14C0E31B9873EFF /* Frameworks */,
+				A2D7384B075C4EC40FA42591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2382F97AB1D9F89C03F48BC2 /* PBXTargetDependency */,
+			);
+			name = "GdeiAssistant-iOSTests";
+			productName = "GdeiAssistant-iOSTests";
+			productReference = 69DC5B58D2579C0F23D05428 /* GdeiAssistant-iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D721270F2F5D506E00AE6A6F /* GdeiAssistant-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D721271B2F5D507400AE6A6F /* Build configuration list for PBXNativeTarget "GdeiAssistant-iOS" */;
@@ -64,8 +161,6 @@
 				D72127122F5D506E00AE6A6F /* GdeiAssistant-iOS */,
 			);
 			name = "GdeiAssistant-iOS";
-			packageProductDependencies = (
-			);
 			productName = "GdeiAssistant-iOS";
 			productReference = D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -80,6 +175,10 @@
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					93B29C575A2CE29135D37165 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = D721270F2F5D506E00AE6A6F;
+					};
 					D721270F2F5D506E00AE6A6F = {
 						CreatedOnToolsVersion = 26.3;
 					};
@@ -100,11 +199,19 @@
 			projectRoot = "";
 			targets = (
 				D721270F2F5D506E00AE6A6F /* GdeiAssistant-iOS */,
+				93B29C575A2CE29135D37165 /* GdeiAssistant-iOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A2D7384B075C4EC40FA42591 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D721270E2F5D506E00AE6A6F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +222,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A728B1AF4FD797A8240800CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E21B05F43CAE6846A9EC26D1 /* AuthManagerTests.swift in Sources */,
+				0A177ECCDC40F719D4D9F46F /* AuthTestDoubles.swift in Sources */,
+				C64B15DF5C6F7CCC0E32B37B /* DatingRemoteMapperTests.swift in Sources */,
+				F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */,
+				FFDDE89AE80431D0303BCEB4 /* MessagesRemoteMapperTests.swift in Sources */,
+				E9FC3B2241EB8C322C48A5EF /* MultipartFormDataBuilderTests.swift in Sources */,
+				45CD090CF159FFACA7D91AD4 /* ProfileFormSupportTests.swift in Sources */,
+				23FC56E702BCF7B97FD9012D /* RemoteMapperSupportTests.swift in Sources */,
+				8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D721270C2F5D506E00AE6A6F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +247,72 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2382F97AB1D9F89C03F48BC2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "GdeiAssistant-iOS";
+			target = D721270F2F5D506E00AE6A6F /* GdeiAssistant-iOS */;
+			targetProxy = 6C5F704645B485111969D145 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		530F13BF5A5B2B212C3BE62F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.gdeiassistant.GdeiAssistant-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GdeiAssistant-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GdeiAssistant-iOS";
+				TEST_TARGET_NAME = "GdeiAssistant-iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C92848EE4D6A4BCAB38697CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cn.gdeiassistant.GdeiAssistant-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GdeiAssistant-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GdeiAssistant-iOS";
+				TEST_TARGET_NAME = "GdeiAssistant-iOS";
+			};
+			name = Debug;
+		};
 		D72127192F5D507400AE6A6F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -313,6 +501,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D2AC8EB4A6C616F6E8199634 /* Build configuration list for PBXNativeTarget "GdeiAssistant-iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C92848EE4D6A4BCAB38697CE /* Debug */,
+				530F13BF5A5B2B212C3BE62F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D721270B2F5D506E00AE6A6F /* Build configuration list for PBXProject "GdeiAssistant-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
