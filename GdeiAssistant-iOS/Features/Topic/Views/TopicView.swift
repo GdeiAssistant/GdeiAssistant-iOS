@@ -12,6 +12,23 @@ struct TopicView: View {
 
     var body: some View {
         Group {
+            VStack(spacing: 0) {
+                HStack {
+                    TextField("搜索话题", text: $viewModel.searchQuery)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { Task { await viewModel.search() } }
+                    if !viewModel.searchQuery.isEmpty {
+                        Button { Task { await viewModel.clearSearch() } } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(DSColor.subtitle)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+
             if viewModel.isLoading && viewModel.posts.isEmpty {
                 DSLoadingView(text: "正在加载话题...")
             } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {

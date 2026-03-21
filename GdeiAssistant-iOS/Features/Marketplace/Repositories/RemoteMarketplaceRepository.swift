@@ -21,6 +21,13 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         return try await enrichPreviewURLs(for: items)
     }
 
+    func searchItems(keyword: String, start: Int) async throws -> [MarketplaceItem] {
+        let encoded = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? keyword
+        let dtos: [MarketplaceItemDTO] = try await apiClient.get("/ershou/keyword/\(encoded)/start/\(start)", requiresAuth: true)
+        let items = MarketplaceRemoteMapper.mapItems(dtos)
+        return try await enrichPreviewURLs(for: items)
+    }
+
     func fetchItemDetail(itemID: String) async throws -> MarketplaceDetail {
         let dto: MarketplaceDetailDTO = try await apiClient.get("/ershou/item/id/\(itemID)", requiresAuth: true)
         let detail = try MarketplaceRemoteMapper.mapDetail(dto)

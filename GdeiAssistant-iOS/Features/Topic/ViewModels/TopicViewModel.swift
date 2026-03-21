@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class TopicViewModel: ObservableObject {
     @Published var posts: [TopicPost] = []
+    @Published var searchQuery = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -25,10 +26,24 @@ final class TopicViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            posts = try await repository.fetchPosts(start: 0, size: pageSize)
+            let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty {
+                posts = try await repository.searchPosts(keyword: trimmed, start: 0, size: pageSize)
+            } else {
+                posts = try await repository.fetchPosts(start: 0, size: pageSize)
+            }
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "话题列表加载失败"
         }
+    }
+
+    func search() async {
+        await refresh()
+    }
+
+    func clearSearch() async {
+        searchQuery = ""
+        await refresh()
     }
 
     func fetchMyPosts() async throws -> [TopicPost] {

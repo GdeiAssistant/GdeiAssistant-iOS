@@ -11,9 +11,22 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            contentView
+            Group {
+                if viewModel.isLoading && viewModel.dashboard == nil {
+                    DSLoadingView(text: "正在加载首页...")
+                } else if viewModel.dashboard == nil, let error = viewModel.errorMessage {
+                    DSErrorStateView(message: error) {
+                        Task { await viewModel.refresh() }
+                    }
+                } else {
+                    contentView
+                }
+            }
             .navigationTitle("首页")
             .navigationBarTitleDisplayMode(.large)
+            .task {
+                await viewModel.loadIfNeeded()
+            }
         }
     }
 
@@ -76,6 +89,7 @@ struct HomeView: View {
                                 Text(entry.title)
                                     .font(.system(size: 11))
                                     .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
                                     .foregroundStyle(DSColor.title)
                             }
                             .accessibilityElement(children: .combine)

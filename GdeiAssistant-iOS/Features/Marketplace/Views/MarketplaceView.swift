@@ -13,8 +13,23 @@ struct MarketplaceView: View {
     var body: some View {
         List {
             Section {
+                HStack {
+                    TextField("搜索二手交易", text: $viewModel.searchQuery)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { Task { await viewModel.search() } }
+                    if !viewModel.searchQuery.isEmpty {
+                        Button { Task { await viewModel.clearSearch() } } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(DSColor.subtitle)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 4, trailing: 16))
+                .listRowBackground(Color.clear)
+
                 typeSelector
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
                     .listRowBackground(Color.clear)
             }
 

@@ -18,6 +18,12 @@ final class MockMarketplaceRepository: MarketplaceRepository {
         return items.filter { $0.tags.contains(typeName) }
     }
 
+    func searchItems(keyword: String, start: Int) async throws -> [MarketplaceItem] {
+        try await Task.sleep(nanoseconds: 200_000_000)
+        let query = keyword.lowercased()
+        return items.filter { $0.title.lowercased().contains(query) || $0.summary.lowercased().contains(query) }
+    }
+
     func fetchItemDetail(itemID: String) async throws -> MarketplaceDetail {
         try await Task.sleep(nanoseconds: 160_000_000)
 

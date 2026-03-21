@@ -5,6 +5,7 @@ import Combine
 final class MarketplaceViewModel: ObservableObject {
     @Published var items: [MarketplaceItem] = []
     @Published var selectedTypeID: Int?
+    @Published var searchQuery = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -30,10 +31,25 @@ final class MarketplaceViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            items = try await repository.fetchItems(typeID: selectedTypeID)
+            let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty {
+                items = try await repository.searchItems(keyword: trimmed, start: 0)
+            } else {
+                items = try await repository.fetchItems(typeID: selectedTypeID)
+            }
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "二手列表加载失败"
         }
+    }
+
+    func search() async {
+        selectedTypeID = nil
+        await refresh()
+    }
+
+    func clearSearch() async {
+        searchQuery = ""
+        await refresh()
     }
 
     func fetchDetail(itemID: String) async throws -> MarketplaceDetail {
