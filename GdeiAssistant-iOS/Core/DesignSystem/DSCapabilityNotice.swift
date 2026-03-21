@@ -28,7 +28,7 @@ struct DSCapabilityNotice: View {
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(DSColor.divider.opacity(0.1), lineWidth: 1)
+                .stroke(DSColor.divider.opacity(0.12), lineWidth: 1)
         )
     }
 }

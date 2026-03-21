@@ -9,6 +9,7 @@ struct DSErrorStateView: View {
             Image(systemName: "exclamationmark.circle")
                 .font(.system(size: 30, weight: .semibold))
                 .foregroundStyle(DSColor.danger)
+                .accessibilityHidden(true)
 
             Text("加载失败")
                 .font(.headline)

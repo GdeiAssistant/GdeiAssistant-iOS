@@ -37,6 +37,7 @@ struct DSButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(.isButton)
         .disabled(isLoading || isDisabled)
         .opacity(isLoading || isDisabled ? 0.75 : 1.0)
     }

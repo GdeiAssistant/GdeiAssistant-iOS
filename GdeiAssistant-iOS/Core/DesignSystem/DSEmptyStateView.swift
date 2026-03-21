@@ -10,6 +10,7 @@ struct DSEmptyStateView: View {
             Image(systemName: icon)
                 .font(.system(size: 30, weight: .semibold))
                 .foregroundStyle(DSColor.subtitle)
+                .accessibilityHidden(true)
 
             Text(title)
                 .font(.headline)
