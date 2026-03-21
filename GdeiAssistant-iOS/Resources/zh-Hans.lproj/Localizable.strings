@@ -54,3 +54,16 @@
 "info.announcement" = "系统公告";
 "info.interaction" = "互动消息";
 "info.markAllRead" = "全部已读";
+
+"appearance.title" = "界面和外观";
+"appearance.theme.label" = "主题";
+"appearance.theme.system" = "跟随系统";
+"appearance.theme.light" = "浅色模式";
+"appearance.theme.dark" = "深色模式";
+"appearance.font.label" = "字体大小";
+"appearance.font.small" = "小";
+"appearance.font.standard" = "标准";
+"appearance.font.large" = "大";
+"appearance.font.xlarge" = "超大";
+"appearance.font.preview" = "预览：广东第二师范学院校园助手";
+"appearance.language.label" = "语言";

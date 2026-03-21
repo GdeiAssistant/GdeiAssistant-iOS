@@ -54,3 +54,16 @@
 "info.announcement" = "공지사항";
 "info.interaction" = "메시지";
 "info.markAllRead" = "모두 읽음";
+
+"appearance.title" = "인터페이스 및 외관";
+"appearance.theme.label" = "테마";
+"appearance.theme.system" = "시스템 설정 따르기";
+"appearance.theme.light" = "라이트 모드";
+"appearance.theme.dark" = "다크 모드";
+"appearance.font.label" = "글꼴 크기";
+"appearance.font.small" = "작게";
+"appearance.font.standard" = "표준";
+"appearance.font.large" = "크게";
+"appearance.font.xlarge" = "매우 크게";
+"appearance.font.preview" = "미리보기: 광동제2사범학원 캠퍼스 도우미";
+"appearance.language.label" = "언어";

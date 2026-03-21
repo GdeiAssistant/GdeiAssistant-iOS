@@ -54,3 +54,16 @@
 "info.announcement" = "Announcements";
 "info.interaction" = "Messages";
 "info.markAllRead" = "Mark all read";
+
+"appearance.title" = "Interface & Appearance";
+"appearance.theme.label" = "Theme";
+"appearance.theme.system" = "Follow System";
+"appearance.theme.light" = "Light Mode";
+"appearance.theme.dark" = "Dark Mode";
+"appearance.font.label" = "Font Size";
+"appearance.font.small" = "Small";
+"appearance.font.standard" = "Standard";
+"appearance.font.large" = "Large";
+"appearance.font.xlarge" = "Extra Large";
+"appearance.font.preview" = "Preview: GdeiAssistant Campus Helper";
+"appearance.language.label" = "Language";

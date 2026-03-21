@@ -54,3 +54,16 @@
 "info.announcement" = "お知らせ";
 "info.interaction" = "メッセージ";
 "info.markAllRead" = "すべて既読にする";
+
+"appearance.title" = "インターフェースと外観";
+"appearance.theme.label" = "テーマ";
+"appearance.theme.system" = "システムに従う";
+"appearance.theme.light" = "ライトモード";
+"appearance.theme.dark" = "ダークモード";
+"appearance.font.label" = "フォントサイズ";
+"appearance.font.small" = "小";
+"appearance.font.standard" = "標準";
+"appearance.font.large" = "大";
+"appearance.font.xlarge" = "特大";
+"appearance.font.preview" = "プレビュー：広東第二師範学院キャンパスアシスタント";
+"appearance.language.label" = "言語";

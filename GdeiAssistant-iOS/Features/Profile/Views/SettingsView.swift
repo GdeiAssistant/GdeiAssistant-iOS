@@ -11,12 +11,12 @@ struct SettingsView: View {
         List {
             Section {
                 NavigationLink {
-                    LanguagePickerView()
+                    AppearanceView()
                 } label: {
-                    Label("语言", systemImage: "globe")
+                    Label(NSLocalizedString("appearance.title", comment: ""), systemImage: "paintbrush")
                 }
             } header: {
-                Text("外观")
+                Text(NSLocalizedString("appearance.title", comment: ""))
             }
 
             Section {
