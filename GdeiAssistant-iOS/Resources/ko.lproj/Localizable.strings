@@ -1,0 +1,56 @@
+"tab.home" = "홈";
+"tab.info" = "소식";
+"tab.profile" = "마이페이지";
+
+"feature.community" = "발견";
+"feature.topic" = "토픽";
+"feature.express" = "고백벽";
+"feature.delivery" = "배달";
+"feature.photograph" = "포토월";
+"feature.schedule" = "시간표";
+"feature.grade" = "성적 조회";
+"feature.card" = "학생증";
+"feature.library" = "도서관";
+"feature.cet" = "CET 성적";
+"feature.evaluate" = "수업 평가";
+"feature.spare" = "빈 강의실";
+"feature.graduateExam" = "대학원 시험";
+"feature.news" = "뉴스";
+"feature.dataCenter" = "데이터 조회";
+"feature.marketplace" = "중고거래";
+"feature.lostFound" = "분실물";
+"feature.secret" = "비밀나무";
+"feature.dating" = "룸메이트";
+
+"home.campusServices" = "캠퍼스 서비스";
+"home.campusLife" = "캠퍼스 라이프";
+"home.campusServicesSubtitle" = "성적, 시간표, CET, 도서관, 학생증 등 조회 도구";
+"home.campusLifeSubtitle" = "중고거래, 배달, 분실물, 비밀나무, 룸메이트, 고백, 토픽, 포토";
+
+"common.loading" = "로딩 중...";
+"common.retry" = "재시도";
+"common.error" = "로딩 실패";
+"common.noData" = "데이터가 없습니다";
+"common.confirm" = "확인";
+"common.cancel" = "취소";
+"common.save" = "저장";
+"common.delete" = "삭제";
+"common.submit" = "제출";
+"common.done" = "완료";
+
+"profile.privacy" = "개인정보";
+"profile.loginRecords" = "로그인 기록";
+"profile.bindPhone" = "전화번호 연결";
+"profile.bindEmail" = "이메일 연결";
+"profile.deleteAccount" = "계정 삭제";
+"profile.downloadData" = "데이터 다운로드";
+"profile.feedback" = "도움말";
+"profile.theme" = "테마";
+"profile.language" = "언어";
+"profile.settings" = "설정";
+"profile.logout" = "로그아웃";
+
+"info.news" = "뉴스";
+"info.announcement" = "공지사항";
+"info.interaction" = "메시지";
+"info.markAllRead" = "모두 읽음";

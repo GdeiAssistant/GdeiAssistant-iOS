@@ -1,0 +1,56 @@
+"tab.home" = "首頁";
+"tab.info" = "資訊";
+"tab.profile" = "我的";
+
+"feature.community" = "發現";
+"feature.topic" = "話題";
+"feature.express" = "表白牆";
+"feature.delivery" = "全民快遞";
+"feature.photograph" = "拍好校園";
+"feature.schedule" = "課表查詢";
+"feature.grade" = "成績查詢";
+"feature.card" = "校園卡";
+"feature.library" = "圖書館";
+"feature.cet" = "四六級查詢";
+"feature.evaluate" = "教學評量";
+"feature.spare" = "教室查詢";
+"feature.graduateExam" = "考研查詢";
+"feature.news" = "新聞";
+"feature.dataCenter" = "資料查詢";
+"feature.marketplace" = "二手交易";
+"feature.lostFound" = "失物招領";
+"feature.secret" = "校園樹洞";
+"feature.dating" = "賣室友";
+
+"home.campusServices" = "校園服務";
+"home.campusLife" = "校園生活";
+"home.campusServicesSubtitle" = "查成績、課表、四六級、圖書館、校園卡和常用查詢工具";
+"home.campusLifeSubtitle" = "二手交易、快遞代取、失物招領、樹洞、賣室友、表白牆、話題和校園攝影";
+
+"common.loading" = "載入中...";
+"common.retry" = "重試";
+"common.error" = "載入失敗";
+"common.noData" = "暫無資料";
+"common.confirm" = "確認";
+"common.cancel" = "取消";
+"common.save" = "儲存";
+"common.delete" = "刪除";
+"common.submit" = "送出";
+"common.done" = "完成";
+
+"profile.privacy" = "隱私權設定";
+"profile.loginRecords" = "登入紀錄";
+"profile.bindPhone" = "繫結手機";
+"profile.bindEmail" = "繫結電子信箱";
+"profile.deleteAccount" = "註銷帳號";
+"profile.downloadData" = "下載個人資料";
+"profile.feedback" = "協助與回饋";
+"profile.theme" = "主題色";
+"profile.language" = "語言";
+"profile.settings" = "設定";
+"profile.logout" = "登出";
+
+"info.news" = "新聞";
+"info.announcement" = "系統公告";
+"info.interaction" = "互動訊息";
+"info.markAllRead" = "全部已讀";
