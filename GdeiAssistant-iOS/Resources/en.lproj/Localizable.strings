@@ -1,0 +1,56 @@
+"tab.home" = "Home";
+"tab.info" = "News";
+"tab.profile" = "Me";
+
+"feature.community" = "Discover";
+"feature.topic" = "Topics";
+"feature.express" = "Confession";
+"feature.delivery" = "Delivery";
+"feature.photograph" = "Photo Wall";
+"feature.schedule" = "Schedule";
+"feature.grade" = "Grades";
+"feature.card" = "Campus Card";
+"feature.library" = "Library";
+"feature.cet" = "CET Score";
+"feature.evaluate" = "Evaluation";
+"feature.spare" = "Spare Rooms";
+"feature.graduateExam" = "Postgrad Exam";
+"feature.news" = "News";
+"feature.dataCenter" = "Data Center";
+"feature.marketplace" = "Marketplace";
+"feature.lostFound" = "Lost & Found";
+"feature.secret" = "Secret";
+"feature.dating" = "Roommate";
+
+"home.campusServices" = "Campus Services";
+"home.campusLife" = "Campus Life";
+"home.campusServicesSubtitle" = "Grades, schedule, CET, library, campus card and more";
+"home.campusLifeSubtitle" = "Marketplace, delivery, lost & found, secret, roommate, confession, topics and photography";
+
+"common.loading" = "Loading...";
+"common.retry" = "Retry";
+"common.error" = "Failed to load";
+"common.noData" = "No data";
+"common.confirm" = "Confirm";
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.delete" = "Delete";
+"common.submit" = "Submit";
+"common.done" = "Done";
+
+"profile.privacy" = "Privacy";
+"profile.loginRecords" = "Login Records";
+"profile.bindPhone" = "Bind Phone";
+"profile.bindEmail" = "Bind Email";
+"profile.deleteAccount" = "Delete Account";
+"profile.downloadData" = "Download Data";
+"profile.feedback" = "Help & Feedback";
+"profile.theme" = "Theme";
+"profile.language" = "Language";
+"profile.settings" = "Settings";
+"profile.logout" = "Logout";
+
+"info.news" = "News";
+"info.announcement" = "Announcements";
+"info.interaction" = "Messages";
+"info.markAllRead" = "Mark all read";

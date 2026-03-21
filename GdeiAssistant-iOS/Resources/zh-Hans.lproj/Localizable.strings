@@ -1,0 +1,56 @@
+"tab.home" = "首页";
+"tab.info" = "资讯";
+"tab.profile" = "我的";
+
+"feature.community" = "发现";
+"feature.topic" = "话题";
+"feature.express" = "表白墙";
+"feature.delivery" = "全民快递";
+"feature.photograph" = "拍好校园";
+"feature.schedule" = "课表查询";
+"feature.grade" = "成绩查询";
+"feature.card" = "校园卡";
+"feature.library" = "图书馆";
+"feature.cet" = "四六级查询";
+"feature.evaluate" = "教学评价";
+"feature.spare" = "教室查询";
+"feature.graduateExam" = "考研查询";
+"feature.news" = "新闻";
+"feature.dataCenter" = "数据查询";
+"feature.marketplace" = "二手交易";
+"feature.lostFound" = "失物招领";
+"feature.secret" = "校园树洞";
+"feature.dating" = "卖室友";
+
+"home.campusServices" = "校园服务";
+"home.campusLife" = "校园生活";
+"home.campusServicesSubtitle" = "查成绩、课表、四六级、图书馆、校园卡和常用查询工具";
+"home.campusLifeSubtitle" = "二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影";
+
+"common.loading" = "加载中...";
+"common.retry" = "重试";
+"common.error" = "加载失败";
+"common.noData" = "暂无数据";
+"common.confirm" = "确认";
+"common.cancel" = "取消";
+"common.save" = "保存";
+"common.delete" = "删除";
+"common.submit" = "提交";
+"common.done" = "完成";
+
+"profile.privacy" = "隐私设置";
+"profile.loginRecords" = "登录记录";
+"profile.bindPhone" = "绑定手机";
+"profile.bindEmail" = "绑定邮箱";
+"profile.deleteAccount" = "注销账号";
+"profile.downloadData" = "下载个人数据";
+"profile.feedback" = "帮助与反馈";
+"profile.theme" = "主题色";
+"profile.language" = "语言";
+"profile.settings" = "设置";
+"profile.logout" = "退出登录";
+
+"info.news" = "新闻";
+"info.announcement" = "系统公告";
+"info.interaction" = "互动消息";
+"info.markAllRead" = "全部已读";

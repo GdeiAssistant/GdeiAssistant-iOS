@@ -1,0 +1,56 @@
+"tab.home" = "ホーム";
+"tab.info" = "お知らせ";
+"tab.profile" = "マイページ";
+
+"feature.community" = "発見";
+"feature.topic" = "トピック";
+"feature.express" = "告白の壁";
+"feature.delivery" = "デリバリー";
+"feature.photograph" = "フォトウォール";
+"feature.schedule" = "時間割";
+"feature.grade" = "成績照会";
+"feature.card" = "学生証";
+"feature.library" = "図書館";
+"feature.cet" = "CET成績";
+"feature.evaluate" = "授業評価";
+"feature.spare" = "空き教室";
+"feature.graduateExam" = "大学院入試";
+"feature.news" = "ニュース";
+"feature.dataCenter" = "データ照会";
+"feature.marketplace" = "フリマ";
+"feature.lostFound" = "落とし物";
+"feature.secret" = "秘密の木";
+"feature.dating" = "ルームメイト";
+
+"home.campusServices" = "キャンパスサービス";
+"home.campusLife" = "キャンパスライフ";
+"home.campusServicesSubtitle" = "成績、時間割、CET、図書館、学生証などの照会ツール";
+"home.campusLifeSubtitle" = "フリマ、デリバリー、落とし物、秘密の木、ルームメイト、告白、トピック、フォト";
+
+"common.loading" = "読み込み中...";
+"common.retry" = "再試行";
+"common.error" = "読み込み失敗";
+"common.noData" = "データがありません";
+"common.confirm" = "確認";
+"common.cancel" = "キャンセル";
+"common.save" = "保存";
+"common.delete" = "削除";
+"common.submit" = "送信";
+"common.done" = "完了";
+
+"profile.privacy" = "プライバシー";
+"profile.loginRecords" = "ログイン履歴";
+"profile.bindPhone" = "電話番号を紐付け";
+"profile.bindEmail" = "メールを紐付け";
+"profile.deleteAccount" = "アカウント削除";
+"profile.downloadData" = "データダウンロード";
+"profile.feedback" = "ヘルプ";
+"profile.theme" = "テーマカラー";
+"profile.language" = "言語";
+"profile.settings" = "設定";
+"profile.logout" = "ログアウト";
+
+"info.news" = "ニュース";
+"info.announcement" = "お知らせ";
+"info.interaction" = "メッセージ";
+"info.markAllRead" = "すべて既読にする";
