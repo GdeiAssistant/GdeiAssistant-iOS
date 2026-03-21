@@ -12,6 +12,9 @@ final class UserPreferences: ObservableObject {
     @Published var selectedThemeKey: String {
         didSet { persistThemeIfNeeded() }
     }
+    @Published var selectedLocale: String {
+        didSet { persistLocaleIfNeeded() }
+    }
 
     private let defaults: UserDefaults
     private var hasInitialized = false
@@ -35,6 +38,11 @@ final class UserPreferences: ObservableObject {
             self.selectedThemeKey = storedTheme
         } else {
             self.selectedThemeKey = DSTheme.campusGreen.rawValue
+        }
+        if let storedLocale = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) {
+            self.selectedLocale = storedLocale
+        } else {
+            self.selectedLocale = Self.detectSystemLocale()
         }
         hasInitialized = true
     }
@@ -72,5 +80,27 @@ final class UserPreferences: ObservableObject {
     private func persistThemeIfNeeded() {
         guard hasInitialized else { return }
         defaults.set(selectedThemeKey, forKey: AppConstants.UserDefaultsKeys.selectedTheme)
+    }
+
+    private func persistLocaleIfNeeded() {
+        guard hasInitialized else { return }
+        defaults.set(selectedLocale, forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+    }
+
+    private static func detectSystemLocale() -> String {
+        let lang = Locale.current.language.languageCode?.identifier ?? "zh"
+        let region = Locale.current.region?.identifier ?? ""
+        switch "\(lang)-\(region)" {
+        case "zh-HK": return "zh-HK"
+        case "zh-TW": return "zh-TW"
+        default: break
+        }
+        switch lang {
+        case "zh": return "zh-CN"
+        case "ja": return "ja"
+        case "ko": return "ko"
+        case "en": return "en"
+        default: return "zh-CN"
+        }
     }
 }

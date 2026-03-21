@@ -15,6 +15,11 @@ struct SettingsView: View {
                 } label: {
                     Label("主题色", systemImage: "paintpalette")
                 }
+                NavigationLink {
+                    LanguagePickerView()
+                } label: {
+                    Label("语言", systemImage: "globe")
+                }
             } header: {
                 Text("外观")
             }

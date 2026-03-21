@@ -39,6 +39,9 @@ struct RequestBuilder {
             urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: AppConstants.API.authorizationHeader)
         }
 
+        let locale = UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) ?? "zh-CN"
+        urlRequest.setValue(locale, forHTTPHeaderField: "Accept-Language")
+
         request.headers.forEach { key, value in
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }

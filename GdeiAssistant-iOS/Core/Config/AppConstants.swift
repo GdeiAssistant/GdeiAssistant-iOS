@@ -37,5 +37,6 @@ enum AppConstants {
         static let useMockData = "use_mock_data"
         static let networkEnvironment = "network_environment"
         static let selectedTheme = "selected_theme"
+        static let selectedLocale = "selected_locale"
     }
 }
