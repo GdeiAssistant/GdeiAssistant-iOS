@@ -42,7 +42,7 @@ struct AppRootView: View {
                 router.resetAfterLogout()
             }
         }
-        .id(preferences.selectedThemeKey)
+        .id(preferences.selectedLocale)
         .alert("提示", isPresented: $showAuthAlert) {
             Button("知道了") {
                 sessionState.authErrorMessage = nil
