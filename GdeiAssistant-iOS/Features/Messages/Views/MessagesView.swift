@@ -48,6 +48,7 @@ struct MessagesView: View {
             LazyVStack(spacing: 16) {
                 newsPanel
                 systemNoticePanel
+                festivalPanel
                 interactionPanel
             }
             .padding(16)
@@ -147,6 +148,28 @@ struct MessagesView: View {
                             systemNoticeRow(item)
                         }
                         .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var festivalPanel: some View {
+        if let festival = viewModel.festival {
+            DSCard {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "calendar.badge.clock")
+                            .foregroundStyle(DSColor.primary)
+                        Text(festival.name)
+                            .font(.headline)
+                            .foregroundStyle(DSColor.title)
+                    }
+                    ForEach(festival.description, id: \.self) { line in
+                        Text(line)
+                            .font(.subheadline)
+                            .foregroundStyle(DSColor.subtitle)
                     }
                 }
             }

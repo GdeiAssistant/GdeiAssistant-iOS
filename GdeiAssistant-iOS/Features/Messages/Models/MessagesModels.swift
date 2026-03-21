@@ -192,6 +192,11 @@ struct AppNotificationItem: Codable, Identifiable, Hashable {
     }
 }
 
+struct Festival {
+    let name: String
+    let description: [String]
+}
+
 struct AnnouncementDetailItem: Codable, Identifiable, Hashable {
     let id: String
     let title: String

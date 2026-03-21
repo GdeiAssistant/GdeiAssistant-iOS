@@ -34,6 +34,10 @@ final class MockMessagesRepository: MessagesRepository {
         throw NetworkError.server(code: 404, message: "公告不存在")
     }
 
+    func fetchFestival() async throws -> Festival? {
+        Festival(name: "植树节", description: ["3月12日是中国的植树节", "旨在倡导植树造林、保护生态环境"])
+    }
+
     func markNotificationRead(notificationID: String) async throws {
         guard let index = interactionItems.firstIndex(where: { $0.id == notificationID }), !interactionItems[index].isRead else {
             return
