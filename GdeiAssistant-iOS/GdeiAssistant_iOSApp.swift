@@ -26,6 +26,15 @@ struct GdeiAssistant_iOSApp: App {
                 .environmentObject(container.userPreferences)
                 .environmentObject(container.sessionState)
                 .environmentObject(container.router)
+                .preferredColorScheme(colorSchemeFor(container.userPreferences.selectedTheme))
+        }
+    }
+
+    private func colorSchemeFor(_ theme: UserPreferences.ThemeMode) -> ColorScheme? {
+        switch theme {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
         }
     }
 }

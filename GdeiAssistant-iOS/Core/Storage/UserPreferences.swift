@@ -3,6 +3,10 @@ import Combine
 
 @MainActor
 final class UserPreferences: ObservableObject {
+    enum ThemeMode: String, CaseIterable {
+        case system, light, dark
+    }
+
     @Published var useMockData: Bool {
         didSet { persistUseMockDataIfNeeded() }
     }
@@ -12,6 +16,16 @@ final class UserPreferences: ObservableObject {
     @Published var selectedLocale: String {
         didSet { persistLocaleIfNeeded() }
     }
+    @Published var selectedTheme: ThemeMode = .system {
+        didSet { persistThemeIfNeeded() }
+    }
+    @Published var fontScaleStep: Int = 1 {
+        didSet { persistFontScaleStepIfNeeded() }
+    }
+
+    static let fontScaleValues: [CGFloat] = [0.85, 1.0, 1.15, 1.3]
+
+    var fontScale: CGFloat { Self.fontScaleValues[fontScaleStep.clamped(to: 0...3)] }
 
     private let defaults: UserDefaults
     private var hasInitialized = false
@@ -35,6 +49,13 @@ final class UserPreferences: ObservableObject {
             self.selectedLocale = storedLocale
         } else {
             self.selectedLocale = Self.detectSystemLocale()
+        }
+        if let themeRaw = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedTheme),
+           let theme = ThemeMode(rawValue: themeRaw) {
+            self.selectedTheme = theme
+        }
+        if defaults.object(forKey: AppConstants.UserDefaultsKeys.fontScaleStep) != nil {
+            self.fontScaleStep = defaults.integer(forKey: AppConstants.UserDefaultsKeys.fontScaleStep).clamped(to: 0...3)
         }
         hasInitialized = true
     }
@@ -70,6 +91,16 @@ final class UserPreferences: ObservableObject {
         defaults.set(selectedLocale, forKey: AppConstants.UserDefaultsKeys.selectedLocale)
     }
 
+    private func persistThemeIfNeeded() {
+        guard hasInitialized else { return }
+        defaults.set(selectedTheme.rawValue, forKey: AppConstants.UserDefaultsKeys.selectedTheme)
+    }
+
+    private func persistFontScaleStepIfNeeded() {
+        guard hasInitialized else { return }
+        defaults.set(fontScaleStep, forKey: AppConstants.UserDefaultsKeys.fontScaleStep)
+    }
+
     private static func detectSystemLocale() -> String {
         let lang = Locale.current.language.languageCode?.identifier ?? "zh"
         let region = Locale.current.region?.identifier ?? ""
@@ -85,5 +116,11 @@ final class UserPreferences: ObservableObject {
         case "en": return "en"
         default: return "zh-CN"
         }
+    }
+}
+
+private extension Int {
+    func clamped(to range: ClosedRange<Int>) -> Int {
+        Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
     }
 }

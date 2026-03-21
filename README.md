@@ -42,6 +42,7 @@
 - 隐私设置
 - 登录记录
 - 下载个人数据
+- 界面和外观（主题切换、字体大小、语言）
 - 反馈
 - 设置
 - 退出登录
@@ -143,6 +144,15 @@ GdeiAssistant-iOS/
 - `Mapper`：完成 DTO -> Domain Model 映射
 - `Repository`：对 ViewModel 暴露稳定的数据访问接口
 
+### 5. 主题系统
+
+应用支持亮色/暗色主题切换，默认跟随系统：
+
+- 固定 Campus Green 品牌色（亮色 `#047857` / 暗色 `#34D399`）
+- 用户可在"界面和外观"页面手动选择浅色/深色/跟随系统
+- 字体大小四档可调（小/标准/大/超大）
+- 主题与字体偏好通过 UserDefaults 持久化
+
 ## 运行环境
 
 - Xcode 15 及以上
@@ -199,14 +209,6 @@ CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 本项目对应的后端仓库为：
 
 - GitHub：`https://github.com/GdeiAssistant/GdeiAssistant`
-
-## 应用截图
-
-<p>
-  <img src="README-assets/screenshot-home.jpeg" alt="功能主页" width="220" />
-  <img src="README-assets/screenshot-grade.jpeg" alt="成绩查询" width="220" />
-  <img src="README-assets/screenshot-schedule.jpeg" alt="我的课程表" width="220" />
-</p>
 
 ## 开源协议
 

@@ -54,3 +54,16 @@
 "info.announcement" = "系統公告";
 "info.interaction" = "互動消息";
 "info.markAllRead" = "全部已讀";
+
+"appearance.title" = "介面和外觀";
+"appearance.theme.label" = "主題";
+"appearance.theme.system" = "跟隨系統";
+"appearance.theme.light" = "淺色模式";
+"appearance.theme.dark" = "深色模式";
+"appearance.font.label" = "字體大小";
+"appearance.font.small" = "小";
+"appearance.font.standard" = "標準";
+"appearance.font.large" = "大";
+"appearance.font.xlarge" = "超大";
+"appearance.font.preview" = "預覽：廣東第二師範學院校園助手";
+"appearance.language.label" = "語言";
