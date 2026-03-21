@@ -33,6 +33,11 @@ enum MessagesRemoteMapper {
         )
     }
 
+    nonisolated static func mapFestival(_ dto: FestivalRemoteDTO?) -> Festival? {
+        guard let dto, let name = dto.name, !name.isEmpty else { return nil }
+        return Festival(name: name, description: dto.description ?? [])
+    }
+
     nonisolated private static func mapAnnouncement(_ announcement: AnnouncementRemoteDTO) -> AppNotificationItem {
         let targetID = RemoteMapperSupport.sanitizedText(announcement.id)
         return AppNotificationItem(

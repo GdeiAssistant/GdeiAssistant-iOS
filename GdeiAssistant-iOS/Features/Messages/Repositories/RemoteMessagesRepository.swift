@@ -34,6 +34,11 @@ final class RemoteMessagesRepository: MessagesRepository {
         return MessagesRemoteMapper.mapAnnouncementDetail(dto)
     }
 
+    func fetchFestival() async throws -> Festival? {
+        let info: InformationRemoteDTO = try await apiClient.get("/information/all", requiresAuth: true)
+        return MessagesRemoteMapper.mapFestival(info.festival)
+    }
+
     func markNotificationRead(notificationID: String) async throws {
         let _: EmptyPayload = try await apiClient.post("/information/message/id/\(notificationID)/read", requiresAuth: true)
     }

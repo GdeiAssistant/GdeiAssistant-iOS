@@ -6,6 +6,7 @@ protocol MessagesRepository {
     func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem]
     func fetchInteractionUnreadCount() async throws -> Int
     func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem
+    func fetchFestival() async throws -> Festival?
     func markNotificationRead(notificationID: String) async throws
     func markAllNotificationsRead() async throws
 }
@@ -40,6 +41,10 @@ final class SwitchingMessagesRepository: MessagesRepository {
 
     func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
         try await currentRepository.fetchAnnouncementDetail(id: id)
+    }
+
+    func fetchFestival() async throws -> Festival? {
+        try await currentRepository.fetchFestival()
     }
 
     func markNotificationRead(notificationID: String) async throws {

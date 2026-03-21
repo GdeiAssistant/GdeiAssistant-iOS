@@ -16,6 +16,7 @@ final class MessagesViewModel: ObservableObject {
     @Published var interactionErrorMessage: String?
 
     @Published var interactionUnreadCount = 0
+    @Published var festival: Festival?
 
     private let newsRepository: any NewsRepository
     private let messagesRepository: any MessagesRepository
@@ -61,6 +62,7 @@ final class MessagesViewModel: ObservableObject {
             group.addTask { await self.refreshNews() }
             group.addTask { await self.refreshSystemNotices() }
             group.addTask { await self.refreshInteractionItems() }
+            group.addTask { await self.refreshFestival() }
         }
     }
 
@@ -107,6 +109,10 @@ final class MessagesViewModel: ObservableObject {
             interactionUnreadCount = 0
             interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "互动消息加载失败"
         }
+    }
+
+    func refreshFestival() async {
+        festival = try? await messagesRepository.fetchFestival()
     }
 
     func markNotificationRead(notificationID: String) async {
