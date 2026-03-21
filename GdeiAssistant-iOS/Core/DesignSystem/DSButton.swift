@@ -58,7 +58,7 @@ struct DSButton: View {
         case .primary:
             return DSColor.onPrimary
         case .destructive:
-            return .white
+            return DSColor.onPrimary
         case .secondary:
             return DSColor.title
         }
