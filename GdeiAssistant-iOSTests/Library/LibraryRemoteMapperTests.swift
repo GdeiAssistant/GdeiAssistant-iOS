@@ -28,9 +28,10 @@ final class LibraryRemoteMapperTests: XCTestCase {
 
         XCTAssertEqual(records.count, 2)
         XCTAssertTrue(records[0].renewable)
-        XCTAssertEqual(records[0].status, "已续借1次")
+        let expectedRenewed = localizedString("library.mapper.renewed") + "1" + localizedString("library.mapper.times")
+        XCTAssertEqual(records[0].status, expectedRenewed)
         XCTAssertFalse(records[1].renewable)
-        XCTAssertEqual(records[1].status, "待归还")
+        XCTAssertEqual(records[1].status, localizedString("library.mapper.toReturn"))
     }
 
     func testMapRenewRequestTrimsPasswordAndTokens() {
@@ -66,6 +67,6 @@ final class LibraryRemoteMapperTests: XCTestCase {
         let updatedRecords = try await repository.fetchBorrowRecords(password: "123456")
         let updatedRecord = try XCTUnwrap(updatedRecords.first(where: { $0.id == "borrow_001" }))
         XCTAssertFalse(updatedRecord.renewable)
-        XCTAssertEqual(updatedRecord.status, "已续借一次")
+        XCTAssertEqual(updatedRecord.status, localizedString("mock.library.borrow.renewedOnce"))
     }
 }
