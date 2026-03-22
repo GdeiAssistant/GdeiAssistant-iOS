@@ -381,3 +381,48 @@
 "topic.vm.contentTooLong" = "话题内容不能超过 250 个字";
 "topic.vm.publishSuccess" = "话题已发布";
 "topic.vm.publishFailed" = "发布失败";
+
+// MARK: - Mock CET
+"mock.cet.captchaError" = "模拟查询失败：验证码错误";
+
+// MARK: - Mock LostFound
+"mock.lostFound.postNotFound" = "帖子不存在";
+"mock.lostFound.uploadAtLeastOneImage" = "请至少上传一张图片";
+"mock.lostFound.justNow" = "刚刚";
+"mock.lostFound.searching" = "寻主/寻物中";
+"mock.lostFound.justEdited" = "刚刚修改";
+"mock.lostFound.qqPrefix" = "QQ：%@";
+"mock.lostFound.wechatPrefix" = "微信：%@";
+"mock.lostFound.phonePrefix" = "手机号：%@";
+"mock.lostFound.resolved" = "已找回";
+"mock.lostFound.personalFoundTitle" = "拾到蓝色 U 盘一个";
+"mock.lostFound.personalFoundSummary" = "在教学楼 B 栋门口拾到，先登记在个人中心。";
+"mock.lostFound.personalFoundLocation" = "教学楼 B 栋门口";
+"mock.lostFound.personalFoundTime" = "昨天 20:10";
+"mock.lostFound.personalResolvedTitle" = "寻图书馆借书证";
+"mock.lostFound.personalResolvedSummary" = "已经找到，保留在个人中心记录。";
+"mock.lostFound.personalResolvedLocation" = "图书馆服务台";
+"mock.lostFound.personalResolvedTime" = "前天 11:25";
+"mock.lostFound.personalFoundDescription" = "在教学楼 B 栋门口拾到，发布后等待失主联系。";
+"mock.lostFound.personalFoundContact" = "QQ：231245678 / 微信：gdeiassistant";
+"mock.lostFound.personalResolvedDescription" = "已经在服务台找回，保留历史记录。";
+"mock.lostFound.personalResolvedContact" = "QQ：231245678";
+
+// MARK: - Mock Topic
+"mock.topic.post1Topic" = "SwiftUI";
+"mock.topic.post1Preview" = "这周社团分享会准备讲 SwiftUI 工程拆分，有没有同学想一起交流导航和 Repository 设计？";
+"mock.topic.post1Author" = "iOS 开发社";
+"mock.topic.post1Time" = "15分钟前";
+"mock.topic.post2Topic" = "考证";
+"mock.topic.post2Preview" = "准备四月冲软考中级，想找几个一起打卡刷题的同学，周末可以线下自习。";
+"mock.topic.post2Author" = "陈同学";
+"mock.topic.post2Time" = "1小时前";
+"mock.topic.post3Topic" = "图书馆";
+"mock.topic.post3Preview" = "图书馆五楼新开了夜间讨论区，插座和灯光都比以前好很多，适合做课程展示排练。";
+"mock.topic.post3Author" = "学习互助站";
+"mock.topic.post3Time" = "昨天";
+"mock.topic.post1Detail" = "#SwiftUI\n\n这周社团分享会准备讲 SwiftUI 工程拆分，有没有同学想一起交流导航和 Repository 设计？\n\n计划重点聊路由分发、Repository 切换、Preview 数据隔离。";
+"mock.topic.post2Detail" = "#考证\n\n准备四月冲软考中级，想找几个一起打卡刷题的同学，周末可以线下自习。\n\n如果你最近也在做题，可以一起整理错题本。";
+"mock.topic.post3Detail" = "#图书馆\n\n图书馆五楼新开了夜间讨论区，插座和灯光都比以前好很多，适合做课程展示排练。\n\n晚上九点后人会少一点，适合小组讨论。";
+"mock.topic.me" = "我";
+"mock.topic.justNow" = "刚刚";

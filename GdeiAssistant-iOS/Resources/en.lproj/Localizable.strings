@@ -381,3 +381,48 @@
 "topic.vm.contentTooLong" = "Topic content cannot exceed 250 characters";
 "topic.vm.publishSuccess" = "Topic published";
 "topic.vm.publishFailed" = "Failed to publish";
+
+// MARK: - Mock CET
+"mock.cet.captchaError" = "Mock query failed: incorrect captcha";
+
+// MARK: - Mock LostFound
+"mock.lostFound.postNotFound" = "Post not found";
+"mock.lostFound.uploadAtLeastOneImage" = "Please upload at least one image";
+"mock.lostFound.justNow" = "Just now";
+"mock.lostFound.searching" = "Searching";
+"mock.lostFound.justEdited" = "Just edited";
+"mock.lostFound.qqPrefix" = "QQ: %@";
+"mock.lostFound.wechatPrefix" = "WeChat: %@";
+"mock.lostFound.phonePrefix" = "Phone: %@";
+"mock.lostFound.resolved" = "Resolved";
+"mock.lostFound.personalFoundTitle" = "Found a blue USB drive";
+"mock.lostFound.personalFoundSummary" = "Picked up at Building B entrance, registered in personal center.";
+"mock.lostFound.personalFoundLocation" = "Building B entrance";
+"mock.lostFound.personalFoundTime" = "Yesterday 20:10";
+"mock.lostFound.personalResolvedTitle" = "Looking for library card";
+"mock.lostFound.personalResolvedSummary" = "Already found, kept in personal center records.";
+"mock.lostFound.personalResolvedLocation" = "Library service desk";
+"mock.lostFound.personalResolvedTime" = "2 days ago 11:25";
+"mock.lostFound.personalFoundDescription" = "Picked up at Building B entrance, waiting for the owner to get in touch.";
+"mock.lostFound.personalFoundContact" = "QQ: 231245678 / WeChat: gdeiassistant";
+"mock.lostFound.personalResolvedDescription" = "Retrieved at the service desk, keeping historical record.";
+"mock.lostFound.personalResolvedContact" = "QQ: 231245678";
+
+// MARK: - Mock Topic
+"mock.topic.post1Topic" = "SwiftUI";
+"mock.topic.post1Preview" = "This week's club sharing session will cover SwiftUI project modularization. Anyone interested in discussing navigation and Repository design?";
+"mock.topic.post1Author" = "iOS Dev Club";
+"mock.topic.post1Time" = "15 min ago";
+"mock.topic.post2Topic" = "Certification";
+"mock.topic.post2Preview" = "Preparing for the April software exam (intermediate level). Looking for study buddies to practice together on weekends.";
+"mock.topic.post2Author" = "Chen";
+"mock.topic.post2Time" = "1 hour ago";
+"mock.topic.post3Topic" = "Library";
+"mock.topic.post3Preview" = "The 5th floor of the library just opened a nighttime discussion area — much better outlets and lighting, great for rehearsing presentations.";
+"mock.topic.post3Author" = "Study Hub";
+"mock.topic.post3Time" = "Yesterday";
+"mock.topic.post1Detail" = "#SwiftUI\n\nThis week's club sharing session will cover SwiftUI project modularization. Anyone interested in discussing navigation and Repository design?\n\nPlanning to focus on route dispatching, Repository switching, and Preview data isolation.";
+"mock.topic.post2Detail" = "#Certification\n\nPreparing for the April software exam (intermediate level). Looking for study buddies to practice together on weekends.\n\nIf you're also doing practice problems lately, we can compile a shared mistake notebook.";
+"mock.topic.post3Detail" = "#Library\n\nThe 5th floor of the library just opened a nighttime discussion area — much better outlets and lighting, great for rehearsing presentations.\n\nIt gets quieter after 9 PM, perfect for group discussions.";
+"mock.topic.me" = "Me";
+"mock.topic.justNow" = "Just now";

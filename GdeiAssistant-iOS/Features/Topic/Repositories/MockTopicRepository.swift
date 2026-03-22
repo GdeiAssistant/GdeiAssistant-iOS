@@ -5,10 +5,10 @@ final class MockTopicRepository: TopicRepository {
     private var posts: [TopicPost] = [
         TopicPost(
             id: "topic_001",
-            topic: "SwiftUI",
-            contentPreview: "这周社团分享会准备讲 SwiftUI 工程拆分，有没有同学想一起交流导航和 Repository 设计？",
-            authorName: "iOS 开发社",
-            publishedAt: "15分钟前",
+            topic: localizedString("mock.topic.post1Topic"),
+            contentPreview: localizedString("mock.topic.post1Preview"),
+            authorName: localizedString("mock.topic.post1Author"),
+            publishedAt: localizedString("mock.topic.post1Time"),
             likeCount: 26,
             imageCount: 1,
             firstImageURL: "https://example.com/topic/swiftui.jpg",
@@ -16,10 +16,10 @@ final class MockTopicRepository: TopicRepository {
         ),
         TopicPost(
             id: "topic_002",
-            topic: "考证",
-            contentPreview: "准备四月冲软考中级，想找几个一起打卡刷题的同学，周末可以线下自习。",
-            authorName: "陈同学",
-            publishedAt: "1小时前",
+            topic: localizedString("mock.topic.post2Topic"),
+            contentPreview: localizedString("mock.topic.post2Preview"),
+            authorName: localizedString("mock.topic.post2Author"),
+            publishedAt: localizedString("mock.topic.post2Time"),
             likeCount: 19,
             imageCount: 0,
             firstImageURL: nil,
@@ -27,10 +27,10 @@ final class MockTopicRepository: TopicRepository {
         ),
         TopicPost(
             id: "topic_003",
-            topic: "图书馆",
-            contentPreview: "图书馆五楼新开了夜间讨论区，插座和灯光都比以前好很多，适合做课程展示排练。",
-            authorName: "学习互助站",
-            publishedAt: "昨天",
+            topic: localizedString("mock.topic.post3Topic"),
+            contentPreview: localizedString("mock.topic.post3Preview"),
+            authorName: localizedString("mock.topic.post3Author"),
+            publishedAt: localizedString("mock.topic.post3Time"),
             likeCount: 42,
             imageCount: 2,
             firstImageURL: "https://example.com/topic/library.jpg",
@@ -39,9 +39,9 @@ final class MockTopicRepository: TopicRepository {
     ]
 
     private var detailContents: [String: String] = [
-        "topic_001": "#SwiftUI\n\n这周社团分享会准备讲 SwiftUI 工程拆分，有没有同学想一起交流导航和 Repository 设计？\n\n计划重点聊路由分发、Repository 切换、Preview 数据隔离。",
-        "topic_002": "#考证\n\n准备四月冲软考中级，想找几个一起打卡刷题的同学，周末可以线下自习。\n\n如果你最近也在做题，可以一起整理错题本。",
-        "topic_003": "#图书馆\n\n图书馆五楼新开了夜间讨论区，插座和灯光都比以前好很多，适合做课程展示排练。\n\n晚上九点后人会少一点，适合小组讨论。"
+        "topic_001": localizedString("mock.topic.post1Detail"),
+        "topic_002": localizedString("mock.topic.post2Detail"),
+        "topic_003": localizedString("mock.topic.post3Detail")
     ]
 
     func fetchPosts(start: Int, size: Int) async throws -> [TopicPost] {
@@ -82,8 +82,8 @@ final class MockTopicRepository: TopicRepository {
             id: newID,
             topic: draft.topic,
             contentPreview: preview,
-            authorName: "我",
-            publishedAt: "刚刚",
+            authorName: localizedString("mock.topic.me"),
+            publishedAt: localizedString("mock.topic.justNow"),
             likeCount: 0,
             imageCount: draft.images.count,
             firstImageURL: draft.images.isEmpty ? nil : "mock://topic/image/0",

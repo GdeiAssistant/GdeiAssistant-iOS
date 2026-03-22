@@ -381,3 +381,48 @@
 "topic.vm.contentTooLong" = "トピック内容は250文字以内にしてください";
 "topic.vm.publishSuccess" = "トピックが投稿されました";
 "topic.vm.publishFailed" = "投稿に失敗しました";
+
+// MARK: - Mock CET
+"mock.cet.captchaError" = "モッククエリ失敗：認証コードが正しくありません";
+
+// MARK: - Mock LostFound
+"mock.lostFound.postNotFound" = "投稿が見つかりません";
+"mock.lostFound.uploadAtLeastOneImage" = "画像を少なくとも1枚アップロードしてください";
+"mock.lostFound.justNow" = "たった今";
+"mock.lostFound.searching" = "捜索中";
+"mock.lostFound.justEdited" = "編集済み";
+"mock.lostFound.qqPrefix" = "QQ：%@";
+"mock.lostFound.wechatPrefix" = "WeChat：%@";
+"mock.lostFound.phonePrefix" = "電話番号：%@";
+"mock.lostFound.resolved" = "解決済み";
+"mock.lostFound.personalFoundTitle" = "青いUSBメモリを拾いました";
+"mock.lostFound.personalFoundSummary" = "教学棟B棟入口で拾得、個人センターに登録済み。";
+"mock.lostFound.personalFoundLocation" = "教学棟B棟入口";
+"mock.lostFound.personalFoundTime" = "昨日 20:10";
+"mock.lostFound.personalResolvedTitle" = "図書館カードを探しています";
+"mock.lostFound.personalResolvedSummary" = "すでに見つかりました。個人センターに記録を保持。";
+"mock.lostFound.personalResolvedLocation" = "図書館サービスデスク";
+"mock.lostFound.personalResolvedTime" = "一昨日 11:25";
+"mock.lostFound.personalFoundDescription" = "教学棟B棟入口で拾得、所有者の連絡をお待ちしています。";
+"mock.lostFound.personalFoundContact" = "QQ：231245678 / WeChat：gdeiassistant";
+"mock.lostFound.personalResolvedDescription" = "サービスデスクで回収済み、履歴を保持しています。";
+"mock.lostFound.personalResolvedContact" = "QQ：231245678";
+
+// MARK: - Mock Topic
+"mock.topic.post1Topic" = "SwiftUI";
+"mock.topic.post1Preview" = "今週のサークル発表会でSwiftUIのプロジェクト分割について話す予定です。ナビゲーションやRepository設計について一緒に話しませんか？";
+"mock.topic.post1Author" = "iOS開発サークル";
+"mock.topic.post1Time" = "15分前";
+"mock.topic.post2Topic" = "資格試験";
+"mock.topic.post2Preview" = "4月のソフトウェア試験中級に向けて準備中。週末に一緒に勉強する仲間を探しています。";
+"mock.topic.post2Author" = "陳さん";
+"mock.topic.post2Time" = "1時間前";
+"mock.topic.post3Topic" = "図書館";
+"mock.topic.post3Preview" = "図書館5階に夜間ディスカッションエリアがオープン。コンセントや照明が改善され、プレゼンのリハーサルに最適です。";
+"mock.topic.post3Author" = "学習サポートステーション";
+"mock.topic.post3Time" = "昨日";
+"mock.topic.post1Detail" = "#SwiftUI\n\n今週のサークル発表会でSwiftUIのプロジェクト分割について話す予定です。ナビゲーションやRepository設計について一緒に話しませんか？\n\nルーティング、Repository切り替え、Previewデータ分離について重点的に話す予定です。";
+"mock.topic.post2Detail" = "#資格試験\n\n4月のソフトウェア試験中級に向けて準備中。週末に一緒に勉強する仲間を探しています。\n\n最近問題を解いているなら、一緒に間違いノートを整理しませんか。";
+"mock.topic.post3Detail" = "#図書館\n\n図書館5階に夜間ディスカッションエリアがオープン。コンセントや照明が改善され、プレゼンのリハーサルに最適です。\n\n夜9時以降は人が少なくなり、グループディスカッションに向いています。";
+"mock.topic.me" = "自分";
+"mock.topic.justNow" = "たった今";

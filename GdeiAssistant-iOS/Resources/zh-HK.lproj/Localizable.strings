@@ -381,3 +381,48 @@
 "topic.vm.contentTooLong" = "話題內容不能超過 250 個字";
 "topic.vm.publishSuccess" = "話題已發佈";
 "topic.vm.publishFailed" = "發佈失敗";
+
+// MARK: - Mock CET
+"mock.cet.captchaError" = "模擬查詢失敗：驗證碼錯誤";
+
+// MARK: - Mock LostFound
+"mock.lostFound.postNotFound" = "帖子不存在";
+"mock.lostFound.uploadAtLeastOneImage" = "請至少上傳一張圖片";
+"mock.lostFound.justNow" = "剛剛";
+"mock.lostFound.searching" = "尋主/尋物中";
+"mock.lostFound.justEdited" = "剛剛修改";
+"mock.lostFound.qqPrefix" = "QQ：%@";
+"mock.lostFound.wechatPrefix" = "微信：%@";
+"mock.lostFound.phonePrefix" = "手機號：%@";
+"mock.lostFound.resolved" = "已找回";
+"mock.lostFound.personalFoundTitle" = "拾到藍色 U 盤一個";
+"mock.lostFound.personalFoundSummary" = "在教學樓 B 棟門口拾到，先登記在個人中心。";
+"mock.lostFound.personalFoundLocation" = "教學樓 B 棟門口";
+"mock.lostFound.personalFoundTime" = "昨天 20:10";
+"mock.lostFound.personalResolvedTitle" = "尋圖書館借書證";
+"mock.lostFound.personalResolvedSummary" = "已經找到，保留在個人中心記錄。";
+"mock.lostFound.personalResolvedLocation" = "圖書館服務台";
+"mock.lostFound.personalResolvedTime" = "前天 11:25";
+"mock.lostFound.personalFoundDescription" = "在教學樓 B 棟門口拾到，發佈後等待失主聯繫。";
+"mock.lostFound.personalFoundContact" = "QQ：231245678 / 微信：gdeiassistant";
+"mock.lostFound.personalResolvedDescription" = "已經在服務台找回，保留歷史記錄。";
+"mock.lostFound.personalResolvedContact" = "QQ：231245678";
+
+// MARK: - Mock Topic
+"mock.topic.post1Topic" = "SwiftUI";
+"mock.topic.post1Preview" = "這週社團分享會準備講 SwiftUI 工程拆分，有冇同學想一齊交流導航和 Repository 設計？";
+"mock.topic.post1Author" = "iOS 開發社";
+"mock.topic.post1Time" = "15分鐘前";
+"mock.topic.post2Topic" = "考證";
+"mock.topic.post2Preview" = "準備四月衝軟考中級，想搵幾個一齊打卡刷題嘅同學，週末可以線下自習。";
+"mock.topic.post2Author" = "陳同學";
+"mock.topic.post2Time" = "1小時前";
+"mock.topic.post3Topic" = "圖書館";
+"mock.topic.post3Preview" = "圖書館五樓新開咗夜間討論區，插座和燈光都比以前好好多，適合做課程展示排練。";
+"mock.topic.post3Author" = "學習互助站";
+"mock.topic.post3Time" = "昨天";
+"mock.topic.post1Detail" = "#SwiftUI\n\n這週社團分享會準備講 SwiftUI 工程拆分，有冇同學想一齊交流導航和 Repository 設計？\n\n計劃重點傾路由分發、Repository 切換、Preview 數據隔離。";
+"mock.topic.post2Detail" = "#考證\n\n準備四月衝軟考中級，想搵幾個一齊打卡刷題嘅同學，週末可以線下自習。\n\n如果你最近都喺度做題，可以一齊整理錯題本。";
+"mock.topic.post3Detail" = "#圖書館\n\n圖書館五樓新開咗夜間討論區，插座和燈光都比以前好好多，適合做課程展示排練。\n\n晚上九點後人會少啲，適合小組討論。";
+"mock.topic.me" = "我";
+"mock.topic.justNow" = "剛剛";
