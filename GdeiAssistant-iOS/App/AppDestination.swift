@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum AppDestination: Hashable {
     case community
@@ -66,47 +67,36 @@ extension AppDestination {
         }
     }
 
-    var title: String {
+    private var localizationKey: String {
         switch self {
-        case .community:
-            return "发现"
-        case .topic:
-            return "话题"
-        case .express:
-            return "表白墙"
-        case .delivery:
-            return "全民快递"
-        case .photograph:
-            return "拍好校园"
-        case .schedule:
-            return "课表查询"
-        case .grade:
-            return "成绩查询"
-        case .card:
-            return "校园卡"
-        case .library:
-            return "图书馆"
-        case .cet:
-            return "四六级查询"
-        case .evaluate:
-            return "教学评价"
-        case .spare:
-            return "教室查询"
-        case .graduateExam:
-            return "考研查询"
-        case .news:
-            return "新闻"
-        case .dataCenter:
-            return "数据查询"
-        case .marketplace:
-            return "二手交易"
-        case .lostFound:
-            return "失物招领"
-        case .secret:
-            return "校园树洞"
-        case .dating:
-            return "卖室友"
+        case .community: return "feature.community"
+        case .topic: return "feature.topic"
+        case .express: return "feature.express"
+        case .delivery: return "feature.delivery"
+        case .photograph: return "feature.photograph"
+        case .schedule: return "feature.schedule"
+        case .grade: return "feature.grade"
+        case .card: return "feature.card"
+        case .library: return "feature.library"
+        case .cet: return "feature.cet"
+        case .evaluate: return "feature.evaluate"
+        case .spare: return "feature.spare"
+        case .graduateExam: return "feature.graduateExam"
+        case .news: return "feature.news"
+        case .dataCenter: return "feature.dataCenter"
+        case .marketplace: return "feature.marketplace"
+        case .lostFound: return "feature.lostFound"
+        case .secret: return "feature.secret"
+        case .dating: return "feature.dating"
         }
+    }
+
+    var title: String {
+        localizedString(localizationKey)
+    }
+
+    var localizedTitle: LocalizedStringKey {
+        LocalizedStringKey(localizationKey)
     }
 
     var icon: String {

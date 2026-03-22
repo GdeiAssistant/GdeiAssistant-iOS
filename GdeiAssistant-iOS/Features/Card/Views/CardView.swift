@@ -13,7 +13,7 @@ struct CardView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.dashboard == nil {
-                DSLoadingView(text: "正在加载校园卡...")
+                DSLoadingView(text: localizedString("card.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.dashboard == nil {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.loadDashboard() }
@@ -21,27 +21,27 @@ struct CardView: View {
             } else if let dashboard = viewModel.dashboard {
                 content(dashboard)
             } else {
-                DSEmptyStateView(icon: "creditcard", title: "暂无校园卡信息", message: "请稍后重试")
+                DSEmptyStateView(icon: "creditcard", title: localizedString("card.emptyTitle"), message: localizedString("card.emptyMessage"))
             }
         }
-        .navigationTitle("校园卡")
+        .navigationTitle(localizedString("card.title"))
         .task {
             await viewModel.loadIfNeeded()
         }
-        .alert("确认挂失", isPresented: $showLossConfirm) {
-            Button("取消", role: .cancel) {}
-            Button("继续", role: .destructive) {
+        .alert(localizedString("card.confirmLoss"), isPresented: $showLossConfirm) {
+            Button(localizedString("common.cancel"), role: .cancel) {}
+            Button(localizedString("common.confirm"), role: .destructive) {
                 showPasswordSheet = true
             }
         } message: {
-            Text("挂失后将暂停校园卡消费功能，是否继续进行安全验证？")
+            Text(localizedString("card.confirmLossMessage"))
         }
         .sheet(isPresented: $showPasswordSheet, onDismiss: resetPasswordInput) {
             PasswordInputSheet(
-                title: "校园卡挂失",
-                message: "请输入校园卡查询密码完成高风险操作验证。为保护账户安全，密码不会被本地保存。",
-                placeholder: "请输入校园卡查询密码",
-                confirmTitle: "确认挂失",
+                title: localizedString("card.lossSheetTitle"),
+                message: localizedString("card.lossSheetMessage"),
+                placeholder: localizedString("card.lossSheetPlaceholder"),
+                confirmTitle: localizedString("card.lossSheetConfirm"),
                 keyboardType: .numberPad,
                 isSubmitting: viewModel.submitState.isSubmitting,
                 errorMessage: {
@@ -58,7 +58,7 @@ struct CardView: View {
             )
             .presentationDetents([.medium])
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("card.notice"), isPresented: Binding(
             get: {
                 if case .success = viewModel.submitState {
                     return true
@@ -71,7 +71,7 @@ struct CardView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("card.understood")) {
                 viewModel.clearSubmitState()
             }
         } message: {
@@ -84,18 +84,18 @@ struct CardView: View {
             VStack(spacing: 14) {
                 DSCard {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("校园卡余额")
+                        Text(LocalizedStringKey("card.balance"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
 
-                        Text("¥\(dashboard.info.balance, specifier: "%.2f")")
-                            .font(.system(size: 34, weight: .bold))
+                        Text("\u{00A5}\(dashboard.info.balance, specifier: "%.2f")")
+                            .font(.largeTitle.weight(.bold))
                             .foregroundStyle(DSColor.title)
 
                         HStack {
-                            Text("卡号 \(dashboard.info.cardNumber)")
+                            Text(String(format: localizedString("card.number"), dashboard.info.cardNumber))
                             Spacer()
-                            Text("状态：\(dashboard.info.status.displayName)")
+                            Text(String(format: localizedString("card.status"), dashboard.info.status.displayName))
                         }
                         .font(.caption)
                         .foregroundStyle(DSColor.subtitle)
@@ -104,41 +104,41 @@ struct CardView: View {
 
                 DSCard {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("消费记录")
+                        Text(LocalizedStringKey("card.transactions"))
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 
                         DatePicker(
-                            "查询日期",
+                            LocalizedStringKey("card.queryDate"),
                             selection: $viewModel.selectedDate,
                             in: ...Date(),
                             displayedComponents: .date
                         )
                         .datePickerStyle(.compact)
 
-                        DSButton(title: "查询当天消费记录", icon: "calendar") {
+                        DSButton(title: localizedString("card.queryButton"), icon: "calendar") {
                             Task { await viewModel.loadDashboard(for: viewModel.selectedDate) }
                         }
                         .disabled(viewModel.isLoading)
 
-                        Text("当前查看：\(viewModel.selectedDateText)")
+                        Text(String(format: localizedString("card.currentDate"), viewModel.selectedDateText))
                             .font(.caption)
                             .foregroundStyle(DSColor.subtitle)
                     }
                 }
 
                 DSCard {
-                    Text("安全操作")
+                    Text(LocalizedStringKey("card.security"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
-                    Text("挂失前需要输入校园卡查询密码进行验证。该密码仅用于本次提交，不会写入本地存储。")
+                    Text(LocalizedStringKey("card.securityNote"))
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
                         .lineSpacing(4)
 
                     DSButton(
-                        title: dashboard.info.status == .lost ? "已挂失" : "挂失校园卡",
+                        title: dashboard.info.status == .lost ? localizedString("card.alreadyLost") : localizedString("card.reportLoss"),
                         icon: "lock.shield",
                         variant: .destructive,
                         isLoading: viewModel.submitState.isSubmitting,
@@ -149,12 +149,12 @@ struct CardView: View {
                 }
 
                 DSCard {
-                    Text("\(viewModel.selectedDateText) 消费记录")
+                    Text(String(format: localizedString("card.dateTransactions"), viewModel.selectedDateText))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
                     if dashboard.transactions.isEmpty {
-                        Text("这一天没有查询到消费记录")
+                        Text(LocalizedStringKey("card.noTransactions"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                     } else {
@@ -164,12 +164,12 @@ struct CardView: View {
                                     Text(transaction.merchantName)
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundStyle(DSColor.title)
-                                    Text("\(transaction.timeText) · \(transaction.category)")
+                                    Text("\(transaction.timeText) \u{00B7} \(transaction.category)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                                 Spacer()
-                                Text(String(format: "-¥%.2f", transaction.amount))
+                                Text(String(format: "-\u{00A5}%.2f", transaction.amount))
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(DSColor.danger)
                             }

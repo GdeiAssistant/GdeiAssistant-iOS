@@ -8,7 +8,7 @@ struct DSEmptyStateView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 30, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(DSColor.subtitle)
                 .accessibilityHidden(true)
 
