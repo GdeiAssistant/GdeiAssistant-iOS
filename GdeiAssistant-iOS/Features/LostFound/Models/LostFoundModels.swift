@@ -7,9 +7,9 @@ enum LostFoundType: String, Codable, CaseIterable {
     nonisolated var displayName: String {
         switch self {
         case .lost:
-            return "寻物"
+            return localizedString("lostFound.type.lost")
         case .found:
-            return "招领"
+            return localizedString("lostFound.type.found")
         }
     }
 
@@ -31,11 +31,11 @@ enum LostFoundItemState: Int, Codable, Hashable {
     var title: String {
         switch self {
         case .active:
-            return "寻主/寻物中"
+            return localizedString("lostFound.state.active")
         case .resolved:
-            return "已找回"
+            return localizedString("lostFound.state.resolved")
         case .systemDeleted:
-            return "系统删除"
+            return localizedString("lostFound.state.systemDeleted")
         }
     }
 }

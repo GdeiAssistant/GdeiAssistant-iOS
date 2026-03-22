@@ -35,7 +35,7 @@ final class PublishLostFoundViewModel: ObservableObject {
 
     func addImage(_ image: UploadImageAsset) {
         guard images.count < 4 else {
-            submitState = .failure("最多只能选择 4 张图片")
+            submitState = .failure(localizedString("lostFound.vm.maxImages"))
             return
         }
         images.append(image)
@@ -56,55 +56,55 @@ final class PublishLostFoundViewModel: ObservableObject {
         let trimmedWechat = FormValidationSupport.trimmed(wechat)
         let trimmedPhone = FormValidationSupport.trimmed(phone)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: "请填写物品名称") {
+        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("lostFound.vm.enterItemName")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedTitle.count > 25 {
-            submitState = .failure("物品名称不能超过 25 个字")
+            submitState = .failure(localizedString("lostFound.vm.itemNameTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: "请填写物品描述") {
+        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("lostFound.vm.enterDescription")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedDescription.count > 100 {
-            submitState = .failure("物品描述不能超过 100 个字")
+            submitState = .failure(localizedString("lostFound.vm.descriptionTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: "请填写地点") {
+        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("lostFound.vm.enterLocation")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedLocation.count > 30 {
-            submitState = .failure("地点不能超过 30 个字")
+            submitState = .failure(localizedString("lostFound.vm.locationTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireOneFilled([trimmedQQ, trimmedWechat, trimmedPhone], message: "联系方式至少填写一项") {
+        if let message = FormValidationSupport.requireOneFilled([trimmedQQ, trimmedWechat, trimmedPhone], message: localizedString("lostFound.vm.contactRequired")) {
             submitState = .failure(message)
             return nil
         }
         if !trimmedQQ.isEmpty && trimmedQQ.count > 20 {
-            submitState = .failure("QQ 号不能超过 20 位")
+            submitState = .failure(localizedString("lostFound.vm.qqTooLong"))
             return nil
         }
         if !trimmedWechat.isEmpty && trimmedWechat.count > 20 {
-            submitState = .failure("微信号不能超过 20 位")
+            submitState = .failure(localizedString("lostFound.vm.wechatTooLong"))
             return nil
         }
         if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure("手机号不能超过 11 位")
+            submitState = .failure(localizedString("lostFound.vm.phoneTooLong"))
             return nil
         }
         if images.isEmpty {
-            submitState = .failure("请至少上传一张图片")
+            submitState = .failure(localizedString("lostFound.vm.uploadAtLeastOne"))
             return nil
         }
 
         let contactHint = [
-            trimmedQQ.isEmpty ? nil : "QQ：\(trimmedQQ)",
-            trimmedWechat.isEmpty ? nil : "微信：\(trimmedWechat)",
-            trimmedPhone.isEmpty ? nil : "手机号：\(trimmedPhone)"
+            trimmedQQ.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactQQ"))\(trimmedQQ)",
+            trimmedWechat.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactWechat"))\(trimmedWechat)",
+            trimmedPhone.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactPhone"))\(trimmedPhone)"
         ].compactMap { $0 }.joined(separator: " / ")
 
         submitState = .idle
@@ -145,9 +145,9 @@ final class EditLostFoundViewModel: ObservableObject {
         selectedItemTypeID = detail.item.itemTypeID
         descriptionText = detail.description
         location = detail.item.location
-        qq = Self.extractContactValue(from: detail.contactHint, prefix: "QQ：") ?? ""
-        wechat = Self.extractContactValue(from: detail.contactHint, prefix: "微信：") ?? ""
-        phone = Self.extractContactValue(from: detail.contactHint, prefix: "手机号：") ?? ""
+        qq = Self.extractContactValue(from: detail.contactHint, prefix: localizedString("lostFound.mapper.contactQQ")) ?? ""
+        wechat = Self.extractContactValue(from: detail.contactHint, prefix: localizedString("lostFound.mapper.contactWechat")) ?? ""
+        phone = Self.extractContactValue(from: detail.contactHint, prefix: localizedString("lostFound.mapper.contactPhone")) ?? ""
     }
 
     var itemTypeOptions: [String] {
@@ -176,44 +176,44 @@ final class EditLostFoundViewModel: ObservableObject {
         let trimmedWechat = FormValidationSupport.trimmed(wechat)
         let trimmedPhone = FormValidationSupport.trimmed(phone)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: "请填写物品名称") {
+        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("lostFound.vm.enterItemName")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedTitle.count > 25 {
-            submitState = .failure("物品名称不能超过 25 个字")
+            submitState = .failure(localizedString("lostFound.vm.itemNameTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: "请填写物品描述") {
+        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("lostFound.vm.enterDescription")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedDescription.count > 100 {
-            submitState = .failure("物品描述不能超过 100 个字")
+            submitState = .failure(localizedString("lostFound.vm.descriptionTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: "请填写地点") {
+        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("lostFound.vm.enterLocation")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedLocation.count > 30 {
-            submitState = .failure("地点不能超过 30 个字")
+            submitState = .failure(localizedString("lostFound.vm.locationTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireOneFilled([trimmedQQ, trimmedWechat, trimmedPhone], message: "联系方式至少填写一项") {
+        if let message = FormValidationSupport.requireOneFilled([trimmedQQ, trimmedWechat, trimmedPhone], message: localizedString("lostFound.vm.contactRequired")) {
             submitState = .failure(message)
             return nil
         }
         if !trimmedQQ.isEmpty && trimmedQQ.count > 20 {
-            submitState = .failure("QQ 号不能超过 20 位")
+            submitState = .failure(localizedString("lostFound.vm.qqTooLong"))
             return nil
         }
         if !trimmedWechat.isEmpty && trimmedWechat.count > 20 {
-            submitState = .failure("微信号不能超过 20 位")
+            submitState = .failure(localizedString("lostFound.vm.wechatTooLong"))
             return nil
         }
         if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure("手机号不能超过 11 位")
+            submitState = .failure(localizedString("lostFound.vm.phoneTooLong"))
             return nil
         }
 

@@ -41,15 +41,15 @@ final class CETViewModel: ObservableObject {
         captchaCode = FormValidationSupport.trimmed(captchaCode)
 
         guard ticketNumber.count == 15 else {
-            queryState = .failure("准考证号必须为15位数字")
+            queryState = .failure(localizedString("cet.vm.ticketMustBe15"))
             return
         }
         guard FormValidationSupport.hasText(candidateName) else {
-            queryState = .failure("请输入姓名")
+            queryState = .failure(localizedString("cet.vm.enterName"))
             return
         }
         guard FormValidationSupport.hasText(captchaCode) else {
-            queryState = .failure("请输入验证码")
+            queryState = .failure(localizedString("cet.vm.enterCaptcha"))
             return
         }
 
@@ -64,11 +64,11 @@ final class CETViewModel: ObservableObject {
                 )
             )
             self.dashboard = dashboard
-            queryState = .success("成绩查询完成")
+            queryState = .success(localizedString("cet.vm.querySuccess"))
             captchaCode = ""
             await refreshCaptcha()
         } catch {
-            queryState = .failure((error as? LocalizedError)?.errorDescription ?? "查询失败")
+            queryState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("cet.vm.queryFailed"))
             await refreshCaptcha()
         }
     }

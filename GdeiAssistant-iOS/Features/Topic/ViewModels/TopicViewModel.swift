@@ -33,7 +33,7 @@ final class TopicViewModel: ObservableObject {
                 posts = try await repository.fetchPosts(start: 0, size: pageSize)
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "话题列表加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("topic.vm.loadFailed")
         }
     }
 
@@ -92,7 +92,7 @@ final class PublishTopicViewModel: ObservableObject {
 
     func addImage(_ image: UploadImageAsset) {
         guard images.count < 9 else {
-            submitState = .failure("最多只能上传 9 张图片")
+            submitState = .failure(localizedString("topic.vm.maxImages"))
             return
         }
         images.append(image)
@@ -106,20 +106,20 @@ final class PublishTopicViewModel: ObservableObject {
         let trimmedTopic = FormValidationSupport.trimmed(topic)
         let trimmedContent = FormValidationSupport.trimmed(content)
 
-        if let message = FormValidationSupport.requireText(trimmedTopic, message: "请输入话题标签") {
+        if let message = FormValidationSupport.requireText(trimmedTopic, message: localizedString("topic.vm.enterTag")) {
             submitState = .failure(message)
             return false
         }
         if trimmedTopic.count > 15 {
-            submitState = .failure("话题标签不能超过 15 个字")
+            submitState = .failure(localizedString("topic.vm.tagTooLong"))
             return false
         }
-        if let message = FormValidationSupport.requireText(trimmedContent, message: "请输入话题内容") {
+        if let message = FormValidationSupport.requireText(trimmedContent, message: localizedString("topic.vm.enterContent")) {
             submitState = .failure(message)
             return false
         }
         if trimmedContent.count > 250 {
-            submitState = .failure("话题内容不能超过 250 个字")
+            submitState = .failure(localizedString("topic.vm.contentTooLong"))
             return false
         }
 
@@ -128,10 +128,10 @@ final class PublishTopicViewModel: ObservableObject {
             try await repository.publish(
                 draft: TopicDraft(topic: trimmedTopic, content: trimmedContent, images: images)
             )
-            submitState = .success("话题已发布")
+            submitState = .success(localizedString("topic.vm.publishSuccess"))
             return true
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("topic.vm.publishFailed"))
             return false
         }
     }
