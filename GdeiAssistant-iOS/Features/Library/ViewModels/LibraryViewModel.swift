@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class LibraryViewModel: ObservableObject {
     @Published var keyword: String = ""
+    @Published var currentPage: Int = 1
     @Published var books: [LibraryBook] = []
     @Published var borrowPassword: String = ""
     @Published var borrowRecords: [BorrowRecord] = []
@@ -34,13 +35,29 @@ final class LibraryViewModel: ObservableObject {
     }
 
     func searchBooks() async {
+        currentPage = 1
+        await fetchPage(currentPage)
+    }
+
+    func goToPreviousPage() async {
+        guard currentPage > 1 else { return }
+        currentPage -= 1
+        await fetchPage(currentPage)
+    }
+
+    func goToNextPage() async {
+        currentPage += 1
+        await fetchPage(currentPage)
+    }
+
+    private func fetchPage(_ page: Int) async {
         isLoading = true
         errorMessage = nil
 
         defer { isLoading = false }
 
         do {
-            books = try await repository.searchBooks(keyword: keyword)
+            books = try await repository.searchBooks(keyword: keyword, page: page)
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "检索失败"
         }
