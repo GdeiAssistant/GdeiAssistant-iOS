@@ -524,40 +524,42 @@ enum MockSeedData {
         ]
     }
 
-    static let cetDashboard = CETDashboard(
-        profile: CETProfile(
-            candidateName: "林知远",
-            schoolName: "广东第二师范学院",
-            examLevel: "CET-6",
-            admissionTicket: "440120260601234",
-            examDate: "2026-06-15 09:00",
-            examVenue: "教学楼 D302"
-        ),
-        scoreRecords: [
-            CETScoreRecord(
-                id: "cet_2025_12",
-                examSession: "2025年12月",
-                level: "CET-6",
-                totalScore: 532,
-                listeningScore: 182,
-                readingScore: 198,
-                writingScore: 152,
-                speakingScore: nil,
-                passed: true
+    static var cetDashboard: CETDashboard {
+        CETDashboard(
+            profile: CETProfile(
+                candidateName: localizedString("mock.cet.seed.candidateName"),
+                schoolName: localizedString("mock.cet.seed.schoolName"),
+                examLevel: "CET-6",
+                admissionTicket: "440120260601234",
+                examDate: "2026-06-15 09:00",
+                examVenue: localizedString("mock.cet.seed.examVenue")
             ),
-            CETScoreRecord(
-                id: "cet_2025_06",
-                examSession: "2025年06月",
-                level: "CET-4",
-                totalScore: 578,
-                listeningScore: 196,
-                readingScore: 215,
-                writingScore: 167,
-                speakingScore: 81,
-                passed: true
-            )
-        ]
-    )
+            scoreRecords: [
+                CETScoreRecord(
+                    id: "cet_2025_12",
+                    examSession: localizedString("mock.cet.seed.session202512"),
+                    level: "CET-6",
+                    totalScore: 532,
+                    listeningScore: 182,
+                    readingScore: 198,
+                    writingScore: 152,
+                    speakingScore: nil,
+                    passed: true
+                ),
+                CETScoreRecord(
+                    id: "cet_2025_06",
+                    examSession: localizedString("mock.cet.seed.session202506"),
+                    level: "CET-4",
+                    totalScore: 578,
+                    listeningScore: 196,
+                    readingScore: 215,
+                    writingScore: 167,
+                    speakingScore: 81,
+                    passed: true
+                )
+            ]
+        )
+    }
 }
 
 extension MockSeedData {

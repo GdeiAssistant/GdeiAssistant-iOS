@@ -426,3 +426,32 @@
 "mock.topic.post3Detail" = "#图书馆\n\n图书馆五楼新开了夜间讨论区，插座和灯光都比以前好很多，适合做课程展示排练。\n\n晚上九点后人会少一点，适合小组讨论。";
 "mock.topic.me" = "我";
 "mock.topic.justNow" = "刚刚";
+
+// MARK: - Mock Lost & Found Seed Data
+"mock.lostFound.seed.item1.title" = "寻一把黑色折叠伞";
+"mock.lostFound.seed.item1.summary" = "昨晚在图书馆一楼自助借还机附近遗失。";
+"mock.lostFound.seed.item1.location" = "图书馆一楼";
+"mock.lostFound.seed.item1.createdAt" = "18分钟前";
+"mock.lostFound.seed.item2.title" = "拾到一卡通一张";
+"mock.lostFound.seed.item2.summary" = "卡面姓名显示为李同学，已暂存到宿管阿姨处。";
+"mock.lostFound.seed.item2.location" = "北苑 3 栋门口";
+"mock.lostFound.seed.item2.createdAt" = "42分钟前";
+"mock.lostFound.seed.item3.title" = "寻 AirPods 保护壳";
+"mock.lostFound.seed.item3.summary" = "透明壳，背面贴了蓝色笑脸贴纸。";
+"mock.lostFound.seed.item3.location" = "教学楼 C201";
+"mock.lostFound.seed.item3.createdAt" = "1小时前";
+"mock.lostFound.seed.detail1.description" = "雨伞手柄处有白色胶带，晚上闭馆前还在使用，怀疑离开时落在借还机座位旁。";
+"mock.lostFound.seed.detail1.contactHint" = "QQ：231245678 / 微信：demo_umbrella";
+"mock.lostFound.seed.statusText.active" = "寻主/寻物中";
+"mock.lostFound.seed.detail2.description" = "已将校园卡交给宿管阿姨保管，卡主可凭学生证领取。";
+"mock.lostFound.seed.detail2.contactHint" = "QQ：83457892";
+"mock.lostFound.seed.detail2.ownerNickname" = "李同学";
+"mock.lostFound.seed.detail3.description" = "保护壳内侧写有 ZY 字样，如果捡到请留言。";
+"mock.lostFound.seed.detail3.contactHint" = "微信：zy_airpods";
+
+// MARK: - Mock CET Seed Data
+"mock.cet.seed.candidateName" = "林知远";
+"mock.cet.seed.schoolName" = "广东第二师范学院";
+"mock.cet.seed.examVenue" = "教学楼 D302";
+"mock.cet.seed.session202512" = "2025年12月";
+"mock.cet.seed.session202506" = "2025年06月";

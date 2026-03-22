@@ -426,3 +426,32 @@
 "mock.topic.post3Detail" = "#Library\n\nThe 5th floor of the library just opened a nighttime discussion area — much better outlets and lighting, great for rehearsing presentations.\n\nIt gets quieter after 9 PM, perfect for group discussions.";
 "mock.topic.me" = "Me";
 "mock.topic.justNow" = "Just now";
+
+// MARK: - Mock Lost & Found Seed Data
+"mock.lostFound.seed.item1.title" = "Lost: Black folding umbrella";
+"mock.lostFound.seed.item1.summary" = "Left near the self-service kiosk on the 1st floor of the library last night.";
+"mock.lostFound.seed.item1.location" = "Library 1F";
+"mock.lostFound.seed.item1.createdAt" = "18 min ago";
+"mock.lostFound.seed.item2.title" = "Found: Campus card";
+"mock.lostFound.seed.item2.summary" = "Name on card shows Li. Left with the dorm manager for safekeeping.";
+"mock.lostFound.seed.item2.location" = "North Court, Bldg 3 entrance";
+"mock.lostFound.seed.item2.createdAt" = "42 min ago";
+"mock.lostFound.seed.item3.title" = "Lost: AirPods case";
+"mock.lostFound.seed.item3.summary" = "Clear case with a blue smiley sticker on the back.";
+"mock.lostFound.seed.item3.location" = "Teaching Bldg C201";
+"mock.lostFound.seed.item3.createdAt" = "1 hr ago";
+"mock.lostFound.seed.detail1.description" = "White tape on the handle. Was still using it before the library closed; likely left next to the kiosk seat.";
+"mock.lostFound.seed.detail1.contactHint" = "QQ: 231245678 / WeChat: demo_umbrella";
+"mock.lostFound.seed.statusText.active" = "Searching";
+"mock.lostFound.seed.detail2.description" = "Campus card has been left with the dorm manager. Owner can pick it up with student ID.";
+"mock.lostFound.seed.detail2.contactHint" = "QQ: 83457892";
+"mock.lostFound.seed.detail2.ownerNickname" = "Li";
+"mock.lostFound.seed.detail3.description" = "Case has 'ZY' written inside. Please leave a message if found.";
+"mock.lostFound.seed.detail3.contactHint" = "WeChat: zy_airpods";
+
+// MARK: - Mock CET Seed Data
+"mock.cet.seed.candidateName" = "Lin Zhiyuan";
+"mock.cet.seed.schoolName" = "Guangdong University of Education";
+"mock.cet.seed.examVenue" = "Teaching Bldg D302";
+"mock.cet.seed.session202512" = "Dec 2025";
+"mock.cet.seed.session202506" = "Jun 2025";

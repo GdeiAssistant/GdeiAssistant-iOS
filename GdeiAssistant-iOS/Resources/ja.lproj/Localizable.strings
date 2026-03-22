@@ -426,3 +426,32 @@
 "mock.topic.post3Detail" = "#図書館\n\n図書館5階に夜間ディスカッションエリアがオープン。コンセントや照明が改善され、プレゼンのリハーサルに最適です。\n\n夜9時以降は人が少なくなり、グループディスカッションに向いています。";
 "mock.topic.me" = "自分";
 "mock.topic.justNow" = "たった今";
+
+// MARK: - Mock Lost & Found Seed Data
+"mock.lostFound.seed.item1.title" = "紛失：黒い折りたたみ傘";
+"mock.lostFound.seed.item1.summary" = "昨夜、図書館1階のセルフ貸出機付近で紛失しました。";
+"mock.lostFound.seed.item1.location" = "図書館1階";
+"mock.lostFound.seed.item1.createdAt" = "18分前";
+"mock.lostFound.seed.item2.title" = "拾得：学生カード1枚";
+"mock.lostFound.seed.item2.summary" = "カードの名前は李さん。寮管理人に預けてあります。";
+"mock.lostFound.seed.item2.location" = "北苑3号棟入口";
+"mock.lostFound.seed.item2.createdAt" = "42分前";
+"mock.lostFound.seed.item3.title" = "紛失：AirPodsケース";
+"mock.lostFound.seed.item3.summary" = "透明ケース、裏面に青いスマイルシールが貼ってあります。";
+"mock.lostFound.seed.item3.location" = "教学棟C201";
+"mock.lostFound.seed.item3.createdAt" = "1時間前";
+"mock.lostFound.seed.detail1.description" = "持ち手に白いテープが巻いてあります。閉館前まで使用しており、貸出機の席に置き忘れた可能性があります。";
+"mock.lostFound.seed.detail1.contactHint" = "QQ: 231245678 / WeChat: demo_umbrella";
+"mock.lostFound.seed.statusText.active" = "捜索中";
+"mock.lostFound.seed.detail2.description" = "学生カードを寮管理人に預けました。持ち主は学生証を持って受け取りに来てください。";
+"mock.lostFound.seed.detail2.contactHint" = "QQ: 83457892";
+"mock.lostFound.seed.detail2.ownerNickname" = "李さん";
+"mock.lostFound.seed.detail3.description" = "ケース内側に「ZY」と書いてあります。拾った方はメッセージをお願いします。";
+"mock.lostFound.seed.detail3.contactHint" = "WeChat: zy_airpods";
+
+// MARK: - Mock CET Seed Data
+"mock.cet.seed.candidateName" = "林知遠";
+"mock.cet.seed.schoolName" = "広東第二師範学院";
+"mock.cet.seed.examVenue" = "教学棟D302";
+"mock.cet.seed.session202512" = "2025年12月";
+"mock.cet.seed.session202506" = "2025年06月";
