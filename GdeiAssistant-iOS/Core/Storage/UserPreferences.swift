@@ -74,7 +74,7 @@ final class UserPreferences: ObservableObject {
     /// Reads the persisted locale directly from UserDefaults so that
     /// non-SwiftUI code (computed properties, utility functions) can resolve
     /// the correct localization bundle without holding an instance reference.
-    static var currentLocale: String {
+    nonisolated static var currentLocale: String {
         UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
             ?? detectSystemLocale()
     }
@@ -120,7 +120,7 @@ final class UserPreferences: ObservableObject {
         defaults.set(fontScaleStep, forKey: AppConstants.UserDefaultsKeys.fontScaleStep)
     }
 
-    private static func detectSystemLocale() -> String {
+    private nonisolated static func detectSystemLocale() -> String {
         let lang = Locale.current.language.languageCode?.identifier ?? "zh"
         let region = Locale.current.region?.identifier ?? ""
         switch "\(lang)-\(region)" {
