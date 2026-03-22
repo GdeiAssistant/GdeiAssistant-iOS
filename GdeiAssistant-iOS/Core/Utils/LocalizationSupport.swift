@@ -5,7 +5,7 @@ import Foundation
 ///
 /// Use this helper anywhere `NSLocalizedString` would ignore the SwiftUI
 /// environment locale (non-SwiftUI contexts, computed properties, etc.).
-func localizedString(_ key: String, locale: String? = nil) -> String {
+nonisolated func localizedString(_ key: String, locale: String? = nil) -> String {
     let targetLocale = locale ?? UserPreferences.currentLocale
     let resolvedResource = lprojResourceName(for: targetLocale)
 
@@ -19,7 +19,7 @@ func localizedString(_ key: String, locale: String? = nil) -> String {
 
 /// Maps a locale identifier used by `UserPreferences` to the corresponding
 /// `.lproj` folder resource name inside the app bundle.
-private func lprojResourceName(for locale: String) -> String {
+private nonisolated func lprojResourceName(for locale: String) -> String {
     switch locale {
     case "zh-CN": return "zh-Hans"
     default: return locale
