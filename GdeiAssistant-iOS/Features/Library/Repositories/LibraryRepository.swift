@@ -25,7 +25,7 @@ final class SwitchingLibraryRepository: LibraryRepository {
     }
 
     func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook] {
-        try await currentRepository.searchBooks(keyword: keyword)
+        try await currentRepository.searchBooks(keyword: keyword, page: page)
     }
 
     func fetchBookDetail(bookID: String) async throws -> LibraryBookDetail {
