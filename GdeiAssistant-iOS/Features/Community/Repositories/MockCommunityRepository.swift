@@ -2,18 +2,43 @@ import Foundation
 
 @MainActor
 final class MockCommunityRepository: CommunityRepository {
-    private var hotPosts = MockSeedData.communityHotPosts
-    private var latestPosts = MockSeedData.communityLatestPosts
-    private var commentsByPostID = MockSeedData.communityCommentsByPostID
+    private var likeCountOverrides: [String: Int] = [:]
+    private var commentCountOverrides: [String: Int] = [:]
+    private var addedComments: [String: [CommunityComment]] = [:]
     private var likedPostIDs: Set<String> = []
+
+    private func hotPosts() -> [CommunityPost] {
+        MockSeedData.communityHotPosts.map { applyOverrides($0) }
+    }
+
+    private func latestPosts() -> [CommunityPost] {
+        MockSeedData.communityLatestPosts.map { applyOverrides($0) }
+    }
+
+    private func comments(for postID: String) -> [CommunityComment] {
+        let seedComments = MockSeedData.communityCommentsByPostID[postID] ?? []
+        let added = addedComments[postID] ?? []
+        return added + seedComments
+    }
+
+    private func applyOverrides(_ post: CommunityPost) -> CommunityPost {
+        var result = post
+        if let likeCount = likeCountOverrides[post.id] {
+            result = result.updating(likeCount: likeCount)
+        }
+        if let commentCount = commentCountOverrides[post.id] {
+            result = result.updating(commentCount: commentCount)
+        }
+        return result
+    }
 
     func fetchPosts(sort: CommunityFeedSort) async throws -> [CommunityPost] {
         try await Task.sleep(nanoseconds: 350_000_000)
         switch sort {
         case .hot:
-            return hotPosts
+            return hotPosts()
         case .latest:
-            return latestPosts
+            return latestPosts()
         }
     }
 
@@ -34,7 +59,7 @@ final class MockCommunityRepository: CommunityRepository {
 
     func fetchComments(postID: String) async throws -> [CommunityComment] {
         try await Task.sleep(nanoseconds: 160_000_000)
-        return commentsByPostID[postID] ?? []
+        return comments(for: postID)
     }
 
     func submitComment(postID: String, content: String) async throws {
@@ -54,27 +79,25 @@ final class MockCommunityRepository: CommunityRepository {
             likeCount: 0
         )
 
-        var comments = commentsByPostID[postID] ?? []
-        comments.insert(newComment, at: 0)
-        commentsByPostID[postID] = comments
-        updatePost(postID: postID) { post in
-            post.updating(commentCount: comments.count)
-        }
+        var added = addedComments[postID] ?? []
+        added.insert(newComment, at: 0)
+        addedComments[postID] = added
+
+        let totalComments = comments(for: postID).count
+        commentCountOverrides[postID] = totalComments
     }
 
     func toggleLike(postID: String) async throws {
         try await Task.sleep(nanoseconds: 120_000_000)
 
+        let currentCount = likeCountOverrides[postID] ?? findPost(postID: postID)?.likeCount ?? 0
+
         if likedPostIDs.contains(postID) {
             likedPostIDs.remove(postID)
-            updatePost(postID: postID) { post in
-                post.updating(likeCount: max(0, post.likeCount - 1))
-            }
+            likeCountOverrides[postID] = max(0, currentCount - 1)
         } else {
             likedPostIDs.insert(postID)
-            updatePost(postID: postID) { post in
-                post.updating(likeCount: post.likeCount + 1)
-            }
+            likeCountOverrides[postID] = currentCount + 1
         }
     }
 
@@ -89,25 +112,16 @@ final class MockCommunityRepository: CommunityRepository {
         let sourcePosts: [CommunityPost]
         switch sort {
         case .hot:
-            sourcePosts = hotPosts
+            sourcePosts = hotPosts()
         case .latest:
-            sourcePosts = latestPosts
+            sourcePosts = latestPosts()
         }
 
         return sourcePosts.filter { $0.tags.contains(topicID) }
     }
 
     private func findPost(postID: String) -> CommunityPost? {
-        hotPosts.first(where: { $0.id == postID }) ?? latestPosts.first(where: { $0.id == postID })
-    }
-
-    private func updatePost(postID: String, transform: (CommunityPost) -> CommunityPost) {
-        if let index = hotPosts.firstIndex(where: { $0.id == postID }) {
-            hotPosts[index] = transform(hotPosts[index])
-        }
-
-        if let index = latestPosts.firstIndex(where: { $0.id == postID }) {
-            latestPosts[index] = transform(latestPosts[index])
-        }
+        let post = hotPosts().first(where: { $0.id == postID }) ?? latestPosts().first(where: { $0.id == postID })
+        return post
     }
 }
