@@ -18,15 +18,6 @@ struct DeliveryView: View {
                 }
             } else {
                 List {
-                    Section {
-                        Picker("状态", selection: $viewModel.selectedFilter) {
-                            ForEach(DeliveryOrderFilter.allCases) { filter in
-                                Text(filter.title).tag(filter)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                    }
-
                     if let actionMessage = viewModel.actionMessage {
                         Section {
                             Text(actionMessage)
@@ -35,13 +26,13 @@ struct DeliveryView: View {
                         }
                     }
 
-                    if viewModel.filteredOrders.isEmpty {
+                    if viewModel.orders.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "shippingbox.circle", title: "暂无订单", message: "当前筛选下没有可展示的订单")
+                            DSEmptyStateView(icon: "shippingbox.circle", title: "暂无订单", message: "暂时没有可接的跑腿任务")
                         }
                     } else {
                         Section {
-                            ForEach(viewModel.filteredOrders) { order in
+                            ForEach(viewModel.orders) { order in
                                 NavigationLink {
                                     DeliveryDetailView(viewModel: viewModel, orderID: order.orderID, dismissAfterMutation: false)
                                 } label: {

@@ -5,7 +5,6 @@ import Combine
 final class DeliveryViewModel: ObservableObject {
     @Published var orders: [DeliveryOrder] = []
     @Published var mine = DeliveryMineSummary(published: [], accepted: [])
-    @Published var selectedFilter: DeliveryOrderFilter = .all
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var actionMessage: String?
@@ -15,19 +14,6 @@ final class DeliveryViewModel: ObservableObject {
 
     init(repository: any DeliveryRepository) {
         self.repository = repository
-    }
-
-    var filteredOrders: [DeliveryOrder] {
-        switch selectedFilter {
-        case .all:
-            return orders
-        case .pending:
-            return orders.filter { $0.state == .pending }
-        case .delivering:
-            return orders.filter { $0.state == .delivering }
-        case .completed:
-            return orders.filter { $0.state == .completed }
-        }
     }
 
     func loadIfNeeded() async {
