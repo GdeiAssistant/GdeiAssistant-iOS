@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 @MainActor
 struct RequestBuilder {
@@ -37,6 +38,10 @@ struct RequestBuilder {
 
         if request.requiresAuth, let token = tokenProvider(), !token.isEmpty {
             urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: AppConstants.API.authorizationHeader)
+        }
+
+        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+            urlRequest.setValue(deviceId, forHTTPHeaderField: "X-Device-ID")
         }
 
         let locale = UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) ?? "zh-CN"

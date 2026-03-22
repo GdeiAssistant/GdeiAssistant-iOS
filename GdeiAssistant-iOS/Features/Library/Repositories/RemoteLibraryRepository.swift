@@ -8,12 +8,12 @@ final class RemoteLibraryRepository: LibraryRepository {
         self.apiClient = apiClient
     }
 
-    func searchBooks(keyword: String) async throws -> [LibraryBook] {
+    func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook] {
         let dto: BookSearchResponseDTO = try await apiClient.get(
             "/library/search",
             queryItems: [
                 URLQueryItem(name: "keyword", value: keyword),
-                URLQueryItem(name: "page", value: "1")
+                URLQueryItem(name: "page", value: String(page))
             ],
             requiresAuth: true
         )

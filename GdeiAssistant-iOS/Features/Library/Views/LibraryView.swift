@@ -49,27 +49,47 @@ struct LibraryView: View {
         } else if viewModel.books.isEmpty {
             DSEmptyStateView(icon: "books.vertical", title: "暂无匹配图书", message: "换个关键词试试")
         } else {
-            List(viewModel.books) { book in
-                NavigationLink {
-                    LibraryBookDetailView(viewModel: viewModel, bookID: book.id)
-                } label: {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(book.title)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(DSColor.title)
-                        Text("\(book.author) · \(book.location)")
-                            .font(.caption)
-                            .foregroundStyle(DSColor.subtitle)
-                        Text("可借数量：\(book.availableCount)")
-                            .font(.caption)
-                            .foregroundStyle(book.availableCount > 0 ? DSColor.secondary : DSColor.danger)
+            VStack(spacing: 0) {
+                List(viewModel.books) { book in
+                    NavigationLink {
+                        LibraryBookDetailView(viewModel: viewModel, bookID: book.id)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(book.title)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(DSColor.title)
+                            Text("\(book.author) · \(book.location)")
+                                .font(.caption)
+                                .foregroundStyle(DSColor.subtitle)
+                            Text("可借数量：\(book.availableCount)")
+                                .font(.caption)
+                                .foregroundStyle(book.availableCount > 0 ? DSColor.secondary : DSColor.danger)
+                        }
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 4)
                 }
-            }
-            .listStyle(.plain)
-            .refreshable {
-                await viewModel.refreshAll()
+                .listStyle(.plain)
+                .refreshable {
+                    await viewModel.refreshAll()
+                }
+
+                HStack(spacing: 16) {
+                    Button("上一页") {
+                        Task { await viewModel.goToPreviousPage() }
+                    }
+                    .disabled(viewModel.currentPage <= 1)
+
+                    Text("第 \(viewModel.currentPage) 页")
+                        .font(.subheadline)
+                        .foregroundStyle(DSColor.subtitle)
+
+                    Button("下一页") {
+                        Task { await viewModel.goToNextPage() }
+                    }
+                }
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(DSColor.background)
             }
         }
     }
