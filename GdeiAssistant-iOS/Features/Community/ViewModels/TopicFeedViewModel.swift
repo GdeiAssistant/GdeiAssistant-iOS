@@ -37,7 +37,7 @@ final class TopicFeedViewModel: ObservableObject {
         } catch {
             topic = nil
             posts = []
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "话题加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("community.vm.topicLoadFailed")
         }
     }
 

@@ -5,10 +5,10 @@ enum LibraryRemoteMapper {
         (dto.collectionList ?? []).map { item in
             LibraryBook(
                 id: RemoteMapperSupport.firstNonEmpty(item.detailURL, UUID().uuidString),
-                title: RemoteMapperSupport.firstNonEmpty(item.bookname, "未命名图书"),
-                author: RemoteMapperSupport.firstNonEmpty(item.author, "作者未知"),
+                title: RemoteMapperSupport.firstNonEmpty(item.bookname, localizedString("library.mapper.unnamedBook")),
+                author: RemoteMapperSupport.firstNonEmpty(item.author, localizedString("library.mapper.unknownAuthor")),
                 availableCount: 0,
-                location: RemoteMapperSupport.firstNonEmpty(item.publishingHouse, "点击查看馆藏详情")
+                location: RemoteMapperSupport.firstNonEmpty(item.publishingHouse, localizedString("library.mapper.viewHoldings"))
             )
         }
     }
@@ -25,10 +25,10 @@ enum LibraryRemoteMapper {
         let distributions = dto.collectionDistributionList ?? []
         let availableCount = distributions.filter { distribution in
             let state = distribution.state?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-            return state.contains("可借") || state.contains("在馆")
+            return state.contains("可借") || state.contains("在馆") || state.contains("Available") || state.contains("In Library")
         }.count
 
-        let location = distributions.first?.location ?? "馆藏位置待更新"
+        let location = distributions.first?.location ?? localizedString("library.mapper.locationPending")
         let summaryParts = [
             dto.subjectTheme,
             dto.personalPrincipal,
@@ -41,11 +41,11 @@ enum LibraryRemoteMapper {
 
         return LibraryBookDetail(
             id: bookID,
-            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, "未命名图书"),
-            author: RemoteMapperSupport.firstNonEmpty(dto.author, "作者未知"),
-            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, "出版社未知"),
-            isbn: RemoteMapperSupport.firstNonEmpty(dto.chineseLibraryClassification, dto.principal, "暂无馆藏编号"),
-            summary: summaryParts.isEmpty ? "暂无馆藏说明" : summaryParts.joined(separator: "\n"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, localizedString("library.mapper.unnamedBook")),
+            author: RemoteMapperSupport.firstNonEmpty(dto.author, localizedString("library.mapper.unknownAuthor")),
+            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, localizedString("library.mapper.unknownPublisher")),
+            isbn: RemoteMapperSupport.firstNonEmpty(dto.chineseLibraryClassification, dto.principal, localizedString("library.mapper.noISBN")),
+            summary: summaryParts.isEmpty ? localizedString("library.mapper.noSummary") : summaryParts.joined(separator: "\n"),
             availableCount: availableCount,
             location: location
         )
@@ -58,10 +58,10 @@ enum LibraryRemoteMapper {
 
             return BorrowRecord(
                 id: RemoteMapperSupport.firstNonEmpty(item.id, item.sn, UUID().uuidString),
-                bookTitle: RemoteMapperSupport.firstNonEmpty(item.name, "未命名图书"),
-                borrowDate: RemoteMapperSupport.dateText(item.borrowDate, fallback: "待定"),
-                dueDate: RemoteMapperSupport.dateText(item.returnDate, fallback: "待定"),
-                status: renewTime > 0 ? "已续借\(renewTime)次" : "待归还",
+                bookTitle: RemoteMapperSupport.firstNonEmpty(item.name, localizedString("library.mapper.unnamedBook")),
+                borrowDate: RemoteMapperSupport.dateText(item.borrowDate, fallback: localizedString("library.mapper.pending")),
+                dueDate: RemoteMapperSupport.dateText(item.returnDate, fallback: localizedString("library.mapper.pending")),
+                status: renewTime > 0 ? localizedString("library.mapper.renewed") + "\(renewTime)" + localizedString("library.mapper.times") : localizedString("library.mapper.toReturn"),
                 renewable: hasRenewToken,
                 sn: item.sn,
                 code: item.code

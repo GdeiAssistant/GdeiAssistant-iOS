@@ -10,7 +10,7 @@ struct TopicFeedView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Picker("排序", selection: sortBinding) {
+            Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
                 ForEach(CommunityFeedSort.allCases) { sort in
                     Text(sort.title).tag(sort)
                 }
@@ -21,7 +21,7 @@ struct TopicFeedView: View {
             content
         }
         .background(DSColor.background)
-        .navigationTitle(viewModel.topic?.title ?? "话题")
+        .navigationTitle(viewModel.topic?.title ?? localizedString("community.topicFeed.defaultTitle"))
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -30,13 +30,13 @@ struct TopicFeedView: View {
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading && viewModel.posts.isEmpty {
-            DSLoadingView(text: "正在加载话题内容...")
+            DSLoadingView(text: localizedString("community.topicFeed.loading"))
         } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
             DSErrorStateView(message: errorMessage) {
                 Task { await viewModel.load() }
             }
         } else if viewModel.posts.isEmpty {
-            DSEmptyStateView(icon: "number.circle", title: "暂无相关帖子", message: "换个排序试试")
+            DSEmptyStateView(icon: "number.circle", title: localizedString("community.topicFeed.emptyTitle"), message: localizedString("community.topicFeed.emptyMessage"))
         } else {
             ScrollView {
                 VStack(spacing: 14) {

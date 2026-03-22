@@ -38,14 +38,14 @@ final class PostDetailViewModel: ObservableObject {
         } catch {
             detail = nil
             comments = []
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "帖子详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("community.vm.postDetailLoadFailed")
         }
     }
 
     func submitComment() async {
         let trimmedContent = commentText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedContent.isEmpty else {
-            errorMessage = "请输入评论内容"
+            errorMessage = localizedString("community.vm.enterComment")
             return
         }
 
@@ -57,7 +57,7 @@ final class PostDetailViewModel: ObservableObject {
             commentText = ""
             await loadDetail()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "评论发送失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("community.vm.commentFailed")
         }
     }
 
@@ -66,7 +66,7 @@ final class PostDetailViewModel: ObservableObject {
             try await repository.toggleLike(postID: postID)
             detail = try await repository.fetchPostDetail(postID: postID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "点赞操作失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("community.vm.likeFailed")
         }
     }
 }

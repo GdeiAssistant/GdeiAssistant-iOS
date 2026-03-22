@@ -11,13 +11,13 @@ struct ExpressView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.posts.isEmpty {
-                DSLoadingView(text: "正在加载表白墙...")
+                DSLoadingView(text: localizedString("express.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.posts.isEmpty {
-                DSEmptyStateView(icon: "heart.text.square", title: "暂无内容", message: "去发布一条真诚的表白")
+                DSEmptyStateView(icon: "heart.text.square", title: localizedString("express.emptyTitle"), message: localizedString("express.emptyMessage"))
             } else {
                 List(viewModel.posts) { post in
                     NavigationLink {
@@ -33,14 +33,14 @@ struct ExpressView: View {
                 }
             }
         }
-        .navigationTitle("表白墙")
+        .navigationTitle(LocalizedStringKey("express.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(LocalizedStringKey("express.mine")) {
                     MyExpressPostsView(viewModel: viewModel)
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(LocalizedStringKey("express.publish")) {
                     PublishExpressView(viewModel: container.makePublishExpressViewModel(), listViewModel: viewModel)
                 }
             }
@@ -80,7 +80,7 @@ private struct ExpressPostRow: View {
             HStack {
                 Label("\(post.likeCount)", systemImage: post.isLiked ? "heart.fill" : "heart")
                 Label("\(post.commentCount)", systemImage: "bubble.left")
-                Text(post.canGuess ? "可猜名" : "不可猜名")
+                Text(post.canGuess ? LocalizedStringKey("express.canGuess") : LocalizedStringKey("express.cannotGuess"))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
                     .background((post.canGuess ? DSColor.warning : DSColor.subtitle).opacity(0.12))
@@ -130,7 +130,7 @@ struct ExpressDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("express.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -160,10 +160,10 @@ struct ExpressDetailView: View {
                             }
 
                             HStack(spacing: 18) {
-                                statItem(title: "点赞", value: detail.post.likeCount)
-                                statItem(title: "评论", value: detail.post.commentCount)
+                                statItem(title: localizedString("express.detail.likes"), value: detail.post.likeCount)
+                                statItem(title: localizedString("express.detail.comments"), value: detail.post.commentCount)
                                 if detail.post.canGuess {
-                                    statItem(title: "猜中", value: detail.post.correctGuessCount)
+                                    statItem(title: localizedString("express.detail.correctGuess"), value: detail.post.correctGuessCount)
                                 }
                             }
 
@@ -172,13 +172,13 @@ struct ExpressDetailView: View {
                                 .foregroundStyle(DSColor.title)
 
                             if detail.post.canGuess {
-                                Text("猜名字功能会实时刷新猜测次数与猜中次数。")
+                                Text(LocalizedStringKey("express.detail.guessHint"))
                                     .font(.footnote)
                                     .foregroundStyle(DSColor.subtitle)
                             }
 
                             if let realName = detail.realName, detail.post.canGuess {
-                                Text("真实姓名：\(realName)")
+                                Text(localizedString("express.detail.realName") + realName)
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
                             }
@@ -187,16 +187,16 @@ struct ExpressDetailView: View {
                                 Button {
                                     Task { await like() }
                                 } label: {
-                                    Label(detail.post.isLiked ? "已点赞" : "点赞", systemImage: detail.post.isLiked ? "heart.fill" : "heart")
+                                    Label(detail.post.isLiked ? LocalizedStringKey("express.detail.liked") : LocalizedStringKey("express.detail.like"), systemImage: detail.post.isLiked ? "heart.fill" : "heart")
                                 }
                                 .buttonStyle(.bordered)
                                 .disabled(detail.post.isLiked || isSubmitting)
                                 .tint(actionTint(for: "like"))
 
                                 if detail.post.canGuess {
-                                    TextField("输入你猜的名字", text: $guessName)
+                                    TextField(LocalizedStringKey("express.detail.guessPlaceholder"), text: $guessName)
                                         .textFieldStyle(.roundedBorder)
-                                    Button("猜一猜") {
+                                    Button(LocalizedStringKey("express.detail.guessButton")) {
                                         Task { await guess() }
                                     }
                                     .buttonStyle(.borderedProminent)
@@ -206,13 +206,13 @@ struct ExpressDetailView: View {
                             }
                         }
                     } header: {
-                        Text("正文")
+                        Text(LocalizedStringKey("express.detail.bodySection"))
                     }
 
                     Section {
-                        TextField("写下你的留言", text: $commentInput, axis: .vertical)
+                        TextField(LocalizedStringKey("express.detail.commentPlaceholder"), text: $commentInput, axis: .vertical)
                             .lineLimit(2...4)
-                        Button(isSubmitting ? "提交中..." : "发送评论") {
+                        Button(isSubmitting ? LocalizedStringKey("express.detail.submitting") : LocalizedStringKey("express.detail.sendComment")) {
                             Task { await submitComment() }
                         }
                         .disabled(isSubmitting || !FormValidationSupport.hasText(commentInput))
@@ -222,12 +222,12 @@ struct ExpressDetailView: View {
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     } header: {
-                        Text("互动")
+                        Text(LocalizedStringKey("express.detail.interactionSection"))
                     }
 
                     if comments.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "bubble.left", title: "暂无评论", message: "说点什么，给这条表白一点回应")
+                            DSEmptyStateView(icon: "bubble.left", title: localizedString("express.detail.noComments"), message: localizedString("express.detail.noCommentsMessage"))
                         }
                     } else {
                         Section {
@@ -248,14 +248,14 @@ struct ExpressDetailView: View {
                                 .padding(.vertical, 4)
                             }
                         } header: {
-                            Text("评论")
+                            Text(LocalizedStringKey("express.detail.commentsSection"))
                         }
                     }
                 }
                 .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("详情")
+        .navigationTitle(LocalizedStringKey("express.detail.title"))
         .task {
             await loadDetail()
         }
@@ -284,7 +284,7 @@ struct ExpressDetailView: View {
             detail = try await detailTask
             comments = try await commentsTask
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.detail.loadFailed")
         }
     }
 
@@ -296,11 +296,11 @@ struct ExpressDetailView: View {
         do {
             try await viewModel.submitComment(postID: postID, content: FormValidationSupport.trimmed(commentInput))
             commentInput = ""
-            resultMessage = "评论已发送"
+            resultMessage = localizedString("express.detail.commentSent")
             comments = try await viewModel.fetchComments(postID: postID)
             try await refreshDetailAndNotifyParent()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "评论发送失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.detail.commentFailed")
         }
     }
 
@@ -312,7 +312,7 @@ struct ExpressDetailView: View {
             try await viewModel.like(postID: postID)
             try await refreshDetailAndNotifyParent()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "点赞失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.detail.likeFailed")
         }
     }
 
@@ -322,11 +322,11 @@ struct ExpressDetailView: View {
 
         do {
             let matched = try await viewModel.guess(postID: postID, name: FormValidationSupport.trimmed(guessName))
-            resultMessage = matched ? "你猜对了" : "猜错了，再试试"
+            resultMessage = matched ? localizedString("express.detail.guessCorrect") : localizedString("express.detail.guessWrong")
             try await refreshDetailAndNotifyParent()
             guessName = ""
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "提交失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.detail.submitFailed")
         }
     }
 
@@ -345,13 +345,13 @@ struct ExpressDetailView: View {
         guard notificationID != nil else { return nil }
         switch normalizedNotificationTargetType {
         case "comment":
-            return "来自互动消息：有新评论，打开详情即可查看"
+            return localizedString("express.notification.comment")
         case "like":
-            return "来自互动消息：有人点赞了这条表白"
+            return localizedString("express.notification.like")
         case "guess":
-            return "来自互动消息：有人参与了猜名字"
+            return localizedString("express.notification.guess")
         default:
-            return "来自互动消息"
+            return localizedString("express.notification.generic")
         }
     }
 
@@ -370,13 +370,13 @@ private struct MyExpressPostsView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载我的内容...")
+                DSLoadingView(text: localizedString("express.myPosts.loading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
                 }
             } else if posts.isEmpty {
-                DSEmptyStateView(icon: "heart.slash", title: "还没有发布内容", message: "去写下一条想说的话")
+                DSEmptyStateView(icon: "heart.slash", title: localizedString("express.myPosts.emptyTitle"), message: localizedString("express.myPosts.emptyMessage"))
             } else {
                 List {
                     Section {
@@ -398,7 +398,7 @@ private struct MyExpressPostsView: View {
                 }
             }
         }
-        .navigationTitle("我的")
+        .navigationTitle(LocalizedStringKey("express.mine"))
         .task {
             await loadData()
         }
@@ -412,7 +412,7 @@ private struct MyExpressPostsView: View {
         do {
             posts = try await viewModel.fetchMyPosts()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.myPosts.loadFailed")
         }
     }
 
@@ -435,28 +435,28 @@ private struct PublishExpressView: View {
     var body: some View {
         Form {
             Section {
-                TextField("昵称", text: $viewModel.nickname)
-                TextField("真实姓名（选填）", text: $viewModel.realName)
-                Picker("你的性别", selection: $viewModel.selfGender) {
+                TextField(LocalizedStringKey("express.publish.nickname"), text: $viewModel.nickname)
+                TextField(LocalizedStringKey("express.publish.realNameOptional"), text: $viewModel.realName)
+                Picker(LocalizedStringKey("express.publish.selfGender"), selection: $viewModel.selfGender) {
                     ForEach(ExpressGender.allCases) { gender in
                         Text(gender.title).tag(gender)
                     }
                 }
             } header: {
-                Text("你的信息")
+                Text(LocalizedStringKey("express.publish.yourInfo"))
             }
 
             Section {
-                TextField("TA 的名字", text: $viewModel.targetName)
-                Picker("TA 的性别", selection: $viewModel.targetGender) {
+                TextField(LocalizedStringKey("express.publish.targetName"), text: $viewModel.targetName)
+                Picker(LocalizedStringKey("express.publish.targetGender"), selection: $viewModel.targetGender) {
                     ForEach(ExpressGender.allCases) { gender in
                         Text(gender.title).tag(gender)
                     }
                 }
-                TextField("表白内容", text: $viewModel.content, axis: .vertical)
+                TextField(LocalizedStringKey("express.publish.contentPlaceholder"), text: $viewModel.content, axis: .vertical)
                     .lineLimit(5...8)
             } header: {
-                Text("内容")
+                Text(LocalizedStringKey("express.publish.contentSection"))
             }
 
             if let message = viewModel.submitState.message {
@@ -467,10 +467,10 @@ private struct PublishExpressView: View {
                 }
             }
         }
-        .navigationTitle("发布表白")
+        .navigationTitle(LocalizedStringKey("express.publish.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "提交中..." : "提交") {
+                Button(viewModel.submitState.isSubmitting ? LocalizedStringKey("express.publish.submitting") : LocalizedStringKey("express.publish.submit")) {
                     Task {
                         let success = await viewModel.submit()
                         if success {

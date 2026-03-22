@@ -9,9 +9,9 @@ enum CommunityFeedSort: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .hot:
-            return "热门"
+            return localizedString("community.sort.hot")
         case .latest:
-            return "最新"
+            return localizedString("community.sort.latest")
         }
     }
 }

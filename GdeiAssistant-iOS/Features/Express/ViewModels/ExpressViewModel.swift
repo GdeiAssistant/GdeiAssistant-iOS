@@ -27,7 +27,7 @@ final class ExpressViewModel: ObservableObject {
         do {
             posts = try await repository.fetchPosts(start: 0, size: pageSize)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "表白墙加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("express.vm.loadFailed")
         }
     }
 
@@ -146,32 +146,32 @@ final class PublishExpressViewModel: ObservableObject {
         let trimmedTargetName = FormValidationSupport.trimmed(targetName)
         let trimmedContent = FormValidationSupport.trimmed(content)
 
-        if let message = FormValidationSupport.requireText(trimmedNickname, message: "请输入昵称") {
+        if let message = FormValidationSupport.requireText(trimmedNickname, message: localizedString("express.vm.enterNickname")) {
             submitState = .failure(message)
             return false
         }
         if trimmedNickname.count > 10 {
-            submitState = .failure("昵称不能超过 10 个字")
+            submitState = .failure(localizedString("express.vm.nicknameTooLong"))
             return false
         }
         if trimmedRealName.count > 10 {
-            submitState = .failure("真名不能超过 10 个字")
+            submitState = .failure(localizedString("express.vm.realNameTooLong"))
             return false
         }
-        if let message = FormValidationSupport.requireText(trimmedTargetName, message: "请输入 TA 的名字") {
+        if let message = FormValidationSupport.requireText(trimmedTargetName, message: localizedString("express.vm.enterTargetName")) {
             submitState = .failure(message)
             return false
         }
         if trimmedTargetName.count > 10 {
-            submitState = .failure("TA 的名字不能超过 10 个字")
+            submitState = .failure(localizedString("express.vm.targetNameTooLong"))
             return false
         }
-        if let message = FormValidationSupport.requireText(trimmedContent, message: "请填写表白内容") {
+        if let message = FormValidationSupport.requireText(trimmedContent, message: localizedString("express.vm.enterContent")) {
             submitState = .failure(message)
             return false
         }
         if trimmedContent.count > 250 {
-            submitState = .failure("表白内容不能超过 250 个字")
+            submitState = .failure(localizedString("express.vm.contentTooLong"))
             return false
         }
 
@@ -187,10 +187,10 @@ final class PublishExpressViewModel: ObservableObject {
                     targetGender: targetGender
                 )
             )
-            submitState = .success("表白已发布")
+            submitState = .success(localizedString("express.vm.publishSuccess"))
             return true
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("express.vm.publishFailed"))
             return false
         }
     }
