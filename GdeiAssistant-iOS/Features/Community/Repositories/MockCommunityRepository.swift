@@ -21,7 +21,7 @@ final class MockCommunityRepository: CommunityRepository {
         try await Task.sleep(nanoseconds: 180_000_000)
 
         guard let post = findPost(postID: postID) else {
-            throw NetworkError.server(code: 404, message: "帖子不存在或已被删除")
+            throw NetworkError.server(code: 404, message: localizedString("mock.community.postNotFound"))
         }
 
         return CommunityPostDetail(
@@ -42,14 +42,14 @@ final class MockCommunityRepository: CommunityRepository {
 
         let trimmedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedContent.isEmpty else {
-            throw NetworkError.server(code: 400, message: "评论内容不能为空")
+            throw NetworkError.server(code: 400, message: localizedString("mock.community.emptyComment"))
         }
 
         let newComment = CommunityComment(
             id: "comment_\(UUID().uuidString)",
             authorName: MockSeedData.demoProfile.nickname,
             isAnonymous: false,
-            createdAt: "刚刚",
+            createdAt: localizedString("mock.community.justNow"),
             content: trimmedContent,
             likeCount: 0
         )

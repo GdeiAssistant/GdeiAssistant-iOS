@@ -42,37 +42,37 @@ enum MockSeedData {
     static let communityHotPosts: [CommunityPost] = [
         CommunityPost(
             id: "post_hot_001",
-            authorName: "计算机协会",
+            authorName: localizedString("mock.community.hot1.authorName"),
             authorAvatarURL: "https://example.com/avatar/club_cs.png",
             isAnonymous: false,
-            createdAt: "10分钟前",
-            title: "下周三晚开设 iOS 入门分享会，欢迎旁听",
-            summary: "本次分享覆盖 SwiftUI 基础、项目结构设计和简历项目打磨，活动结束后开放答疑。",
-            tags: ["技术交流", "社团活动"],
+            createdAt: localizedString("mock.community.hot1.createdAt"),
+            title: localizedString("mock.community.hot1.title"),
+            summary: localizedString("mock.community.hot1.summary"),
+            tags: [localizedString("mock.community.tag.techExchange"), localizedString("mock.community.tag.clubActivity")],
             likeCount: 126,
             commentCount: 38
         ),
         CommunityPost(
             id: "post_hot_002",
-            authorName: "匿名同学",
+            authorName: localizedString("mock.community.hot2.authorName"),
             authorAvatarURL: "",
             isAnonymous: true,
-            createdAt: "35分钟前",
-            title: "求推荐数据库课程复习路径",
-            summary: "基础一般，时间只有一周，想先抓重点知识点和常考题型，有同学愿意分享笔记吗？",
-            tags: ["学习互助", "课程讨论"],
+            createdAt: localizedString("mock.community.hot2.createdAt"),
+            title: localizedString("mock.community.hot2.title"),
+            summary: localizedString("mock.community.hot2.summary"),
+            tags: [localizedString("mock.community.tag.studyHelp"), localizedString("mock.community.tag.courseDiscussion")],
             likeCount: 89,
             commentCount: 52
         ),
         CommunityPost(
             id: "post_hot_003",
-            authorName: "校学生会",
+            authorName: localizedString("mock.community.hot3.authorName"),
             authorAvatarURL: "https://example.com/avatar/student_union.png",
             isAnonymous: false,
-            createdAt: "1小时前",
-            title: "校园马拉松志愿者报名开始",
-            summary: "志愿时长可认定第二课堂学分，岗位包含赛道引导、物资发放、医疗协助。",
-            tags: ["校园活动", "志愿服务"],
+            createdAt: localizedString("mock.community.hot3.createdAt"),
+            title: localizedString("mock.community.hot3.title"),
+            summary: localizedString("mock.community.hot3.summary"),
+            tags: [localizedString("mock.community.tag.campusEvent"), localizedString("mock.community.tag.volunteer")],
             likeCount: 160,
             commentCount: 21
         )
@@ -81,37 +81,37 @@ enum MockSeedData {
     static let communityLatestPosts: [CommunityPost] = [
         CommunityPost(
             id: "post_latest_001",
-            authorName: "英语角负责人",
+            authorName: localizedString("mock.community.latest1.authorName"),
             authorAvatarURL: "https://example.com/avatar/english_club.png",
             isAnonymous: false,
-            createdAt: "刚刚",
-            title: "今晚英语角主题：海外交换申请经验",
-            summary: "欢迎有申请计划的同学来交流选校策略、文书准备和时间线安排。",
-            tags: ["留学交流", "讲座"],
+            createdAt: localizedString("mock.community.latest1.createdAt"),
+            title: localizedString("mock.community.latest1.title"),
+            summary: localizedString("mock.community.latest1.summary"),
+            tags: [localizedString("mock.community.tag.studyAbroad"), localizedString("mock.community.tag.lecture")],
             likeCount: 8,
             commentCount: 2
         ),
         CommunityPost(
             id: "post_latest_002",
-            authorName: "匿名同学",
+            authorName: localizedString("mock.community.latest2.authorName"),
             authorAvatarURL: "",
             isAnonymous: true,
-            createdAt: "5分钟前",
-            title: "北区食堂二楼新品测评，有人去试了吗？",
-            summary: "听说新增了轻食窗口，想知道性价比和排队情况，准备明天去看看。",
-            tags: ["校园生活", "食堂"],
+            createdAt: localizedString("mock.community.latest2.createdAt"),
+            title: localizedString("mock.community.latest2.title"),
+            summary: localizedString("mock.community.latest2.summary"),
+            tags: [localizedString("mock.community.tag.campusLife"), localizedString("mock.community.tag.canteen")],
             likeCount: 12,
             commentCount: 7
         ),
         CommunityPost(
             id: "post_latest_003",
-            authorName: "图书馆志愿者",
+            authorName: localizedString("mock.community.latest3.authorName"),
             authorAvatarURL: "https://example.com/avatar/library.png",
             isAnonymous: false,
-            createdAt: "12分钟前",
-            title: "图书馆 3 楼自习区插座维护完成",
-            summary: "之前反馈的插座接触问题已处理，今晚起可正常使用，欢迎继续反馈。",
-            tags: ["公告", "图书馆"],
+            createdAt: localizedString("mock.community.latest3.createdAt"),
+            title: localizedString("mock.community.latest3.title"),
+            summary: localizedString("mock.community.latest3.summary"),
+            tags: [localizedString("mock.community.tag.announcement"), localizedString("mock.community.tag.library")],
             likeCount: 24,
             commentCount: 5
         )
@@ -121,90 +121,103 @@ enum MockSeedData {
         "post_hot_001": [
             CommunityComment(
                 id: "comment_hot_001",
-                authorName: "张同学",
+                authorName: localizedString("mock.community.commentHot1.authorName"),
                 isAnonymous: false,
-                createdAt: "3分钟前",
-                content: "上次参加过这个系列分享，内容很实在，适合刚开始做项目的同学。",
+                createdAt: localizedString("mock.community.commentHot1.createdAt"),
+                content: localizedString("mock.community.commentHot1.content"),
                 likeCount: 12
             ),
             CommunityComment(
                 id: "comment_hot_002",
-                authorName: "匿名用户",
+                authorName: localizedString("mock.community.commentHot2.authorName"),
                 isAnonymous: true,
-                createdAt: "9分钟前",
-                content: "想问下现场会不会讲到接口联调和简历包装？",
+                createdAt: localizedString("mock.community.commentHot2.createdAt"),
+                content: localizedString("mock.community.commentHot2.content"),
                 likeCount: 7
             )
         ],
         "post_hot_002": [
             CommunityComment(
                 id: "comment_hot_003",
-                authorName: "王雨晨",
+                authorName: localizedString("mock.community.commentHot3.authorName"),
                 isAnonymous: false,
-                createdAt: "11分钟前",
-                content: "先抓范式、事务、索引和 SQL 查询优化，期中基本绕不开这些。",
+                createdAt: localizedString("mock.community.commentHot3.createdAt"),
+                content: localizedString("mock.community.commentHot3.content"),
                 likeCount: 15
             )
         ],
         "post_latest_001": [
             CommunityComment(
                 id: "comment_latest_001",
-                authorName: "陈佳怡",
+                authorName: localizedString("mock.community.commentLatest1.authorName"),
                 isAnonymous: false,
-                createdAt: "刚刚",
-                content: "请问是线下活动吗？需要提前报名吗？",
+                createdAt: localizedString("mock.community.commentLatest1.createdAt"),
+                content: localizedString("mock.community.commentLatest1.content"),
                 likeCount: 3
             )
         ]
     ]
 
     static func communityTopic(topicID: String) -> CommunityTopic {
+        let tagTechExchange = localizedString("mock.community.tag.techExchange")
+        let tagClubActivity = localizedString("mock.community.tag.clubActivity")
+        let tagStudyHelp = localizedString("mock.community.tag.studyHelp")
+        let tagCourseDiscussion = localizedString("mock.community.tag.courseDiscussion")
+        let tagCampusEvent = localizedString("mock.community.tag.campusEvent")
+        let tagVolunteer = localizedString("mock.community.tag.volunteer")
+        let tagStudyAbroad = localizedString("mock.community.tag.studyAbroad")
+        let tagLecture = localizedString("mock.community.tag.lecture")
+        let tagCampusLife = localizedString("mock.community.tag.campusLife")
+        let tagCanteen = localizedString("mock.community.tag.canteen")
+        let tagAnnouncement = localizedString("mock.community.tag.announcement")
+        let tagLibrary = localizedString("mock.community.tag.library")
+
         switch topicID {
-        case "技术交流":
-            return CommunityTopic(id: topicID, title: "#技术交流", summary: "分享开发经验、项目实践与技术活动。")
-        case "社团活动":
-            return CommunityTopic(id: topicID, title: "#社团活动", summary: "聚合校内社团招新、活动预告与经验交流。")
-        case "学习互助":
-            return CommunityTopic(id: topicID, title: "#学习互助", summary: "课程答疑、复习资料共享与组队学习。")
-        case "课程讨论":
-            return CommunityTopic(id: topicID, title: "#课程讨论", summary: "围绕课程内容、作业与考试安排交流。")
-        case "校园活动":
-            return CommunityTopic(id: topicID, title: "#校园活动", summary: "校园赛事、讲座和线下活动的集中入口。")
-        case "志愿服务":
-            return CommunityTopic(id: topicID, title: "#志愿服务", summary: "志愿者招募、服务心得和第二课堂资讯。")
-        case "留学交流":
-            return CommunityTopic(id: topicID, title: "#留学交流", summary: "交换申请、语言考试与海外学习经验。")
-        case "讲座":
-            return CommunityTopic(id: topicID, title: "#讲座", summary: "学术讲座、职业分享和专题活动汇总。")
-        case "校园生活":
-            return CommunityTopic(id: topicID, title: "#校园生活", summary: "食堂、宿舍、交通与日常生活信息分享。")
-        case "食堂":
-            return CommunityTopic(id: topicID, title: "#食堂", summary: "食堂窗口测评、菜单推荐和营业调整。")
-        case "公告":
-            return CommunityTopic(id: topicID, title: "#公告", summary: "校内设施维护、时间变更与官方提醒。")
-        case "图书馆":
-            return CommunityTopic(id: topicID, title: "#图书馆", summary: "馆藏检索、借阅经验和自习空间动态。")
+        case tagTechExchange:
+            return CommunityTopic(id: topicID, title: "#\(tagTechExchange)", summary: localizedString("mock.community.topicSummary.techExchange"))
+        case tagClubActivity:
+            return CommunityTopic(id: topicID, title: "#\(tagClubActivity)", summary: localizedString("mock.community.topicSummary.clubActivity"))
+        case tagStudyHelp:
+            return CommunityTopic(id: topicID, title: "#\(tagStudyHelp)", summary: localizedString("mock.community.topicSummary.studyHelp"))
+        case tagCourseDiscussion:
+            return CommunityTopic(id: topicID, title: "#\(tagCourseDiscussion)", summary: localizedString("mock.community.topicSummary.courseDiscussion"))
+        case tagCampusEvent:
+            return CommunityTopic(id: topicID, title: "#\(tagCampusEvent)", summary: localizedString("mock.community.topicSummary.campusEvent"))
+        case tagVolunteer:
+            return CommunityTopic(id: topicID, title: "#\(tagVolunteer)", summary: localizedString("mock.community.topicSummary.volunteer"))
+        case tagStudyAbroad:
+            return CommunityTopic(id: topicID, title: "#\(tagStudyAbroad)", summary: localizedString("mock.community.topicSummary.studyAbroad"))
+        case tagLecture:
+            return CommunityTopic(id: topicID, title: "#\(tagLecture)", summary: localizedString("mock.community.topicSummary.lecture"))
+        case tagCampusLife:
+            return CommunityTopic(id: topicID, title: "#\(tagCampusLife)", summary: localizedString("mock.community.topicSummary.campusLife"))
+        case tagCanteen:
+            return CommunityTopic(id: topicID, title: "#\(tagCanteen)", summary: localizedString("mock.community.topicSummary.canteen"))
+        case tagAnnouncement:
+            return CommunityTopic(id: topicID, title: "#\(tagAnnouncement)", summary: localizedString("mock.community.topicSummary.announcement"))
+        case tagLibrary:
+            return CommunityTopic(id: topicID, title: "#\(tagLibrary)", summary: localizedString("mock.community.topicSummary.library"))
         default:
-            return CommunityTopic(id: topicID, title: "#\(topicID)", summary: "校园社区话题讨论。")
+            return CommunityTopic(id: topicID, title: "#\(topicID)", summary: localizedString("mock.community.topicSummary.default"))
         }
     }
 
     static func communityPostContent(postID: String) -> String {
         switch postID {
         case "post_hot_001":
-            return "这次分享会会从 SwiftUI 页面组织、项目目录结构、接口层封装三个方面展开，也会结合真实校园产品的迭代经验，聊一聊学生项目如何做出完成度。活动后半段会留出时间做现场答疑，欢迎带着自己的代码和问题来。"
+            return localizedString("mock.community.content.hot1")
         case "post_hot_002":
-            return "最近数据库复习越看越乱，特别是事务隔离级别和关系代数部分，总觉得抓不住重点。想问问大家如果只有一周时间，应该先看教材、PPT 还是历年题？如果有整理好的笔记或者刷题路径，也想借鉴一下。"
+            return localizedString("mock.community.content.hot2")
         case "post_hot_003":
-            return "今年校园马拉松计划扩大路线范围，志愿者需要协助起终点秩序维护、赛道补给和完赛引导。报名后会统一培训，服务时长可计入志愿学分。"
+            return localizedString("mock.community.content.hot3")
         case "post_latest_001":
-            return "今晚英语角会邀请两位刚完成交换申请的学长学姐，重点分享语言成绩准备、文书时间线和院校选择逻辑。欢迎准备四六级后继续冲刺雅思托福的同学来听。"
+            return localizedString("mock.community.content.latest1")
         case "post_latest_002":
-            return "最近北区食堂新开的轻食窗口很火，想看看大家吃过之后的真实评价。尤其想知道鸡胸肉套餐的分量和排队速度，适不适合赶课间隙去买。"
+            return localizedString("mock.community.content.latest2")
         case "post_latest_003":
-            return "前几天很多同学反馈 3 楼插座接触不良，现在馆内维护已经完成。如果后续还有新问题，可以继续在本帖留言，方便集中反馈给图书馆老师。"
+            return localizedString("mock.community.content.latest3")
         default:
-            return "这是一条来自校园社区的帖子详情内容，用于展示评论、标签和互动能力。"
+            return localizedString("mock.community.content.default")
         }
     }
 
@@ -441,61 +454,61 @@ enum MockSeedData {
     }
 
     static let libraryBooks: [LibraryBook] = [
-        LibraryBook(id: "book_001", title: "SwiftUI 实战指南", author: "陈智勇", availableCount: 3, location: "总馆 3F 技术区"),
-        LibraryBook(id: "book_002", title: "算法图解", author: "Aditya Bhargava", availableCount: 1, location: "总馆 2F 计算机区"),
-        LibraryBook(id: "book_003", title: "数据库系统概论", author: "王珊", availableCount: 0, location: "北馆 4F 教材区"),
-        LibraryBook(id: "book_004", title: "计算机网络：自顶向下", author: "Kurose", availableCount: 2, location: "总馆 2F 计算机区")
+        LibraryBook(id: "book_001", title: localizedString("mock.library.book1.title"), author: localizedString("mock.library.book1.author"), availableCount: 3, location: localizedString("mock.library.book1.location")),
+        LibraryBook(id: "book_002", title: localizedString("mock.library.book2.title"), author: "Aditya Bhargava", availableCount: 1, location: localizedString("mock.library.book2.location")),
+        LibraryBook(id: "book_003", title: localizedString("mock.library.book3.title"), author: localizedString("mock.library.book3.author"), availableCount: 0, location: localizedString("mock.library.book3.location")),
+        LibraryBook(id: "book_004", title: localizedString("mock.library.book4.title"), author: "Kurose", availableCount: 2, location: localizedString("mock.library.book4.location"))
     ]
 
     static func libraryBookDetail(bookID: String) -> LibraryBookDetail {
         if bookID == "book_002" {
             return LibraryBookDetail(
                 id: "book_002",
-                title: "算法图解",
+                title: localizedString("mock.library.book2.title"),
                 author: "Aditya Bhargava",
-                publisher: "人民邮电出版社",
+                publisher: localizedString("mock.library.book2.publisher"),
                 isbn: "9787115447637",
-                summary: "用图解方式讲解常见算法思想，适合算法入门与复习。",
+                summary: localizedString("mock.library.book2.summary"),
                 availableCount: 1,
-                location: "总馆 2F 计算机区"
+                location: localizedString("mock.library.book2.location")
             )
         }
 
         if bookID == "book_003" {
             return LibraryBookDetail(
                 id: "book_003",
-                title: "数据库系统概论",
-                author: "王珊",
-                publisher: "高等教育出版社",
+                title: localizedString("mock.library.book3.title"),
+                author: localizedString("mock.library.book3.author"),
+                publisher: localizedString("mock.library.book3.publisher"),
                 isbn: "9787040587446",
-                summary: "数据库课程核心教材，覆盖关系模型、SQL、事务与恢复等知识点。",
+                summary: localizedString("mock.library.book3.summary"),
                 availableCount: 0,
-                location: "北馆 4F 教材区"
+                location: localizedString("mock.library.book3.location")
             )
         }
 
         if bookID == "book_004" {
             return LibraryBookDetail(
                 id: "book_004",
-                title: "计算机网络：自顶向下",
+                title: localizedString("mock.library.book4.title"),
                 author: "Kurose",
-                publisher: "机械工业出版社",
+                publisher: localizedString("mock.library.book4.publisher"),
                 isbn: "9787111716485",
-                summary: "以应用层到物理层的方式讲解网络基础，是网络课程常用参考书。",
+                summary: localizedString("mock.library.book4.summary"),
                 availableCount: 2,
-                location: "总馆 2F 计算机区"
+                location: localizedString("mock.library.book4.location")
             )
         }
 
         return LibraryBookDetail(
             id: "book_001",
-            title: "SwiftUI 实战指南",
-            author: "陈智勇",
-            publisher: "电子工业出版社",
+            title: localizedString("mock.library.book1.title"),
+            author: localizedString("mock.library.book1.author"),
+            publisher: localizedString("mock.library.book1.publisher"),
             isbn: "9787121422338",
-            summary: "围绕真实项目讲解 SwiftUI 组件、状态管理、网络交互与架构设计。",
+            summary: localizedString("mock.library.book1.summary"),
             availableCount: 3,
-            location: "总馆 3F 技术区"
+            location: localizedString("mock.library.book1.location")
         )
     }
 
@@ -503,20 +516,20 @@ enum MockSeedData {
         [
             BorrowRecord(
                 id: "borrow_001",
-                bookTitle: "数据库系统概论",
+                bookTitle: localizedString("mock.library.book3.title"),
                 borrowDate: "2026-02-20",
                 dueDate: renewedRecordIDs.contains("borrow_001") ? "2026-04-06" : "2026-03-23",
-                status: renewedRecordIDs.contains("borrow_001") ? "已续借一次" : "借阅中",
+                status: renewedRecordIDs.contains("borrow_001") ? localizedString("mock.library.borrow.renewedOnce") : localizedString("mock.library.borrow.borrowing"),
                 renewable: !renewedRecordIDs.contains("borrow_001"),
                 sn: "borrow_001",
                 code: "code_001"
             ),
             BorrowRecord(
                 id: "borrow_002",
-                bookTitle: "计算机网络：自顶向下",
+                bookTitle: localizedString("mock.library.book4.title"),
                 borrowDate: "2026-02-28",
                 dueDate: "2026-03-31",
-                status: "借阅中",
+                status: localizedString("mock.library.borrow.borrowing"),
                 renewable: true,
                 sn: "borrow_002",
                 code: "code_002"

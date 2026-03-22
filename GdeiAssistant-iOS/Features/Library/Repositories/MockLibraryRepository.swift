@@ -19,10 +19,10 @@ final class MockLibraryRepository: LibraryRepository {
         try await Task.sleep(nanoseconds: 200_000_000)
         let normalizedPassword = FormValidationSupport.trimmed(password)
         guard !normalizedPassword.isEmpty else {
-            throw NetworkError.server(code: 400, message: "请输入图书馆密码")
+            throw NetworkError.server(code: 400, message: localizedString("mock.library.enterPassword"))
         }
         guard validPasswords.contains(normalizedPassword) else {
-            throw NetworkError.server(code: 400, message: "模拟查询失败：图书馆密码不正确")
+            throw NetworkError.server(code: 400, message: localizedString("mock.library.queryPasswordError"))
         }
         return MockFactory.makeBorrowRecords(renewedRecordIDs: renewedRecordIDs)
     }
@@ -32,10 +32,10 @@ final class MockLibraryRepository: LibraryRepository {
 
         let password = FormValidationSupport.trimmed(request.password)
         guard !password.isEmpty else {
-            throw NetworkError.server(code: 400, message: "请输入图书馆密码")
+            throw NetworkError.server(code: 400, message: localizedString("mock.library.enterPassword"))
         }
         guard validPasswords.contains(password) else {
-            throw NetworkError.server(code: 400, message: "模拟续借失败：图书馆密码不正确")
+            throw NetworkError.server(code: 400, message: localizedString("mock.library.renewPasswordError"))
         }
 
         renewedRecordIDs.insert(request.sn)
