@@ -4,10 +4,10 @@ enum ExpressRemoteMapper {
     nonisolated static func mapPost(_ dto: ExpressRemoteDTO) -> ExpressPost {
         ExpressPost(
             id: RemoteMapperSupport.text(dto.id, fallback: UUID().uuidString),
-            nickname: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, "匿名同学"),
-            targetName: RemoteMapperSupport.firstNonEmpty(dto.name, "某位同学"),
+            nickname: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, localizedString("express.mapper.anonymous")),
+            targetName: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("express.mapper.someStudent")),
             contentPreview: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.content), limit: 72),
-            publishTime: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚"),
+            publishTime: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("express.mapper.justNow")),
             likeCount: RemoteMapperSupport.int(dto.likeCount),
             commentCount: RemoteMapperSupport.int(dto.commentCount),
             guessCount: RemoteMapperSupport.int(dto.guessSum),
@@ -30,9 +30,9 @@ enum ExpressRemoteMapper {
     nonisolated static func mapComment(_ dto: ExpressCommentRemoteDTO) -> ExpressCommentItem {
         ExpressCommentItem(
             id: RemoteMapperSupport.text(dto.id, fallback: UUID().uuidString),
-            authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, "同学"),
+            authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, localizedString("express.mapper.student")),
             content: RemoteMapperSupport.firstNonEmpty(dto.comment),
-            publishTime: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚")
+            publishTime: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("express.mapper.justNow"))
         )
     }
 

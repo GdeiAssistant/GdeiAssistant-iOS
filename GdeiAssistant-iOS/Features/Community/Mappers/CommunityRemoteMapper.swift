@@ -11,7 +11,7 @@ enum CommunityRemoteMapper {
         return CommunityPostDetail(
             post: post,
             content: RemoteMapperSupport.firstNonEmpty(dto.content, post.summary),
-            topics: post.tags.map { CommunityTopic(id: $0, title: $0, summary: "按关键词查看校园讨论") },
+            topics: post.tags.map { CommunityTopic(id: $0, title: $0, summary: localizedString("community.mapper.topicSummary")) },
             isLiked: dto.liked ?? false
         )
     }
@@ -20,9 +20,9 @@ enum CommunityRemoteMapper {
         dtos.map { item in
             CommunityComment(
                 id: String(item.id ?? Int.random(in: 1...999_999)),
-                authorName: RemoteMapperSupport.firstNonEmpty(item.nickname, item.username, "校园同学"),
+                authorName: RemoteMapperSupport.firstNonEmpty(item.nickname, item.username, localizedString("community.mapper.campusStudent")),
                 isAnonymous: false,
-                createdAt: RemoteMapperSupport.dateText(item.publishTime, fallback: "刚刚"),
+                createdAt: RemoteMapperSupport.dateText(item.publishTime, fallback: localizedString("community.mapper.justNow")),
                 content: RemoteMapperSupport.firstNonEmpty(item.comment, ""),
                 likeCount: 0
             )
@@ -33,7 +33,7 @@ enum CommunityRemoteMapper {
         CommunityTopic(
             id: keyword,
             title: keyword,
-            summary: "按关键词汇聚校园话题与相关讨论"
+            summary: localizedString("community.mapper.topicKeywordSummary")
         )
     }
 
@@ -41,12 +41,12 @@ enum CommunityRemoteMapper {
         let posts = dtos.map { item in
             CommunityPost(
                 id: String(item.id ?? Int.random(in: 1...999_999)),
-                authorName: RemoteMapperSupport.firstNonEmpty(item.username, "校园同学"),
+                authorName: RemoteMapperSupport.firstNonEmpty(item.username, localizedString("community.mapper.campusStudent")),
                 authorAvatarURL: item.firstImageUrl ?? "",
                 isAnonymous: false,
-                createdAt: RemoteMapperSupport.dateText(item.publishTime, fallback: "刚刚"),
-                title: RemoteMapperSupport.firstNonEmpty(item.topic, RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(item.content, "校园话题"), limit: 18)),
-                summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(item.content, "暂无内容"), limit: 64),
+                createdAt: RemoteMapperSupport.dateText(item.publishTime, fallback: localizedString("community.mapper.justNow")),
+                title: RemoteMapperSupport.firstNonEmpty(item.topic, RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(item.content, localizedString("community.mapper.campusTopic")), limit: 18)),
+                summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(item.content, localizedString("community.mapper.noContent")), limit: 64),
                 tags: [keyword],
                 likeCount: item.likeCount ?? 0,
                 commentCount: 0
@@ -57,20 +57,20 @@ enum CommunityRemoteMapper {
 
     nonisolated private static func mapPost(_ dto: ExpressPostDTO) -> CommunityPost {
         let targetName = RemoteMapperSupport.firstNonEmpty(dto.name)
-        let content = RemoteMapperSupport.firstNonEmpty(dto.content, "暂无内容")
+        let content = RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("community.mapper.noContent"))
         let genderTag = expressGenderLabel(dto.personGender)
         var tags = [String]()
         if !targetName.isEmpty { tags.append(targetName) }
         if !genderTag.isEmpty { tags.append(genderTag) }
-        if tags.isEmpty { tags.append("校园热议") }
+        if tags.isEmpty { tags.append(localizedString("community.mapper.campusHot")) }
 
         return CommunityPost(
             id: String(dto.id ?? Int.random(in: 1...999_999)),
-            authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, dto.realname, "校园同学"),
+            authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, dto.realname, localizedString("community.mapper.campusStudent")),
             authorAvatarURL: "",
             isAnonymous: false,
-            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚"),
-            title: RemoteMapperSupport.firstNonEmpty(dto.name, RemoteMapperSupport.truncated(content, limit: 18), "校园动态"),
+            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("community.mapper.justNow")),
+            title: RemoteMapperSupport.firstNonEmpty(dto.name, RemoteMapperSupport.truncated(content, limit: 18), localizedString("community.mapper.campusUpdate")),
             summary: RemoteMapperSupport.truncated(content, limit: 72),
             tags: tags,
             likeCount: dto.likeCount ?? 0,
@@ -98,11 +98,11 @@ enum CommunityRemoteMapper {
     nonisolated private static func expressGenderLabel(_ value: Int?) -> String {
         switch value {
         case 0:
-            return "男生"
+            return localizedString("community.mapper.genderMale")
         case 1:
-            return "女生"
+            return localizedString("community.mapper.genderFemale")
         case 2:
-            return "保密"
+            return localizedString("community.mapper.genderSecret")
         default:
             return ""
         }

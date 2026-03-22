@@ -11,7 +11,7 @@ struct PostDetailView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.detail == nil {
-                DSLoadingView(text: "正在加载帖子详情...")
+                DSLoadingView(text: localizedString("community.postDetail.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.detail == nil {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.loadDetail() }
@@ -19,10 +19,10 @@ struct PostDetailView: View {
             } else if let detail = viewModel.detail {
                 content(detail)
             } else {
-                DSEmptyStateView(icon: "doc.text", title: "暂无帖子详情", message: "请稍后重试")
+                DSEmptyStateView(icon: "doc.text", title: localizedString("community.postDetail.emptyTitle"), message: localizedString("community.postDetail.emptyMessage"))
             }
         }
-        .navigationTitle("帖子详情")
+        .navigationTitle(LocalizedStringKey("community.postDetail.title"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadIfNeeded()
@@ -39,7 +39,7 @@ struct PostDetailView: View {
                             .foregroundStyle(DSColor.primary)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(detail.post.isAnonymous ? "匿名同学" : detail.post.authorName)
+                            Text(detail.post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(detail.post.authorName))
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(DSColor.title)
 
@@ -101,21 +101,21 @@ struct PostDetailView: View {
                 }
 
                 DSCard {
-                    Text("评论区")
+                    Text(LocalizedStringKey("community.postDetail.commentsSection"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
                     commentInput
 
                     if viewModel.comments.isEmpty {
-                        Text("还没有评论，欢迎抢先发言。")
+                        Text(LocalizedStringKey("community.postDetail.noComments"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                     } else {
                         ForEach(viewModel.comments) { comment in
                             VStack(alignment: .leading, spacing: 6) {
                                 HStack {
-                                    Text(comment.isAnonymous ? "匿名用户" : comment.authorName)
+                                    Text(comment.isAnonymous ? LocalizedStringKey("community.anonymousUser") : LocalizedStringKey(comment.authorName))
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundStyle(DSColor.title)
                                     Spacer()
@@ -147,7 +147,7 @@ struct PostDetailView: View {
 
     private var commentInput: some View {
         HStack(alignment: .bottom, spacing: 10) {
-            TextField("写下你的评论...", text: $viewModel.commentText, axis: .vertical)
+            TextField(LocalizedStringKey("community.postDetail.commentPlaceholder"), text: $viewModel.commentText, axis: .vertical)
                 .lineLimit(2...4)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
@@ -155,7 +155,7 @@ struct PostDetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
             DSButton(
-                title: "发送",
+                title: localizedString("community.postDetail.send"),
                 variant: .primary,
                 isLoading: viewModel.isSubmittingComment,
                 isDisabled: viewModel.commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty

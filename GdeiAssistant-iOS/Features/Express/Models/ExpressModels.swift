@@ -10,11 +10,11 @@ enum ExpressGender: Int, CaseIterable, Identifiable, Codable {
     var title: String {
         switch self {
         case .male:
-            return "男"
+            return localizedString("express.gender.male")
         case .female:
-            return "女"
+            return localizedString("express.gender.female")
         case .secret:
-            return "其他或保密"
+            return localizedString("express.gender.secret")
         }
     }
 }

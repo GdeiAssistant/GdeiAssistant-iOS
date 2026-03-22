@@ -33,7 +33,7 @@ final class CommunityFeedViewModel: ObservableObject {
             posts = try await repository.fetchPosts(sort: selectedSort)
         } catch {
             posts = []
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载发现页内容失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("community.vm.feedLoadFailed")
         }
     }
 

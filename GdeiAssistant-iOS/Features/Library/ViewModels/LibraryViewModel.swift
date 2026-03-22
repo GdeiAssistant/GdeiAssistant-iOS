@@ -59,7 +59,7 @@ final class LibraryViewModel: ObservableObject {
         do {
             books = try await repository.searchBooks(keyword: keyword, page: page)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "检索失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("library.vm.searchFailed")
         }
     }
 
@@ -70,7 +70,7 @@ final class LibraryViewModel: ObservableObject {
     func fetchBorrowRecords() async {
         let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
         guard !normalizedPassword.isEmpty else {
-            borrowErrorMessage = "请输入图书馆密码"
+            borrowErrorMessage = localizedString("library.vm.enterPassword")
             return
         }
 
@@ -84,7 +84,7 @@ final class LibraryViewModel: ObservableObject {
             borrowPassword = normalizedPassword
             hasLoadedBorrowRecords = true
         } catch {
-            borrowErrorMessage = (error as? LocalizedError)?.errorDescription ?? "借阅记录加载失败"
+            borrowErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("library.vm.borrowLoadFailed")
         }
     }
 
@@ -94,13 +94,13 @@ final class LibraryViewModel: ObservableObject {
             let code = record.code,
             record.renewable
         else {
-            submitState = .failure("当前借阅记录暂不支持续借")
+            submitState = .failure(localizedString("library.vm.cannotRenew"))
             return
         }
 
         let normalizedPassword = FormValidationSupport.trimmed(password)
         guard !normalizedPassword.isEmpty else {
-            submitState = .failure("请输入图书馆密码")
+            submitState = .failure(localizedString("library.vm.enterPassword"))
             return
         }
 
@@ -113,9 +113,9 @@ final class LibraryViewModel: ObservableObject {
             borrowPassword = normalizedPassword
             borrowRecords = try await repository.fetchBorrowRecords(password: normalizedPassword)
             hasLoadedBorrowRecords = true
-            submitState = .success("续借申请已提交")
+            submitState = .success(localizedString("library.vm.renewSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "续借失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("library.vm.renewFailed"))
         }
     }
 

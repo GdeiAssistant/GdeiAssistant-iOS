@@ -12,9 +12,9 @@ struct LibraryView: View {
             searchBar
             content
         }
-        .navigationTitle("图书馆")
+        .navigationTitle(LocalizedStringKey("library.title"))
         .toolbar {
-            NavigationLink("我的借阅") {
+            NavigationLink(LocalizedStringKey("library.myBorrow")) {
                 MyBorrowView(viewModel: viewModel)
             }
         }
@@ -25,10 +25,10 @@ struct LibraryView: View {
 
     private var searchBar: some View {
         HStack(spacing: 10) {
-            TextField("搜索书名 / 作者", text: $viewModel.keyword)
+            TextField(LocalizedStringKey("library.searchPlaceholder"), text: $viewModel.keyword)
                 .textFieldStyle(.roundedBorder)
 
-            Button("搜索") {
+            Button(LocalizedStringKey("library.search")) {
                 Task { await viewModel.searchBooks() }
             }
             .buttonStyle(.borderedProminent)
@@ -41,13 +41,13 @@ struct LibraryView: View {
     @ViewBuilder
     private var content: some View {
         if viewModel.isLoading && viewModel.books.isEmpty {
-            DSLoadingView(text: "正在检索图书...")
+            DSLoadingView(text: localizedString("library.loading"))
         } else if let errorMessage = viewModel.errorMessage, viewModel.books.isEmpty {
             DSErrorStateView(message: errorMessage) {
                 Task { await viewModel.refreshAll() }
             }
         } else if viewModel.books.isEmpty {
-            DSEmptyStateView(icon: "books.vertical", title: "暂无匹配图书", message: "换个关键词试试")
+            DSEmptyStateView(icon: "books.vertical", title: localizedString("library.emptyTitle"), message: localizedString("library.emptyMessage"))
         } else {
             VStack(spacing: 0) {
                 List(viewModel.books) { book in
@@ -61,7 +61,7 @@ struct LibraryView: View {
                             Text("\(book.author) · \(book.location)")
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
-                            Text("可借数量：\(book.availableCount)")
+                            Text(localizedString("library.availableCount") + "\(book.availableCount)")
                                 .font(.caption)
                                 .foregroundStyle(book.availableCount > 0 ? DSColor.secondary : DSColor.danger)
                         }
@@ -74,16 +74,16 @@ struct LibraryView: View {
                 }
 
                 HStack(spacing: 16) {
-                    Button("上一页") {
+                    Button(LocalizedStringKey("library.previousPage")) {
                         Task { await viewModel.goToPreviousPage() }
                     }
                     .disabled(viewModel.currentPage <= 1)
 
-                    Text("第 \(viewModel.currentPage) 页")
+                    Text(localizedString("library.pageIndicator") + "\(viewModel.currentPage)")
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
 
-                    Button("下一页") {
+                    Button(LocalizedStringKey("library.nextPage")) {
                         Task { await viewModel.goToNextPage() }
                     }
                 }
@@ -106,7 +106,7 @@ struct LibraryBookDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("library.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -117,19 +117,19 @@ struct LibraryBookDetailView: View {
                         Text(detail.title)
                             .font(.title3.weight(.bold))
                             .foregroundStyle(DSColor.title)
-                        Text("作者：\(detail.author)")
+                        Text(localizedString("library.detail.author") + detail.author)
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("出版社：\(detail.publisher)")
+                        Text(localizedString("library.detail.publisher") + detail.publisher)
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("ISBN：\(detail.isbn)")
+                        Text(localizedString("library.detail.isbn") + detail.isbn)
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("馆藏位置：\(detail.location)")
+                        Text(localizedString("library.detail.location") + detail.location)
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("可借数量：\(detail.availableCount)")
+                        Text(localizedString("library.availableCount") + "\(detail.availableCount)")
                             .font(.subheadline)
                             .foregroundStyle(detail.availableCount > 0 ? DSColor.secondary : DSColor.danger)
 
@@ -144,7 +144,7 @@ struct LibraryBookDetailView: View {
                 .background(DSColor.background)
             }
         }
-        .navigationTitle("图书详情")
+        .navigationTitle(LocalizedStringKey("library.detail.title"))
         .task {
             await loadDetail()
         }
@@ -159,7 +159,7 @@ struct LibraryBookDetailView: View {
         do {
             detail = try await viewModel.fetchBookDetail(bookID: bookID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("library.detail.loadFailed")
         }
     }
 }
@@ -170,18 +170,18 @@ struct MyBorrowView: View {
     var body: some View {
         List {
             Section {
-                SecureField("请输入图书馆密码", text: $viewModel.borrowPassword)
+                SecureField(LocalizedStringKey("library.borrow.passwordPlaceholder"), text: $viewModel.borrowPassword)
                     .textContentType(.password)
 
                 DSButton(
-                    title: viewModel.hasLoadedBorrowRecords ? "刷新借阅记录" : "查询借阅记录",
+                    title: viewModel.hasLoadedBorrowRecords ? localizedString("library.borrow.refresh") : localizedString("library.borrow.query"),
                     icon: "arrow.clockwise",
                     isLoading: viewModel.isBorrowLoading
                 ) {
                     Task { await viewModel.fetchBorrowRecords() }
                 }
 
-                Text("我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。")
+                Text(LocalizedStringKey("library.borrow.hint"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
             }
@@ -196,18 +196,18 @@ struct MyBorrowView: View {
 
             if viewModel.isBorrowLoading && viewModel.borrowRecords.isEmpty {
                 Section {
-                    DSLoadingView(text: "正在加载借阅记录...")
+                    DSLoadingView(text: localizedString("library.borrow.loading"))
                 }
             } else if !viewModel.hasLoadedBorrowRecords {
                 Section {
-                    DSEmptyStateView(icon: "book.closed", title: "还没有开始查询", message: "输入图书馆密码后即可查看当前借阅记录")
+                    DSEmptyStateView(icon: "book.closed", title: localizedString("library.borrow.notQueried"), message: localizedString("library.borrow.notQueriedMessage"))
                 }
             } else if viewModel.borrowRecords.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "book.closed", title: "暂无借阅记录", message: "当前没有可展示的借阅记录")
+                    DSEmptyStateView(icon: "book.closed", title: localizedString("library.borrow.emptyTitle"), message: localizedString("library.borrow.emptyMessage"))
                 }
             } else {
-                Section("借阅列表") {
+                Section(localizedString("library.borrow.list")) {
                     ForEach(viewModel.borrowRecords) { record in
                         NavigationLink {
                             BorrowRecordDetailView(viewModel: viewModel, record: record)
@@ -217,7 +217,7 @@ struct MyBorrowView: View {
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(DSColor.title)
 
-                                Text("借阅：\(record.borrowDate)  到期：\(record.dueDate)")
+                                Text(localizedString("library.borrow.borrowDate") + record.borrowDate + "  " + localizedString("library.borrow.dueDate") + record.dueDate)
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
 
@@ -228,7 +228,7 @@ struct MyBorrowView: View {
 
                                     Spacer()
 
-                                    Text(record.renewable ? "可续借" : "不可续借")
+                                    Text(record.renewable ? LocalizedStringKey("library.borrow.renewable") : LocalizedStringKey("library.borrow.notRenewable"))
                                         .font(.caption)
                                         .foregroundStyle(record.renewable ? DSColor.primary : DSColor.subtitle)
                                 }
@@ -240,7 +240,7 @@ struct MyBorrowView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("我的借阅")
+        .navigationTitle(LocalizedStringKey("library.myBorrow"))
     }
 }
 
@@ -259,24 +259,24 @@ struct BorrowRecordDetailView: View {
                         .font(.title3.weight(.bold))
                         .foregroundStyle(DSColor.title)
 
-                    infoRow(title: "借阅日期", value: record.borrowDate)
-                    infoRow(title: "应还日期", value: record.dueDate)
-                    infoRow(title: "当前状态", value: record.status)
-                    infoRow(title: "续借凭据", value: record.renewable ? "已获取 sn / code" : "不可续借")
+                    infoRow(title: localizedString("library.renew.borrowDate"), value: record.borrowDate)
+                    infoRow(title: localizedString("library.renew.dueDate"), value: record.dueDate)
+                    infoRow(title: localizedString("library.renew.status"), value: record.status)
+                    infoRow(title: localizedString("library.renew.token"), value: record.renewable ? localizedString("library.renew.tokenAcquired") : localizedString("library.borrow.notRenewable"))
                 }
 
                 DSCard {
-                    Text("续借说明")
+                    Text(LocalizedStringKey("library.renew.instructions"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
-                    Text("续借前需要输入图书馆密码进行二次校验。密码仅用于本次请求，不会写入本地。")
+                    Text(LocalizedStringKey("library.renew.instructionsDetail"))
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
                         .lineSpacing(4)
 
                     DSButton(
-                        title: "续借图书",
+                        title: localizedString("library.renew.button"),
                         icon: "arrow.clockwise",
                         isLoading: viewModel.submitState.isSubmitting,
                         isDisabled: !record.renewable
@@ -290,16 +290,16 @@ struct BorrowRecordDetailView: View {
             .padding(16)
         }
         .background(DSColor.background)
-        .navigationTitle("借阅详情")
+        .navigationTitle(LocalizedStringKey("library.renew.detailTitle"))
         .sheet(isPresented: $showPasswordSheet, onDismiss: {
             password = ""
             viewModel.clearSubmitState()
         }) {
             PasswordInputSheet(
-                title: "图书续借",
-                message: "请输入图书馆密码完成续借校验。续借需要后端同时校验借阅凭据和账号密码。",
-                placeholder: "请输入图书馆密码",
-                confirmTitle: "确认续借",
+                title: localizedString("library.renew.sheetTitle"),
+                message: localizedString("library.renew.sheetMessage"),
+                placeholder: localizedString("library.borrow.passwordPlaceholder"),
+                confirmTitle: localizedString("library.renew.confirmButton"),
                 keyboardType: .default,
                 isSubmitting: viewModel.submitState.isSubmitting,
                 errorMessage: {
@@ -323,7 +323,7 @@ struct BorrowRecordDetailView: View {
             )
             .presentationDetents([.medium])
         }
-        .alert("提示", isPresented: Binding(
+        .alert(LocalizedStringKey("library.notice"), isPresented: Binding(
             get: {
                 if case .success = viewModel.submitState {
                     return true
@@ -336,7 +336,7 @@ struct BorrowRecordDetailView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(LocalizedStringKey("library.understood")) {
                 viewModel.clearSubmitState()
             }
         } message: {

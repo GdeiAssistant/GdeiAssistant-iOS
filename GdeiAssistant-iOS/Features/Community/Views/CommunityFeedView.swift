@@ -12,7 +12,7 @@ struct CommunityFeedView: View {
         VStack(spacing: 0) {
             communityShortcutBar
 
-            Picker("排序", selection: sortBinding) {
+            Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
                 ForEach(CommunityFeedSort.allCases) { sort in
                     Text(sort.title).tag(sort)
                 }
@@ -69,7 +69,7 @@ struct CommunityFeedView: View {
     @ViewBuilder
     private var contentView: some View {
         if viewModel.isLoading && viewModel.posts.isEmpty {
-            DSLoadingView(text: "正在加载发现页内容...")
+            DSLoadingView(text: localizedString("community.feed.loading"))
         } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
             DSErrorStateView(message: errorMessage) {
                 Task { await viewModel.loadPosts() }
@@ -77,8 +77,8 @@ struct CommunityFeedView: View {
         } else if viewModel.posts.isEmpty {
             DSEmptyStateView(
                 icon: "bubble.left.and.bubble.right",
-                title: "暂无帖子",
-                message: "试试切换排序或稍后刷新"
+                title: localizedString("community.feed.emptyTitle"),
+                message: localizedString("community.feed.emptyMessage")
             )
         } else {
             ScrollView {
@@ -107,7 +107,7 @@ struct CommunityFeedView: View {
                             .foregroundStyle(DSColor.primary)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(post.isAnonymous ? "匿名同学" : post.authorName)
+                            Text(post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(post.authorName))
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(DSColor.title)
 
