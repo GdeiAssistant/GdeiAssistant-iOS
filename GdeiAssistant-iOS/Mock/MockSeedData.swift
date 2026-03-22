@@ -39,7 +39,7 @@ enum MockSeedData {
         ]
     )
 
-    static let communityHotPosts: [CommunityPost] = [
+    static var communityHotPosts: [CommunityPost] { [
         CommunityPost(
             id: "post_hot_001",
             authorName: localizedString("mock.community.hot1.authorName"),
@@ -76,9 +76,9 @@ enum MockSeedData {
             likeCount: 160,
             commentCount: 21
         )
-    ]
+    ] }
 
-    static let communityLatestPosts: [CommunityPost] = [
+    static var communityLatestPosts: [CommunityPost] { [
         CommunityPost(
             id: "post_latest_001",
             authorName: localizedString("mock.community.latest1.authorName"),
@@ -115,9 +115,9 @@ enum MockSeedData {
             likeCount: 24,
             commentCount: 5
         )
-    ]
+    ] }
 
-    static let communityCommentsByPostID: [String: [CommunityComment]] = [
+    static var communityCommentsByPostID: [String: [CommunityComment]] { [
         "post_hot_001": [
             CommunityComment(
                 id: "comment_hot_001",
@@ -156,7 +156,7 @@ enum MockSeedData {
                 likeCount: 3
             )
         ]
-    ]
+    ] }
 
     static func communityTopic(topicID: String) -> CommunityTopic {
         let tagTechExchange = localizedString("mock.community.tag.techExchange")
@@ -453,12 +453,12 @@ enum MockSeedData {
         )
     }
 
-    static let libraryBooks: [LibraryBook] = [
+    static var libraryBooks: [LibraryBook] { [
         LibraryBook(id: "book_001", title: localizedString("mock.library.book1.title"), author: localizedString("mock.library.book1.author"), availableCount: 3, location: localizedString("mock.library.book1.location")),
         LibraryBook(id: "book_002", title: localizedString("mock.library.book2.title"), author: "Aditya Bhargava", availableCount: 1, location: localizedString("mock.library.book2.location")),
         LibraryBook(id: "book_003", title: localizedString("mock.library.book3.title"), author: localizedString("mock.library.book3.author"), availableCount: 0, location: localizedString("mock.library.book3.location")),
         LibraryBook(id: "book_004", title: localizedString("mock.library.book4.title"), author: "Kurose", availableCount: 2, location: localizedString("mock.library.book4.location"))
-    ]
+    ] }
 
     static func libraryBookDetail(bookID: String) -> LibraryBookDetail {
         if bookID == "book_002" {
