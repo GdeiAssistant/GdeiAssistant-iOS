@@ -1,8 +1,29 @@
 import Foundation
 
 enum LostFoundRemoteMapper {
-    nonisolated static let itemTypes = ["手机", "校园卡", "身份证", "银行卡", "书", "钥匙", "包包", "衣帽", "校园代步", "运动健身", "数码配件", "其他"]
-    nonisolated static let stateTypes = ["寻主/寻物中", "确认寻回", "系统删除"]
+    nonisolated static var itemTypes: [String] {
+        [
+            localizedString("lostFound.itemType.phone"),
+            localizedString("lostFound.itemType.campusCard"),
+            localizedString("lostFound.itemType.idCard"),
+            localizedString("lostFound.itemType.bankCard"),
+            localizedString("lostFound.itemType.book"),
+            localizedString("lostFound.itemType.key"),
+            localizedString("lostFound.itemType.bag"),
+            localizedString("lostFound.itemType.clothing"),
+            localizedString("lostFound.itemType.campusTransport"),
+            localizedString("lostFound.itemType.sportsFitness"),
+            localizedString("lostFound.itemType.digitalAccessory"),
+            localizedString("lostFound.itemType.other")
+        ]
+    }
+    nonisolated static var stateTypes: [String] {
+        [
+            localizedString("lostFound.state.active"),
+            localizedString("lostFound.state.confirmed"),
+            localizedString("lostFound.state.systemDeleted")
+        ]
+    }
 
     nonisolated static func mapItems(lostItems: [LostFoundItemDTO], foundItems: [LostFoundItemDTO]) -> [LostFoundItem] {
         let mappedLost = lostItems
@@ -76,7 +97,7 @@ enum LostFoundRemoteMapper {
     }
 
     nonisolated static func displayName(forItemType itemTypeID: Int) -> String {
-        displayName(in: itemTypes, index: itemTypeID, fallback: "其他")
+        displayName(in: itemTypes, index: itemTypeID, fallback: localizedString("lostFound.itemType.other"))
     }
 
     nonisolated static func mapDetail(_ dto: LostFoundDetailDTO) throws -> LostFoundDetail {
@@ -85,17 +106,17 @@ enum LostFoundRemoteMapper {
         }
 
         let item = mapItem(itemDTO, fallbackType: (itemDTO.lostType ?? 0) == 0 ? .lost : .found)
-        let statusText = displayName(in: stateTypes, index: itemDTO.state, fallback: "状态未知")
+        let statusText = displayName(in: stateTypes, index: itemDTO.state, fallback: localizedString("lostFound.mapper.statusUnknown"))
         let contactHint = [
-            itemDTO.qq.flatMap { $0.isEmpty ? nil : "QQ：\($0)" },
-            itemDTO.wechat.flatMap { $0.isEmpty ? nil : "微信：\($0)" },
-            itemDTO.phone.flatMap { $0.isEmpty ? nil : "手机号：\($0)" }
+            itemDTO.qq.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactQQ"))\($0)" },
+            itemDTO.wechat.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactWechat"))\($0)" },
+            itemDTO.phone.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactPhone"))\($0)" }
         ].compactMap { $0 }.joined(separator: " / ")
 
         return LostFoundDetail(
             item: item,
-            description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, "暂无详细描述"),
-            contactHint: contactHint.isEmpty ? "发布者暂未公开联系方式" : contactHint,
+            description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, localizedString("lostFound.mapper.noDescription")),
+            contactHint: contactHint.isEmpty ? localizedString("lostFound.mapper.noContact") : contactHint,
             statusText: statusText,
             ownerUsername: dto.profile?.username ?? itemDTO.username,
             ownerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
@@ -107,8 +128,8 @@ enum LostFoundRemoteMapper {
     nonisolated static func mapPersonalSummary(_ dto: LostFoundPersonalSummaryDTO, profile: UserProfileDTO) -> LostFoundPersonalSummary {
         LostFoundPersonalSummary(
             avatarURL: RemoteMapperSupport.sanitizedText(profile.avatar),
-            nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, "失物招领用户"),
-            introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, "这个人很懒，什么都没写_(:3 」∠)_"),
+            nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, localizedString("lostFound.mapper.defaultUser")),
+            introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, localizedString("lostFound.mapper.defaultIntro")),
             lost: (dto.lost ?? []).map { mapItem($0, fallbackType: .lost) },
             found: (dto.found ?? []).map { mapItem($0, fallbackType: .found) },
             didFound: (dto.didfound ?? []).map { mapItem($0, fallbackType: ($0.lostType ?? 0) == 0 ? .lost : .found) }
@@ -118,12 +139,12 @@ enum LostFoundRemoteMapper {
     nonisolated private static func mapItem(_ dto: LostFoundItemDTO, fallbackType: LostFoundType) -> LostFoundItem {
         LostFoundItem(
             id: String(dto.id ?? Int.random(in: 1...999_999)),
-            title: RemoteMapperSupport.firstNonEmpty(dto.name, "未命名物品"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("lostFound.mapper.unnamedItem")),
             type: fallbackType,
             itemTypeID: dto.itemType ?? 0,
-            summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, "暂无描述"), limit: 56),
-            location: RemoteMapperSupport.firstNonEmpty(dto.location, displayName(in: itemTypes, index: dto.itemType, fallback: "校内")),
-            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚"),
+            summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, localizedString("lostFound.mapper.noSummary")), limit: 56),
+            location: RemoteMapperSupport.firstNonEmpty(dto.location, displayName(in: itemTypes, index: dto.itemType, fallback: localizedString("lostFound.mapper.onCampus"))),
+            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("lostFound.mapper.justNow")),
             state: mapState(dto.state),
             previewImageURL: RemoteMapperSupport.sanitizedTextList(dto.pictureURL).first
         )

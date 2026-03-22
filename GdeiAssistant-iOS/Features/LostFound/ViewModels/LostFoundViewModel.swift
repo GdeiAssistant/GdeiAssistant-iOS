@@ -27,7 +27,7 @@ final class LostFoundViewModel: ObservableObject {
         do {
             items = try await repository.fetchItems()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "失物招领加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.vm.loadFailed")
         }
     }
 

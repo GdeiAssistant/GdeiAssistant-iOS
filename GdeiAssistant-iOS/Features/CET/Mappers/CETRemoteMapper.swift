@@ -4,12 +4,12 @@ enum CETRemoteMapper {
     nonisolated static func emptyDashboard() -> CETDashboard {
         CETDashboard(
             profile: CETProfile(
-                candidateName: "未保存",
-                schoolName: "广东第二师范学院",
-                examLevel: "待查询",
-                admissionTicket: "未保存准考证号",
-                examDate: "需验证码后查询",
-                examVenue: "后端接口暂未提供"
+                candidateName: localizedString("cet.mapper.notSaved"),
+                schoolName: localizedString("cet.mapper.defaultSchool"),
+                examLevel: localizedString("cet.mapper.pendingQuery"),
+                admissionTicket: localizedString("cet.mapper.ticketNotSaved"),
+                examDate: localizedString("cet.mapper.captchaRequired"),
+                examVenue: localizedString("cet.mapper.apiNotAvailable")
             ),
             scoreRecords: []
         )
@@ -32,20 +32,20 @@ enum CETRemoteMapper {
     }
 
     nonisolated static func mapDashboard(numberDTO: CETNumberDTO?, scoreDTO: CETScoreDTO?) -> CETDashboard {
-        let candidateName = RemoteMapperSupport.firstNonEmpty(numberDTO?.name, scoreDTO?.name, "未保存")
+        let candidateName = RemoteMapperSupport.firstNonEmpty(numberDTO?.name, scoreDTO?.name, localizedString("cet.mapper.notSaved"))
         let admissionTicket = RemoteMapperSupport.firstNonEmpty(
             numberDTO.map { RemoteMapperSupport.text($0.number) },
             scoreDTO.map { RemoteMapperSupport.text($0.admissionCard) },
-            "未保存准考证号"
+            localizedString("cet.mapper.ticketNotSaved")
         )
 
         let profile = CETProfile(
             candidateName: candidateName,
-            schoolName: RemoteMapperSupport.firstNonEmpty(scoreDTO?.school, "广东第二师范学院"),
-            examLevel: RemoteMapperSupport.firstNonEmpty(scoreDTO?.type, "待查询"),
+            schoolName: RemoteMapperSupport.firstNonEmpty(scoreDTO?.school, localizedString("cet.mapper.defaultSchool")),
+            examLevel: RemoteMapperSupport.firstNonEmpty(scoreDTO?.type, localizedString("cet.mapper.pendingQuery")),
             admissionTicket: admissionTicket,
-            examDate: scoreDTO == nil ? "需验证码后查询" : "最近一次查询结果",
-            examVenue: "后端接口暂未提供"
+            examDate: scoreDTO == nil ? localizedString("cet.mapper.captchaRequired") : localizedString("cet.mapper.latestResult"),
+            examVenue: localizedString("cet.mapper.apiNotAvailable")
         )
 
         let scoreRecords: [CETScoreRecord]
@@ -54,8 +54,8 @@ enum CETRemoteMapper {
             scoreRecords = [
                 CETScoreRecord(
                     id: admissionTicket,
-                    examSession: "最近一次查询",
-                    level: RemoteMapperSupport.firstNonEmpty(scoreDTO.type, "未知级别"),
+                    examSession: localizedString("cet.mapper.latestQuery"),
+                    level: RemoteMapperSupport.firstNonEmpty(scoreDTO.type, localizedString("cet.mapper.unknownLevel")),
                     totalScore: totalScore,
                     listeningScore: RemoteMapperSupport.int(scoreDTO.listeningScore),
                     readingScore: RemoteMapperSupport.int(scoreDTO.readingScore),

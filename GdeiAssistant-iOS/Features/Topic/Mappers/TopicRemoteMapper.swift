@@ -2,7 +2,7 @@ import Foundation
 
 enum TopicRemoteMapper {
     nonisolated static func mapPost(_ dto: TopicRemoteDTO) -> TopicPost {
-        let topic = RemoteMapperSupport.firstNonEmpty(dto.topic, "校园话题")
+        let topic = RemoteMapperSupport.firstNonEmpty(dto.topic, localizedString("topic.mapper.defaultTopic"))
         let content = RemoteMapperSupport.firstNonEmpty(dto.content)
         let firstImageURL = RemoteMapperSupport.sanitizedText(dto.firstImageUrl)
         let imageURLs = RemoteMapperSupport.sanitizedTextList(dto.imageUrls)
@@ -10,8 +10,8 @@ enum TopicRemoteMapper {
             id: RemoteMapperSupport.text(dto.id, fallback: UUID().uuidString),
             topic: topic,
             contentPreview: RemoteMapperSupport.truncated(content, limit: 64),
-            authorName: RemoteMapperSupport.firstNonEmpty(dto.username, "匿名同学"),
-            publishedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚"),
+            authorName: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("topic.mapper.anonymous")),
+            publishedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("topic.mapper.justNow")),
             likeCount: RemoteMapperSupport.int(dto.likeCount),
             imageCount: max(RemoteMapperSupport.int(dto.count), imageURLs.count, firstImageURL == nil ? 0 : 1),
             firstImageURL: firstImageURL,
