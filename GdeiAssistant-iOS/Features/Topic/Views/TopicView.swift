@@ -14,7 +14,7 @@ struct TopicView: View {
         Group {
             VStack(spacing: 0) {
                 HStack {
-                    TextField("搜索话题", text: $viewModel.searchQuery)
+                    TextField(localizedString("topic.searchPlaceholder"), text: $viewModel.searchQuery)
                         .textFieldStyle(.roundedBorder)
                         .onSubmit { Task { await viewModel.search() } }
                     if !viewModel.searchQuery.isEmpty {
@@ -30,13 +30,13 @@ struct TopicView: View {
             }
 
             if viewModel.isLoading && viewModel.posts.isEmpty {
-                DSLoadingView(text: "正在加载话题...")
+                DSLoadingView(text: localizedString("topic.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.posts.isEmpty {
-                DSEmptyStateView(icon: "number", title: "暂无话题", message: "去发布第一条校园话题")
+                DSEmptyStateView(icon: "number", title: localizedString("topic.emptyTitle"), message: localizedString("topic.emptyMessage"))
             } else {
                 List(viewModel.posts) { post in
                     NavigationLink {
@@ -145,7 +145,7 @@ struct TopicDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("topic.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -176,8 +176,8 @@ struct TopicDetailView: View {
                             }
 
                             HStack(spacing: 20) {
-                                statItem(title: "点赞", value: detail.post.likeCount)
-                                statItem(title: "图片", value: detail.imageURLs.count)
+                                statItem(title: localizedString("topic.likes"), value: detail.post.likeCount)
+                                statItem(title: localizedString("topic.images"), value: detail.imageURLs.count)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 8)
@@ -195,7 +195,7 @@ struct TopicDetailView: View {
                                         VStack(spacing: 10) {
                                             DSRemoteImageView(urlString: url)
                                                 .frame(height: 220)
-                                            Text("第 \(index + 1) / \(detail.imageURLs.count) 张")
+                                            Text(String(format: localizedString("topic.imageCounter"), index + 1, detail.imageURLs.count))
                                                 .font(.caption)
                                                 .foregroundStyle(DSColor.subtitle)
                                         }
@@ -210,7 +210,7 @@ struct TopicDetailView: View {
                         Button {
                             Task { await like() }
                         } label: {
-                            Label(isLiking ? "处理中..." : (detail.post.isLiked ? "已点赞" : "点赞"), systemImage: detail.post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                            Label(isLiking ? localizedString("topic.likeProcessing") : (detail.post.isLiked ? localizedString("topic.liked") : localizedString("topic.like")), systemImage: detail.post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
@@ -222,7 +222,7 @@ struct TopicDetailView: View {
                 .background(DSColor.background)
             }
         }
-        .navigationTitle("话题详情")
+        .navigationTitle(localizedString("topic.detailTitle"))
         .task {
             await loadDetail()
         }
@@ -247,7 +247,7 @@ struct TopicDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(postID: postID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("topic.detailLoadFailed")
         }
     }
 
@@ -260,13 +260,13 @@ struct TopicDetailView: View {
             try await viewModel.like(postID: postID)
             await loadDetail()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "点赞失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("topic.likeFailed")
         }
     }
 
     private var notificationContextText: String? {
         guard notificationID != nil else { return nil }
-        return isLikeNotification ? "来自互动消息：有人点赞了这条话题" : "来自互动消息"
+        return isLikeNotification ? localizedString("topic.notificationLike") : localizedString("topic.notificationGeneric")
     }
 
     private var isLikeNotification: Bool {
@@ -284,13 +284,13 @@ private struct MyTopicPostsView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载我的话题...")
+                DSLoadingView(text: localizedString("topic.myTopicsLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
                 }
             } else if posts.isEmpty {
-                DSEmptyStateView(icon: "square.and.pencil", title: "还没有发布话题", message: "去发布你的第一条校园话题")
+                DSEmptyStateView(icon: "square.and.pencil", title: localizedString("topic.myTopicsEmptyTitle"), message: localizedString("topic.myTopicsEmptyMessage"))
             } else {
                 List {
                     Section {
@@ -310,7 +310,7 @@ private struct MyTopicPostsView: View {
                 }
             }
         }
-        .navigationTitle("我的")
+        .navigationTitle(localizedString("topic.myTopicsTitle"))
         .task {
             await loadData()
         }
@@ -324,7 +324,7 @@ private struct MyTopicPostsView: View {
         do {
             posts = try await viewModel.fetchMyPosts()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("topic.myTopicsLoadFailed")
         }
     }
 }
@@ -343,14 +343,14 @@ private struct PublishTopicView: View {
     var body: some View {
         Form {
             Section {
-                TextField("输入话题标签", text: $viewModel.topic)
-                TextField("输入话题内容", text: $viewModel.content, axis: .vertical)
+                TextField(localizedString("topic.topicTag"), text: $viewModel.topic)
+                TextField(localizedString("topic.topicContent"), text: $viewModel.content, axis: .vertical)
                     .lineLimit(5...8)
-                Text("可选上传图片，最多 9 张。")
+                Text(LocalizedStringKey("topic.imageHint"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("话题内容")
+                Text(LocalizedStringKey("topic.contentSection"))
             }
 
             Section {
@@ -377,7 +377,7 @@ private struct PublishTopicView: View {
                             ) {
                                 VStack(spacing: 8) {
                                     Image(systemName: "photo.badge.plus")
-                                    Text("添加图片")
+                                    Text(LocalizedStringKey("topic.addImage"))
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
@@ -389,7 +389,7 @@ private struct PublishTopicView: View {
                     .padding(.vertical, 4)
                 }
             } header: {
-                Text("图片")
+                Text(LocalizedStringKey("topic.imageSection"))
             }
 
             if let message = viewModel.submitState.message {
@@ -400,10 +400,10 @@ private struct PublishTopicView: View {
                 }
             }
         }
-        .navigationTitle("发布话题")
+        .navigationTitle(localizedString("topic.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "提交中..." : "提交") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("topic.submitting") : localizedString("topic.submitBtn")) {
                     Task {
                         let success = await viewModel.submit()
                         if success {

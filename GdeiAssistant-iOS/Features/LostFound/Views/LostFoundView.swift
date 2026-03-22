@@ -13,13 +13,13 @@ struct LostFoundView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载失物招领...")
+                DSLoadingView(text: localizedString("lostFound.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "shippingbox.circle", title: "暂无失物招领信息", message: "可以先发布一条信息")
+                DSEmptyStateView(icon: "shippingbox.circle", title: localizedString("lostFound.emptyTitle"), message: localizedString("lostFound.emptyMessage"))
             } else {
                 List(viewModel.items) { item in
                     NavigationLink {
@@ -99,7 +99,7 @@ private struct LostFoundProfileView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载个人中心...")
+                DSLoadingView(text: localizedString("lostFound.profileLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
@@ -119,17 +119,17 @@ private struct LostFoundProfileView: View {
                 }
             }
         }
-        .navigationTitle("个人中心")
-        .confirmationDialog("确认标记为已找回？", isPresented: Binding(
+        .navigationTitle(localizedString("lostFound.profileCenter"))
+        .confirmationDialog(localizedString("lostFound.confirmMarkFound"), isPresented: Binding(
             get: { markTargetID != nil },
             set: { if !$0 { markTargetID = nil } }
         )) {
-            Button("确认寻回") {
+            Button(localizedString("lostFound.confirmFound")) {
                 if let markTargetID {
                     Task { await markDidFound(markTargetID) }
                 }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
         .sheet(item: $editingDetail) { detail in
             NavigationStack {
@@ -215,12 +215,12 @@ private struct LostFoundProfileView: View {
 
                             if selectedTab != .didFound {
                                 HStack(spacing: 10) {
-                                    Button("编辑") {
+                                    Button(localizedString("lostFound.edit")) {
                                         Task { await openDetail(item.id, forEditing: true) }
                                     }
                                     .buttonStyle(.bordered)
 
-                                    Button("确认寻回") {
+                                    Button(localizedString("lostFound.confirmFound")) {
                                         markTargetID = item.id
                                     }
                                     .buttonStyle(.borderedProminent)
@@ -273,7 +273,7 @@ private struct LostFoundProfileView: View {
                 editingDetail = detail
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.detailLoadFailed")
         }
     }
 
@@ -281,10 +281,10 @@ private struct LostFoundProfileView: View {
         defer { markTargetID = nil }
         do {
             try await viewModel.markDidFound(itemID: itemID)
-            actionMessage = "状态已更新"
+            actionMessage = localizedString("lostFound.statusUpdated")
             await loadData()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "更新失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.updateFailed")
         }
     }
 
@@ -296,7 +296,7 @@ private struct LostFoundProfileView: View {
         do {
             summary = try await viewModel.fetchMySummary()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "个人中心加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.profileLoadFailed")
         }
     }
 }
@@ -311,33 +311,33 @@ private enum LostFoundProfileTab: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .lost:
-            return "寻物"
+            return localizedString("lostFound.tabLost")
         case .found:
-            return "招领"
+            return localizedString("lostFound.tabFound")
         case .didFound:
-            return "已找回"
+            return localizedString("lostFound.tabDidFound")
         }
     }
 
     var emptyTitle: String {
         switch self {
         case .lost:
-            return "暂无寻物信息"
+            return localizedString("lostFound.emptyLost")
         case .found:
-            return "暂无招领信息"
+            return localizedString("lostFound.emptyFound")
         case .didFound:
-            return "暂无已找回信息"
+            return localizedString("lostFound.emptyDidFound")
         }
     }
 
     var emptyMessage: String {
         switch self {
         case .lost:
-            return "遗失信息会展示在这里"
+            return localizedString("lostFound.emptyLostMessage")
         case .found:
-            return "拾到并发布的信息会展示在这里"
+            return localizedString("lostFound.emptyFoundMessage")
         case .didFound:
-            return "确认寻回后的内容会保留在这里"
+            return localizedString("lostFound.emptyDidFoundMessage")
         }
     }
 }
@@ -359,7 +359,7 @@ struct LostFoundDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("lostFound.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -394,19 +394,19 @@ struct LostFoundDetailView: View {
                                 DSAvatarView(urlString: detail.ownerAvatarURL, size: 52)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(detail.ownerNickname ?? "发布者")
+                                    Text(detail.ownerNickname ?? localizedString("lostFound.publisher"))
                                         .font(.headline)
                                         .foregroundStyle(DSColor.title)
-                                    Text(detail.ownerUsername ?? "发布者")
+                                    Text(detail.ownerUsername ?? localizedString("lostFound.publisher"))
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                             }
 
-                            detailRow(title: "类型", value: detail.item.type.displayName)
-                            detailRow(title: "地点", value: detail.item.location)
-                            detailRow(title: "联系说明", value: detail.contactHint)
-                            detailRow(title: "状态", value: detail.statusText)
+                            detailRow(title: localizedString("lostFound.type"), value: detail.item.type.displayName)
+                            detailRow(title: localizedString("lostFound.location"), value: detail.item.location)
+                            detailRow(title: localizedString("lostFound.contactHint"), value: detail.contactHint)
+                            detailRow(title: localizedString("lostFound.status"), value: detail.statusText)
                         }
 
                         if isOwnedByCurrentUser(detail) {
@@ -418,18 +418,18 @@ struct LostFoundDetailView: View {
                                 }
 
                                 if detail.item.state == .active {
-                                    Button("编辑信息") {
+                                    Button(localizedString("lostFound.editInfo")) {
                                         editingDetail = detail
                                     }
                                     .buttonStyle(.bordered)
 
-                                    Button(isSubmitting ? "处理中..." : "标记已找回") {
+                                    Button(isSubmitting ? localizedString("lostFound.processing") : localizedString("lostFound.markFound")) {
                                         confirmDidFound = true
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .disabled(isSubmitting)
                                 } else {
-                                    Text("该信息已完成找回，不再展示在大厅列表。")
+                                    Text(LocalizedStringKey("lostFound.itemCompleted"))
                                         .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
@@ -441,12 +441,12 @@ struct LostFoundDetailView: View {
                 .background(DSColor.background)
             }
         }
-        .navigationTitle("详情")
-        .confirmationDialog("确认标记为已找回？", isPresented: $confirmDidFound) {
-            Button("确认已找回") {
+        .navigationTitle(localizedString("lostFound.detail"))
+        .confirmationDialog(localizedString("lostFound.confirmMarkFound"), isPresented: $confirmDidFound) {
+            Button(localizedString("lostFound.confirmMarkFoundBtn")) {
                 Task { await markDidFound() }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
         .sheet(item: $editingDetail) { detail in
             NavigationStack {
@@ -473,7 +473,7 @@ struct LostFoundDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(itemID: itemID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.detailLoadFailed")
         }
     }
 
@@ -491,10 +491,10 @@ struct LostFoundDetailView: View {
 
         do {
             try await viewModel.markDidFound(itemID: itemID)
-            resultMessage = "状态已更新"
+            resultMessage = localizedString("lostFound.statusUpdated")
             dismiss()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "更新失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.updateFailed")
         }
     }
 
@@ -528,37 +528,37 @@ struct PublishLostFoundView: View {
     var body: some View {
         Form {
             Section {
-                Picker("寻找类型", selection: $publishViewModel.selectedType) {
+                Picker(localizedString("lostFound.searchType"), selection: $publishViewModel.selectedType) {
                     ForEach(LostFoundType.allCases, id: \.rawValue) { type in
                         Text(type.displayName).tag(type)
                     }
                 }
 
-                Picker("物品分类", selection: $publishViewModel.selectedItemTypeID) {
+                Picker(localizedString("lostFound.itemCategory"), selection: $publishViewModel.selectedItemTypeID) {
                     ForEach(Array(publishViewModel.itemTypeOptions.enumerated()), id: \.offset) { index, title in
                         Text(title).tag(index)
                     }
                 }
 
-                TextField("物品名称", text: $publishViewModel.title)
-                TextField("物品描述（100字内）", text: $publishViewModel.descriptionText, axis: .vertical)
+                TextField(localizedString("lostFound.itemName"), text: $publishViewModel.title)
+                TextField(localizedString("lostFound.itemDescription"), text: $publishViewModel.descriptionText, axis: .vertical)
                     .lineLimit(4...6)
-                TextField(publishViewModel.selectedType == .lost ? "丢失地点" : "捡到地点", text: $publishViewModel.location)
+                TextField(publishViewModel.selectedType == .lost ? localizedString("lostFound.lostLocation") : localizedString("lostFound.foundLocation"), text: $publishViewModel.location)
             } header: {
-                Text("基础信息")
+                Text(LocalizedStringKey("lostFound.basicInfo"))
             }
 
             Section {
-                TextField("QQ 号（选填）", text: $publishViewModel.qq)
+                TextField(localizedString("lostFound.qqOptional"), text: $publishViewModel.qq)
                     .keyboardType(.numberPad)
-                TextField("微信号（选填）", text: $publishViewModel.wechat)
-                TextField("手机号（选填）", text: $publishViewModel.phone)
+                TextField(localizedString("lostFound.wechatOptional"), text: $publishViewModel.wechat)
+                TextField(localizedString("lostFound.phoneOptional"), text: $publishViewModel.phone)
                     .keyboardType(.numberPad)
-                Text("QQ / 微信 / 手机号至少填写一项。")
+                Text(LocalizedStringKey("lostFound.contactRequired"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("联系方式")
+                Text(LocalizedStringKey("lostFound.contactInfo"))
             }
 
             Section {
@@ -587,7 +587,7 @@ struct PublishLostFoundView: View {
                                 VStack(spacing: 8) {
                                     Image(systemName: "photo.badge.plus")
                                         .font(.title3)
-                                    Text("添加图片")
+                                    Text(LocalizedStringKey("lostFound.addImage"))
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
@@ -598,11 +598,11 @@ struct PublishLostFoundView: View {
                     }
                     .padding(.vertical, 4)
                 }
-                Text("最多可上传 4 张图片。")
+                Text(LocalizedStringKey("lostFound.maxImages"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("图片")
+                Text(LocalizedStringKey("lostFound.images"))
             }
 
             if let failureMessage = publishViewModel.failureMessage {
@@ -613,7 +613,7 @@ struct PublishLostFoundView: View {
                 }
             }
         }
-        .navigationTitle("发布信息")
+        .navigationTitle(localizedString("lostFound.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -622,7 +622,7 @@ struct PublishLostFoundView: View {
                     if publishViewModel.submitState.isSubmitting {
                         ProgressView()
                     } else {
-                        Text("提交")
+                        Text(LocalizedStringKey("lostFound.submitBtn"))
                     }
                 }
                 .disabled(publishViewModel.submitState.isSubmitting || !publishViewModel.isFormValid)
@@ -631,7 +631,7 @@ struct PublishLostFoundView: View {
         .onChange(of: selectedPhotoItems) { _, newItems in
             Task { await loadSelectedImages(from: newItems) }
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("lostFound.notice"), isPresented: Binding(
             get: {
                 if case .success = publishViewModel.submitState {
                     return true
@@ -644,7 +644,7 @@ struct PublishLostFoundView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("lostFound.understood")) {
                 publishViewModel.submitState = .idle
                 dismiss()
             }
@@ -660,9 +660,9 @@ struct PublishLostFoundView: View {
 
         do {
             try await listViewModel.publish(draft: draft)
-            publishViewModel.submitState = .success("信息已发布，稍后会出现在列表中")
+            publishViewModel.submitState = .success(localizedString("lostFound.publishSuccess"))
         } catch {
-            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.publishFailed"))
         }
     }
 
@@ -727,34 +727,34 @@ private struct EditLostFoundView: View {
     var body: some View {
         Form {
             Section {
-                Picker("寻找类型", selection: $viewModel.selectedType) {
+                Picker(localizedString("lostFound.searchType"), selection: $viewModel.selectedType) {
                     ForEach(LostFoundType.allCases, id: \.rawValue) { type in
                         Text(type.displayName).tag(type)
                     }
                 }
 
-                Picker("物品分类", selection: $viewModel.selectedItemTypeID) {
+                Picker(localizedString("lostFound.itemCategory"), selection: $viewModel.selectedItemTypeID) {
                     ForEach(Array(viewModel.itemTypeOptions.enumerated()), id: \.offset) { index, title in
                         Text(title).tag(index)
                     }
                 }
 
-                TextField("物品名称", text: $viewModel.title)
-                TextField("物品描述（100字内）", text: $viewModel.descriptionText, axis: .vertical)
+                TextField(localizedString("lostFound.itemName"), text: $viewModel.title)
+                TextField(localizedString("lostFound.itemDescription"), text: $viewModel.descriptionText, axis: .vertical)
                     .lineLimit(4...6)
-                TextField(viewModel.selectedType == .lost ? "丢失地点" : "捡到地点", text: $viewModel.location)
+                TextField(viewModel.selectedType == .lost ? localizedString("lostFound.lostLocation") : localizedString("lostFound.foundLocation"), text: $viewModel.location)
             } header: {
-                Text("基础信息")
+                Text(LocalizedStringKey("lostFound.basicInfo"))
             }
 
             Section {
-                TextField("QQ 号（选填）", text: $viewModel.qq)
+                TextField(localizedString("lostFound.qqOptional"), text: $viewModel.qq)
                     .keyboardType(.numberPad)
-                TextField("微信号（选填）", text: $viewModel.wechat)
-                TextField("手机号（选填）", text: $viewModel.phone)
+                TextField(localizedString("lostFound.wechatOptional"), text: $viewModel.wechat)
+                TextField(localizedString("lostFound.phoneOptional"), text: $viewModel.phone)
                     .keyboardType(.numberPad)
             } header: {
-                Text("联系方式")
+                Text(LocalizedStringKey("lostFound.contactInfo"))
             }
 
             if let failureMessage = viewModel.failureMessage {
@@ -765,15 +765,15 @@ private struct EditLostFoundView: View {
                 }
             }
         }
-        .navigationTitle("编辑信息")
+        .navigationTitle(localizedString("lostFound.editTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("取消") {
+                Button(localizedString("common.cancel")) {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "保存中..." : "保存") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("lostFound.saving") : localizedString("common.save")) {
                     Task { await submit() }
                 }
                 .disabled(viewModel.submitState.isSubmitting || !viewModel.isFormValid)
@@ -787,11 +787,11 @@ private struct EditLostFoundView: View {
 
         do {
             try await listViewModel.update(itemID: viewModel.itemID, draft: draft)
-            viewModel.submitState = .success("信息已更新")
+            viewModel.submitState = .success(localizedString("lostFound.updateSuccess"))
             await onSaved()
             dismiss()
         } catch {
-            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "保存失败")
+            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("lostFound.saveFailed"))
         }
     }
 }
