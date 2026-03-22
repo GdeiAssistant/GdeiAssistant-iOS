@@ -167,6 +167,25 @@
 "schedule.weekday.sun" = "Sunday";
 "schedule.weekday.unknown" = "Unknown";
 
+"login.account" = "Account";
+"login.accountPlaceholder" = "Enter username";
+"login.password" = "Password";
+"login.passwordPlaceholder" = "Enter password";
+"login.submit" = "Log In";
+"login.privacyNote" = "By logging in you agree to the Terms of Service and Privacy Policy. We only process necessary information when providing campus services.";
+
+"cet.title" = "CET Score";
+"cet.alertTitle" = "Notice";
+"cet.alertDismiss" = "OK";
+
+"lostFound.title" = "Lost & Found";
+"lostFound.mine" = "Mine";
+"lostFound.publish" = "Post";
+
+"topic.title" = "Campus Topics";
+"topic.mine" = "Mine";
+"topic.publish" = "Post";
+
 "homeEntry.grade.subtitle" = "Check grades and GPA for each semester";
 "homeEntry.schedule.subtitle" = "See your daily class schedule at a glance";
 "homeEntry.cet.subtitle" = "Enter exam ID and captcha to check scores";

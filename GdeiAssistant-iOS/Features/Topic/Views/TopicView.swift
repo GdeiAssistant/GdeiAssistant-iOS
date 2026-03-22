@@ -52,14 +52,14 @@ struct TopicView: View {
                 }
             }
         }
-        .navigationTitle("校园话题")
+        .navigationTitle(localizedString("topic.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("topic.mine")) {
                     MyTopicPostsView(viewModel: viewModel)
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(localizedString("topic.publish")) {
                     PublishTopicView(viewModel: container.makePublishTopicViewModel(), listViewModel: viewModel)
                 }
             }

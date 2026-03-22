@@ -167,6 +167,25 @@
 "schedule.weekday.sun" = "星期日";
 "schedule.weekday.unknown" = "未知";
 
+"login.account" = "帳號";
+"login.accountPlaceholder" = "請輸入使用者名稱";
+"login.password" = "密碼";
+"login.passwordPlaceholder" = "請輸入密碼";
+"login.submit" = "登入";
+"login.privacyNote" = "登入即表示你同意《使用者服務協議》與《隱私權政策》。我們僅在提供校園服務時處理必要資訊。";
+
+"cet.title" = "四六級查詢";
+"cet.alertTitle" = "提示";
+"cet.alertDismiss" = "知道了";
+
+"lostFound.title" = "失物招領";
+"lostFound.mine" = "我的";
+"lostFound.publish" = "發布";
+
+"topic.title" = "校園話題";
+"topic.mine" = "我的";
+"topic.publish" = "發布";
+
 "homeEntry.grade.subtitle" = "查每學年每學期成績和績點";
 "homeEntry.schedule.subtitle" = "一眼看清這週每天上什麼課";
 "homeEntry.cet.subtitle" = "輸入考號和驗證碼即可查分";

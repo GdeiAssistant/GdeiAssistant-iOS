@@ -167,6 +167,25 @@
 "schedule.weekday.sun" = "日曜日";
 "schedule.weekday.unknown" = "不明";
 
+"login.account" = "アカウント";
+"login.accountPlaceholder" = "ユーザー名を入力";
+"login.password" = "パスワード";
+"login.passwordPlaceholder" = "パスワードを入力";
+"login.submit" = "ログイン";
+"login.privacyNote" = "ログインすることで利用規約とプライバシーポリシーに同意したことになります。キャンパスサービスの提供に必要な情報のみを処理します。";
+
+"cet.title" = "CET成績照会";
+"cet.alertTitle" = "お知らせ";
+"cet.alertDismiss" = "了解";
+
+"lostFound.title" = "落とし物";
+"lostFound.mine" = "マイページ";
+"lostFound.publish" = "投稿";
+
+"topic.title" = "キャンパストピック";
+"topic.mine" = "マイページ";
+"topic.publish" = "投稿";
+
 "homeEntry.grade.subtitle" = "各学期の成績とGPAを確認";
 "homeEntry.schedule.subtitle" = "今週の授業を一目で確認";
 "homeEntry.cet.subtitle" = "受験番号とキャプチャで成績照会";

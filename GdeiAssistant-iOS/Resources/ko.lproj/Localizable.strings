@@ -167,6 +167,25 @@
 "schedule.weekday.sun" = "일요일";
 "schedule.weekday.unknown" = "알 수 없음";
 
+"login.account" = "계정";
+"login.accountPlaceholder" = "사용자 이름 입력";
+"login.password" = "비밀번호";
+"login.passwordPlaceholder" = "비밀번호 입력";
+"login.submit" = "로그인";
+"login.privacyNote" = "로그인하면 서비스 이용약관 및 개인정보 처리방침에 동의하게 됩니다. 캠퍼스 서비스 제공에 필요한 정보만 처리합니다.";
+
+"cet.title" = "CET 성적 조회";
+"cet.alertTitle" = "알림";
+"cet.alertDismiss" = "확인";
+
+"lostFound.title" = "분실물";
+"lostFound.mine" = "마이페이지";
+"lostFound.publish" = "게시";
+
+"topic.title" = "캠퍼스 토픽";
+"topic.mine" = "마이페이지";
+"topic.publish" = "게시";
+
 "homeEntry.grade.subtitle" = "각 학기 성적과 GPA 확인";
 "homeEntry.schedule.subtitle" = "이번 주 수업을 한눈에 확인";
 "homeEntry.cet.subtitle" = "수험번호와 캡차로 성적 조회";

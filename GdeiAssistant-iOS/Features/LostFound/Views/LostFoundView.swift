@@ -65,14 +65,14 @@ struct LostFoundView: View {
                 }
             }
         }
-        .navigationTitle("失物招领")
+        .navigationTitle(localizedString("lostFound.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("lostFound.mine")) {
                     LostFoundProfileView(viewModel: viewModel)
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(localizedString("lostFound.publish")) {
                     PublishLostFoundView(
                         listViewModel: viewModel,
                         publishViewModel: container.makePublishLostFoundViewModel()
