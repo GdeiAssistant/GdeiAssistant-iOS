@@ -426,3 +426,32 @@
 "mock.topic.post3Detail" = "#도서관\n\n도서관 5층에 야간 토론 공간이 새로 열렸습니다. 콘센트와 조명이 훨씬 좋아져서 발표 리허설에 적합합니다.\n\n밤 9시 이후에는 사람이 줄어들어 그룹 토론에 적합합니다.";
 "mock.topic.me" = "나";
 "mock.topic.justNow" = "방금";
+
+// MARK: - Mock Lost & Found Seed Data
+"mock.lostFound.seed.item1.title" = "분실: 검은색 접이식 우산";
+"mock.lostFound.seed.item1.summary" = "어젯밤 도서관 1층 셀프 대출기 근처에서 분실했습니다.";
+"mock.lostFound.seed.item1.location" = "도서관 1층";
+"mock.lostFound.seed.item1.createdAt" = "18분 전";
+"mock.lostFound.seed.item2.title" = "습득: 학생증 1장";
+"mock.lostFound.seed.item2.summary" = "카드에 이름이 이 학생으로 표시되어 있으며 기숙사 관리인에게 맡겨두었습니다.";
+"mock.lostFound.seed.item2.location" = "북원 3동 입구";
+"mock.lostFound.seed.item2.createdAt" = "42분 전";
+"mock.lostFound.seed.item3.title" = "분실: AirPods 케이스";
+"mock.lostFound.seed.item3.summary" = "투명 케이스, 뒷면에 파란색 스마일 스티커가 붙어 있습니다.";
+"mock.lostFound.seed.item3.location" = "교학관 C201";
+"mock.lostFound.seed.item3.createdAt" = "1시간 전";
+"mock.lostFound.seed.detail1.description" = "손잡이에 흰색 테이프가 감겨 있습니다. 폐관 전까지 사용 중이었으며 대출기 옆 자리에 두고 온 것으로 추정됩니다.";
+"mock.lostFound.seed.detail1.contactHint" = "QQ: 231245678 / WeChat: demo_umbrella";
+"mock.lostFound.seed.statusText.active" = "찾는 중";
+"mock.lostFound.seed.detail2.description" = "학생 카드를 기숙사 관리인에게 맡겨두었습니다. 카드 소유자는 학생증을 지참하고 수령해 주세요.";
+"mock.lostFound.seed.detail2.contactHint" = "QQ: 83457892";
+"mock.lostFound.seed.detail2.ownerNickname" = "이 학생";
+"mock.lostFound.seed.detail3.description" = "케이스 안쪽에 'ZY'라고 적혀 있습니다. 주우신 분은 메시지를 남겨 주세요.";
+"mock.lostFound.seed.detail3.contactHint" = "WeChat: zy_airpods";
+
+// MARK: - Mock CET Seed Data
+"mock.cet.seed.candidateName" = "린즈위안";
+"mock.cet.seed.schoolName" = "광동제2사범학원";
+"mock.cet.seed.examVenue" = "교학관 D302";
+"mock.cet.seed.session202512" = "2025년 12월";
+"mock.cet.seed.session202506" = "2025년 06월";
