@@ -43,30 +43,30 @@ struct CETView: View {
         ScrollView {
             VStack(spacing: 14) {
                 DSCard {
-                    Text("查询信息")
+                    Text(LocalizedStringKey("cet.queryInfo"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
                     DSInputField(
-                        title: "准考证号",
-                        placeholder: "请输入15位准考证号",
+                        title: localizedString("cet.ticketNumber"),
+                        placeholder: localizedString("cet.ticketPlaceholder"),
                         text: $viewModel.ticketNumber,
                         keyboardType: .numberPad
                     )
 
                     DSInputField(
-                        title: "姓名",
-                        placeholder: "姓名超过3个字可只输入前3个",
+                        title: localizedString("cet.candidateName"),
+                        placeholder: localizedString("cet.namePlaceholder"),
                         text: $viewModel.candidateName
                     )
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("验证码")
+                        Text(LocalizedStringKey("cet.captcha"))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(DSColor.subtitle)
 
                         HStack(spacing: 12) {
-                            TextField("请输入验证码", text: $viewModel.captchaCode)
+                            TextField(localizedString("cet.captchaPlaceholder"), text: $viewModel.captchaCode)
                                 .textFieldStyle(.roundedBorder)
                                 .textInputAutocapitalization(.never)
 
@@ -80,12 +80,12 @@ struct CETView: View {
                         }
                     }
 
-                    Text("验证码图片来自后端 `/cet/checkcode`，点击图片可刷新。")
+                    Text(LocalizedStringKey("cet.captchaHint"))
                         .font(.caption)
                         .foregroundStyle(DSColor.subtitle)
 
                     DSButton(
-                        title: "查询成绩",
+                        title: localizedString("cet.queryScore"),
                         icon: "doc.text.magnifyingglass",
                         isLoading: viewModel.queryState.isSubmitting
                     ) {
@@ -94,19 +94,19 @@ struct CETView: View {
                 }
 
                 DSCard {
-                    Text("成绩记录")
+                    Text(LocalizedStringKey("cet.scoreRecords"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
                     if dashboard.scoreRecords.isEmpty {
-                        Text("请输入准考证号、姓名和验证码后查询。")
+                        Text(LocalizedStringKey("cet.scoreEmptyHint"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                     } else {
-                        infoRow(title: "姓名", value: dashboard.profile.candidateName)
-                        infoRow(title: "学校", value: dashboard.profile.schoolName)
-                        infoRow(title: "级别", value: dashboard.profile.examLevel)
-                        infoRow(title: "准考证号", value: dashboard.profile.admissionTicket)
+                        infoRow(title: localizedString("cet.name"), value: dashboard.profile.candidateName)
+                        infoRow(title: localizedString("cet.school"), value: dashboard.profile.schoolName)
+                        infoRow(title: localizedString("cet.level"), value: dashboard.profile.examLevel)
+                        infoRow(title: localizedString("cet.ticketNumber"), value: dashboard.profile.admissionTicket)
 
                         ForEach(dashboard.scoreRecords) { record in
                             VStack(alignment: .leading, spacing: 6) {
@@ -115,17 +115,17 @@ struct CETView: View {
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundStyle(DSColor.title)
                                     Spacer()
-                                    Text("总分 \(record.totalScore)")
+                                    Text(localizedString("cet.totalScore") + " \(record.totalScore)")
                                         .font(.subheadline.weight(.bold))
                                         .foregroundStyle(record.passed ? DSColor.secondary : DSColor.danger)
                                 }
 
-                                Text("听力 \(record.listeningScore)  阅读 \(record.readingScore)  写作 \(record.writingScore)")
+                                Text("\(localizedString("cet.listening")) \(record.listeningScore)  \(localizedString("cet.reading")) \(record.readingScore)  \(localizedString("cet.writing")) \(record.writingScore)")
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
 
                                 if let speaking = record.speakingScore {
-                                    Text("口语 \(speaking)")
+                                    Text("\(localizedString("cet.speaking")) \(speaking)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
