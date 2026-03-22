@@ -381,3 +381,48 @@
 "topic.vm.contentTooLong" = "토픽 내용은 250자 이내로 입력하세요";
 "topic.vm.publishSuccess" = "토픽이 게시되었습니다";
 "topic.vm.publishFailed" = "게시에 실패했습니다";
+
+// MARK: - Mock CET
+"mock.cet.captchaError" = "모의 조회 실패: 인증코드가 올바르지 않습니다";
+
+// MARK: - Mock LostFound
+"mock.lostFound.postNotFound" = "게시물을 찾을 수 없습니다";
+"mock.lostFound.uploadAtLeastOneImage" = "이미지를 최소 1장 업로드하세요";
+"mock.lostFound.justNow" = "방금";
+"mock.lostFound.searching" = "수색 중";
+"mock.lostFound.justEdited" = "방금 수정됨";
+"mock.lostFound.qqPrefix" = "QQ: %@";
+"mock.lostFound.wechatPrefix" = "WeChat: %@";
+"mock.lostFound.phonePrefix" = "전화번호: %@";
+"mock.lostFound.resolved" = "해결됨";
+"mock.lostFound.personalFoundTitle" = "파란색 USB 메모리를 주웠습니다";
+"mock.lostFound.personalFoundSummary" = "교학관 B동 입구에서 주운 후 개인 센터에 등록했습니다.";
+"mock.lostFound.personalFoundLocation" = "교학관 B동 입구";
+"mock.lostFound.personalFoundTime" = "어제 20:10";
+"mock.lostFound.personalResolvedTitle" = "도서관 대출증을 찾고 있습니다";
+"mock.lostFound.personalResolvedSummary" = "이미 찾았으며, 개인 센터 기록에 보관합니다.";
+"mock.lostFound.personalResolvedLocation" = "도서관 서비스 데스크";
+"mock.lostFound.personalResolvedTime" = "그저께 11:25";
+"mock.lostFound.personalFoundDescription" = "교학관 B동 입구에서 주운 후 소유자 연락을 기다리고 있습니다.";
+"mock.lostFound.personalFoundContact" = "QQ: 231245678 / WeChat: gdeiassistant";
+"mock.lostFound.personalResolvedDescription" = "서비스 데스크에서 회수 완료, 기록을 보관합니다.";
+"mock.lostFound.personalResolvedContact" = "QQ: 231245678";
+
+// MARK: - Mock Topic
+"mock.topic.post1Topic" = "SwiftUI";
+"mock.topic.post1Preview" = "이번 주 동아리 발표에서 SwiftUI 프로젝트 분할을 다룰 예정입니다. 네비게이션과 Repository 설계에 대해 함께 이야기할 분?";
+"mock.topic.post1Author" = "iOS 개발 동아리";
+"mock.topic.post1Time" = "15분 전";
+"mock.topic.post2Topic" = "자격증";
+"mock.topic.post2Preview" = "4월 소프트웨어 시험 중급을 준비 중입니다. 주말에 함께 공부할 친구를 찾고 있어요.";
+"mock.topic.post2Author" = "진 학우";
+"mock.topic.post2Time" = "1시간 전";
+"mock.topic.post3Topic" = "도서관";
+"mock.topic.post3Preview" = "도서관 5층에 야간 토론 공간이 새로 열렸습니다. 콘센트와 조명이 훨씬 좋아져서 발표 리허설에 적합합니다.";
+"mock.topic.post3Author" = "학습 지원 스테이션";
+"mock.topic.post3Time" = "어제";
+"mock.topic.post1Detail" = "#SwiftUI\n\n이번 주 동아리 발표에서 SwiftUI 프로젝트 분할을 다룰 예정입니다. 네비게이션과 Repository 설계에 대해 함께 이야기할 분?\n\n라우팅 디스패치, Repository 전환, Preview 데이터 격리에 중점을 둘 예정입니다.";
+"mock.topic.post2Detail" = "#자격증\n\n4월 소프트웨어 시험 중급을 준비 중입니다. 주말에 함께 공부할 친구를 찾고 있어요.\n\n최근 문제를 풀고 있다면 함께 오답 노트를 정리해요.";
+"mock.topic.post3Detail" = "#도서관\n\n도서관 5층에 야간 토론 공간이 새로 열렸습니다. 콘센트와 조명이 훨씬 좋아져서 발표 리허설에 적합합니다.\n\n밤 9시 이후에는 사람이 줄어들어 그룹 토론에 적합합니다.";
+"mock.topic.me" = "나";
+"mock.topic.justNow" = "방금";

@@ -12,7 +12,7 @@ final class MockCETRepository: CETRepository {
 
         let code = FormValidationSupport.trimmed(request.captchaCode).lowercased()
         guard code == "gd26" || code == "1234" else {
-            throw NetworkError.server(code: 400, message: "模拟查询失败：验证码错误")
+            throw NetworkError.server(code: 400, message: localizedString("mock.cet.captchaError"))
         }
 
         return MockFactory.makeCETDashboard(
