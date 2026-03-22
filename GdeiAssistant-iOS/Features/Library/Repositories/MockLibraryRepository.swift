@@ -5,7 +5,7 @@ final class MockLibraryRepository: LibraryRepository {
     private let validPasswords: Set<String> = ["library123", "123456"]
     private var renewedRecordIDs: Set<String> = []
 
-    func searchBooks(keyword: String) async throws -> [LibraryBook] {
+    func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook] {
         try await Task.sleep(nanoseconds: 260_000_000)
         return MockFactory.makeLibraryBooks(keyword: keyword)
     }

@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 protocol LibraryRepository {
-    func searchBooks(keyword: String) async throws -> [LibraryBook]
+    func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook]
     func fetchBookDetail(bookID: String) async throws -> LibraryBookDetail
     func fetchBorrowRecords(password: String) async throws -> [BorrowRecord]
     func renewBorrow(request: LibraryRenewRequest) async throws
@@ -24,7 +24,7 @@ final class SwitchingLibraryRepository: LibraryRepository {
         self.mockRepository = mockRepository
     }
 
-    func searchBooks(keyword: String) async throws -> [LibraryBook] {
+    func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook] {
         try await currentRepository.searchBooks(keyword: keyword)
     }
 
