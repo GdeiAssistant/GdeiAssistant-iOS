@@ -13,7 +13,7 @@ struct HomeView: View {
         NavigationStack {
             Group {
                 if viewModel.isLoading && viewModel.dashboard == nil {
-                    DSLoadingView(text: "正在加载首页...")
+                    DSLoadingView(text: localizedString("home.loading"))
                 } else if viewModel.dashboard == nil, let error = viewModel.errorMessage {
                     DSErrorStateView(message: error) {
                         Task { await viewModel.refresh() }
@@ -22,7 +22,7 @@ struct HomeView: View {
                     contentView
                 }
             }
-            .navigationTitle("首页")
+            .navigationTitle(localizedString("home.title"))
             .navigationBarTitleDisplayMode(.large)
             .task {
                 await viewModel.loadIfNeeded()
@@ -81,13 +81,13 @@ struct HomeView: View {
                                         .frame(width: 44, height: 44)
 
                                     Image(systemName: entry.icon)
-                                        .font(.system(size: 20))
+                                        .font(.title3)
                                         .foregroundStyle(DSColor.primary)
                                         .accessibilityHidden(true)
                                 }
 
                                 Text(entry.title)
-                                    .font(.system(size: 11))
+                                    .font(.caption2)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.8)
                                     .foregroundStyle(DSColor.title)

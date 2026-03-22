@@ -26,6 +26,8 @@ struct GdeiAssistant_iOSApp: App {
                 .environmentObject(container.userPreferences)
                 .environmentObject(container.sessionState)
                 .environmentObject(container.router)
+                .environment(\.locale, Locale(identifier: container.userPreferences.selectedLocale))
+                .environment(\.sizeCategory, container.userPreferences.sizeCategory)
                 .preferredColorScheme(colorSchemeFor(container.userPreferences.selectedTheme))
         }
     }

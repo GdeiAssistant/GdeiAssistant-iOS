@@ -34,7 +34,7 @@ struct AppearanceView: View {
                         preferences.selectedTheme = mode
                     } label: {
                         HStack {
-                            Text(NSLocalizedString("appearance.theme.\(mode.rawValue)", comment: ""))
+                            Text(LocalizedStringKey("appearance.theme.\(mode.rawValue)"))
                                 .foregroundStyle(DSColor.title)
                             Spacer()
                             if preferences.selectedTheme == mode {
@@ -48,7 +48,7 @@ struct AppearanceView: View {
                     .buttonStyle(.plain)
                 }
             } header: {
-                Text(NSLocalizedString("appearance.theme.label", comment: ""))
+                Text(LocalizedStringKey("appearance.theme.label"))
             }
 
             // Font Size
@@ -66,20 +66,20 @@ struct AppearanceView: View {
 
                     HStack {
                         ForEach(fontScaleLabels.indices, id: \.self) { i in
-                            Text(NSLocalizedString(fontScaleLabels[i], comment: ""))
+                            Text(LocalizedStringKey(fontScaleLabels[i]))
                                 .font(.caption)
                                 .frame(maxWidth: .infinity)
                         }
                     }
                     .foregroundStyle(DSColor.subtitle)
 
-                    Text(NSLocalizedString("appearance.font.preview", comment: ""))
+                    Text(LocalizedStringKey("appearance.font.preview"))
                         .font(.system(size: 16 * preferences.fontScale))
                         .padding(.top, 4)
                 }
                 .padding(.vertical, 8)
             } header: {
-                Text(NSLocalizedString("appearance.font.label", comment: ""))
+                Text(LocalizedStringKey("appearance.font.label"))
             }
 
             // Language
@@ -103,10 +103,10 @@ struct AppearanceView: View {
                     .buttonStyle(.plain)
                 }
             } header: {
-                Text(NSLocalizedString("appearance.language.label", comment: ""))
+                Text(LocalizedStringKey("appearance.language.label"))
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle(NSLocalizedString("appearance.title", comment: ""))
+        .navigationTitle(localizedString("appearance.title"))
     }
 }

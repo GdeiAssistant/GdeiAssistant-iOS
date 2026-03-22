@@ -15,7 +15,7 @@ struct ScheduleView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.schedule == nil {
-                DSLoadingView(text: "正在加载课表...")
+                DSLoadingView(text: localizedString("schedule.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.schedule == nil {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.loadSchedule() }
@@ -23,19 +23,19 @@ struct ScheduleView: View {
             } else if let schedule = viewModel.schedule {
                 content(schedule)
             } else {
-                DSEmptyStateView(icon: "calendar", title: "暂无课表数据", message: "请稍后重试")
+                DSEmptyStateView(icon: "calendar", title: localizedString("schedule.emptyTitle"), message: localizedString("schedule.emptyMessage"))
             }
         }
-        .navigationTitle("我的课程表")
+        .navigationTitle(localizedString("schedule.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     PhotosPicker(selection: $selectedBackgroundItem, matching: .images) {
-                        Label(backgroundImage == nil ? "选择背景图" : "更换背景图", systemImage: "photo")
+                        Label(backgroundImage == nil ? localizedString("schedule.selectBackground") : localizedString("schedule.changeBackground"), systemImage: "photo")
                     }
 
                     if backgroundImage != nil {
-                        Button("清除背景图", role: .destructive) {
+                        Button(localizedString("schedule.clearBackground"), role: .destructive) {
                             clearBackground()
                         }
                     }
@@ -74,7 +74,7 @@ struct ScheduleView: View {
                             Text(schedule.termName)
                                 .font(.subheadline)
                                 .foregroundStyle(DSColor.subtitle)
-                            Text("第 \(schedule.weekIndex) 周")
+                            Text(String(format: localizedString("schedule.weekLabel"), schedule.weekIndex))
                                 .font(.headline)
                                 .foregroundStyle(DSColor.title)
                         }
@@ -91,12 +91,12 @@ struct ScheduleView: View {
                 }
 
                 DSCard {
-                    Text("今日课程")
+                    Text(LocalizedStringKey("schedule.todayCourses"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
                     if viewModel.todayCourses.isEmpty {
-                        Text("今天没有课程安排")
+                        Text(LocalizedStringKey("schedule.noCourses"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                     } else {
@@ -108,7 +108,7 @@ struct ScheduleView: View {
 
                 DSCard {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("周课表")
+                        Text(LocalizedStringKey("schedule.weeklyGrid"))
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 
@@ -134,7 +134,7 @@ struct ScheduleView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(DSColor.title)
 
-            Text("第 \(course.startSection)-\(course.endSection) 节 · \(course.location)")
+            Text(String(format: localizedString("schedule.sectionLocation"), course.startSection, course.endSection, course.location))
                 .font(.caption)
                 .foregroundStyle(DSColor.subtitle)
 
@@ -160,7 +160,7 @@ struct ScheduleView: View {
             }
             backgroundImage = storedImage
         } catch {
-            // 本地背景图读取失败时保持现状，不影响课表主流程
+            // Keep current state when background image loading fails
         }
     }
 
@@ -174,6 +174,9 @@ private struct ScheduleGridView: View {
     let schedule: WeeklySchedule
     let backgroundImage: UIImage?
     let onSelectCourse: (CourseItem) -> Void
+
+    @ScaledMetric(relativeTo: .caption2) private var dateTextSize: CGFloat = 9
+    @ScaledMetric(relativeTo: .caption2) private var sectionNumberSize: CGFloat = 10
 
     private let timeColumnWidth: CGFloat = 26
     private let cellHeight: CGFloat = 38
@@ -199,7 +202,7 @@ private struct ScheduleGridView: View {
                                 .foregroundStyle(isToday(day.dayOfWeek) ? DSColor.primary : DSColor.title)
                             if !day.dateText.isEmpty {
                                 Text(day.dateText)
-                                    .font(.system(size: 9))
+                                    .font(.system(size: dateTextSize))
                                     .foregroundStyle(DSColor.subtitle)
                             }
                         }
@@ -212,7 +215,7 @@ private struct ScheduleGridView: View {
                     VStack(spacing: 0) {
                         ForEach(1...sectionCount, id: \.self) { section in
                             Text("\(section)")
-                                .font(.system(size: 10, weight: .medium))
+                                .font(.system(size: sectionNumberSize, weight: .medium))
                                 .foregroundStyle(DSColor.subtitle)
                                 .frame(width: timeColumnWidth, height: cellHeight)
                                 .overlay(alignment: .bottom) {
@@ -316,17 +319,20 @@ private struct ScheduleCourseBlock: View {
     let cellHeight: CGFloat
     let onTap: () -> Void
 
+    @ScaledMetric(relativeTo: .caption2) private var courseNameSize: CGFloat = 10
+    @ScaledMetric(relativeTo: .caption2) private var locationSize: CGFloat = 8
+
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(course.courseName)
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: courseNameSize, weight: .semibold))
                     .foregroundStyle(.white)
                     .lineLimit(3)
                     .minimumScaleFactor(0.8)
 
                 Text(course.location)
-                    .font(.system(size: 8))
+                    .font(.system(size: locationSize))
                     .foregroundStyle(.white.opacity(0.92))
                     .lineLimit(2)
                     .minimumScaleFactor(0.85)
@@ -366,18 +372,18 @@ private struct ScheduleCourseDetailView: View {
     var body: some View {
         NavigationStack {
             List {
-                infoRow("课程", course.courseName)
-                infoRow("教师", course.teacherName)
-                infoRow("地点", course.location)
-                infoRow("节次", "第 \(course.startSection)-\(course.endSection) 节")
-                infoRow("星期", weekdayText(course.dayOfWeek))
-                infoRow("周次", course.weekIndices.isEmpty ? "全周" : course.weekIndices.map(String.init).joined(separator: "、"))
+                infoRow(localizedString("schedule.course"), course.courseName)
+                infoRow(localizedString("schedule.teacher"), course.teacherName)
+                infoRow(localizedString("schedule.location"), course.location)
+                infoRow(localizedString("schedule.section"), String(format: localizedString("schedule.sectionRange"), course.startSection, course.endSection))
+                infoRow(localizedString("schedule.dayOfWeek"), weekdayText(course.dayOfWeek))
+                infoRow(localizedString("schedule.weeks"), course.weekIndices.isEmpty ? localizedString("schedule.allWeeks") : course.weekIndices.map(String.init).joined(separator: "\u{3001}"))
             }
-            .navigationTitle("课程详情")
+            .navigationTitle(localizedString("schedule.courseDetail"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("关闭") {
+                    Button(localizedString("schedule.close")) {
                         dismiss()
                     }
                 }
@@ -398,14 +404,14 @@ private struct ScheduleCourseDetailView: View {
 
     private func weekdayText(_ dayOfWeek: Int) -> String {
         switch dayOfWeek {
-        case 1: return "星期一"
-        case 2: return "星期二"
-        case 3: return "星期三"
-        case 4: return "星期四"
-        case 5: return "星期五"
-        case 6: return "星期六"
-        case 7: return "星期日"
-        default: return "未知"
+        case 1: return localizedString("schedule.weekday.mon")
+        case 2: return localizedString("schedule.weekday.tue")
+        case 3: return localizedString("schedule.weekday.wed")
+        case 4: return localizedString("schedule.weekday.thu")
+        case 5: return localizedString("schedule.weekday.fri")
+        case 6: return localizedString("schedule.weekday.sat")
+        case 7: return localizedString("schedule.weekday.sun")
+        default: return localizedString("schedule.weekday.unknown")
         }
     }
 }
