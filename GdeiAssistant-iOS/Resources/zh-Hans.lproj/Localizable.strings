@@ -167,6 +167,25 @@
 "schedule.weekday.sun" = "星期日";
 "schedule.weekday.unknown" = "未知";
 
+"login.account" = "账号";
+"login.accountPlaceholder" = "请输入用户名";
+"login.password" = "密码";
+"login.passwordPlaceholder" = "请输入密码";
+"login.submit" = "登录";
+"login.privacyNote" = "登录即表示你同意《用户服务协议》与《隐私政策》。我们仅在提供校园服务时处理必要信息。";
+
+"cet.title" = "四六级查询";
+"cet.alertTitle" = "提示";
+"cet.alertDismiss" = "知道了";
+
+"lostFound.title" = "失物招领";
+"lostFound.mine" = "我的";
+"lostFound.publish" = "发布";
+
+"topic.title" = "校园话题";
+"topic.mine" = "我的";
+"topic.publish" = "发布";
+
 "homeEntry.grade.subtitle" = "查每学年每学期成绩和绩点";
 "homeEntry.schedule.subtitle" = "一眼看清这周每天上什么课";
 "homeEntry.cet.subtitle" = "输入考号和验证码即可查分";

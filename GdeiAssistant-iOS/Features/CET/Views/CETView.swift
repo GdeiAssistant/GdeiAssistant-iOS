@@ -19,11 +19,11 @@ struct CETView: View {
                 content(viewModel.dashboard ?? CETRemoteMapper.emptyDashboard())
             }
         }
-        .navigationTitle("四六级查询")
+        .navigationTitle(localizedString("cet.title"))
         .task {
             await viewModel.loadIfNeeded()
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("cet.alertTitle"), isPresented: Binding(
             get: { viewModel.queryState.message != nil },
             set: { isPresented in
                 if !isPresented {
@@ -31,7 +31,7 @@ struct CETView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("cet.alertDismiss")) {
                 viewModel.clearQueryState()
             }
         } message: {

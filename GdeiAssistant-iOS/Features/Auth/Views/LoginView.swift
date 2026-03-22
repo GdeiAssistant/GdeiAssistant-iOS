@@ -56,15 +56,15 @@ struct LoginView: View {
         DSCard {
             VStack(spacing: 16) {
                 DSInputField(
-                    title: "账号",
-                    placeholder: "请输入用户名",
+                    title: localizedString("login.account"),
+                    placeholder: localizedString("login.accountPlaceholder"),
                     text: $viewModel.username,
                     textContentType: .username
                 )
 
                 DSInputField(
-                    title: "密码",
-                    placeholder: "请输入密码",
+                    title: localizedString("login.password"),
+                    placeholder: localizedString("login.passwordPlaceholder"),
                     text: $viewModel.password,
                     isSecureEntry: $viewModel.isPasswordSecure,
                     textContentType: .password
@@ -78,7 +78,7 @@ struct LoginView: View {
                 }
 
                 DSButton(
-                    title: "登录",
+                    title: localizedString("login.submit"),
                     icon: "arrow.right.circle.fill",
                     variant: .primary,
                     isLoading: viewModel.isLoading,
@@ -101,7 +101,7 @@ struct LoginView: View {
     }
 
     private var privacyNote: some View {
-        Text("登录即表示你同意《用户服务协议》与《隐私政策》。我们仅在提供校园服务时处理必要信息。")
+        Text(LocalizedStringKey("login.privacyNote"))
             .font(.footnote)
             .foregroundStyle(DSColor.subtitle)
             .lineSpacing(4)
