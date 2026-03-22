@@ -35,7 +35,7 @@ struct LoginView: View {
     private var header: some View {
         VStack(spacing: 12) {
             Image(systemName: "graduationcap.circle.fill")
-                .font(.system(size: 56))
+                .font(.largeTitle)
                 .foregroundStyle(DSColor.primary)
 
             Text(AppConstants.Brand.shortDisplayName)

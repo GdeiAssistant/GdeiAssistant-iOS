@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 @MainActor
 final class UserPreferences: ObservableObject {
@@ -26,6 +27,16 @@ final class UserPreferences: ObservableObject {
     static let fontScaleValues: [CGFloat] = [0.85, 1.0, 1.15, 1.3]
 
     var fontScale: CGFloat { Self.fontScaleValues[fontScaleStep.clamped(to: 0...3)] }
+
+    var sizeCategory: ContentSizeCategory {
+        switch fontScaleStep.clamped(to: 0...3) {
+        case 0: return .small
+        case 1: return .medium
+        case 2: return .large
+        case 3: return .extraExtraLarge
+        default: return .medium
+        }
+    }
 
     private let defaults: UserDefaults
     private var hasInitialized = false
@@ -58,6 +69,14 @@ final class UserPreferences: ObservableObject {
             self.fontScaleStep = defaults.integer(forKey: AppConstants.UserDefaultsKeys.fontScaleStep).clamped(to: 0...3)
         }
         hasInitialized = true
+    }
+
+    /// Reads the persisted locale directly from UserDefaults so that
+    /// non-SwiftUI code (computed properties, utility functions) can resolve
+    /// the correct localization bundle without holding an instance reference.
+    static var currentLocale: String {
+        UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+            ?? detectSystemLocale()
     }
 
     var currentDataSourceMode: DataSourceMode {

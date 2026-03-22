@@ -13,31 +13,31 @@ struct SettingsView: View {
                 NavigationLink {
                     AppearanceView()
                 } label: {
-                    Label(NSLocalizedString("appearance.title", comment: ""), systemImage: "paintbrush")
+                    Label(LocalizedStringKey("appearance.title"), systemImage: "paintbrush")
                 }
             } header: {
-                Text(NSLocalizedString("appearance.title", comment: ""))
+                Text(LocalizedStringKey("appearance.title"))
             }
 
             Section {
-                Toggle("使用模拟测试数据", isOn: mockBinding)
+                Toggle(LocalizedStringKey("settings.useMockData"), isOn: mockBinding)
                     .disabled(!viewModel.isDebug)
 
-                Text(viewModel.isDebug ? "开启后将读取本地 Mock 数据，便于离线测试。" : "当前为 Release 环境，不允许切换数据源。")
+                Text(LocalizedStringKey(viewModel.isDebug ? "settings.mockDataEnabled" : "settings.mockDataDisabled"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
 
                 if viewModel.showReloadHint {
-                    Text("切换已生效，部分页面可能需要重新加载。")
+                    Text(LocalizedStringKey("settings.reloadHint"))
                         .font(.footnote)
                         .foregroundStyle(DSColor.warning)
                 }
             } header: {
-                Text("调试数据源")
+                Text(LocalizedStringKey("settings.debugDataSource"))
             }
 
             Section {
-                Picker("接口环境", selection: networkEnvironmentBinding) {
+                Picker(LocalizedStringKey("settings.apiEnvironmentLabel"), selection: networkEnvironmentBinding) {
                     ForEach(NetworkEnvironment.allCases, id: \.self) { environment in
                         Text(environment.displayName).tag(environment)
                     }
@@ -45,11 +45,11 @@ struct SettingsView: View {
                 .pickerStyle(.segmented)
                 .disabled(!viewModel.isDebug)
 
-                Text(viewModel.isDebug ? "真实接口支持 dev / staging / prod 三档切换，方便本地联调和灰度验证。" : "当前为 Release 环境，不允许切换接口环境。")
+                Text(LocalizedStringKey(viewModel.isDebug ? "settings.apiDebugHint" : "settings.apiReleaseHint"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("接口环境")
+                Text(LocalizedStringKey("settings.apiEnvironment"))
             }
 
             if viewModel.isDebug {
@@ -60,27 +60,27 @@ struct SettingsView: View {
                     infoRow(title: "X-Client-Type", value: viewModel.clientTypeText)
                     infoRow(title: "isDebug", value: viewModel.isDebug ? "true" : "false")
                 } header: {
-                    Text("调试信息")
+                    Text(LocalizedStringKey("settings.debugInfo"))
                 }
             }
 
             Section {
                 VStack(spacing: 6) {
                     Text(AppConstants.Brand.displayName)
-                    Text("iOS 客户端")
+                    Text(LocalizedStringKey("settings.iOSClient"))
                         .font(.footnote)
                         .foregroundStyle(DSColor.subtitle)
-                    Text("Copyright © GdeiAssistant 2016-2026")
+                    Text("Copyright \u{00A9} GdeiAssistant 2016-2026")
                         .font(.footnote)
                         .foregroundStyle(DSColor.subtitle)
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
             } header: {
-                Text("应用信息")
+                Text(LocalizedStringKey("settings.appInfo"))
             }
         }
-        .navigationTitle("设置")
+        .navigationTitle(localizedString("settings.title"))
     }
 
     private var mockBinding: Binding<Bool> {

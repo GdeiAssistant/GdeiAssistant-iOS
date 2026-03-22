@@ -7,11 +7,11 @@ struct DSErrorStateView: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: "exclamationmark.circle")
-                .font(.system(size: 30, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .foregroundStyle(DSColor.danger)
                 .accessibilityHidden(true)
 
-            Text("加载失败")
+            Text(LocalizedStringKey("common.error"))
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
 
@@ -21,7 +21,7 @@ struct DSErrorStateView: View {
                 .multilineTextAlignment(.center)
 
             if let retryAction {
-                DSButton(title: "重试", icon: "arrow.clockwise", variant: .secondary, action: retryAction)
+                DSButton(title: localizedString("common.retry"), icon: "arrow.clockwise", variant: .secondary, action: retryAction)
                     .frame(maxWidth: 180)
             }
         }

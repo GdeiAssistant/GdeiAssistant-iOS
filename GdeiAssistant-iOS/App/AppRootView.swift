@@ -21,7 +21,7 @@ struct AppRootView: View {
                 if hasBootstrapTimedOut && sessionState.isRestoringSession {
                     startupFallbackView
                 } else if sessionState.isRestoringSession {
-                    DSLoadingView(text: "正在恢复登录状态...")
+                    DSLoadingView(text: localizedString("startup.restoringSession"))
                 } else if sessionState.isLoggedIn {
                     MainTabView()
                 } else {
@@ -43,8 +43,10 @@ struct AppRootView: View {
             }
         }
         .id(preferences.selectedLocale)
-        .alert("提示", isPresented: $showAuthAlert) {
-            Button("知道了") {
+        .environment(\.locale, Locale(identifier: preferences.selectedLocale))
+        .environment(\.sizeCategory, preferences.sizeCategory)
+        .alert(Text(LocalizedStringKey("startup.alert.title")), isPresented: $showAuthAlert) {
+            Button(localizedString("startup.alert.dismiss")) {
                 sessionState.authErrorMessage = nil
             }
         } message: {
@@ -55,7 +57,7 @@ struct AppRootView: View {
     private var startupFallbackView: some View {
         VStack(spacing: 18) {
             Image(systemName: "graduationcap.circle.fill")
-                .font(.system(size: 52))
+                .font(.largeTitle)
                 .foregroundStyle(DSColor.primary)
 
             VStack(spacing: 6) {
@@ -63,19 +65,25 @@ struct AppRootView: View {
                     .font(.title3.weight(.bold))
                     .foregroundStyle(DSColor.title)
 
-                Text(environment.dataSourceMode == .mock ? "当前使用 mock 数据源" : "当前使用 remote 数据源")
+                Text(environment.dataSourceMode == .mock
+                     ? localizedString("startup.dataSource.mock")
+                     : localizedString("startup.dataSource.remote"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
             }
 
-            DSErrorStateView(message: AppConstants.Debug.bootstrapTimeoutMessage) {
+            DSErrorStateView(message: localizedString("startup.timeout")) {
                 bootstrapAttempt += 1
             }
             .frame(maxHeight: 220)
 
-            DSButton(title: "进入登录页", icon: "person.crop.circle.badge.exclamationmark", variant: .secondary) {
+            DSButton(
+                title: localizedString("startup.goToLogin"),
+                icon: "person.crop.circle.badge.exclamationmark",
+                variant: .secondary
+            ) {
                 container.authManager.clearToken()
-                sessionState.markLoggedOut(message: "启动恢复失败，请重新登录")
+                sessionState.markLoggedOut(message: localizedString("startup.restoreFailed"))
             }
             .frame(maxWidth: 220)
         }
