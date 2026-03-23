@@ -45,7 +45,7 @@ final class InteractionMessageListViewModel: ObservableObject {
             items = []
             interactionUnreadCount = 0
             canLoadMore = false
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "互动消息加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
         }
     }
 
@@ -62,7 +62,7 @@ final class InteractionMessageListViewModel: ObservableObject {
             nextStart += page.count
             canLoadMore = page.count == pageSize
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? "互动消息加载失败"
+            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
         }
     }
 
@@ -76,7 +76,7 @@ final class InteractionMessageListViewModel: ObservableObject {
             items[index] = items[index].updatingReadState(true)
             interactionUnreadCount = max(0, interactionUnreadCount - 1)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }
 
@@ -90,7 +90,7 @@ final class InteractionMessageListViewModel: ObservableObject {
             }
             interactionUnreadCount = 0
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }
 }

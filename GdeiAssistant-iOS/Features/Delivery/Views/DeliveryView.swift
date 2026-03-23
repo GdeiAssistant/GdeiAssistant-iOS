@@ -11,7 +11,7 @@ struct DeliveryView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.orders.isEmpty {
-                DSLoadingView(text: "正在加载跑腿订单...")
+                DSLoadingView(text: localizedString("delivery.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.orders.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
@@ -28,7 +28,7 @@ struct DeliveryView: View {
 
                     if viewModel.orders.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "shippingbox.circle", title: "暂无订单", message: "暂时没有可接的跑腿任务")
+                            DSEmptyStateView(icon: "shippingbox.circle", title: localizedString("delivery.noOrders"), message: localizedString("delivery.noOrdersMessage"))
                         }
                     } else {
                         Section {
@@ -41,7 +41,7 @@ struct DeliveryView: View {
                                 .buttonStyle(.plain)
                             }
                         } header: {
-                            Text("跑腿大厅")
+                            Text(localizedString("delivery.hall"))
                         }
                     }
                 }
@@ -51,13 +51,13 @@ struct DeliveryView: View {
                 }
             }
         }
-        .navigationTitle("全民快递")
+        .navigationTitle(localizedString("delivery.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("delivery.mine")) {
                     MyDeliveryView(viewModel: viewModel)
                 }
-                NavigationLink("发布") {
+                NavigationLink(localizedString("delivery.publish")) {
                     PublishDeliveryView(viewModel: container.makePublishDeliveryViewModel(), listViewModel: viewModel)
                 }
             }
@@ -74,7 +74,7 @@ private struct DeliveryOrderRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("代取快递")
+                Text(localizedString("delivery.pickupDelivery"))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(DSColor.title)
                 Spacer()
@@ -83,8 +83,8 @@ private struct DeliveryOrderRow: View {
                     .foregroundStyle(DSColor.primary)
             }
 
-            routeRow(icon: "tray.and.arrow.down", title: "取", value: "\(order.company) 取件")
-            routeRow(icon: "location", title: "送", value: order.address)
+            routeRow(icon: "tray.and.arrow.down", title: localizedString("delivery.pickup"), value: "\(order.company) \(localizedString("delivery.pickupSuffix"))")
+            routeRow(icon: "location", title: localizedString("delivery.deliver"), value: order.address)
 
             HStack {
                 Text(order.orderTime)
@@ -107,7 +107,7 @@ private struct DeliveryOrderRow: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.white)
                 .frame(width: 20, height: 20)
-                .background(title == "取" ? DSColor.primary : DSColor.secondary)
+                .background(title == localizedString("delivery.pickup") ? DSColor.primary : DSColor.secondary)
                 .clipShape(Circle())
             Image(systemName: icon)
                 .font(.caption)
@@ -165,7 +165,7 @@ struct DeliveryDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载任务详情...")
+                DSLoadingView(text: localizedString("delivery.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -187,57 +187,57 @@ struct DeliveryDetailView: View {
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     } header: {
-                        Text("状态")
+                        Text(localizedString("delivery.statusHeader"))
                     }
 
                     Section {
                         roleRow(detail.userRoleTitle)
-                        infoRow("发布者", detail.order.username)
-                        infoRow("取件地点", "\(detail.order.company) 取件")
-                        infoRow("送达地址", detail.order.address)
-                        infoRow("联系电话", detail.displayContactPhone)
+                        infoRow(localizedString("delivery.publisherLabel"), detail.order.username)
+                        infoRow(localizedString("delivery.pickupLocation"), "\(detail.order.company) \(localizedString("delivery.pickupSuffix"))")
+                        infoRow(localizedString("delivery.deliveryAddress"), detail.order.address)
+                        infoRow(localizedString("delivery.contactPhone"), detail.displayContactPhone)
                         if detail.hasMeaningfulPickupCode {
-                            infoRow("取件码", detail.displayPickupCode)
+                            infoRow(localizedString("delivery.pickupCode"), detail.displayPickupCode)
                         }
-                        infoRow("赏金", String(format: "¥%.2f", detail.order.price))
-                        infoRow("发布时间", detail.order.orderTime)
+                        infoRow(localizedString("delivery.reward"), String(format: "¥%.2f", detail.order.price))
+                        infoRow(localizedString("delivery.publishTime"), detail.order.orderTime)
                         if !detail.order.remarks.isEmpty {
-                            infoRow("备注", detail.order.remarks)
+                            infoRow(localizedString("delivery.remarks"), detail.order.remarks)
                         }
                     } header: {
-                        Text("订单信息")
+                        Text(localizedString("delivery.orderInfo"))
                     } footer: {
                         if !detail.canViewSensitiveInfo {
-                            Text("为保护发布者信息，完整联系方式会在接单后展示。")
+                            Text(localizedString("delivery.sensitiveInfoHidden"))
                         }
                     }
 
                     if let trade = detail.trade {
                         Section {
-                            infoRow("接单者", trade.username)
-                            infoRow("接单时间", trade.createTime)
+                            infoRow(localizedString("delivery.acceptor"), trade.username)
+                            infoRow(localizedString("delivery.acceptTime"), trade.createTime)
                         } header: {
-                            Text("交易信息")
+                            Text(localizedString("delivery.tradeInfo"))
                         }
                     }
 
                     Section {
                         if detail.canAccept {
-                            Button(isSubmitting ? "接单中..." : "立即抢单") {
+                            Button(isSubmitting ? localizedString("delivery.accepting") : localizedString("delivery.acceptNow")) {
                                 Task { await accept(detail.order.orderID) }
                             }
                             .disabled(isSubmitting)
                         }
                         if detail.canComplete, let trade = detail.trade {
-                            Button(isSubmitting ? "处理中..." : "确认订单完成") {
+                            Button(isSubmitting ? localizedString("delivery.processing") : localizedString("delivery.confirmComplete")) {
                                 confirmFinish = true
                             }
                             .disabled(isSubmitting)
-                            .confirmationDialog("确认订单已经完成交付？", isPresented: $confirmFinish) {
-                                Button("确认订单完成") {
+                            .confirmationDialog(localizedString("delivery.confirmCompleteDialog"), isPresented: $confirmFinish) {
+                                Button(localizedString("delivery.confirmCompleteButton")) {
                                     Task { await finishTrade(trade.tradeID) }
                                 }
-                                Button("取消", role: .cancel) {}
+                                Button(localizedString("common.cancel"), role: .cancel) {}
                             }
                         }
                         if let resultMessage {
@@ -246,10 +246,10 @@ struct DeliveryDetailView: View {
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     } header: {
-                        Text("操作")
+                        Text(localizedString("delivery.actions"))
                     } footer: {
                         if detail.canComplete {
-                            Text("确认订单完成后，该订单会切换到已完成状态。")
+                            Text(localizedString("delivery.completeFooter"))
                         } else {
                             Text(detail.order.state.descriptionText)
                         }
@@ -258,7 +258,7 @@ struct DeliveryDetailView: View {
                 .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("任务详情")
+        .navigationTitle(localizedString("delivery.detailTitle"))
         .task {
             await loadDetail()
         }
@@ -272,7 +272,7 @@ struct DeliveryDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(orderID: orderID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.detailLoadFailed")
         }
     }
 
@@ -281,10 +281,10 @@ struct DeliveryDetailView: View {
         defer { isSubmitting = false }
         do {
             try await viewModel.accept(orderID: orderID)
-            resultMessage = "接单成功"
+            resultMessage = localizedString("delivery.acceptSuccess")
             await loadDetail()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "接单失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.acceptFailed")
         }
     }
 
@@ -293,14 +293,14 @@ struct DeliveryDetailView: View {
         defer { isSubmitting = false }
         do {
             try await viewModel.finishTrade(tradeID: tradeID)
-            resultMessage = "订单已完成"
+            resultMessage = localizedString("delivery.orderCompleted")
             if dismissAfterMutation {
                 dismiss()
             } else {
                 await loadDetail()
             }
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "操作失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.operationFailed")
         }
     }
 
@@ -318,7 +318,7 @@ struct DeliveryDetailView: View {
 
     private func roleRow(_ role: String) -> some View {
         HStack {
-            Text("我的角色")
+            Text(localizedString("delivery.myRole"))
                 .foregroundStyle(DSColor.subtitle)
             Spacer()
             Text(role)
@@ -348,16 +348,16 @@ struct DeliveryDetailView: View {
         switch normalizedNotificationTargetType {
         case "published":
             if let notificationTargetSubID {
-                return "来自互动消息：订单已被接单，交易号 \(notificationTargetSubID)"
+                return String(format: localizedString("delivery.notificationAcceptedTrade"), notificationTargetSubID)
             }
-            return "来自互动消息：订单已被接单"
+            return localizedString("delivery.notificationAccepted")
         case "accepted":
             if let notificationTargetSubID {
-                return "来自互动消息：订单已完成，交易号 \(notificationTargetSubID)"
+                return String(format: localizedString("delivery.notificationCompletedTrade"), notificationTargetSubID)
             }
-            return "来自互动消息：订单已完成"
+            return localizedString("delivery.notificationCompleted")
         default:
-            return "来自互动消息"
+            return localizedString("delivery.notificationGeneric")
         }
     }
 
@@ -380,19 +380,19 @@ private struct PublishDeliveryView: View {
     var body: some View {
         Form {
             Section {
-                TextField("取件地点", text: $viewModel.pickupPlace)
-                TextField("取件码 / 凭证（选填）", text: $viewModel.pickupNumber)
-                TextField("联系电话", text: $viewModel.phone)
+                TextField(localizedString("delivery.pickupPlacePlaceholder"), text: $viewModel.pickupPlace)
+                TextField(localizedString("delivery.pickupCodePlaceholder"), text: $viewModel.pickupNumber)
+                TextField(localizedString("delivery.phonePlaceholder"), text: $viewModel.phone)
                     .keyboardType(.numberPad)
-                TextField("送达地址", text: $viewModel.address)
-                TextField("备注（选填）", text: $viewModel.remarks, axis: .vertical)
+                TextField(localizedString("delivery.addressPlaceholder"), text: $viewModel.address)
+                TextField(localizedString("delivery.remarksPlaceholder"), text: $viewModel.remarks, axis: .vertical)
                     .lineLimit(3...5)
-                TextField("跑腿费", text: $viewModel.rewardText)
+                TextField(localizedString("delivery.rewardPlaceholder"), text: $viewModel.rewardText)
                     .keyboardType(.decimalPad)
             } header: {
-                Text("订单信息")
+                Text(localizedString("delivery.orderInfo"))
             } footer: {
-                Text("与 Web 当前提交流程一致，取件码或凭证可不填写；未填写时会按前端默认值提交。")
+                Text(localizedString("delivery.publishFooter"))
             }
 
             if let message = viewModel.submitState.message {
@@ -403,10 +403,10 @@ private struct PublishDeliveryView: View {
                 }
             }
         }
-        .navigationTitle("发布全民快递")
+        .navigationTitle(localizedString("delivery.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "提交中..." : "提交") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("delivery.submitting") : localizedString("common.submit")) {
                     Task {
                         let success = await viewModel.submit()
                         if success {
@@ -449,7 +449,7 @@ private struct MyDeliveryView: View {
     var body: some View {
         List {
             Section {
-                Picker("我的订单", selection: $selectedTab) {
+                Picker(localizedString("delivery.myOrders"), selection: $selectedTab) {
                     ForEach(DeliveryMineTab.allCases) { tab in
                         Text(tab.title).tag(tab)
                     }
@@ -459,13 +459,13 @@ private struct MyDeliveryView: View {
 
             Section {
                 HStack {
-                    summaryCard(title: "发布", value: viewModel.mine.published.count, tint: DSColor.primary)
-                    summaryCard(title: "接单", value: viewModel.mine.accepted.count, tint: DSColor.secondary)
+                    summaryCard(title: localizedString("delivery.publishedTab"), value: viewModel.mine.published.count, tint: DSColor.primary)
+                    summaryCard(title: localizedString("delivery.acceptedTab"), value: viewModel.mine.accepted.count, tint: DSColor.secondary)
                 }
             }
 
             Section {
-                Picker("状态筛选", selection: $statusFilter) {
+                Picker(localizedString("delivery.statusFilter"), selection: $statusFilter) {
                     ForEach(DeliveryMineStatusFilter.allCases) { filter in
                         Text(filter.title).tag(filter)
                     }
@@ -485,7 +485,7 @@ private struct MyDeliveryView: View {
                 Section {
                     DSEmptyStateView(
                         icon: selectedTab == .published ? "square.and.arrow.up" : "shippingbox.circle",
-                        title: selectedTab == .published ? "暂无我发布的订单" : "暂无我接的订单",
+                        title: selectedTab == .published ? localizedString("delivery.noPublishedOrders") : localizedString("delivery.noAcceptedOrders"),
                         message: emptyMessage
                     )
                 }
@@ -504,7 +504,7 @@ private struct MyDeliveryView: View {
                 }
             }
         }
-        .navigationTitle("我的跑腿")
+        .navigationTitle(localizedString("delivery.myDelivery"))
         .refreshable {
             await viewModel.refresh()
         }
@@ -516,11 +516,11 @@ private struct MyDeliveryView: View {
     private var emptyMessage: String {
         switch (selectedTab, statusFilter) {
         case (.published, .all):
-            return "去发布一个新的跑腿任务"
+            return localizedString("delivery.emptyPublished")
         case (.accepted, .all):
-            return "去大厅看看有没有可接的单"
+            return localizedString("delivery.emptyAccepted")
         default:
-            return "当前状态下没有匹配的订单"
+            return localizedString("delivery.emptyFiltered")
         }
     }
 

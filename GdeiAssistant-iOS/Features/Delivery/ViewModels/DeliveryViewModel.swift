@@ -32,7 +32,7 @@ final class DeliveryViewModel: ObservableObject {
             orders = try await listTask
             mine = try await mineTask
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "跑腿列表加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.listLoadFailed")
         }
     }
 
@@ -40,7 +40,7 @@ final class DeliveryViewModel: ObservableObject {
         do {
             mine = try await repository.fetchMine()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "我的跑腿刷新失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.mineRefreshFailed")
         }
     }
 
@@ -50,13 +50,13 @@ final class DeliveryViewModel: ObservableObject {
 
     func accept(orderID: String) async throws {
         try await repository.accept(orderID: orderID)
-        actionMessage = "接单成功"
+        actionMessage = localizedString("delivery.acceptSuccess")
         await refresh()
     }
 
     func finishTrade(tradeID: String) async throws {
         try await repository.finishTrade(tradeID: tradeID)
-        actionMessage = "订单已完成"
+        actionMessage = localizedString("delivery.orderCompleted")
         await refresh()
     }
 }
@@ -91,36 +91,36 @@ final class PublishDeliveryViewModel: ObservableObject {
         let trimmedAddress = FormValidationSupport.trimmed(address)
         let trimmedRemarks = FormValidationSupport.trimmed(remarks)
 
-        if let message = FormValidationSupport.requireText(trimmedPickupPlace, message: "请输入取件地点") {
+        if let message = FormValidationSupport.requireText(trimmedPickupPlace, message: localizedString("delivery.pickupPlaceRequired")) {
             submitState = .failure(message)
             return false
         }
         if trimmedPickupPlace.count > 10 {
-            submitState = .failure("取件地点不能超过 10 个字")
+            submitState = .failure(localizedString("delivery.pickupPlaceTooLong"))
             return false
         }
-        if let message = FormValidationSupport.requireText(trimmedPhone, message: "请输入联系电话") {
+        if let message = FormValidationSupport.requireText(trimmedPhone, message: localizedString("delivery.phoneRequired")) {
             submitState = .failure(message)
             return false
         }
         if trimmedPhone.count > 11 {
-            submitState = .failure("联系电话不能超过 11 位")
+            submitState = .failure(localizedString("delivery.phoneTooLong"))
             return false
         }
-        if let message = FormValidationSupport.requireText(trimmedAddress, message: "请输入送达地址") {
+        if let message = FormValidationSupport.requireText(trimmedAddress, message: localizedString("delivery.addressRequired")) {
             submitState = .failure(message)
             return false
         }
         if trimmedAddress.count > 50 {
-            submitState = .failure("送达地址不能超过 50 个字")
+            submitState = .failure(localizedString("delivery.addressTooLong"))
             return false
         }
         guard let reward = FormValidationSupport.parsePositiveAmount(rewardText, max: 99, message: "") else {
-            submitState = .failure("请输入有效的跑腿费")
+            submitState = .failure(localizedString("delivery.rewardInvalid"))
             return false
         }
         if trimmedRemarks.count > 100 {
-            submitState = .failure("备注不能超过 100 个字")
+            submitState = .failure(localizedString("delivery.remarksTooLong"))
             return false
         }
 
@@ -137,10 +137,10 @@ final class PublishDeliveryViewModel: ObservableObject {
                     remarks: trimmedRemarks
                 )
             )
-            submitState = .success("跑腿任务已发布")
+            submitState = .success(localizedString("delivery.published"))
             return true
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("delivery.publishFailed"))
             return false
         }
     }

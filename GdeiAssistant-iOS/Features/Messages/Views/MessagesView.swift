@@ -27,7 +27,7 @@ struct MessagesView: View {
         NavigationStack {
             Group {
                 if viewModel.isInitialLoading {
-                    DSLoadingView(text: "正在加载资讯信息...")
+                    DSLoadingView(text: localizedString("messages.loading"))
                 } else if !viewModel.hasAnyContent && viewModel.hasAnyError {
                     DSErrorStateView(message: viewModel.primaryErrorMessage) {
                         Task { await viewModel.refresh() }
@@ -36,7 +36,7 @@ struct MessagesView: View {
                     content
                 }
             }
-            .navigationTitle("资讯信息")
+            .navigationTitle(localizedString("messages.title"))
             .task {
                 await viewModel.loadIfNeeded()
             }
@@ -65,7 +65,7 @@ struct MessagesView: View {
 
     private var newsPanel: some View {
         overviewSectionCard(
-            title: "新闻",
+            title: localizedString("messages.newsSection"),
             systemImage: "newspaper.fill",
             tint: DSColor.primary
         ) {
@@ -83,7 +83,7 @@ struct MessagesView: View {
                     Task { await viewModel.refreshNews() }
                 }
             } else if viewModel.newsItems.isEmpty {
-                sectionEmptyRow(title: "暂无新闻", systemImage: "tray")
+                sectionEmptyRow(title: localizedString("messages.noNews"), systemImage: "tray")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(viewModel.newsItems.enumerated()), id: \.element.id) { index, item in
@@ -111,7 +111,7 @@ struct MessagesView: View {
 
     private var systemNoticePanel: some View {
         overviewSectionCard(
-            title: "系统公告",
+            title: localizedString("messages.systemNoticeSection"),
             systemImage: "megaphone.fill",
             tint: DSColor.warning
         ) {
@@ -129,7 +129,7 @@ struct MessagesView: View {
                     Task { await viewModel.refreshSystemNotices() }
                 }
             } else if viewModel.systemNoticeItems.isEmpty {
-                sectionEmptyRow(title: "暂无系统公告", systemImage: "tray")
+                sectionEmptyRow(title: localizedString("messages.noSystemNotice"), systemImage: "tray")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(viewModel.systemNoticeItems.enumerated()), id: \.element.id) { index, item in
@@ -138,7 +138,7 @@ struct MessagesView: View {
                         }
                         NavigationLink {
                             AnnouncementDetailView(
-                                navigationTitleText: "系统公告",
+                                navigationTitleText: localizedString("messages.systemNoticeSection"),
                                 announcementID: item.targetID ?? item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.message,
@@ -178,14 +178,14 @@ struct MessagesView: View {
 
     private var interactionPanel: some View {
         sectionCard(
-            title: "互动消息",
+            title: localizedString("messages.interactionSection"),
             systemImage: "bubble.left.and.bubble.right.fill",
             tint: DSColor.primary
         ) {
             HStack(spacing: 8) {
                 if viewModel.interactionUnreadCount > 0 {
-                    headerMetaChip(title: "\(viewModel.interactionUnreadCount) 未读", tint: DSColor.primary)
-                    headerActionButton(title: "全部已读", tint: DSColor.primary) {
+                    headerMetaChip(title: String(format: localizedString("messages.unreadCount"), viewModel.interactionUnreadCount), tint: DSColor.primary)
+                    headerActionButton(title: localizedString("messages.markAllRead"), tint: DSColor.primary) {
                         Task { await viewModel.markAllInteractionNotificationsRead() }
                     }
                 }
@@ -205,7 +205,7 @@ struct MessagesView: View {
                     Task { await viewModel.refreshInteractionItems() }
                 }
             } else if viewModel.interactionNoticeItems.isEmpty {
-                sectionEmptyRow(title: "暂无互动消息", systemImage: "tray")
+                sectionEmptyRow(title: localizedString("messages.noInteraction"), systemImage: "tray")
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(viewModel.interactionNoticeItems.enumerated()), id: \.element.id) { index, item in
@@ -438,7 +438,7 @@ struct MessagesView: View {
     }
 
     private var moreChip: some View {
-        Text("更多")
+        Text(localizedString("messages.more"))
             .font(.caption2.weight(.semibold))
             .foregroundStyle(DSColor.subtitle)
             .padding(.horizontal, 10)
@@ -484,7 +484,7 @@ struct MessagesView: View {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
-                Text("点击重试")
+                Text(localizedString("messages.tapRetry"))
                     .font(.caption)
                     .foregroundStyle(DSColor.primary)
             }

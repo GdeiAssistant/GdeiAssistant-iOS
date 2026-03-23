@@ -23,9 +23,9 @@ final class CountingSecretRepositorySpy: SecretRepository {
         return try await backing.fetchPosts()
     }
 
-    func fetchMyPosts() async throws -> [SecretPost] {
+    func fetchMyPosts(start: Int, size: Int) async throws -> [SecretPost] {
         fetchMyPostsCallCount += 1
-        return try await backing.fetchMyPosts()
+        return try await backing.fetchMyPosts(start: start, size: size)
     }
 
     func fetchDetail(postID: String) async throws -> SecretPostDetail {

@@ -10,9 +10,11 @@ final class MockSecretRepository: SecretRepository {
         return posts
     }
 
-    func fetchMyPosts() async throws -> [SecretPost] {
+    func fetchMyPosts(start: Int, size: Int) async throws -> [SecretPost] {
         try await Task.sleep(nanoseconds: 120_000_000)
-        return posts
+        let end = min(start + size, posts.count)
+        guard start < posts.count else { return [] }
+        return Array(posts[start..<end])
     }
 
     func fetchDetail(postID: String) async throws -> SecretPostDetail {

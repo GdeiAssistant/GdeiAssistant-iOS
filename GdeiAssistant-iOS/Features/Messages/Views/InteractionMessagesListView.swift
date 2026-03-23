@@ -10,13 +10,13 @@ struct InteractionMessagesListView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载互动消息...")
+                DSLoadingView(text: localizedString("messages.interactionLoading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "bubble.left.and.bubble.right", title: "暂无互动消息", message: "新的互动消息会显示在这里")
+                DSEmptyStateView(icon: "bubble.left.and.bubble.right", title: localizedString("messages.noInteractionEmpty"), message: localizedString("messages.noInteractionMessage"))
             } else {
                 List {
                     ForEach(viewModel.items) { item in
@@ -42,11 +42,11 @@ struct InteractionMessagesListView: View {
                 }
             }
         }
-        .navigationTitle("互动消息")
+        .navigationTitle(localizedString("messages.interactionTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 if viewModel.interactionUnreadCount > 0 {
-                    Button("统一已读") {
+                    Button(localizedString("messages.markAllReadButton")) {
                         Task { await viewModel.markAllNotificationsRead() }
                     }
                 }
@@ -140,7 +140,7 @@ struct InteractionMessagesListView: View {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
-                Text("点击重试")
+                Text(localizedString("messages.tapRetry"))
                     .font(.caption)
                     .foregroundStyle(DSColor.primary)
             }
