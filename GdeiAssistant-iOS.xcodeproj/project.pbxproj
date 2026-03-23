@@ -18,6 +18,7 @@
 		F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */; };
 		FFDDE89AE80431D0303BCEB4 /* MessagesRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */; };
 		B1A2C3D4E5F60718A9B0C1D2 /* AppContainerBootstrapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */; };
+		A1B2C3D4E5F60718A9B0D1E1 /* SecretDetailNoDuplicateFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GdeiAssistant-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthManagerTests.swift; path = "GdeiAssistant-iOSTests/Auth/AuthManagerTests.swift"; sourceTree = "<group>"; };
 		B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppContainerBootstrapTests.swift; path = "GdeiAssistant-iOSTests/Container/AppContainerBootstrapTests.swift"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SecretDetailNoDuplicateFetchTests.swift; path = "GdeiAssistant-iOSTests/Contract/SecretDetailNoDuplicateFetchTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -123,6 +125,7 @@
 				A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */,
 				346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */,
 				CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */,
+				A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */,
 			);
 			name = "GdeiAssistant-iOSTests";
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				45CD090CF159FFACA7D91AD4 /* ProfileFormSupportTests.swift in Sources */,
 				23FC56E702BCF7B97FD9012D /* RemoteMapperSupportTests.swift in Sources */,
 				8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */,
+				A1B2C3D4E5F60718A9B0D1E1 /* SecretDetailNoDuplicateFetchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
