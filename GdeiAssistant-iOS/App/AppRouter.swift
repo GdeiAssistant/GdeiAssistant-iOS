@@ -24,30 +24,42 @@ final class AppContainer: ObservableObject {
     let sessionState: SessionState
     let authManager: AuthManager
 
-    let authRepository: any AuthRepository
-    let homeRepository: any HomeRepository
-    let communityRepository: any CommunityRepository
-    let topicRepository: any TopicRepository
-    let expressRepository: any ExpressRepository
-    let deliveryRepository: any DeliveryRepository
-    let photographRepository: any PhotographRepository
-    let profileRepository: any ProfileRepository
-    let accountCenterRepository: any AccountCenterRepository
-    let scheduleRepository: any ScheduleRepository
-    let gradeRepository: any GradeRepository
-    let cardRepository: any CardRepository
-    let libraryRepository: any LibraryRepository
-    let cetRepository: any CETRepository
-    let evaluateRepository: any EvaluateRepository
-    let spareRepository: any SpareRepository
-    let graduateExamRepository: any GraduateExamRepository
-    let newsRepository: any NewsRepository
-    let dataCenterRepository: any DataCenterRepository
-    let marketplaceRepository: any MarketplaceRepository
-    let lostFoundRepository: any LostFoundRepository
-    let secretRepository: any SecretRepository
-    let datingRepository: any DatingRepository
-    let messagesRepository: any MessagesRepository
+    // MARK: - Assemblies
+
+    let coreAssembly: CoreAssembly
+    let campusServicesAssembly: CampusServicesAssembly
+    let communityAssembly: CommunityAssembly
+    let profileAssembly: ProfileAssembly
+
+    // MARK: - Repository accessors (forwarded from assemblies)
+
+    var authRepository: any AuthRepository { coreAssembly.authRepository }
+    var homeRepository: any HomeRepository { coreAssembly.homeRepository }
+
+    var scheduleRepository: any ScheduleRepository { campusServicesAssembly.scheduleRepository }
+    var gradeRepository: any GradeRepository { campusServicesAssembly.gradeRepository }
+    var cardRepository: any CardRepository { campusServicesAssembly.cardRepository }
+    var libraryRepository: any LibraryRepository { campusServicesAssembly.libraryRepository }
+    var cetRepository: any CETRepository { campusServicesAssembly.cetRepository }
+    var evaluateRepository: any EvaluateRepository { campusServicesAssembly.evaluateRepository }
+    var spareRepository: any SpareRepository { campusServicesAssembly.spareRepository }
+    var graduateExamRepository: any GraduateExamRepository { campusServicesAssembly.graduateExamRepository }
+    var newsRepository: any NewsRepository { campusServicesAssembly.newsRepository }
+    var dataCenterRepository: any DataCenterRepository { campusServicesAssembly.dataCenterRepository }
+
+    var communityRepository: any CommunityRepository { communityAssembly.communityRepository }
+    var topicRepository: any TopicRepository { communityAssembly.topicRepository }
+    var expressRepository: any ExpressRepository { communityAssembly.expressRepository }
+    var deliveryRepository: any DeliveryRepository { communityAssembly.deliveryRepository }
+    var photographRepository: any PhotographRepository { communityAssembly.photographRepository }
+    var marketplaceRepository: any MarketplaceRepository { communityAssembly.marketplaceRepository }
+    var lostFoundRepository: any LostFoundRepository { communityAssembly.lostFoundRepository }
+    var secretRepository: any SecretRepository { communityAssembly.secretRepository }
+    var datingRepository: any DatingRepository { communityAssembly.datingRepository }
+
+    var profileRepository: any ProfileRepository { profileAssembly.profileRepository }
+    var accountCenterRepository: any AccountCenterRepository { profileAssembly.accountCenterRepository }
+    var messagesRepository: any MessagesRepository { profileAssembly.messagesRepository }
 
     private var hasBootstrapped = false
     private let shouldSkipBootstrap: Bool
@@ -79,202 +91,14 @@ final class AppContainer: ObservableObject {
             }
         )
 
-        let remoteAuthRepository = RemoteAuthRepository(apiClient: apiClient)
-        let mockAuthRepository = MockAuthRepository()
-        self.authRepository = SwitchingAuthRepository(
-            environment: environment,
-            remoteRepository: remoteAuthRepository,
-            mockRepository: mockAuthRepository
-        )
-
-        let remoteHomeRepository = RemoteHomeRepository(apiClient: apiClient)
-        let mockHomeRepository = MockHomeRepository()
-        self.homeRepository = SwitchingHomeRepository(
-            environment: environment,
-            remoteRepository: remoteHomeRepository,
-            mockRepository: mockHomeRepository
-        )
-
-        let remoteCommunityRepository = RemoteCommunityRepository(apiClient: apiClient)
-        let mockCommunityRepository = MockCommunityRepository()
-        self.communityRepository = SwitchingCommunityRepository(
-            environment: environment,
-            remoteRepository: remoteCommunityRepository,
-            mockRepository: mockCommunityRepository
-        )
-
-        let remoteTopicRepository = RemoteTopicRepository(apiClient: apiClient)
-        let mockTopicRepository = MockTopicRepository()
-        self.topicRepository = SwitchingTopicRepository(
-            environment: environment,
-            remoteRepository: remoteTopicRepository,
-            mockRepository: mockTopicRepository
-        )
-
-        let remoteExpressRepository = RemoteExpressRepository(apiClient: apiClient)
-        let mockExpressRepository = MockExpressRepository()
-        self.expressRepository = SwitchingExpressRepository(
-            environment: environment,
-            remoteRepository: remoteExpressRepository,
-            mockRepository: mockExpressRepository
-        )
-
-        let remoteDeliveryRepository = RemoteDeliveryRepository(apiClient: apiClient)
-        let mockDeliveryRepository = MockDeliveryRepository()
-        self.deliveryRepository = SwitchingDeliveryRepository(
-            environment: environment,
-            remoteRepository: remoteDeliveryRepository,
-            mockRepository: mockDeliveryRepository
-        )
-
-        let remotePhotographRepository = RemotePhotographRepository(apiClient: apiClient)
-        let mockPhotographRepository = MockPhotographRepository()
-        self.photographRepository = SwitchingPhotographRepository(
-            environment: environment,
-            remoteRepository: remotePhotographRepository,
-            mockRepository: mockPhotographRepository
-        )
-
-        let remoteProfileRepository = RemoteProfileRepository(apiClient: apiClient)
-        let mockProfileRepository = MockProfileRepository()
-        self.profileRepository = SwitchingProfileRepository(
-            environment: environment,
-            remoteRepository: remoteProfileRepository,
-            mockRepository: mockProfileRepository
-        )
-
-        let remoteAccountCenterRepository = RemoteAccountCenterRepository(
-            apiClient: apiClient
-        )
-        let mockAccountCenterRepository = MockAccountCenterRepository()
-        self.accountCenterRepository = SwitchingAccountCenterRepository(
-            environment: environment,
-            remoteRepository: remoteAccountCenterRepository,
-            mockRepository: mockAccountCenterRepository
-        )
-
-        let remoteScheduleRepository = RemoteScheduleRepository(apiClient: apiClient)
-        let mockScheduleRepository = MockScheduleRepository()
-        self.scheduleRepository = SwitchingScheduleRepository(
-            environment: environment,
-            remoteRepository: remoteScheduleRepository,
-            mockRepository: mockScheduleRepository
-        )
-
-        let remoteGradeRepository = RemoteGradeRepository(apiClient: apiClient)
-        let mockGradeRepository = MockGradeRepository()
-        self.gradeRepository = SwitchingGradeRepository(
-            environment: environment,
-            remoteRepository: remoteGradeRepository,
-            mockRepository: mockGradeRepository
-        )
-
-        let remoteCardRepository = RemoteCardRepository(apiClient: apiClient)
-        let mockCardRepository = MockCardRepository()
-        self.cardRepository = SwitchingCardRepository(
-            environment: environment,
-            remoteRepository: remoteCardRepository,
-            mockRepository: mockCardRepository
-        )
-
-        let remoteLibraryRepository = RemoteLibraryRepository(apiClient: apiClient)
-        let mockLibraryRepository = MockLibraryRepository()
-        self.libraryRepository = SwitchingLibraryRepository(
-            environment: environment,
-            remoteRepository: remoteLibraryRepository,
-            mockRepository: mockLibraryRepository
-        )
-
-        let remoteCETRepository = RemoteCETRepository(apiClient: apiClient)
-        let mockCETRepository = MockCETRepository()
-        self.cetRepository = SwitchingCETRepository(
-            environment: environment,
-            remoteRepository: remoteCETRepository,
-            mockRepository: mockCETRepository
-        )
-
-        let remoteEvaluateRepository = RemoteEvaluateRepository(apiClient: apiClient)
-        let mockEvaluateRepository = MockEvaluateRepository()
-        self.evaluateRepository = SwitchingEvaluateRepository(
-            environment: environment,
-            remoteRepository: remoteEvaluateRepository,
-            mockRepository: mockEvaluateRepository
-        )
-
-        let remoteSpareRepository = RemoteSpareRepository(apiClient: apiClient)
-        let mockSpareRepository = MockSpareRepository()
-        self.spareRepository = SwitchingSpareRepository(
-            environment: environment,
-            remoteRepository: remoteSpareRepository,
-            mockRepository: mockSpareRepository
-        )
-
-        let remoteGraduateExamRepository = RemoteGraduateExamRepository(apiClient: apiClient)
-        let mockGraduateExamRepository = MockGraduateExamRepository()
-        self.graduateExamRepository = SwitchingGraduateExamRepository(
-            environment: environment,
-            remoteRepository: remoteGraduateExamRepository,
-            mockRepository: mockGraduateExamRepository
-        )
-
-        let remoteNewsRepository = RemoteNewsRepository(apiClient: apiClient)
-        let mockNewsRepository = MockNewsRepository()
-        self.newsRepository = SwitchingNewsRepository(
-            environment: environment,
-            remoteRepository: remoteNewsRepository,
-            mockRepository: mockNewsRepository
-        )
-
-        let remoteDataCenterRepository = RemoteDataCenterRepository(apiClient: apiClient)
-        let mockDataCenterRepository = MockDataCenterRepository()
-        self.dataCenterRepository = SwitchingDataCenterRepository(
-            environment: environment,
-            remoteRepository: remoteDataCenterRepository,
-            mockRepository: mockDataCenterRepository
-        )
-
-        let remoteMarketplaceRepository = RemoteMarketplaceRepository(apiClient: apiClient)
-        let mockMarketplaceRepository = MockMarketplaceRepository()
-        self.marketplaceRepository = SwitchingMarketplaceRepository(
-            environment: environment,
-            remoteRepository: remoteMarketplaceRepository,
-            mockRepository: mockMarketplaceRepository
-        )
-
-        let remoteLostFoundRepository = RemoteLostFoundRepository(apiClient: apiClient)
-        let mockLostFoundRepository = MockLostFoundRepository()
-        self.lostFoundRepository = SwitchingLostFoundRepository(
-            environment: environment,
-            remoteRepository: remoteLostFoundRepository,
-            mockRepository: mockLostFoundRepository
-        )
-
-        let remoteSecretRepository = RemoteSecretRepository(apiClient: apiClient)
-        let mockSecretRepository = MockSecretRepository()
-        self.secretRepository = SwitchingSecretRepository(
-            environment: environment,
-            remoteRepository: remoteSecretRepository,
-            mockRepository: mockSecretRepository
-        )
-
-        let remoteDatingRepository = RemoteDatingRepository(apiClient: apiClient)
-        let mockDatingRepository = MockDatingRepository()
-        self.datingRepository = SwitchingDatingRepository(
-            environment: environment,
-            remoteRepository: remoteDatingRepository,
-            mockRepository: mockDatingRepository
-        )
-
-        let remoteMessagesRepository = RemoteMessagesRepository(apiClient: apiClient)
-        let mockMessagesRepository = MockMessagesRepository()
-        self.messagesRepository = SwitchingMessagesRepository(
-            environment: environment,
-            remoteRepository: remoteMessagesRepository,
-            mockRepository: mockMessagesRepository
-        )
+        // Construct assemblies
+        self.coreAssembly = CoreAssembly(apiClient: apiClient, environment: environment)
+        self.campusServicesAssembly = CampusServicesAssembly(apiClient: apiClient, environment: environment)
+        self.communityAssembly = CommunityAssembly(apiClient: apiClient, environment: environment)
+        self.profileAssembly = ProfileAssembly(apiClient: apiClient, environment: environment)
 
         authManager.configure(
-            repository: authRepository,
+            repository: coreAssembly.authRepository,
             dataSourceModeProvider: { [weak environment] in
                 environment?.dataSourceMode ?? .remote
             }
@@ -323,6 +147,8 @@ final class AppContainer: ObservableObject {
         }
         await authManager.restoreSession()
     }
+
+    // MARK: - ViewModel Factories
 
     func makeLoginViewModel() -> LoginViewModel {
         LoginViewModel(authManager: authManager)
