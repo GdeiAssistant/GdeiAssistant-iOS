@@ -1,6 +1,6 @@
 import Foundation
 
-/// Owns repository construction for auth, home, and shared infrastructure.
+/// Owns repository construction and ViewModel factories for auth, home, and shared infrastructure.
 struct CoreAssembly {
     let authRepository: any AuthRepository
     let homeRepository: any HomeRepository
@@ -21,5 +21,15 @@ struct CoreAssembly {
             remoteRepository: remoteHomeRepository,
             mockRepository: mockHomeRepository
         )
+    }
+
+    // MARK: - ViewModel Factories
+
+    func makeLoginViewModel(authManager: AuthManager) -> LoginViewModel {
+        LoginViewModel(authManager: authManager)
+    }
+
+    func makeHomeViewModel() -> HomeViewModel {
+        HomeViewModel(repository: homeRepository)
     }
 }
