@@ -10,19 +10,19 @@ struct SystemNoticeListView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载系统公告...")
+                DSLoadingView(text: localizedString("messages.systemNoticeLoading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "megaphone", title: "暂无系统公告", message: "稍后再来查看最新公告")
+                DSEmptyStateView(icon: "megaphone", title: localizedString("messages.noSystemNoticeEmpty"), message: localizedString("messages.noSystemNoticeMessage"))
             } else {
                 List {
                     ForEach(viewModel.items) { item in
                         NavigationLink {
                             AnnouncementDetailView(
-                                navigationTitleText: "系统公告",
+                                navigationTitleText: localizedString("messages.systemNoticeSection"),
                                 announcementID: item.targetID ?? item.id,
                                 fallbackTitle: item.title,
                                 fallbackContent: item.message,
@@ -65,7 +65,7 @@ struct SystemNoticeListView: View {
                 }
             }
         }
-        .navigationTitle("系统公告")
+        .navigationTitle(localizedString("messages.systemNoticeSection"))
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -87,7 +87,7 @@ struct SystemNoticeListView: View {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
-                Text("点击重试")
+                Text(localizedString("messages.tapRetry"))
                     .font(.caption)
                     .foregroundStyle(DSColor.primary)
             }

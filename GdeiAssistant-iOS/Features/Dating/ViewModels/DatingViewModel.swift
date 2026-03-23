@@ -27,7 +27,7 @@ final class DatingHallViewModel: ObservableObject {
         do {
             profiles = try await repository.fetchProfiles(filter: DatingFilter(area: selectedArea))
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "卖室友大厅加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dating.hallLoadFailed")
         }
     }
 
@@ -81,27 +81,27 @@ final class DatingCenterViewModel: ObservableObject {
                 myPosts = try await repository.fetchMyPosts()
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "互动中心加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dating.centerLoadFailed")
         }
     }
 
     func updatePickState(id: String, state: DatingPickStatus) async {
         do {
             try await repository.updatePickState(pickID: id, state: state)
-            actionMessage = state == .accepted ? "已同意，联系方式已展示" : "已拒绝"
+            actionMessage = state == .accepted ? localizedString("dating.approvedMessage") : localizedString("dating.rejectedMessage")
             await loadData()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "操作失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("delivery.operationFailed")
         }
     }
 
     func hideProfile(id: String) async {
         do {
             try await repository.hideProfile(profileID: id)
-            actionMessage = "已隐藏"
+            actionMessage = localizedString("dating.hidden")
             await loadData()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "隐藏失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dating.hideFailed")
         }
     }
 }
@@ -151,39 +151,39 @@ final class PublishDatingViewModel: ObservableObject {
         let normalizedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if normalizedNickname.isEmpty {
-            submitState = .failure("请输入昵称")
+            submitState = .failure(localizedString("dating.nicknameRequired"))
             return nil
         }
         if normalizedNickname.count > 15 {
-            submitState = .failure("昵称不能超过 15 个字")
+            submitState = .failure(localizedString("dating.nicknameTooLong"))
             return nil
         }
         if normalizedFaculty.isEmpty || normalizedFaculty == ProfileFormSupport.unselectedOption {
-            submitState = .failure("请选择学院")
+            submitState = .failure(localizedString("dating.facultyRequired"))
             return nil
         }
         if normalizedHometown.isEmpty {
-            submitState = .failure("请输入家乡")
+            submitState = .failure(localizedString("dating.hometownRequired"))
             return nil
         }
         if normalizedHometown.count > 10 {
-            submitState = .failure("家乡不能超过 10 个字")
+            submitState = .failure(localizedString("dating.hometownTooLong"))
             return nil
         }
         if normalizedContent.isEmpty {
-            submitState = .failure("请输入自我介绍")
+            submitState = .failure(localizedString("dating.bioRequired"))
             return nil
         }
         if normalizedContent.count > 100 {
-            submitState = .failure("自我介绍不能超过 100 个字")
+            submitState = .failure(localizedString("dating.bioTooLong"))
             return nil
         }
         if normalizedQQ.count > 15 {
-            submitState = .failure("QQ 不能超过 15 个字符")
+            submitState = .failure(localizedString("dating.qqTooLong"))
             return nil
         }
         if normalizedWechat.count > 20 {
-            submitState = .failure("微信不能超过 20 个字符")
+            submitState = .failure(localizedString("dating.wechatTooLong"))
             return nil
         }
 

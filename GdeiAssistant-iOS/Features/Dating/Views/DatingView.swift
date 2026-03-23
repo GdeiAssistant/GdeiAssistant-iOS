@@ -13,7 +13,7 @@ struct DatingView: View {
     var body: some View {
         List {
             Section {
-                Picker("展示分区", selection: areaBinding) {
+                Picker(localizedString("dating.areaFilter"), selection: areaBinding) {
                     ForEach(DatingArea.allCases) { area in
                         Text(area.title).tag(area)
                     }
@@ -23,7 +23,7 @@ struct DatingView: View {
 
             if viewModel.isLoading && viewModel.profiles.isEmpty {
                 Section {
-                    DSLoadingView(text: "正在加载卖室友资料...")
+                    DSLoadingView(text: localizedString("dating.loading"))
                 }
             } else if let errorMessage = viewModel.errorMessage, viewModel.profiles.isEmpty {
                 Section {
@@ -33,7 +33,7 @@ struct DatingView: View {
                 }
             } else if viewModel.profiles.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "person.3", title: "暂无资料", message: "当前分区还没有新的卖室友资料")
+                    DSEmptyStateView(icon: "person.3", title: localizedString("dating.noProfiles"), message: localizedString("dating.noProfilesMessage"))
                 }
             } else {
                 Section {
@@ -54,7 +54,7 @@ struct DatingView: View {
                                         .font(.subheadline)
                                         .foregroundStyle(DSColor.subtitle)
 
-                                    Text("来自\(profile.hometown)")
+                                    Text(String(format: localizedString("dating.from"), profile.hometown))
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
 
@@ -74,14 +74,14 @@ struct DatingView: View {
         .refreshable {
             await viewModel.refresh()
         }
-        .navigationTitle("卖室友")
+        .navigationTitle(localizedString("dating.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("互动中心") {
+                NavigationLink(localizedString("dating.interactionCenter")) {
                     DatingCenterView(viewModel: container.makeDatingCenterViewModel())
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(localizedString("dating.publish")) {
                     PublishDatingView(
                         listViewModel: viewModel,
                         viewModel: container.makePublishDatingViewModel()
@@ -112,7 +112,7 @@ struct DatingCenterView: View {
     }
 
     var body: some View {
-        DatingCenterContent(viewModel: viewModel, navigationTitle: "互动中心")
+        DatingCenterContent(viewModel: viewModel, navigationTitle: localizedString("dating.interactionCenter"))
     }
 }
 
@@ -125,7 +125,7 @@ private struct DatingCenterContent: View {
     var body: some View {
         List {
             Section {
-                Picker("互动中心", selection: $viewModel.selectedTab) {
+                Picker(localizedString("dating.interactionCenter"), selection: $viewModel.selectedTab) {
                     ForEach(DatingCenterTab.allCases) { tab in
                         Text(tab.title).tag(tab)
                     }
@@ -154,17 +154,17 @@ private struct DatingCenterContent: View {
             await viewModel.loadData()
         }
         .confirmationDialog(
-            "确定要隐藏这条发布吗？隐藏后他人将无法在大厅看到。",
+            localizedString("dating.confirmHide"),
             isPresented: Binding(
                 get: { confirmHideID != nil },
                 set: { if !$0 { confirmHideID = nil } }
             )
         ) {
-            Button("确认隐藏", role: .destructive) {
+            Button(localizedString("dating.confirmHideButton"), role: .destructive) {
                 guard let confirmHideID else { return }
                 Task { await viewModel.hideProfile(id: confirmHideID) }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
     }
 
@@ -173,9 +173,9 @@ private struct DatingCenterContent: View {
         switch viewModel.selectedTab {
         case .received:
             if viewModel.isLoading && viewModel.receivedItems.isEmpty {
-                Section { DSLoadingView(text: "正在加载...") }
+                Section { DSLoadingView(text: localizedString("dating.loadingGeneric")) }
             } else if viewModel.receivedItems.isEmpty {
-                Section { DSEmptyStateView(icon: "tray", title: "暂无收到的请求", message: "有人给你留言时会显示在这里") }
+                Section { DSEmptyStateView(icon: "tray", title: localizedString("dating.noReceived"), message: localizedString("dating.noReceivedMessage")) }
             } else {
                 Section {
                     ForEach(viewModel.receivedItems) { item in
@@ -195,11 +195,11 @@ private struct DatingCenterContent: View {
                                 .font(.subheadline)
                             if item.status == .pending {
                                 HStack {
-                                    Button("同意") {
+                                    Button(localizedString("dating.approve")) {
                                         Task { await viewModel.updatePickState(id: item.id, state: .accepted) }
                                     }
                                     .buttonStyle(.borderedProminent)
-                                    Button("拒绝") {
+                                    Button(localizedString("dating.reject")) {
                                         Task { await viewModel.updatePickState(id: item.id, state: .rejected) }
                                     }
                                     .buttonStyle(.bordered)
@@ -213,14 +213,14 @@ private struct DatingCenterContent: View {
                         .padding(.vertical, 4)
                     }
                 } header: {
-                    Text("收到的撩")
+                    Text(localizedString("dating.receivedHeader"))
                 }
             }
         case .sent:
             if viewModel.isLoading && viewModel.sentItems.isEmpty {
-                Section { DSLoadingView(text: "正在加载...") }
+                Section { DSLoadingView(text: localizedString("dating.loadingGeneric")) }
             } else if viewModel.sentItems.isEmpty {
-                Section { DSEmptyStateView(icon: "paperplane", title: "暂无发出的请求", message: "有人回应后会显示在这里") }
+                Section { DSEmptyStateView(icon: "paperplane", title: localizedString("dating.noSent"), message: localizedString("dating.noSentMessage")) }
             } else {
                 Section {
                     ForEach(viewModel.sentItems) { item in
@@ -241,10 +241,10 @@ private struct DatingCenterContent: View {
                             if item.status == .accepted {
                                 VStack(alignment: .leading, spacing: 4) {
                                     if let qq = item.targetQq, !qq.isEmpty {
-                                        Text("QQ：\(qq)")
+                                        Text(String(format: localizedString("dating.qqLabel"), qq))
                                     }
                                     if let wechat = item.targetWechat, !wechat.isEmpty {
-                                        Text("微信：\(wechat)")
+                                        Text(String(format: localizedString("dating.wechatLabel"), wechat))
                                     }
                                 }
                                 .font(.caption)
@@ -254,14 +254,14 @@ private struct DatingCenterContent: View {
                         .padding(.vertical, 4)
                     }
                 } header: {
-                    Text("我发出的")
+                    Text(localizedString("dating.sentHeader"))
                 }
             }
         case .posts:
             if viewModel.isLoading && viewModel.myPosts.isEmpty {
-                Section { DSLoadingView(text: "正在加载...") }
+                Section { DSLoadingView(text: localizedString("dating.loadingGeneric")) }
             } else if viewModel.myPosts.isEmpty {
-                Section { DSEmptyStateView(icon: "person.crop.square", title: "暂无发布", message: "当前没有可处理的卖室友发布") }
+                Section { DSEmptyStateView(icon: "person.crop.square", title: localizedString("dating.noPosts"), message: localizedString("dating.noPostsMessage")) }
             } else {
                 Section {
                     ForEach(viewModel.myPosts) { item in
@@ -271,7 +271,7 @@ private struct DatingCenterContent: View {
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text(item.name)
                                         .font(.headline)
-                                    Text("\(item.grade) · \(item.faculty) · 来自\(item.hometown)")
+                                    Text("\(item.grade) · \(item.faculty) · \(String(format: localizedString("dating.from"), item.hometown))")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                     Text(item.publishTime)
@@ -280,7 +280,7 @@ private struct DatingCenterContent: View {
                                 }
                             }
                             Spacer()
-                            Button("隐藏", role: .destructive) {
+                            Button(localizedString("dating.hideButton"), role: .destructive) {
                                 confirmHideID = item.id
                             }
                             .buttonStyle(.bordered)
@@ -288,7 +288,7 @@ private struct DatingCenterContent: View {
                         .padding(.vertical, 4)
                     }
                 } header: {
-                    Text("我的发布")
+                    Text(localizedString("dating.myPostsHeader"))
                 }
             }
         }
@@ -309,7 +309,7 @@ private struct DatingDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载资料详情...")
+                DSLoadingView(text: localizedString("dating.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -328,7 +328,7 @@ private struct DatingDetailView: View {
                                 Text(detail.profile.headline)
                                     .font(.subheadline)
                                     .foregroundStyle(DSColor.subtitle)
-                                Text("来自\(detail.profile.hometown)")
+                                Text(String(format: localizedString("dating.from"), detail.profile.hometown))
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
                                 Text(detail.profile.bio)
@@ -339,37 +339,37 @@ private struct DatingDetailView: View {
                         .padding(.vertical, 4)
                     }
 
-                    Section("联系方式") {
+                    Section(localizedString("dating.contactSection")) {
                         if detail.profile.isContactVisible {
                             if let qq = detail.profile.qq, !qq.isEmpty {
-                                Text("QQ：\(qq)")
+                                Text(String(format: localizedString("dating.qqLabel"), qq))
                             }
                             if let wechat = detail.profile.wechat, !wechat.isEmpty {
-                                Text("微信：\(wechat)")
+                                Text(String(format: localizedString("dating.wechatLabel"), wechat))
                             }
                             if (detail.profile.qq ?? "").isEmpty && (detail.profile.wechat ?? "").isEmpty {
-                                Text("对方暂未填写 QQ 或微信")
+                                Text(localizedString("dating.noContact"))
                                     .font(.footnote)
                                     .foregroundStyle(DSColor.subtitle)
                             }
                         } else {
-                            Text("对方还没有向你公开联系方式，互相确认后会展示在这里。")
+                            Text(localizedString("dating.contactHidden"))
                                 .font(.footnote)
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     }
 
-                    Section("撩一下") {
+                    Section(localizedString("dating.pickSection")) {
                         if detail.isPickNotAvailable && !detail.profile.isContactVisible {
-                            Text("你已经发过请求了，等待对方处理即可。")
+                            Text(localizedString("dating.alreadyPicked"))
                                 .font(.footnote)
                                 .foregroundStyle(DSColor.subtitle)
                         } else if detail.profile.isContactVisible {
-                            Text("你们已经互相确认，联系方式现在已可见。")
+                            Text(localizedString("dating.mutualConfirmed"))
                                 .font(.footnote)
                                 .foregroundStyle(DSColor.subtitle)
                         } else {
-                            TextField("说点什么吧，不超过 50 字", text: $pickContent, axis: .vertical)
+                            TextField(localizedString("dating.pickPlaceholder"), text: $pickContent, axis: .vertical)
                                 .lineLimit(3...5)
 
                             Button {
@@ -378,7 +378,7 @@ private struct DatingDetailView: View {
                                 if isSubmittingPick {
                                     ProgressView()
                                 } else {
-                                    Text("发送请求")
+                                    Text(localizedString("dating.sendRequest"))
                                 }
                             }
                             .disabled(isSubmittingPick || pickContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -399,7 +399,7 @@ private struct DatingDetailView: View {
                 }
             }
         }
-        .navigationTitle("资料详情")
+        .navigationTitle(localizedString("dating.detailTitle"))
         .task {
             await loadDetail()
         }
@@ -413,18 +413,18 @@ private struct DatingDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(profileID: profileID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "卖室友详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dating.detailLoadFailed")
         }
     }
 
     private func submitPick() async {
         let normalizedContent = pickContent.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normalizedContent.isEmpty else {
-            actionMessage = "请输入想说的话"
+            actionMessage = localizedString("dating.pickContentRequired")
             return
         }
         guard normalizedContent.count <= 50 else {
-            actionMessage = "撩一下内容不能超过 50 个字"
+            actionMessage = localizedString("dating.pickContentTooLong")
             return
         }
 
@@ -433,11 +433,11 @@ private struct DatingDetailView: View {
 
         do {
             try await viewModel.submitPick(profileID: profileID, content: normalizedContent)
-            actionMessage = "请求已发送"
+            actionMessage = localizedString("dating.requestSent")
             pickContent = ""
             await loadDetail()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "发送失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dating.sendFailed")
         }
     }
 }
@@ -476,7 +476,7 @@ private struct PublishDatingView: View {
                         VStack(spacing: 8) {
                             Image(systemName: "photo.badge.plus")
                                 .font(.title3)
-                            Text("添加照片")
+                            Text(localizedString("dating.addPhoto"))
                                 .font(.caption)
                         }
                         .frame(width: 120, height: 120)
@@ -485,37 +485,37 @@ private struct PublishDatingView: View {
                     }
                 }
 
-                Text("照片为选填，只展示第一张。")
+                Text(localizedString("dating.photoTip"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("资料照片")
+                Text(localizedString("dating.photoSection"))
             }
 
             Section {
-                TextField("昵称", text: $viewModel.nickname)
-                Picker("年级", selection: $viewModel.selectedGrade) {
+                TextField(localizedString("dating.nickname"), text: $viewModel.nickname)
+                Picker(localizedString("dating.grade"), selection: $viewModel.selectedGrade) {
                     ForEach(1 ..< 5) { grade in
                         Text(gradeText(grade)).tag(grade)
                     }
                 }
-                Picker("展示分区", selection: $viewModel.selectedArea) {
+                Picker(localizedString("dating.areaFilter"), selection: $viewModel.selectedArea) {
                     ForEach(DatingArea.allCases) { area in
                         Text(area.title).tag(area)
                     }
                 }
-                Picker("学院", selection: $viewModel.selectedFaculty) {
+                Picker(localizedString("dating.faculty"), selection: $viewModel.selectedFaculty) {
                     ForEach(viewModel.facultyOptions, id: \.self) { faculty in
                         Text(faculty).tag(faculty)
                     }
                 }
-                TextField("家乡", text: $viewModel.hometown)
-                TextField("QQ（选填）", text: $viewModel.qq)
-                TextField("微信（选填）", text: $viewModel.wechat)
-                TextField("自我介绍（100字内）", text: $viewModel.content, axis: .vertical)
+                TextField(localizedString("dating.hometown"), text: $viewModel.hometown)
+                TextField(localizedString("dating.qqOptional"), text: $viewModel.qq)
+                TextField(localizedString("dating.wechatOptional"), text: $viewModel.wechat)
+                TextField(localizedString("dating.bioPlaceholder"), text: $viewModel.content, axis: .vertical)
                     .lineLimit(4...6)
             } header: {
-                Text("资料内容")
+                Text(localizedString("dating.infoSection"))
             }
 
             if let message = viewModel.submitState.message {
@@ -526,7 +526,7 @@ private struct PublishDatingView: View {
                 }
             }
         }
-        .navigationTitle("发布资料")
+        .navigationTitle(localizedString("dating.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -535,7 +535,7 @@ private struct PublishDatingView: View {
                     if viewModel.submitState.isSubmitting {
                         ProgressView()
                     } else {
-                        Text("提交")
+                        Text(localizedString("common.submit"))
                     }
                 }
                 .disabled(viewModel.submitState.isSubmitting || !viewModel.isFormValid)
@@ -544,7 +544,7 @@ private struct PublishDatingView: View {
         .onChange(of: selectedPhotoItem) { _, newItem in
             Task { await loadSelectedImage(from: newItem) }
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("dating.alertTitle"), isPresented: Binding(
             get: { viewModel.submitState.isSuccess },
             set: { isPresented in
                 if !isPresented {
@@ -552,7 +552,7 @@ private struct PublishDatingView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("dating.understood")) {
                 viewModel.submitState = .idle
                 dismiss()
             }
@@ -571,9 +571,9 @@ private struct PublishDatingView: View {
 
         do {
             try await listViewModel.publish(draft: draft)
-            viewModel.submitState = .success("资料已发布，稍后会出现在大厅中")
+            viewModel.submitState = .success(localizedString("dating.profilePublished"))
         } catch {
-            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("delivery.publishFailed"))
         }
     }
 
@@ -614,13 +614,13 @@ private struct PublishDatingView: View {
     private func gradeText(_ grade: Int) -> String {
         switch grade {
         case 1:
-            return "大一"
+            return localizedString("dating.grade1")
         case 2:
-            return "大二"
+            return localizedString("dating.grade2")
         case 3:
-            return "大三"
+            return localizedString("dating.grade3")
         default:
-            return "大四"
+            return localizedString("dating.grade4")
         }
     }
 }

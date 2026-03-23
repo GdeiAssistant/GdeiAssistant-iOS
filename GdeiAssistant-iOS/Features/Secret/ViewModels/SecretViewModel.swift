@@ -6,9 +6,12 @@ final class SecretViewModel: ObservableObject {
     @Published var posts: [SecretPost] = []
     @Published var myPosts: [SecretPost] = []
     @Published var isLoading = false
+    @Published var isLoadingMoreMyPosts = false
+    @Published var hasMoreMyPosts = true
     @Published var errorMessage: String?
 
     private let repository: any SecretRepository
+    private let pageSize = 20
 
     init(repository: any SecretRepository) {
         self.repository = repository
@@ -27,11 +30,27 @@ final class SecretViewModel: ObservableObject {
 
         do {
             async let postsTask = repository.fetchPosts()
-            async let myPostsTask = repository.fetchMyPosts()
+            async let myPostsTask = repository.fetchMyPosts(start: 0, size: pageSize)
             posts = try await postsTask
-            myPosts = try await myPostsTask
+            let myPostsResult = try await myPostsTask
+            myPosts = myPostsResult
+            hasMoreMyPosts = myPostsResult.count >= pageSize
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "树洞内容加载失败"
+        }
+    }
+
+    func loadMoreMyPosts() async {
+        guard !isLoadingMoreMyPosts, hasMoreMyPosts else { return }
+        isLoadingMoreMyPosts = true
+        defer { isLoadingMoreMyPosts = false }
+
+        do {
+            let newPosts = try await repository.fetchMyPosts(start: myPosts.count, size: pageSize)
+            myPosts.append(contentsOf: newPosts)
+            hasMoreMyPosts = newPosts.count >= pageSize
+        } catch {
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载更多失败"
         }
     }
 

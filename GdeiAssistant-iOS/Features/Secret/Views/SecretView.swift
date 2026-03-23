@@ -370,23 +370,53 @@ private struct MySecretPostsView: View {
 
     var body: some View {
         Group {
-            if viewModel.myPosts.isEmpty {
+            if viewModel.myPosts.isEmpty && !viewModel.isLoading {
                 DSEmptyStateView(icon: "moon.stars", title: "暂无发布的树洞", message: "去写下第一条匿名心情")
             } else {
-                List(viewModel.myPosts) { post in
-                    Button {
-                        selectedTarget = SecretNavigationTarget(id: post.id)
-                    } label: {
-                        HStack {
-                            Spacer(minLength: 0)
-                            SecretPostCard(post: post)
-                            Spacer(minLength: 0)
+                List {
+                    ForEach(viewModel.myPosts) { post in
+                        Button {
+                            selectedTarget = SecretNavigationTarget(id: post.id)
+                        } label: {
+                            HStack {
+                                Spacer(minLength: 0)
+                                SecretPostCard(post: post)
+                                Spacer(minLength: 0)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowBackground(Color.clear)
+                        .onAppear {
+                            if post.id == viewModel.myPosts.last?.id {
+                                Task { await viewModel.loadMoreMyPosts() }
+                            }
                         }
                     }
-                    .buttonStyle(.plain)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                    .listRowBackground(Color.clear)
+
+                    if viewModel.isLoadingMoreMyPosts {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Text("加载中...")
+                                .font(.caption)
+                                .foregroundStyle(DSColor.subtitle)
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    } else if !viewModel.hasMoreMyPosts && !viewModel.myPosts.isEmpty {
+                        HStack {
+                            Spacer()
+                            Text("没有更多了")
+                                .font(.caption)
+                                .foregroundStyle(DSColor.subtitle)
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)

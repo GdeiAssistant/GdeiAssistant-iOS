@@ -45,7 +45,7 @@ final class MessagesViewModel: ObservableObject {
         newsErrorMessage
             ?? systemErrorMessage
             ?? interactionErrorMessage
-            ?? "加载资讯信息失败"
+            ?? localizedString("messages.loadFailed")
     }
 
     var hasAnyContent: Bool {
@@ -75,7 +75,7 @@ final class MessagesViewModel: ObservableObject {
             newsItems = try await newsRepository.fetchNews(start: 0, size: overviewLimit)
         } catch {
             newsItems = []
-            newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻加载失败"
+            newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.newsLoadFailed")
         }
     }
 
@@ -88,7 +88,7 @@ final class MessagesViewModel: ObservableObject {
             systemNoticeItems = try await messagesRepository.fetchAnnouncementPage(start: 0, size: overviewLimit)
         } catch {
             systemNoticeItems = []
-            systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? "系统公告加载失败"
+            systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
         }
     }
 
@@ -107,7 +107,7 @@ final class MessagesViewModel: ObservableObject {
         } catch {
             interactionNoticeItems = []
             interactionUnreadCount = 0
-            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "互动消息加载失败"
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
         }
     }
 
@@ -125,7 +125,7 @@ final class MessagesViewModel: ObservableObject {
             interactionNoticeItems[index] = interactionNoticeItems[index].updatingReadState(true)
             interactionUnreadCount = max(0, interactionUnreadCount - 1)
         } catch {
-            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }
 
@@ -139,7 +139,7 @@ final class MessagesViewModel: ObservableObject {
             }
             interactionUnreadCount = 0
         } catch {
-            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? "更新消息状态失败"
+            interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }
 }
