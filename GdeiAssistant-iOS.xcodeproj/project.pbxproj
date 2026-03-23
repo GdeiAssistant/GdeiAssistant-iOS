@@ -17,6 +17,7 @@
 		E9FC3B2241EB8C322C48A5EF /* MultipartFormDataBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112842602259B0422B1CBD1 /* MultipartFormDataBuilderTests.swift */; };
 		F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */; };
 		FFDDE89AE80431D0303BCEB4 /* MessagesRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */; };
+		B1A2C3D4E5F60718A9B0C1D2 /* AppContainerBootstrapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DatingRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Dating/DatingRemoteMapperTests.swift"; sourceTree = "<group>"; };
 		D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GdeiAssistant-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthManagerTests.swift; path = "GdeiAssistant-iOSTests/Auth/AuthManagerTests.swift"; sourceTree = "<group>"; };
+		B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppContainerBootstrapTests.swift; path = "GdeiAssistant-iOSTests/Container/AppContainerBootstrapTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -111,6 +113,7 @@
 		DEECEB8674DE18A2B5A46637 /* GdeiAssistant-iOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */,
 				EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */,
 				373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */,
 				D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */,
@@ -226,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1A2C3D4E5F60718A9B0C1D2 /* AppContainerBootstrapTests.swift in Sources */,
 				E21B05F43CAE6846A9EC26D1 /* AuthManagerTests.swift in Sources */,
 				0A177ECCDC40F719D4D9F46F /* AuthTestDoubles.swift in Sources */,
 				C64B15DF5C6F7CCC0E32B37B /* DatingRemoteMapperTests.swift in Sources */,

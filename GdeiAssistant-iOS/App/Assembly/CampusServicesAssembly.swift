@@ -96,4 +96,42 @@ struct CampusServicesAssembly {
             mockRepository: mockDataCenterRepository
         )
     }
+
+    // MARK: - ViewModel Factories
+
+    func makeScheduleViewModel() -> ScheduleViewModel {
+        ScheduleViewModel(repository: scheduleRepository)
+    }
+
+    func makeGradeViewModel() -> GradeViewModel {
+        GradeViewModel(repository: gradeRepository)
+    }
+
+    func makeCardViewModel() -> CardViewModel {
+        CardViewModel(repository: cardRepository)
+    }
+
+    func makeLibraryViewModel() -> LibraryViewModel {
+        LibraryViewModel(repository: libraryRepository)
+    }
+
+    func makeCETViewModel() -> CETViewModel {
+        CETViewModel(repository: cetRepository)
+    }
+
+    func makeEvaluateViewModel() -> EvaluateViewModel {
+        EvaluateViewModel(repository: evaluateRepository)
+    }
+
+    func makeSpareViewModel() -> SpareViewModel {
+        SpareViewModel(repository: spareRepository)
+    }
+
+    func makeGraduateExamViewModel() -> GraduateExamViewModel {
+        GraduateExamViewModel(repository: graduateExamRepository)
+    }
+
+    func makeNewsViewModel() -> NewsViewModel {
+        NewsViewModel(repository: newsRepository)
+    }
 }

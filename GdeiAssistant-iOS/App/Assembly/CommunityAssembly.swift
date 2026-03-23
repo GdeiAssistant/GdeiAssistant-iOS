@@ -87,4 +87,88 @@ struct CommunityAssembly {
             mockRepository: mockDatingRepository
         )
     }
+
+    // MARK: - ViewModel Factories
+
+    func makeCommunityViewModel() -> CommunityFeedViewModel {
+        CommunityFeedViewModel(repository: communityRepository)
+    }
+
+    func makeTopicViewModel() -> TopicViewModel {
+        TopicViewModel(repository: topicRepository)
+    }
+
+    func makePublishTopicViewModel() -> PublishTopicViewModel {
+        PublishTopicViewModel(repository: topicRepository)
+    }
+
+    func makeExpressViewModel() -> ExpressViewModel {
+        ExpressViewModel(repository: expressRepository)
+    }
+
+    func makePublishExpressViewModel() -> PublishExpressViewModel {
+        PublishExpressViewModel(repository: expressRepository)
+    }
+
+    func makeDeliveryViewModel() -> DeliveryViewModel {
+        DeliveryViewModel(repository: deliveryRepository)
+    }
+
+    func makePublishDeliveryViewModel() -> PublishDeliveryViewModel {
+        PublishDeliveryViewModel(repository: deliveryRepository)
+    }
+
+    func makePhotographViewModel() -> PhotographViewModel {
+        PhotographViewModel(repository: photographRepository)
+    }
+
+    func makePublishPhotographViewModel() -> PublishPhotographViewModel {
+        PublishPhotographViewModel(repository: photographRepository)
+    }
+
+    func makePostDetailViewModel(postID: String) -> PostDetailViewModel {
+        PostDetailViewModel(postID: postID, repository: communityRepository)
+    }
+
+    func makeTopicFeedViewModel(topicID: String) -> TopicFeedViewModel {
+        TopicFeedViewModel(topicID: topicID, repository: communityRepository)
+    }
+
+    func makeMarketplaceViewModel() -> MarketplaceViewModel {
+        MarketplaceViewModel(repository: marketplaceRepository)
+    }
+
+    func makePublishMarketplaceViewModel() -> PublishMarketplaceViewModel {
+        PublishMarketplaceViewModel()
+    }
+
+    func makeLostFoundViewModel() -> LostFoundViewModel {
+        LostFoundViewModel(repository: lostFoundRepository)
+    }
+
+    func makePublishLostFoundViewModel() -> PublishLostFoundViewModel {
+        PublishLostFoundViewModel()
+    }
+
+    func makeSecretViewModel() -> SecretViewModel {
+        SecretViewModel(repository: secretRepository)
+    }
+
+    func makePublishSecretViewModel() -> PublishSecretViewModel {
+        PublishSecretViewModel()
+    }
+
+    func makeDatingViewModel() -> DatingHallViewModel {
+        DatingHallViewModel(repository: datingRepository)
+    }
+
+    func makePublishDatingViewModel(profileRepository: any ProfileRepository) -> PublishDatingViewModel {
+        PublishDatingViewModel(profileRepository: profileRepository)
+    }
+
+    func makeDatingCenterViewModel(initialTab: DatingCenterTab = .received) -> DatingCenterViewModel {
+        let viewModel = DatingCenterViewModel(repository: datingRepository)
+        viewModel.selectedTab = initialTab
+        return viewModel
+    }
 }

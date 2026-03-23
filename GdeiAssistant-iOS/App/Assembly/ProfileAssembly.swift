@@ -33,4 +33,61 @@ struct ProfileAssembly {
             mockRepository: mockMessagesRepository
         )
     }
+
+    // MARK: - ViewModel Factories
+
+    func makeProfileViewModel(sessionState: SessionState) -> ProfileViewModel {
+        ProfileViewModel(repository: profileRepository, sessionState: sessionState)
+    }
+
+    func makeSettingsViewModel(environment: AppEnvironment, preferences: UserPreferences) -> SettingsViewModel {
+        SettingsViewModel(environment: environment, preferences: preferences)
+    }
+
+    func makePrivacySettingsViewModel() -> PrivacySettingsViewModel {
+        PrivacySettingsViewModel(repository: accountCenterRepository)
+    }
+
+    func makeLoginRecordViewModel() -> LoginRecordViewModel {
+        LoginRecordViewModel(repository: accountCenterRepository)
+    }
+
+    func makeBindPhoneViewModel() -> BindPhoneViewModel {
+        BindPhoneViewModel(repository: accountCenterRepository)
+    }
+
+    func makeBindEmailViewModel() -> BindEmailViewModel {
+        BindEmailViewModel(repository: accountCenterRepository)
+    }
+
+    func makeFeedbackViewModel() -> FeedbackViewModel {
+        FeedbackViewModel(repository: accountCenterRepository)
+    }
+
+    func makeDownloadDataViewModel() -> DownloadDataViewModel {
+        DownloadDataViewModel(repository: accountCenterRepository)
+    }
+
+    func makeAvatarEditViewModel(sessionState: SessionState) -> AvatarEditViewModel {
+        AvatarEditViewModel(repository: accountCenterRepository, sessionState: sessionState)
+    }
+
+    func makeDeleteAccountViewModel() -> DeleteAccountViewModel {
+        DeleteAccountViewModel(repository: accountCenterRepository)
+    }
+
+    func makeMessagesViewModel(newsRepository: any NewsRepository) -> MessagesViewModel {
+        MessagesViewModel(
+            newsRepository: newsRepository,
+            messagesRepository: messagesRepository
+        )
+    }
+
+    func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel {
+        SystemNoticeListViewModel(repository: messagesRepository)
+    }
+
+    func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel {
+        InteractionMessageListViewModel(repository: messagesRepository)
+    }
 }

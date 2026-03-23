@@ -148,186 +148,61 @@ final class AppContainer: ObservableObject {
         await authManager.restoreSession()
     }
 
-    // MARK: - ViewModel Factories
+    // MARK: - ViewModel Factories (thin forwarding to assemblies)
 
     func makeLoginViewModel() -> LoginViewModel {
-        LoginViewModel(authManager: authManager)
+        coreAssembly.makeLoginViewModel(authManager: authManager)
     }
 
     func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(repository: homeRepository)
+        coreAssembly.makeHomeViewModel()
     }
 
-    func makeCommunityViewModel() -> CommunityFeedViewModel {
-        CommunityFeedViewModel(repository: communityRepository)
-    }
+    // Campus services
+    func makeScheduleViewModel() -> ScheduleViewModel { campusServicesAssembly.makeScheduleViewModel() }
+    func makeGradeViewModel() -> GradeViewModel { campusServicesAssembly.makeGradeViewModel() }
+    func makeCardViewModel() -> CardViewModel { campusServicesAssembly.makeCardViewModel() }
+    func makeLibraryViewModel() -> LibraryViewModel { campusServicesAssembly.makeLibraryViewModel() }
+    func makeCETViewModel() -> CETViewModel { campusServicesAssembly.makeCETViewModel() }
+    func makeEvaluateViewModel() -> EvaluateViewModel { campusServicesAssembly.makeEvaluateViewModel() }
+    func makeSpareViewModel() -> SpareViewModel { campusServicesAssembly.makeSpareViewModel() }
+    func makeGraduateExamViewModel() -> GraduateExamViewModel { campusServicesAssembly.makeGraduateExamViewModel() }
+    func makeNewsViewModel() -> NewsViewModel { campusServicesAssembly.makeNewsViewModel() }
 
-    func makeTopicViewModel() -> TopicViewModel {
-        TopicViewModel(repository: topicRepository)
-    }
+    // Community
+    func makeCommunityViewModel() -> CommunityFeedViewModel { communityAssembly.makeCommunityViewModel() }
+    func makeTopicViewModel() -> TopicViewModel { communityAssembly.makeTopicViewModel() }
+    func makePublishTopicViewModel() -> PublishTopicViewModel { communityAssembly.makePublishTopicViewModel() }
+    func makeExpressViewModel() -> ExpressViewModel { communityAssembly.makeExpressViewModel() }
+    func makePublishExpressViewModel() -> PublishExpressViewModel { communityAssembly.makePublishExpressViewModel() }
+    func makeDeliveryViewModel() -> DeliveryViewModel { communityAssembly.makeDeliveryViewModel() }
+    func makePublishDeliveryViewModel() -> PublishDeliveryViewModel { communityAssembly.makePublishDeliveryViewModel() }
+    func makePhotographViewModel() -> PhotographViewModel { communityAssembly.makePhotographViewModel() }
+    func makePublishPhotographViewModel() -> PublishPhotographViewModel { communityAssembly.makePublishPhotographViewModel() }
+    func makePostDetailViewModel(postID: String) -> PostDetailViewModel { communityAssembly.makePostDetailViewModel(postID: postID) }
+    func makeTopicFeedViewModel(topicID: String) -> TopicFeedViewModel { communityAssembly.makeTopicFeedViewModel(topicID: topicID) }
+    func makeMarketplaceViewModel() -> MarketplaceViewModel { communityAssembly.makeMarketplaceViewModel() }
+    func makePublishMarketplaceViewModel() -> PublishMarketplaceViewModel { communityAssembly.makePublishMarketplaceViewModel() }
+    func makeLostFoundViewModel() -> LostFoundViewModel { communityAssembly.makeLostFoundViewModel() }
+    func makePublishLostFoundViewModel() -> PublishLostFoundViewModel { communityAssembly.makePublishLostFoundViewModel() }
+    func makeSecretViewModel() -> SecretViewModel { communityAssembly.makeSecretViewModel() }
+    func makePublishSecretViewModel() -> PublishSecretViewModel { communityAssembly.makePublishSecretViewModel() }
+    func makeDatingViewModel() -> DatingHallViewModel { communityAssembly.makeDatingViewModel() }
+    func makePublishDatingViewModel() -> PublishDatingViewModel { communityAssembly.makePublishDatingViewModel(profileRepository: profileRepository) }
+    func makeDatingCenterViewModel(initialTab: DatingCenterTab = .received) -> DatingCenterViewModel { communityAssembly.makeDatingCenterViewModel(initialTab: initialTab) }
 
-    func makePublishTopicViewModel() -> PublishTopicViewModel {
-        PublishTopicViewModel(repository: topicRepository)
-    }
-
-    func makeExpressViewModel() -> ExpressViewModel {
-        ExpressViewModel(repository: expressRepository)
-    }
-
-    func makePublishExpressViewModel() -> PublishExpressViewModel {
-        PublishExpressViewModel(repository: expressRepository)
-    }
-
-    func makeDeliveryViewModel() -> DeliveryViewModel {
-        DeliveryViewModel(repository: deliveryRepository)
-    }
-
-    func makePublishDeliveryViewModel() -> PublishDeliveryViewModel {
-        PublishDeliveryViewModel(repository: deliveryRepository)
-    }
-
-    func makePhotographViewModel() -> PhotographViewModel {
-        PhotographViewModel(repository: photographRepository)
-    }
-
-    func makePublishPhotographViewModel() -> PublishPhotographViewModel {
-        PublishPhotographViewModel(repository: photographRepository)
-    }
-
-    func makePostDetailViewModel(postID: String) -> PostDetailViewModel {
-        PostDetailViewModel(postID: postID, repository: communityRepository)
-    }
-
-    func makeTopicFeedViewModel(topicID: String) -> TopicFeedViewModel {
-        TopicFeedViewModel(topicID: topicID, repository: communityRepository)
-    }
-
-    func makeProfileViewModel() -> ProfileViewModel {
-        ProfileViewModel(repository: profileRepository, sessionState: sessionState)
-    }
-
-    func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(environment: environment, preferences: userPreferences)
-    }
-
-    func makePrivacySettingsViewModel() -> PrivacySettingsViewModel {
-        PrivacySettingsViewModel(repository: accountCenterRepository)
-    }
-
-    func makeLoginRecordViewModel() -> LoginRecordViewModel {
-        LoginRecordViewModel(repository: accountCenterRepository)
-    }
-
-    func makeBindPhoneViewModel() -> BindPhoneViewModel {
-        BindPhoneViewModel(repository: accountCenterRepository)
-    }
-
-    func makeBindEmailViewModel() -> BindEmailViewModel {
-        BindEmailViewModel(repository: accountCenterRepository)
-    }
-
-    func makeFeedbackViewModel() -> FeedbackViewModel {
-        FeedbackViewModel(repository: accountCenterRepository)
-    }
-
-    func makeDownloadDataViewModel() -> DownloadDataViewModel {
-        DownloadDataViewModel(repository: accountCenterRepository)
-    }
-
-    func makeAvatarEditViewModel() -> AvatarEditViewModel {
-        AvatarEditViewModel(repository: accountCenterRepository, sessionState: sessionState)
-    }
-
-    func makeDeleteAccountViewModel() -> DeleteAccountViewModel {
-        DeleteAccountViewModel(repository: accountCenterRepository)
-    }
-
-    func makeScheduleViewModel() -> ScheduleViewModel {
-        ScheduleViewModel(repository: scheduleRepository)
-    }
-
-    func makeGradeViewModel() -> GradeViewModel {
-        GradeViewModel(repository: gradeRepository)
-    }
-
-    func makeCardViewModel() -> CardViewModel {
-        CardViewModel(repository: cardRepository)
-    }
-
-    func makeLibraryViewModel() -> LibraryViewModel {
-        LibraryViewModel(repository: libraryRepository)
-    }
-
-    func makeCETViewModel() -> CETViewModel {
-        CETViewModel(repository: cetRepository)
-    }
-
-    func makeEvaluateViewModel() -> EvaluateViewModel {
-        EvaluateViewModel(repository: evaluateRepository)
-    }
-
-    func makeSpareViewModel() -> SpareViewModel {
-        SpareViewModel(repository: spareRepository)
-    }
-
-    func makeGraduateExamViewModel() -> GraduateExamViewModel {
-        GraduateExamViewModel(repository: graduateExamRepository)
-    }
-
-    func makeNewsViewModel() -> NewsViewModel {
-        NewsViewModel(repository: newsRepository)
-    }
-
-    func makeMarketplaceViewModel() -> MarketplaceViewModel {
-        MarketplaceViewModel(repository: marketplaceRepository)
-    }
-
-    func makePublishMarketplaceViewModel() -> PublishMarketplaceViewModel {
-        PublishMarketplaceViewModel()
-    }
-
-    func makeLostFoundViewModel() -> LostFoundViewModel {
-        LostFoundViewModel(repository: lostFoundRepository)
-    }
-
-    func makePublishLostFoundViewModel() -> PublishLostFoundViewModel {
-        PublishLostFoundViewModel()
-    }
-
-    func makeSecretViewModel() -> SecretViewModel {
-        SecretViewModel(repository: secretRepository)
-    }
-
-    func makeDatingViewModel() -> DatingHallViewModel {
-        DatingHallViewModel(repository: datingRepository)
-    }
-
-    func makePublishSecretViewModel() -> PublishSecretViewModel {
-        PublishSecretViewModel()
-    }
-
-    func makePublishDatingViewModel() -> PublishDatingViewModel {
-        PublishDatingViewModel(profileRepository: profileRepository)
-    }
-
-    func makeDatingCenterViewModel(initialTab: DatingCenterTab = .received) -> DatingCenterViewModel {
-        let viewModel = DatingCenterViewModel(repository: datingRepository)
-        viewModel.selectedTab = initialTab
-        return viewModel
-    }
-
-    func makeMessagesViewModel() -> MessagesViewModel {
-        MessagesViewModel(
-            newsRepository: newsRepository,
-            messagesRepository: messagesRepository
-        )
-    }
-
-    func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel {
-        SystemNoticeListViewModel(repository: messagesRepository)
-    }
-
-    func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel {
-        InteractionMessageListViewModel(repository: messagesRepository)
-    }
+    // Profile & account
+    func makeProfileViewModel() -> ProfileViewModel { profileAssembly.makeProfileViewModel(sessionState: sessionState) }
+    func makeSettingsViewModel() -> SettingsViewModel { profileAssembly.makeSettingsViewModel(environment: environment, preferences: userPreferences) }
+    func makePrivacySettingsViewModel() -> PrivacySettingsViewModel { profileAssembly.makePrivacySettingsViewModel() }
+    func makeLoginRecordViewModel() -> LoginRecordViewModel { profileAssembly.makeLoginRecordViewModel() }
+    func makeBindPhoneViewModel() -> BindPhoneViewModel { profileAssembly.makeBindPhoneViewModel() }
+    func makeBindEmailViewModel() -> BindEmailViewModel { profileAssembly.makeBindEmailViewModel() }
+    func makeFeedbackViewModel() -> FeedbackViewModel { profileAssembly.makeFeedbackViewModel() }
+    func makeDownloadDataViewModel() -> DownloadDataViewModel { profileAssembly.makeDownloadDataViewModel() }
+    func makeAvatarEditViewModel() -> AvatarEditViewModel { profileAssembly.makeAvatarEditViewModel(sessionState: sessionState) }
+    func makeDeleteAccountViewModel() -> DeleteAccountViewModel { profileAssembly.makeDeleteAccountViewModel() }
+    func makeMessagesViewModel() -> MessagesViewModel { profileAssembly.makeMessagesViewModel(newsRepository: campusServicesAssembly.newsRepository) }
+    func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel { profileAssembly.makeSystemNoticeListViewModel() }
+    func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel { profileAssembly.makeInteractionMessageListViewModel() }
 }
