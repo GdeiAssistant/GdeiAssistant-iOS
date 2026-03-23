@@ -43,16 +43,14 @@ extension MockSeedData {
             comments: [
                 SecretComment(id: "secret_comment_001", authorName: "匿名同学", content: "先把最急的一项做完，其他事情一件件来。", createdAt: "5分钟前", avatarTheme: 1),
                 SecretComment(id: "secret_comment_002", authorName: "夜读人", content: "你已经很努力了，今晚先早点休息。", createdAt: "3分钟前", avatarTheme: 2)
-            ],
-            myPosts: secretPosts
+            ]
         ),
         "secret_002": SecretPostDetail(
             post: secretPosts[1],
             content: "这是一条语音树洞，点击播放按钮可试听录音内容。",
             comments: [
                 SecretComment(id: "secret_comment_003", authorName: "路过的同学", content: "稳住这个节奏，你会越来越顺。", createdAt: "12分钟前", avatarTheme: 3)
-            ],
-            myPosts: secretPosts
+            ]
         )
     ]
 }
