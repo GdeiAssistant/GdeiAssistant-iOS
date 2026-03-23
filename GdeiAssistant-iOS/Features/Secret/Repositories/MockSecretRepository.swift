@@ -49,8 +49,7 @@ final class MockSecretRepository: SecretRepository {
         detailsByID[postID] = SecretPostDetail(
             post: post,
             content: draft.content ?? "这是一条新发布的语音树洞，点击播放即可试听。",
-            comments: [],
-            myPosts: posts
+            comments: []
         )
     }
 
@@ -89,7 +88,7 @@ final class MockSecretRepository: SecretRepository {
             state: detail.post.state,
             voiceURL: detail.post.voiceURL
         )
-        detailsByID[postID] = SecretPostDetail(post: updatedPost, content: detail.content, comments: updatedComments, myPosts: posts)
+        detailsByID[postID] = SecretPostDetail(post: updatedPost, content: detail.content, comments: updatedComments)
         syncPost(updatedPost)
     }
 
@@ -113,7 +112,7 @@ final class MockSecretRepository: SecretRepository {
             state: detail.post.state,
             voiceURL: detail.post.voiceURL
         )
-        detailsByID[postID] = SecretPostDetail(post: updatedPost, content: detail.content, comments: detail.comments, myPosts: posts)
+        detailsByID[postID] = SecretPostDetail(post: updatedPost, content: detail.content, comments: detail.comments)
         syncPost(updatedPost)
     }
 

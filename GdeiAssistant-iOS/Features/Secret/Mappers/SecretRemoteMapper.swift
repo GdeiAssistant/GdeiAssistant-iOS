@@ -37,8 +37,7 @@ enum SecretRemoteMapper {
         return SecretPostDetail(
             post: mapPost(dto),
             content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无内容"),
-            comments: mapComments(resolvedComments),
-            myPosts: []
+            comments: mapComments(resolvedComments)
         )
     }
 

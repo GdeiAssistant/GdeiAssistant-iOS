@@ -21,10 +21,7 @@ final class RemoteSecretRepository: SecretRepository {
     func fetchDetail(postID: String) async throws -> SecretPostDetail {
         let detailDTO: SecretPostDTO = try await apiClient.get("/secret/id/\(postID)", requiresAuth: true)
         let comments: [SecretCommentDTO] = (try? await apiClient.get("/secret/id/\(postID)/comments", requiresAuth: true)) ?? []
-        let myPosts: [SecretPostDTO] = (try? await apiClient.get("/secret/profile", requiresAuth: true)) ?? []
-        var detail = SecretRemoteMapper.mapDetail(detailDTO, comments: comments.isEmpty ? detailDTO.secretCommentList ?? [] : comments)
-        detail = SecretPostDetail(post: detail.post, content: detail.content, comments: detail.comments, myPosts: SecretRemoteMapper.mapPosts(myPosts))
-        return detail
+        return SecretRemoteMapper.mapDetail(detailDTO, comments: comments.isEmpty ? detailDTO.secretCommentList ?? [] : comments)
     }
 
     func publish(draft: SecretDraft) async throws {

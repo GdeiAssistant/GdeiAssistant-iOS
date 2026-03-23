@@ -38,8 +38,7 @@ struct SecretPostDetail: Codable, Identifiable, Hashable {
 
     let post: SecretPost
     let content: String
-        let comments: [SecretComment]
-    let myPosts: [SecretPost]
+    let comments: [SecretComment]
 }
 
 enum SecretDraftMode: Int, Codable {
