@@ -1,0 +1,4 @@
+// CI overrides for Xcode 16.x runners that lack Xcode 26 features
+SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated
+SWIFT_APPROACHABLE_CONCURRENCY = NO
+SWIFT_STRICT_CONCURRENCY = minimal
