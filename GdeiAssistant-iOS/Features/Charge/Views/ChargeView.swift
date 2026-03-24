@@ -5,9 +5,9 @@ struct ChargeView: View {
 
     var body: some View {
         Group {
-            if viewModel.paymentSession != nil {
+            if let session = viewModel.paymentSession {
                 PaymentWebView(
-                    session: viewModel.paymentSession!,
+                    session: session,
                     onDismiss: { viewModel.clearPaymentSession() }
                 )
             } else {
