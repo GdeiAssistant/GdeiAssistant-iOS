@@ -17,15 +17,13 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         }
 
         let dtos: [MarketplaceItemDTO] = try await apiClient.get(path, requiresAuth: true)
-        let items = MarketplaceRemoteMapper.mapItems(dtos)
-        return try await enrichPreviewURLs(for: items)
+        return MarketplaceRemoteMapper.mapItems(dtos)
     }
 
     func searchItems(keyword: String, start: Int) async throws -> [MarketplaceItem] {
         let encoded = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? keyword
         let dtos: [MarketplaceItemDTO] = try await apiClient.get("/ershou/keyword/\(encoded)/start/\(start)", requiresAuth: true)
-        let items = MarketplaceRemoteMapper.mapItems(dtos)
-        return try await enrichPreviewURLs(for: items)
+        return MarketplaceRemoteMapper.mapItems(dtos)
     }
 
     func fetchItemDetail(itemID: String) async throws -> MarketplaceDetail {
@@ -100,37 +98,6 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
             queryItems: [URLQueryItem(name: "state", value: String(state.rawValue))],
             requiresAuth: true
         )
-    }
-
-    private func enrichPreviewURLs(for items: [MarketplaceItem]) async throws -> [MarketplaceItem] {
-        var enrichedItems = [MarketplaceItem]()
-        enrichedItems.reserveCapacity(items.count)
-
-        for item in items {
-            guard item.previewImageURL == nil else {
-                enrichedItems.append(item)
-                continue
-            }
-
-            let previewURL = try? await fetchPreviewURL(itemID: item.id)
-            enrichedItems.append(
-                MarketplaceItem(
-                    id: item.id,
-                    title: item.title,
-                    price: item.price,
-                    summary: item.summary,
-                    sellerName: item.sellerName,
-                    sellerAvatarURL: item.sellerAvatarURL,
-                    postedAt: item.postedAt,
-                    location: item.location,
-                    state: item.state,
-                    tags: item.tags,
-                    previewImageURL: previewURL ?? item.previewImageURL
-                )
-            )
-        }
-
-        return enrichedItems
     }
 
     private func fetchPreviewURL(itemID: String) async throws -> String? {

@@ -13,8 +13,7 @@ final class RemoteLostFoundRepository: LostFoundRepository {
         async let foundTask: [LostFoundItemDTO] = apiClient.get("/lostandfound/founditem/start/0", requiresAuth: true)
         let lostItems = try await lostTask
         let foundItems = try await foundTask
-        let items = LostFoundRemoteMapper.mapItems(lostItems: lostItems, foundItems: foundItems)
-        return try await enrichPreviewURLs(for: items)
+        return LostFoundRemoteMapper.mapItems(lostItems: lostItems, foundItems: foundItems)
     }
 
     func fetchDetail(itemID: String) async throws -> LostFoundDetail {
@@ -84,35 +83,6 @@ final class RemoteLostFoundRepository: LostFoundRepository {
             "/lostandfound/item/id/\(itemID)/didfound",
             requiresAuth: true
         )
-    }
-
-    private func enrichPreviewURLs(for items: [LostFoundItem]) async throws -> [LostFoundItem] {
-        var enrichedItems = [LostFoundItem]()
-        enrichedItems.reserveCapacity(items.count)
-
-        for item in items {
-            guard item.previewImageURL == nil else {
-                enrichedItems.append(item)
-                continue
-            }
-
-            let previewURL = try? await fetchPreviewURL(itemID: item.id)
-            enrichedItems.append(
-                LostFoundItem(
-                    id: item.id,
-                    title: item.title,
-                    type: item.type,
-                    itemTypeID: item.itemTypeID,
-                    summary: item.summary,
-                    location: item.location,
-                    createdAt: item.createdAt,
-                    state: item.state,
-                    previewImageURL: previewURL ?? item.previewImageURL
-                )
-            )
-        }
-
-        return enrichedItems
     }
 
     private func fetchPreviewURL(itemID: String) async throws -> String? {

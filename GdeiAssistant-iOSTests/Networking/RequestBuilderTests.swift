@@ -54,4 +54,20 @@ final class RequestBuilderTests: XCTestCase {
         XCTAssertNil(urlRequest.value(forHTTPHeaderField: AppConstants.API.authorizationHeader))
         XCTAssertNil(urlRequest.value(forHTTPHeaderField: AppConstants.API.contentTypeHeader))
     }
+
+    func testBuildInjectsXRequestIDHeader() throws {
+        let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { nil })
+        let urlRequest = try builder.build(from: APIRequest.get(path: "test"))
+
+        let requestId = urlRequest.value(forHTTPHeaderField: "X-Request-ID")
+        XCTAssertNotNil(requestId, "X-Request-ID header should be injected")
+        XCTAssertFalse(requestId!.isEmpty)
+    }
+
+    func testBuildSetsAcceptLanguageHeader() throws {
+        let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { nil })
+        let urlRequest = try builder.build(from: APIRequest.get(path: "test"))
+
+        XCTAssertNotNil(urlRequest.value(forHTTPHeaderField: "Accept-Language"))
+    }
 }
