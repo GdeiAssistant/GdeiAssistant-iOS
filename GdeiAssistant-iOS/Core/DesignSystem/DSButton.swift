@@ -34,9 +34,9 @@ struct DSButton: View {
             .frame(height: 50)
             .foregroundStyle(foregroundColor)
             .background(backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DSPressButtonStyle())
         .accessibilityAddTraits(.isButton)
         .disabled(isLoading || isDisabled)
         .opacity(isLoading || isDisabled ? 0.75 : 1.0)
@@ -62,5 +62,13 @@ struct DSButton: View {
         case .secondary:
             return DSColor.title
         }
+    }
+}
+
+struct DSPressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }

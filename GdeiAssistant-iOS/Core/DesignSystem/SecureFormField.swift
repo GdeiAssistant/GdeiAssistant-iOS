@@ -45,7 +45,7 @@ struct SecureFormField: View {
             .padding(.horizontal, 14)
             .frame(height: 48)
             .background(Color(.tertiarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
     }
 }

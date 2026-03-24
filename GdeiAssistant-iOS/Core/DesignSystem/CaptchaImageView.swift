@@ -9,7 +9,7 @@ struct CaptchaImageView: View {
     var body: some View {
         Button(action: refreshAction) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Color(.tertiarySystemGroupedBackground))
 
                 if isLoading {
