@@ -47,9 +47,8 @@ jobs:
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
+            -xcconfig .github/ci-overrides.xcconfig \
             CODE_SIGNING_ALLOWED=NO \
-            SWIFT_DEFAULT_ACTOR_ISOLATION=nonisolated \
-            SWIFT_APPROACHABLE_CONCURRENCY=NO \
             -resultBundlePath TestResults.xcresult
 
       - name: Upload test results on failure
