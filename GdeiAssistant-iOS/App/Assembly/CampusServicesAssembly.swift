@@ -3,6 +3,7 @@ import Foundation
 /// Owns repository construction for campus service features:
 /// schedule, grade, card, library, CET, evaluate, spare, graduate exam,
 /// news, and data center.
+@MainActor
 struct CampusServicesAssembly {
     let scheduleRepository: any ScheduleRepository
     let gradeRepository: any GradeRepository

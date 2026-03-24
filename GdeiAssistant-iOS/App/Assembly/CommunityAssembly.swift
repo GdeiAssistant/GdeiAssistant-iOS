@@ -3,6 +3,7 @@ import Foundation
 /// Owns repository construction for community features:
 /// community feed, topic, express, delivery, photograph, marketplace,
 /// lost & found, secret, and dating.
+@MainActor
 struct CommunityAssembly {
     let communityRepository: any CommunityRepository
     let topicRepository: any TopicRepository

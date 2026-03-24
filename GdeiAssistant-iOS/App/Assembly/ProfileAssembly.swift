@@ -1,6 +1,7 @@
 import Foundation
 
 /// Owns repository construction for profile, account center, and messages.
+@MainActor
 struct ProfileAssembly {
     let profileRepository: any ProfileRepository
     let accountCenterRepository: any AccountCenterRepository
