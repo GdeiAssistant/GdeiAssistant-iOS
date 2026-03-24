@@ -21,15 +21,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer
+      - name: Select Xcode and list simulators
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
+          echo "Using $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
+          xcrun simctl list devices available iPhone | head -20
 
       - name: Run unit tests
         run: |
+          DEST=$(xcrun simctl list devices available iPhone -j \
+            | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for runtime, devs in data.get('devices', {}).items():
+              for d in devs:
+                  if d.get('isAvailable') and 'iPhone' in d.get('name',''):
+                      print(f\"platform=iOS Simulator,id={d['udid']}\")
+                      sys.exit(0)
+          sys.exit(1)
+          ")
+          echo "Destination: $DEST"
           xcodebuild test \
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -destination "$DEST" \
             CODE_SIGNING_ALLOWED=NO \
             -resultBundlePath TestResults.xcresult
 
