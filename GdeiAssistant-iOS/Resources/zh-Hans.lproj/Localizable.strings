@@ -136,6 +136,29 @@
 "card.notice" = "提示";
 "card.understood" = "知道了";
 
+// MARK: - Charge
+"charge.title" = "校园卡充值";
+"charge.subtitle" = "校园卡充值";
+"charge.currentBalance" = "当前余额";
+"charge.cardStatus" = "卡状态";
+"charge.cardNumber" = "卡号";
+"charge.inputTitle" = "充值信息";
+"charge.quickAmount" = "常用金额";
+"charge.amountHint" = "充值金额（1–500 元）";
+"charge.currencyUnit" = "元";
+"charge.passwordLabel" = "身份验证";
+"charge.passwordHint" = "账号密码";
+"charge.passwordEmpty" = "请输入账号密码以确认充值";
+"charge.amountEmpty" = "充值金额不能为空";
+"charge.amountRange" = "充值金额需在 1 到 500 元之间";
+"charge.submit" = "提交充值";
+"charge.processing" = "正在提交充值请求…";
+"charge.paymentTitle" = "支付宝付款";
+"charge.backToForm" = "返回填写页";
+"charge.loading" = "加载中…";
+"charge.errorNoPayment" = "服务端未返回支付信息";
+"charge.fallbackUser" = "校园卡用户";
+
 "schedule.title" = "我的课程表";
 "schedule.loading" = "正在加载课表...";
 "schedule.emptyTitle" = "暂无课表数据";

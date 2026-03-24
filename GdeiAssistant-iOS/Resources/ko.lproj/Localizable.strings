@@ -136,6 +136,29 @@
 "card.notice" = "알림";
 "card.understood" = "확인";
 
+// MARK: - Charge
+"charge.title" = "캠퍼스 카드 충전";
+"charge.subtitle" = "캠퍼스 카드 충전";
+"charge.currentBalance" = "현재 잔액";
+"charge.cardStatus" = "카드 상태";
+"charge.cardNumber" = "카드 번호";
+"charge.inputTitle" = "충전 정보";
+"charge.quickAmount" = "자주 쓰는 금액";
+"charge.amountHint" = "충전 금액 (1–500위안)";
+"charge.currencyUnit" = "위안";
+"charge.passwordLabel" = "본인 인증";
+"charge.passwordHint" = "계정 비밀번호";
+"charge.passwordEmpty" = "충전을 확인하려면 비밀번호를 입력하세요";
+"charge.amountEmpty" = "충전 금액을 입력하세요";
+"charge.amountRange" = "충전 금액은 1~500위안이어야 합니다";
+"charge.submit" = "충전하기";
+"charge.processing" = "제출 중…";
+"charge.paymentTitle" = "알리페이 결제";
+"charge.backToForm" = "입력 화면으로 돌아가기";
+"charge.loading" = "불러오는 중…";
+"charge.errorNoPayment" = "결제 정보를 받지 못했습니다";
+"charge.fallbackUser" = "카드 사용자";
+
 "schedule.title" = "내 시간표";
 "schedule.loading" = "시간표 로딩 중...";
 "schedule.emptyTitle" = "시간표 데이터 없음";

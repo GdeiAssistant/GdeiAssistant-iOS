@@ -14,7 +14,7 @@ struct ChargeView: View {
                 chargeForm
             }
         }
-        .navigationTitle("校园卡充值")
+        .navigationTitle(NSLocalizedString("charge.title", comment: ""))
         .onAppear { viewModel.loadIfNeeded() }
     }
 
@@ -38,28 +38,28 @@ struct ChargeView: View {
         .refreshable { viewModel.refresh() }
         .overlay {
             if viewModel.isLoading && viewModel.cardInfo == nil {
-                ProgressView("加载中…")
+                ProgressView(NSLocalizedString("charge.loading", comment: ""))
             }
         }
     }
 
     private var overviewCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.cardInfo?.ownerName ?? "校园卡用户")
+            Text(viewModel.cardInfo?.ownerName ?? NSLocalizedString("charge.fallbackUser", comment: ""))
                 .font(.caption)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
                 .background(.blue.opacity(0.1), in: Capsule())
 
-            Text("校园卡充值")
+            Text(NSLocalizedString("charge.subtitle", comment: ""))
                 .font(.title2.bold())
 
             HStack(spacing: 12) {
-                metricCard(label: "当前余额", value: viewModel.balanceText)
-                metricCard(label: "卡状态", value: viewModel.cardInfo?.status.displayName ?? "—")
+                metricCard(label: NSLocalizedString("charge.currentBalance", comment: ""), value: viewModel.balanceText)
+                metricCard(label: NSLocalizedString("charge.cardStatus", comment: ""), value: viewModel.cardInfo?.status.displayName ?? "—")
             }
             HStack(spacing: 12) {
-                metricCard(label: "卡号", value: viewModel.cardNumber)
+                metricCard(label: NSLocalizedString("charge.cardNumber", comment: ""), value: viewModel.cardNumber)
             }
         }
         .padding()
@@ -78,8 +78,8 @@ struct ChargeView: View {
 
     private var amountSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("充值信息").font(.headline)
-            Text("常用金额").font(.caption).foregroundStyle(.secondary)
+            Text(NSLocalizedString("charge.inputTitle", comment: "")).font(.headline)
+            Text(NSLocalizedString("charge.quickAmount", comment: "")).font(.caption).foregroundStyle(.secondary)
 
             HStack(spacing: 10) {
                 ForEach(["20", "50", "100", "200"], id: \.self) { preset in
@@ -96,7 +96,7 @@ struct ChargeView: View {
                 }
             }
 
-            TextField("充值金额（1–500 元）", text: $viewModel.amount)
+            TextField(NSLocalizedString("charge.amountHint", comment: ""), text: $viewModel.amount)
                 .keyboardType(.numberPad)
                 .textFieldStyle(.roundedBorder)
         }
@@ -106,8 +106,8 @@ struct ChargeView: View {
 
     private var passwordSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("身份验证").font(.caption).foregroundStyle(.secondary)
-            SecureField("账号密码", text: $viewModel.password)
+            Text(NSLocalizedString("charge.passwordLabel", comment: "")).font(.caption).foregroundStyle(.secondary)
+            SecureField(NSLocalizedString("charge.passwordHint", comment: ""), text: $viewModel.password)
                 .textFieldStyle(.roundedBorder)
         }
         .padding()
@@ -124,7 +124,7 @@ struct ChargeView: View {
                 } else {
                     Image(systemName: "creditcard")
                 }
-                Text(viewModel.isSubmitting ? "正在提交充值请求…" : "提交充值")
+                Text(viewModel.isSubmitting ? NSLocalizedString("charge.processing", comment: "") : NSLocalizedString("charge.submit", comment: ""))
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
