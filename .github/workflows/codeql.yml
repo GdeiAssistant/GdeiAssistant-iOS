@@ -35,12 +35,12 @@ jobs:
       - name: Build
         run: |
           xcodebuild build \
-            -project GdeiAssistant-iOS/GdeiAssistant-iOS.xcodeproj \
+            -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination 'generic/platform=iOS Simulator' \
-            -skipPackagePluginValidation \
+            -xcconfig .github/ci-overrides.xcconfig \
             CODE_SIGNING_ALLOWED=NO \
-            | tail -5
+            | tail -20
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
