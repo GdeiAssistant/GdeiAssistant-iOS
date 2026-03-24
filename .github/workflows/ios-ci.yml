@@ -48,7 +48,7 @@ jobs:
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
             CODE_SIGNING_ALLOWED=NO \
-            SWIFT_STRICT_CONCURRENCY=minimal \
+            SWIFT_VERSION=5 \
             -resultBundlePath TestResults.xcresult
 
       - name: Upload test results on failure
