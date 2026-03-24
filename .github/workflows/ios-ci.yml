@@ -48,7 +48,7 @@ jobs:
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
             CODE_SIGNING_ALLOWED=NO \
-            SWIFT_VERSION=5 \
+            OTHER_SWIFT_FLAGS='$(inherited) -Xfrontend -enable-upcoming-feature -Xfrontend GlobalActorIsolatedTypesUsability' \
             -resultBundlePath TestResults.xcresult
 
       - name: Upload test results on failure
