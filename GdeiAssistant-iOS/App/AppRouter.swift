@@ -39,6 +39,7 @@ final class AppContainer: ObservableObject {
     var scheduleRepository: any ScheduleRepository { campusServicesAssembly.scheduleRepository }
     var gradeRepository: any GradeRepository { campusServicesAssembly.gradeRepository }
     var cardRepository: any CardRepository { campusServicesAssembly.cardRepository }
+    var chargeRepository: any ChargeRepository { campusServicesAssembly.chargeRepository }
     var libraryRepository: any LibraryRepository { campusServicesAssembly.libraryRepository }
     var cetRepository: any CETRepository { campusServicesAssembly.cetRepository }
     var evaluateRepository: any EvaluateRepository { campusServicesAssembly.evaluateRepository }
@@ -81,8 +82,21 @@ final class AppContainer: ObservableObject {
         let authManager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
         self.authManager = authManager
 
+        // Certificate pinning — replace placeholder hashes with real server public-key SHA-256 pins
+        let pinningDelegate = CertificatePinningDelegate(pinnedHashes: [
+            // TODO: 替换为服务端证书实际的 SHA-256 公钥指纹
+            "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=",
+            "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC="
+        ])
+        let pinnedSession = URLSession(
+            configuration: .default,
+            delegate: pinningDelegate,
+            delegateQueue: nil
+        )
+
         let apiClient = APIClient(
             environment: environment,
+            session: pinnedSession,
             tokenProvider: { [weak authManager] in
                 authManager?.currentToken()
             },
@@ -162,6 +176,7 @@ final class AppContainer: ObservableObject {
     func makeScheduleViewModel() -> ScheduleViewModel { campusServicesAssembly.makeScheduleViewModel() }
     func makeGradeViewModel() -> GradeViewModel { campusServicesAssembly.makeGradeViewModel() }
     func makeCardViewModel() -> CardViewModel { campusServicesAssembly.makeCardViewModel() }
+    func makeChargeViewModel() -> ChargeViewModel { campusServicesAssembly.makeChargeViewModel() }
     func makeLibraryViewModel() -> LibraryViewModel { campusServicesAssembly.makeLibraryViewModel() }
     func makeCETViewModel() -> CETViewModel { campusServicesAssembly.makeCETViewModel() }
     func makeEvaluateViewModel() -> EvaluateViewModel { campusServicesAssembly.makeEvaluateViewModel() }

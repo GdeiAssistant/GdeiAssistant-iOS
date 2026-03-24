@@ -7,6 +7,7 @@ struct CampusServicesAssembly {
     let scheduleRepository: any ScheduleRepository
     let gradeRepository: any GradeRepository
     let cardRepository: any CardRepository
+    let chargeRepository: any ChargeRepository
     let libraryRepository: any LibraryRepository
     let cetRepository: any CETRepository
     let evaluateRepository: any EvaluateRepository
@@ -38,6 +39,14 @@ struct CampusServicesAssembly {
             environment: environment,
             remoteRepository: remoteCardRepository,
             mockRepository: mockCardRepository
+        )
+
+        let remoteChargeRepository = RemoteChargeRepository(apiClient: apiClient)
+        let mockChargeRepository = MockChargeRepository()
+        self.chargeRepository = SwitchingChargeRepository(
+            environment: environment,
+            remoteRepository: remoteChargeRepository,
+            mockRepository: mockChargeRepository
         )
 
         let remoteLibraryRepository = RemoteLibraryRepository(apiClient: apiClient)
@@ -109,6 +118,10 @@ struct CampusServicesAssembly {
 
     func makeCardViewModel() -> CardViewModel {
         CardViewModel(repository: cardRepository)
+    }
+
+    func makeChargeViewModel() -> ChargeViewModel {
+        ChargeViewModel(repository: chargeRepository)
     }
 
     func makeLibraryViewModel() -> LibraryViewModel {
