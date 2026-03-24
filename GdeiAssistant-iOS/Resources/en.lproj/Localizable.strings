@@ -136,6 +136,29 @@
 "card.notice" = "Notice";
 "card.understood" = "OK";
 
+// MARK: - Charge
+"charge.title" = "Top Up Card";
+"charge.subtitle" = "Campus Card Top-Up";
+"charge.currentBalance" = "Current Balance";
+"charge.cardStatus" = "Card Status";
+"charge.cardNumber" = "Card Number";
+"charge.inputTitle" = "Top-Up Details";
+"charge.quickAmount" = "Quick Amounts";
+"charge.amountHint" = "Amount (¥1–500)";
+"charge.currencyUnit" = "¥";
+"charge.passwordLabel" = "Identity Verification";
+"charge.passwordHint" = "Account password";
+"charge.passwordEmpty" = "Enter your password to confirm the top-up";
+"charge.amountEmpty" = "Amount is required";
+"charge.amountRange" = "Amount must be between ¥1 and ¥500";
+"charge.submit" = "Submit Top-Up";
+"charge.processing" = "Submitting…";
+"charge.paymentTitle" = "Alipay Payment";
+"charge.backToForm" = "Back to Form";
+"charge.loading" = "Loading…";
+"charge.errorNoPayment" = "No payment information received";
+"charge.fallbackUser" = "Card Holder";
+
 "schedule.title" = "My Schedule";
 "schedule.loading" = "Loading schedule...";
 "schedule.emptyTitle" = "No Schedule Data";

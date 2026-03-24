@@ -42,11 +42,11 @@ final class ChargeViewModel: ObservableObject {
 
     func submitCharge() {
         guard let value = Int(amount), (1...500).contains(value) else {
-            errorMessage = "充值金额需在 1 到 500 元之间"
+            errorMessage = NSLocalizedString("charge.amountRange", comment: "")
             return
         }
         guard !password.isEmpty else {
-            errorMessage = "请输入账号密码以确认充值"
+            errorMessage = NSLocalizedString("charge.passwordEmpty", comment: "")
             return
         }
         Task {

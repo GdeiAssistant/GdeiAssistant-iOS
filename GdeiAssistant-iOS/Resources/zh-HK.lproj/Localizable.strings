@@ -136,6 +136,29 @@
 "card.notice" = "提示";
 "card.understood" = "知道了";
 
+// MARK: - Charge
+"charge.title" = "校園卡充值";
+"charge.subtitle" = "校園卡充值";
+"charge.currentBalance" = "目前餘額";
+"charge.cardStatus" = "卡片狀態";
+"charge.cardNumber" = "卡號";
+"charge.inputTitle" = "充值資料";
+"charge.quickAmount" = "常用金額";
+"charge.amountHint" = "充值金額（1–500 元）";
+"charge.currencyUnit" = "元";
+"charge.passwordLabel" = "身份驗證";
+"charge.passwordHint" = "帳號密碼";
+"charge.passwordEmpty" = "請輸入帳號密碼以確認充值";
+"charge.amountEmpty" = "充值金額不能為空";
+"charge.amountRange" = "充值金額需在 1 到 500 元之間";
+"charge.submit" = "提交充值";
+"charge.processing" = "正在提交充值請求…";
+"charge.paymentTitle" = "支付寶付款";
+"charge.backToForm" = "返回填寫頁";
+"charge.loading" = "載入中…";
+"charge.errorNoPayment" = "伺服器未返回付款資訊";
+"charge.fallbackUser" = "校園卡用戶";
+
 "schedule.title" = "我的課程表";
 "schedule.loading" = "正在載入課表...";
 "schedule.emptyTitle" = "暫無課表數據";

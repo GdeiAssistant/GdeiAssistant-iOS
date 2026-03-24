@@ -136,6 +136,29 @@
 "card.notice" = "お知らせ";
 "card.understood" = "了解";
 
+// MARK: - Charge
+"charge.title" = "キャンパスカードチャージ";
+"charge.subtitle" = "キャンパスカードチャージ";
+"charge.currentBalance" = "現在の残高";
+"charge.cardStatus" = "カード状態";
+"charge.cardNumber" = "カード番号";
+"charge.inputTitle" = "チャージ情報";
+"charge.quickAmount" = "よく使う金額";
+"charge.amountHint" = "チャージ金額（1〜500元）";
+"charge.currencyUnit" = "元";
+"charge.passwordLabel" = "本人確認";
+"charge.passwordHint" = "アカウントパスワード";
+"charge.passwordEmpty" = "チャージを確認するためにパスワードを入力してください";
+"charge.amountEmpty" = "チャージ金額を入力してください";
+"charge.amountRange" = "チャージ金額は1〜500元の範囲で入力してください";
+"charge.submit" = "チャージする";
+"charge.processing" = "送信中…";
+"charge.paymentTitle" = "Alipay決済";
+"charge.backToForm" = "入力画面に戻る";
+"charge.loading" = "読み込み中…";
+"charge.errorNoPayment" = "決済情報を取得できませんでした";
+"charge.fallbackUser" = "カード利用者";
+
 "schedule.title" = "マイ時間割";
 "schedule.loading" = "時間割を読み込み中...";
 "schedule.emptyTitle" = "時間割データがありません";
