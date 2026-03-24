@@ -1,6 +1,7 @@
 import Foundation
 
 /// Owns repository construction and ViewModel factories for auth, home, and shared infrastructure.
+@MainActor
 struct CoreAssembly {
     let authRepository: any AuthRepository
     let homeRepository: any HomeRepository
