@@ -47,6 +47,8 @@ struct RequestBuilder {
         let locale = UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) ?? "zh-CN"
         urlRequest.setValue(locale, forHTTPHeaderField: "Accept-Language")
 
+        urlRequest.setValue(RequestID.generate(), forHTTPHeaderField: "X-Request-ID")
+
         request.headers.forEach { key, value in
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }

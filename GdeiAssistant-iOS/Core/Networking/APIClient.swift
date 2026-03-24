@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 
 @MainActor
 final class APIClient {
@@ -94,6 +95,10 @@ final class APIClient {
         responseType: T.Type
     ) async throws -> T {
         let urlRequest = try requestBuilder.build(from: request)
+        let requestId = urlRequest.value(forHTTPHeaderField: "X-Request-ID") ?? "?"
+        let method = urlRequest.httpMethod ?? "?"
+        let path = urlRequest.url?.path ?? "?"
+        let start = Date()
 
         let data: Data
         let response: URLResponse
@@ -101,11 +106,21 @@ final class APIClient {
         do {
             (data, response) = try await session.data(for: urlRequest)
         } catch {
+            let elapsed = Int(Date().timeIntervalSince(start) * 1000)
+            AppLogger.network.warning("rid:\(requestId) | \(method) \(path) | FAILED | \(elapsed)ms | \(error.localizedDescription)")
             throw NetworkError.transport(error)
         }
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
+        }
+
+        let elapsed = Int(Date().timeIntervalSince(start) * 1000)
+        let backendRid = httpResponse.value(forHTTPHeaderField: "X-Request-ID")
+        if let backendRid {
+            AppLogger.network.info("client-rid:\(requestId) backend-rid:\(backendRid) | \(method) \(path) | \(httpResponse.statusCode) | \(elapsed)ms")
+        } else {
+            AppLogger.network.info("rid:\(requestId) | \(method) \(path) | \(httpResponse.statusCode) | \(elapsed)ms")
         }
 
         if httpResponse.statusCode == 401 {
