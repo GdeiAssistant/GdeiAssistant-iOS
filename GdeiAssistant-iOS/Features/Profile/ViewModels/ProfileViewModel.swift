@@ -141,8 +141,15 @@ final class ProfileViewModel: ObservableObject {
         birthday = ""
     }
 
-    func applyBirthdayEditorChange(selectedDate: Date, didRequestClear: Bool) {
+    func applyBirthdayEditorChange(
+        selectedDate: Date,
+        hadExistingBirthday: Bool,
+        didChangeSelection: Bool,
+        didRequestClear: Bool
+    ) {
         if didRequestClear {
+            clearBirthday()
+        } else if !hadExistingBirthday && !didChangeSelection {
             clearBirthday()
         } else {
             updateBirthday(date: selectedDate)

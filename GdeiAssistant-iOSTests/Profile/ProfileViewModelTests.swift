@@ -13,7 +13,40 @@ final class ProfileViewModelTests: XCTestCase {
 
         viewModel.applyBirthdayEditorChange(
             selectedDate: existingPickerDate,
+            hadExistingBirthday: true,
+            didChangeSelection: false,
             didRequestClear: true
+        )
+
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertTrue(didSave)
+        XCTAssertEqual(repository.updateRequests.last?.birthday, "")
+    }
+
+    func testSavingWithoutExistingBirthdayKeepsBirthdayEmptyUntilSelectionChanges() async {
+        let repository = RecordingProfileRepository()
+        repository.profile = UserProfile(
+            id: "user-1",
+            username: "demo",
+            nickname: "Demo",
+            avatarURL: "",
+            college: "计算机科学系",
+            major: "软件工程",
+            grade: "2023级",
+            bio: "bio",
+            birthday: ""
+        )
+        let sessionState = SessionState()
+        let viewModel = ProfileViewModel(repository: repository, sessionState: sessionState)
+
+        await viewModel.loadProfile()
+
+        viewModel.applyBirthdayEditorChange(
+            selectedDate: Date(timeIntervalSince1970: 1_710_000_000),
+            hadExistingBirthday: false,
+            didChangeSelection: false,
+            didRequestClear: false
         )
 
         let didSave = await viewModel.saveProfile()
