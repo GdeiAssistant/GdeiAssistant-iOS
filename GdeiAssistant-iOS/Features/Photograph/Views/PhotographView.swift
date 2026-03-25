@@ -13,7 +13,7 @@ struct PhotographView: View {
     var body: some View {
         List {
             Section {
-                Picker("分类", selection: $viewModel.selectedCategory) {
+                Picker(localizedString("photograph.category"), selection: $viewModel.selectedCategory) {
                     ForEach(PhotographCategory.allCases) { category in
                         Text(category.title).tag(category)
                     }
@@ -26,7 +26,7 @@ struct PhotographView: View {
 
             if viewModel.isLoading && viewModel.posts.isEmpty {
                 Section {
-                    DSLoadingView(text: "正在加载摄影作品...")
+                    DSLoadingView(text: localizedString("photograph.loading"))
                 }
             } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
                 Section {
@@ -36,7 +36,7 @@ struct PhotographView: View {
                 }
             } else if viewModel.posts.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "camera", title: "暂无作品", message: "当前分类下还没有内容，去发布第一张校园照片")
+                    DSEmptyStateView(icon: "camera", title: localizedString("photograph.noWorks"), message: "当前分类下还没有内容，去发布第一张校园照片")
                 }
             } else {
                 Section {
@@ -55,13 +55,13 @@ struct PhotographView: View {
                 }
             }
         }
-        .navigationTitle("拍好校园")
+        .navigationTitle(localizedString("photograph.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("photograph.mine")) {
                     MyPhotographPostsView(viewModel: viewModel)
                 }
-                NavigationLink("发布") {
+                NavigationLink(localizedString("photograph.publish")) {
                     PublishPhotographView(viewModel: container.makePublishPhotographViewModel(), listViewModel: viewModel)
                 }
             }
@@ -149,7 +149,7 @@ struct PhotographDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载作品详情...")
+                DSLoadingView(text: localizedString("photograph.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
@@ -164,9 +164,9 @@ struct PhotographDetailView: View {
                         }
 
                         HStack(spacing: 20) {
-                            statItem("照片", value: detail.imageURLs.count)
-                            statItem("评论", value: max(detail.post.commentCount, comments.count))
-                            statItem("点赞", value: detail.post.likeCount)
+                            statItem(localizedString("photograph.photoSection"), value: detail.imageURLs.count)
+                            statItem(localizedString("photograph.comment"), value: max(detail.post.commentCount, comments.count))
+                            statItem(localizedString("photograph.like"), value: detail.post.likeCount)
                         }
                     }
 
@@ -177,17 +177,17 @@ struct PhotographDetailView: View {
                         Text(detail.content)
                             .font(.body)
                             .foregroundStyle(DSColor.title)
-                        Text("发布者：\(detail.post.authorName)")
+                        Text("\(localizedString("photograph.publisher"))\(detail.post.authorName)")
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("分类：\(detail.post.category.title)")
+                        Text("\(localizedString("photograph.categoryLabel"))\(detail.post.category.title)")
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
-                        Text("发布时间：\(detail.post.createdAt)")
+                        Text("\(localizedString("photograph.publishedAt"))\(detail.post.createdAt)")
                             .font(.caption)
                             .foregroundStyle(DSColor.subtitle)
                     } header: {
-                        Text("作品信息")
+                        Text(localizedString("photograph.infoSection"))
                     }
 
                     if !detail.imageURLs.isEmpty {
@@ -202,7 +202,7 @@ struct PhotographDetailView: View {
                             .tabViewStyle(.page(indexDisplayMode: .automatic))
                             .frame(height: 280)
                         } header: {
-                            Text("图片")
+                            Text(localizedString("photograph.imageSection"))
                         }
                     }
 
@@ -210,19 +210,19 @@ struct PhotographDetailView: View {
                         Button {
                             Task { await like() }
                         } label: {
-                            Label(detail.post.isLiked ? "已点赞" : "点赞作品", systemImage: detail.post.isLiked ? "heart.fill" : "heart")
+                            Label(detail.post.isLiked ? localizedString("photograph.liked") : localizedString("photograph.likeItem"), systemImage: detail.post.isLiked ? "heart.fill" : "heart")
                         }
                         .buttonStyle(.bordered)
                         .disabled(detail.post.isLiked || isSubmitting)
                         .tint(isLikeNotification ? DSColor.primary : .accentColor)
                     } header: {
-                        Text("互动状态")
+                        Text(localizedString("photograph.interactionStatus"))
                     }
 
                     Section {
-                        TextField("写下你的评论", text: $commentInput, axis: .vertical)
+                        TextField(localizedString("photograph.commentPlaceholder"), text: $commentInput, axis: .vertical)
                             .lineLimit(2...4)
-                        Button(isSubmitting ? "提交中..." : "发送评论") {
+                        Button(isSubmitting ? localizedString("photograph.submitting") : localizedString("photograph.sendComment")) {
                             Task { await submitComment() }
                         }
                         .disabled(isSubmitting || !FormValidationSupport.hasText(commentInput))
@@ -232,12 +232,12 @@ struct PhotographDetailView: View {
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     } header: {
-                        Text("评论")
+                        Text(localizedString("photograph.comment"))
                     }
 
                     if comments.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "bubble.left", title: "暂无评论", message: "来做第一位评论的同学")
+                            DSEmptyStateView(icon: "bubble.left", title: localizedString("photograph.noComments"), message: localizedString("photograph.beFirstComment"))
                         }
                     } else {
                         Section {
@@ -262,7 +262,7 @@ struct PhotographDetailView: View {
                 .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("作品详情")
+        .navigationTitle(localizedString("photograph.detailTitle"))
         .task {
             await loadData()
         }
@@ -294,7 +294,7 @@ struct PhotographDetailView: View {
                 comments = try await viewModel.fetchComments(postID: postID)
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("photograph.detailLoadFailed")
         }
     }
 
@@ -306,7 +306,7 @@ struct PhotographDetailView: View {
             try await viewModel.like(postID: postID)
             try await refreshDetailAndNotifyParent()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "点赞失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("photograph.likeFailed")
         }
     }
 
@@ -319,9 +319,9 @@ struct PhotographDetailView: View {
             try await viewModel.submitComment(postID: postID, content: FormValidationSupport.trimmed(commentInput))
             commentInput = ""
             try await refreshDetailAndNotifyParent()
-            resultMessage = "评论已发送"
+            resultMessage = localizedString("photograph.commentSent")
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "评论失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("photograph.commentFailed")
         }
     }
 
@@ -341,11 +341,11 @@ struct PhotographDetailView: View {
         guard notificationID != nil else { return nil }
         switch normalizedNotificationTargetType {
         case "comment":
-            return "来自互动消息：有新评论，打开详情即可查看"
+            return localizedString("photograph.fromInteractionComment")
         case "like":
-            return "来自互动消息：有人点赞了这个作品"
+            return localizedString("photograph.fromInteractionLike")
         default:
-            return "来自互动消息"
+            return localizedString("photograph.fromInteraction")
         }
     }
 
@@ -364,7 +364,7 @@ private enum MyPhotographFilter: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .all:
-            return "全部"
+            return localizedString("photograph.all")
         case .campus:
             return PhotographCategory.campus.title
         case .life:
@@ -395,17 +395,17 @@ private struct MyPhotographPostsView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载我的作品...")
+                DSLoadingView(text: localizedString("photograph.myLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
                 }
             } else if visiblePosts.isEmpty {
-                DSEmptyStateView(icon: "camera.macro", title: "还没有发布作品", message: selectedFilter == .all ? "去上传第一张校园照片" : "当前分类下还没有发布作品")
+                DSEmptyStateView(icon: "camera.macro", title: localizedString("photograph.myEmpty"), message: selectedFilter == .all ? localizedString("photograph.myEmptyMsg") : "当前分类下还没有发布作品")
             } else {
                 List {
                     Section {
-                        Picker("分类筛选", selection: $selectedFilter) {
+                        Picker(localizedString("photograph.filterCategory"), selection: $selectedFilter) {
                             ForEach(MyPhotographFilter.allCases) { filter in
                                 Text(filter.title).tag(filter)
                             }
@@ -432,7 +432,7 @@ private struct MyPhotographPostsView: View {
                 }
             }
         }
-        .navigationTitle("我的作品")
+        .navigationTitle(localizedString("photograph.myTitle"))
         .task {
             await loadData()
         }
@@ -446,7 +446,7 @@ private struct MyPhotographPostsView: View {
         do {
             posts = try await viewModel.fetchMyPosts()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("photograph.loadFailed")
         }
     }
 
@@ -470,16 +470,16 @@ private struct PublishPhotographView: View {
     var body: some View {
         Form {
             Section {
-                TextField("标题", text: $viewModel.title)
-                Picker("分类", selection: $viewModel.category) {
+                TextField(localizedString("photograph.titleField"), text: $viewModel.title)
+                Picker(localizedString("photograph.category"), selection: $viewModel.category) {
                     ForEach(PhotographCategory.allCases) { category in
                         Text(category.title).tag(category)
                     }
                 }
-                TextField("想说的话（选填）", text: $viewModel.content, axis: .vertical)
+                TextField(localizedString("photograph.descriptionField"), text: $viewModel.content, axis: .vertical)
                     .lineLimit(3...5)
             } header: {
-                Text("内容")
+                Text(localizedString("photograph.content"))
             }
 
             Section {
@@ -505,7 +505,7 @@ private struct PublishPhotographView: View {
                             ) {
                                 VStack(spacing: 8) {
                                     Image(systemName: "photo.badge.plus")
-                                    Text("添加图片")
+                                    Text(localizedString("photograph.addImage"))
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
@@ -517,7 +517,7 @@ private struct PublishPhotographView: View {
                     .padding(.vertical, 4)
                 }
             } header: {
-                Text("图片")
+                Text(localizedString("photograph.imageSection"))
             }
 
             if let message = viewModel.submitState.message {
@@ -528,10 +528,10 @@ private struct PublishPhotographView: View {
                 }
             }
         }
-        .navigationTitle("发布作品")
+        .navigationTitle(localizedString("photograph.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "提交中..." : "提交") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("photograph.submitting") : "提交") {
                     Task {
                         let success = await viewModel.submit()
                         if success {
