@@ -199,6 +199,9 @@ final class ProfileViewModel: ObservableObject {
             syncDraft(with: updatedProfile)
             return true
         } catch {
+            if let persistedProfile = displayProfile {
+                syncDraft(with: persistedProfile)
+            }
             saveErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.saveFailed")
             return false
         }

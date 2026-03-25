@@ -250,12 +250,20 @@ final class EditMarketplaceViewModel: ObservableObject {
 
     private static func contactPrefixes(for key: String) -> [String] {
         var seen = Set<String>()
-        return [
-            localizedString(key),
-            localizedString(key, locale: "zh-CN"),
-            localizedString(key, locale: "en")
-        ].filter { prefix in
+        return supportedContactPrefixLocales
+            .map { localizedString(key, locale: $0) }
+            .filter { prefix in
             seen.insert(prefix).inserted
         }
     }
+
+    private static let supportedContactPrefixLocales = [
+        UserPreferences.currentLocale,
+        "en",
+        "ja",
+        "ko",
+        "zh-CN",
+        "zh-HK",
+        "zh-TW"
+    ]
 }
