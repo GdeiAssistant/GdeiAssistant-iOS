@@ -1128,3 +1128,116 @@
 "photograph.descriptionField" = "想說的話（選填）";
 "photograph.submit" = "提交";
 "photograph.submitting" = "提交中...";
+
+// MARK: - Datacenter
+"dataCenter.electricQuery" = "電費查詢";
+"dataCenter.yellowPage" = "黃頁查詢";
+"dataCenter.year" = "年份";
+"dataCenter.name" = "姓名";
+"dataCenter.studentId" = "學號";
+"dataCenter.queryElec" = "查詢電費";
+"dataCenter.queryCondition" = "查詢條件";
+"dataCenter.queryingElec" = "正在查詢電費...";
+"dataCenter.dorm" = "宿舍";
+"dataCenter.occupants" = "入住人數";
+"dataCenter.college" = "學院";
+"dataCenter.usedElec" = "用電數額";
+"dataCenter.freeElec" = "免費電額";
+"dataCenter.chargedElec" = "計費電數";
+"dataCenter.elecPrice" = "電價";
+"dataCenter.totalFee" = "總電費";
+"dataCenter.avgFee" = "平均電費";
+"dataCenter.queryResult" = "查詢結果";
+"dataCenter.ypLoading" = "正在載入校園黃頁...";
+"dataCenter.department" = "部門單位";
+"dataCenter.campus" = "校區";
+"dataCenter.address" = "地址";
+"dataCenter.phone" = "電話";
+"dataCenter.mainPhone" = "主要電話";
+"dataCenter.backupPhone" = "備用電話";
+"dataCenter.otherContact" = "其他聯繫方式";
+"dataCenter.ypDetail" = "黃頁詳情";
+"dataCenter.done" = "完成";
+"dataCenter.call" = "打電話";
+"dataCenter.sms" = "發短訊";
+
+// MARK: - Charge
+"charge.alipay" = "支付寶付款";
+
+// MARK: - Graduateexam
+"graduateExam.name" = "姓名";
+"graduateExam.examNumber" = "准考證號";
+"graduateExam.idNumber" = "證件號碼";
+"graduateExam.query" = "查詢成績";
+"graduateExam.queryInfo" = "查詢資訊";
+"graduateExam.querying" = "正在查詢考研成績...";
+"graduateExam.result" = "查詢結果";
+"graduateExam.regNumber" = "報名號";
+"graduateExam.politics" = "思想政治理論";
+"graduateExam.foreignLang" = "外國語";
+"graduateExam.course1" = "業務課一";
+"graduateExam.course2" = "業務課二";
+"graduateExam.altEntry" = "備用入口";
+"graduateExam.openAltEntry" = "開啟研招網備用入口";
+"graduateExam.title" = "考研查詢";
+
+// MARK: - Collection
+"collection.searchPlaceholder" = "搜尋館藏書名、作者";
+"collection.query" = "查詢";
+"collection.catalogSearch" = "館藏檢索";
+"collection.myBorrow" = "我的借閱";
+"collection.borrowService" = "借閱服務";
+"collection.searching" = "正在查詢館藏...";
+"collection.noResult" = "暫無檢索結果";
+"collection.searchHint" = "輸入書名、作者後開始查詢";
+"collection.searchResult" = "檢索結果";
+"collection.library" = "圖書館";
+"collection.detailLoading" = "正在載入詳情...";
+"collection.libPassword" = "圖書館密碼";
+"collection.enterPassword" = "請輸入圖書館密碼";
+"collection.refreshBorrow" = "重新整理借閱記錄";
+"collection.queryBorrow" = "查詢借閱記錄";
+"collection.borrowHint" = "我的借閱需要先輸入圖書館密碼查詢，續借時會再次校驗密碼。";
+"collection.borrowLoading" = "正在載入借閱記錄...";
+"collection.notQueried" = "還沒有開始查詢";
+"collection.borrowEmptyHint" = "輸入圖書館密碼後即可查看目前借閱記錄";
+"collection.noBorrow" = "暫無借閱記錄";
+"collection.noBorrowMsg" = "目前沒有可展示的借閱記錄";
+"collection.renew" = "續借";
+"collection.borrowList" = "借閱列表";
+"collection.notice" = "提示";
+"collection.understood" = "知道了";
+"collection.subjectTheme" = "主題詞：";
+"collection.classification" = "分類號：";
+"collection.bookInfo" = "書目資訊";
+"collection.callNumber" = "索書號：";
+"collection.distribution" = "館藏分布";
+"collection.detailTitle" = "館藏詳情";
+"collection.borrowLabel" = "借閱：";
+"collection.returnLabel" = "應還：";
+"collection.renewCount" = "續借：";
+
+// MARK: - Grade
+"grade.loading" = "正在載入成績...";
+"grade.emptyTitle" = "暫無成績資料";
+"grade.emptyMsg" = "請稍後重試";
+"grade.title" = "我的成績單";
+"grade.academicYear" = "學年";
+"grade.semester" = "學期";
+"grade.gpa" = "績點";
+"grade.courseCount" = "課程數";
+"grade.noGrade" = "目前學期暫無成績";
+"grade.credit" = " 學分";
+
+// MARK: - Evaluate
+"evaluate.title" = "教學評價";
+"evaluate.oneClick" = "一鍵評教";
+"evaluate.description" = "直接提交評教資訊";
+"evaluate.warning" = "注意：評教資訊提交後將不能再次修改，請確認目前學期評教已準備完成。";
+"evaluate.submitting" = "正在提交";
+"evaluate.confirmTitle" = "確認提交評教？";
+"evaluate.confirmSubmit" = "確認提交";
+"evaluate.irreversible" = "該操作不可逆，請確認後再繼續。";
+"evaluate.notice" = "提示";
+"evaluate.understood" = "知道了";
+"graduateExam.totalScore" = "總分：";

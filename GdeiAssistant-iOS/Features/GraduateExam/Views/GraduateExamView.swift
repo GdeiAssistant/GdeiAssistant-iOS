@@ -11,10 +11,10 @@ struct GraduateExamView: View {
     var body: some View {
         List {
             Section {
-                TextField("姓名", text: $viewModel.query.name)
-                TextField("准考证号", text: $viewModel.query.examNumber)
-                TextField("证件号码", text: $viewModel.query.idNumber)
-                Button("查询成绩") {
+                TextField(localizedString("graduateExam.name"), text: $viewModel.query.name)
+                TextField(localizedString("graduateExam.examNumber"), text: $viewModel.query.examNumber)
+                TextField(localizedString("graduateExam.idNumber"), text: $viewModel.query.idNumber)
+                Button(localizedString("graduateExam.query")) {
                     Task { await viewModel.submit() }
                 }
                 .buttonStyle(.borderedProminent)
@@ -25,41 +25,41 @@ struct GraduateExamView: View {
                         .foregroundStyle(DSColor.danger)
                 }
             } header: {
-                Text("查询信息")
+                Text(localizedString("graduateExam.queryInfo"))
             }
 
             if viewModel.isLoading {
                 Section {
-                    DSLoadingView(text: "正在查询考研成绩...")
+                    DSLoadingView(text: localizedString("graduateExam.querying"))
                 }
             } else if let score = viewModel.score {
                 Section {
-                    Text("总分：\(score.totalScore)")
+                    Text("\(localizedString("graduateExam.totalScore"))\(score.totalScore)")
                         .font(.title3.weight(.bold))
                         .foregroundStyle(DSColor.primary)
-                    infoRow("姓名", score.name)
-                    infoRow("报名号", score.signupNumber)
-                    infoRow("准考证号", score.examNumber)
-                    infoRow("思想政治理论", score.politicsScore)
-                    infoRow("外国语", score.foreignLanguageScore)
-                    infoRow("业务课一", score.businessOneScore)
-                    infoRow("业务课二", score.businessTwoScore)
+                    infoRow(localizedString("graduateExam.name"), score.name)
+                    infoRow(localizedString("graduateExam.regNumber"), score.signupNumber)
+                    infoRow(localizedString("graduateExam.examNumber"), score.examNumber)
+                    infoRow(localizedString("graduateExam.politics"), score.politicsScore)
+                    infoRow(localizedString("graduateExam.foreignLang"), score.foreignLanguageScore)
+                    infoRow(localizedString("graduateExam.course1"), score.businessOneScore)
+                    infoRow(localizedString("graduateExam.course2"), score.businessTwoScore)
                 } header: {
-                    Text("查询结果")
+                    Text(localizedString("graduateExam.result"))
                 }
             }
 
             Section {
-                Button("打开研招网备用入口") {
+                Button(localizedString("graduateExam.openAltEntry")) {
                     if let url = URL(string: "https://yz.chsi.com.cn/apply/cjcxa/") {
                         openURL(url)
                     }
                 }
             } header: {
-                Text("备用入口")
+                Text(localizedString("graduateExam.altEntry"))
             }
         }
-        .navigationTitle("考研查询")
+        .navigationTitle(localizedString("graduateExam.title"))
     }
 
     private func infoRow(_ title: String, _ value: String) -> some View {

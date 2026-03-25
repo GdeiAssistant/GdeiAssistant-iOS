@@ -1133,3 +1133,116 @@
 "photograph.descriptionField" = "想说的话（选填）";
 "photograph.submit" = "提交";
 "photograph.submitting" = "提交中...";
+
+// MARK: - Datacenter
+"dataCenter.electricQuery" = "电费查询";
+"dataCenter.yellowPage" = "黄页查询";
+"dataCenter.year" = "年份";
+"dataCenter.name" = "姓名";
+"dataCenter.studentId" = "学号";
+"dataCenter.queryElec" = "查询电费";
+"dataCenter.queryCondition" = "查询条件";
+"dataCenter.queryingElec" = "正在查询电费...";
+"dataCenter.dorm" = "宿舍";
+"dataCenter.occupants" = "入住人数";
+"dataCenter.college" = "学院";
+"dataCenter.usedElec" = "用电数额";
+"dataCenter.freeElec" = "免费电额";
+"dataCenter.chargedElec" = "计费电数";
+"dataCenter.elecPrice" = "电价";
+"dataCenter.totalFee" = "总电费";
+"dataCenter.avgFee" = "平均电费";
+"dataCenter.queryResult" = "查询结果";
+"dataCenter.ypLoading" = "正在加载校园黄页...";
+"dataCenter.department" = "部门单位";
+"dataCenter.campus" = "校区";
+"dataCenter.address" = "地址";
+"dataCenter.phone" = "电话";
+"dataCenter.mainPhone" = "主要电话";
+"dataCenter.backupPhone" = "备用电话";
+"dataCenter.otherContact" = "其他联系方式";
+"dataCenter.ypDetail" = "黄页详情";
+"dataCenter.done" = "完成";
+"dataCenter.call" = "打电话";
+"dataCenter.sms" = "发短信";
+
+// MARK: - Charge
+"charge.alipay" = "支付宝付款";
+
+// MARK: - Graduateexam
+"graduateExam.name" = "姓名";
+"graduateExam.examNumber" = "准考证号";
+"graduateExam.idNumber" = "证件号码";
+"graduateExam.query" = "查询成绩";
+"graduateExam.queryInfo" = "查询信息";
+"graduateExam.querying" = "正在查询考研成绩...";
+"graduateExam.result" = "查询结果";
+"graduateExam.regNumber" = "报名号";
+"graduateExam.politics" = "思想政治理论";
+"graduateExam.foreignLang" = "外国语";
+"graduateExam.course1" = "业务课一";
+"graduateExam.course2" = "业务课二";
+"graduateExam.altEntry" = "备用入口";
+"graduateExam.openAltEntry" = "打开研招网备用入口";
+"graduateExam.title" = "考研查询";
+
+// MARK: - Collection
+"collection.searchPlaceholder" = "搜索馆藏书名、作者";
+"collection.query" = "查询";
+"collection.catalogSearch" = "馆藏检索";
+"collection.myBorrow" = "我的借阅";
+"collection.borrowService" = "借阅服务";
+"collection.searching" = "正在查询馆藏...";
+"collection.noResult" = "暂无检索结果";
+"collection.searchHint" = "输入书名、作者后开始查询";
+"collection.searchResult" = "检索结果";
+"collection.library" = "图书馆";
+"collection.detailLoading" = "正在加载详情...";
+"collection.libPassword" = "图书馆密码";
+"collection.enterPassword" = "请输入图书馆密码";
+"collection.refreshBorrow" = "刷新借阅记录";
+"collection.queryBorrow" = "查询借阅记录";
+"collection.borrowHint" = "我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。";
+"collection.borrowLoading" = "正在加载借阅记录...";
+"collection.notQueried" = "还没有开始查询";
+"collection.borrowEmptyHint" = "输入图书馆密码后即可查看当前借阅记录";
+"collection.noBorrow" = "暂无借阅记录";
+"collection.noBorrowMsg" = "当前没有可展示的借阅记录";
+"collection.renew" = "续借";
+"collection.borrowList" = "借阅列表";
+"collection.notice" = "提示";
+"collection.understood" = "知道了";
+"collection.subjectTheme" = "主题词：";
+"collection.classification" = "分类号：";
+"collection.bookInfo" = "书目信息";
+"collection.callNumber" = "索书号：";
+"collection.distribution" = "馆藏分布";
+"collection.detailTitle" = "馆藏详情";
+"collection.borrowLabel" = "借阅：";
+"collection.returnLabel" = "应还：";
+"collection.renewCount" = "续借：";
+
+// MARK: - Grade
+"grade.loading" = "正在加载成绩...";
+"grade.emptyTitle" = "暂无成绩数据";
+"grade.emptyMsg" = "请稍后重试";
+"grade.title" = "我的成绩单";
+"grade.academicYear" = "学年";
+"grade.semester" = "学期";
+"grade.gpa" = "绩点";
+"grade.courseCount" = "课程数";
+"grade.noGrade" = "当前学期暂无成绩";
+"grade.credit" = " 学分";
+
+// MARK: - Evaluate
+"evaluate.title" = "教学评价";
+"evaluate.oneClick" = "一键评教";
+"evaluate.description" = "直接提交评教信息";
+"evaluate.warning" = "注意：评教信息提交后将不能再次修改，请确认当前学期评教已准备完成。";
+"evaluate.submitting" = "正在提交";
+"evaluate.confirmTitle" = "确认提交评教？";
+"evaluate.confirmSubmit" = "确认提交";
+"evaluate.irreversible" = "该操作不可逆，请确认后再继续。";
+"evaluate.notice" = "提示";
+"evaluate.understood" = "知道了";
+"graduateExam.totalScore" = "总分：";

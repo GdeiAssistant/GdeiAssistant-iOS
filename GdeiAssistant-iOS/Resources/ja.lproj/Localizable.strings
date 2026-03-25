@@ -1128,3 +1128,116 @@
 "photograph.descriptionField" = "キャプション（任意）";
 "photograph.submit" = "投稿";
 "photograph.submitting" = "投稿中...";
+
+// MARK: - Datacenter
+"dataCenter.electricQuery" = "電気料金照会";
+"dataCenter.yellowPage" = "イエローページ";
+"dataCenter.year" = "年度";
+"dataCenter.name" = "氏名";
+"dataCenter.studentId" = "学籍番号";
+"dataCenter.queryElec" = "照会";
+"dataCenter.queryCondition" = "検索条件";
+"dataCenter.queryingElec" = "電気料金を照会中...";
+"dataCenter.dorm" = "寮";
+"dataCenter.occupants" = "入居者数";
+"dataCenter.college" = "学部";
+"dataCenter.usedElec" = "使用量";
+"dataCenter.freeElec" = "無料電力量";
+"dataCenter.chargedElec" = "有料電力量";
+"dataCenter.elecPrice" = "電気単価";
+"dataCenter.totalFee" = "合計電気料金";
+"dataCenter.avgFee" = "平均電気料金";
+"dataCenter.queryResult" = "照会結果";
+"dataCenter.ypLoading" = "イエローページを読み込み中...";
+"dataCenter.department" = "部署";
+"dataCenter.campus" = "キャンパス";
+"dataCenter.address" = "住所";
+"dataCenter.phone" = "電話";
+"dataCenter.mainPhone" = "代表電話";
+"dataCenter.backupPhone" = "予備電話";
+"dataCenter.otherContact" = "その他連絡先";
+"dataCenter.ypDetail" = "詳細";
+"dataCenter.done" = "完了";
+"dataCenter.call" = "電話する";
+"dataCenter.sms" = "SMS送信";
+
+// MARK: - Charge
+"charge.alipay" = "Alipay支払い";
+
+// MARK: - Graduateexam
+"graduateExam.name" = "氏名";
+"graduateExam.examNumber" = "受験番号";
+"graduateExam.idNumber" = "身分証番号";
+"graduateExam.query" = "成績照会";
+"graduateExam.queryInfo" = "照会情報";
+"graduateExam.querying" = "大学院入試成績を照会中...";
+"graduateExam.result" = "照会結果";
+"graduateExam.regNumber" = "登録番号";
+"graduateExam.politics" = "政治理論";
+"graduateExam.foreignLang" = "外国語";
+"graduateExam.course1" = "専門科目1";
+"graduateExam.course2" = "専門科目2";
+"graduateExam.altEntry" = "代替";
+"graduateExam.openAltEntry" = "CHSI代替入口を開く";
+"graduateExam.title" = "大学院入試";
+
+// MARK: - Collection
+"collection.searchPlaceholder" = "書名・著者で検索";
+"collection.query" = "検索";
+"collection.catalogSearch" = "蔵書検索";
+"collection.myBorrow" = "マイ貸出";
+"collection.borrowService" = "貸出サービス";
+"collection.searching" = "蔵書を検索中...";
+"collection.noResult" = "検索結果なし";
+"collection.searchHint" = "書名・著者を入力して検索";
+"collection.searchResult" = "検索結果";
+"collection.library" = "図書館";
+"collection.detailLoading" = "詳細を読み込み中...";
+"collection.libPassword" = "図書館パスワード";
+"collection.enterPassword" = "図書館パスワードを入力";
+"collection.refreshBorrow" = "貸出記録を更新";
+"collection.queryBorrow" = "貸出記録を検索";
+"collection.borrowHint" = "貸出記録の閲覧には図書館パスワードが必要です。";
+"collection.borrowLoading" = "貸出記録を読み込み中...";
+"collection.notQueried" = "まだ検索していません";
+"collection.borrowEmptyHint" = "パスワードを入力して貸出記録を確認";
+"collection.noBorrow" = "貸出記録なし";
+"collection.noBorrowMsg" = "表示する貸出記録がありません";
+"collection.renew" = "延長";
+"collection.borrowList" = "貸出リスト";
+"collection.notice" = "お知らせ";
+"collection.understood" = "了解";
+"collection.subjectTheme" = "主題：";
+"collection.classification" = "分類番号：";
+"collection.bookInfo" = "書誌情報";
+"collection.callNumber" = "請求記号：";
+"collection.distribution" = "所蔵分布";
+"collection.detailTitle" = "蔵書詳細";
+"collection.borrowLabel" = "貸出：";
+"collection.returnLabel" = "返却期限：";
+"collection.renewCount" = "延長：";
+
+// MARK: - Grade
+"grade.loading" = "成績を読み込み中...";
+"grade.emptyTitle" = "成績データなし";
+"grade.emptyMsg" = "後で再試行してください";
+"grade.title" = "成績表";
+"grade.academicYear" = "学年";
+"grade.semester" = "学期";
+"grade.gpa" = "GPA";
+"grade.courseCount" = "科目数";
+"grade.noGrade" = "今学期の成績はありません";
+"grade.credit" = " 単位";
+
+// MARK: - Evaluate
+"evaluate.title" = "授業評価";
+"evaluate.oneClick" = "ワンクリック評価";
+"evaluate.description" = "評価を直接送信";
+"evaluate.warning" = "注意：提出後の修正はできません。準備ができていることを確認してください。";
+"evaluate.submitting" = "送信中";
+"evaluate.confirmTitle" = "評価を送信しますか？";
+"evaluate.confirmSubmit" = "確認";
+"evaluate.irreversible" = "この操作は元に戻せません。";
+"evaluate.notice" = "お知らせ";
+"evaluate.understood" = "了解";
+"graduateExam.totalScore" = "合計：";

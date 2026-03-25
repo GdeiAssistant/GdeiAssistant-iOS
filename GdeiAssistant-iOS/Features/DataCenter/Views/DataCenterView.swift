@@ -8,13 +8,13 @@ struct DataCenterView: View {
             NavigationLink {
                 ElectricityFeesView(viewModel: ElectricityFeesViewModel(repository: container.dataCenterRepository))
             } label: {
-                Label("电费查询", systemImage: "bolt.fill")
+                Label(localizedString("dataCenter.electricQuery"), systemImage: "bolt.fill")
             }
 
             NavigationLink {
                 YellowPageView(viewModel: YellowPageViewModel(repository: container.dataCenterRepository))
             } label: {
-                Label("黄页查询", systemImage: "phone.fill")
+                Label(localizedString("dataCenter.yellowPage"), systemImage: "phone.fill")
             }
         }
         .navigationTitle(AppDestination.dataCenter.title)
@@ -31,16 +31,16 @@ struct ElectricityFeesView: View {
     var body: some View {
         List {
             Section {
-                Picker("年份", selection: $viewModel.query.year) {
+                Picker(localizedString("dataCenter.year"), selection: $viewModel.query.year) {
                     ForEach(viewModel.availableYears, id: \.self) { year in
                         Text("\(year)").tag(year)
                     }
                 }
                 .pickerStyle(.menu)
-                TextField("姓名", text: $viewModel.query.name)
-                TextField("学号", text: $viewModel.query.studentNumber)
+                TextField(localizedString("dataCenter.name"), text: $viewModel.query.name)
+                TextField(localizedString("dataCenter.studentId"), text: $viewModel.query.studentNumber)
                     .keyboardType(.numberPad)
-                Button("查询电费") {
+                Button(localizedString("dataCenter.queryElec")) {
                     Task { await viewModel.submit() }
                 }
                 .buttonStyle(.borderedProminent)
@@ -51,31 +51,31 @@ struct ElectricityFeesView: View {
                         .foregroundStyle(DSColor.danger)
                 }
             } header: {
-                Text("查询条件")
+                Text(localizedString("dataCenter.queryCondition"))
             }
 
             if viewModel.isLoading {
                 Section {
-                    DSLoadingView(text: "正在查询电费...")
+                    DSLoadingView(text: localizedString("dataCenter.queryingElec"))
                 }
             } else if let bill = viewModel.bill {
                 Section {
-                    row("年份", String(bill.year))
-                    row("宿舍", "\(bill.buildingNumber) \(bill.roomNumber)")
-                    row("入住人数", bill.peopleNumber)
-                    row("学院", bill.department)
-                    row("用电数额", bill.usedElectricAmount)
-                    row("免费电额", bill.freeElectricAmount)
-                    row("计费电数", bill.feeBasedElectricAmount)
-                    row("电价", bill.electricPrice)
-                    row("总电费", bill.totalElectricBill)
-                    row("平均电费", bill.averageElectricBill)
+                    row(localizedString("dataCenter.year"), String(bill.year))
+                    row(localizedString("dataCenter.dorm"), "\(bill.buildingNumber) \(bill.roomNumber)")
+                    row(localizedString("dataCenter.occupants"), bill.peopleNumber)
+                    row(localizedString("dataCenter.college"), bill.department)
+                    row(localizedString("dataCenter.usedElec"), bill.usedElectricAmount)
+                    row(localizedString("dataCenter.freeElec"), bill.freeElectricAmount)
+                    row(localizedString("dataCenter.chargedElec"), bill.feeBasedElectricAmount)
+                    row(localizedString("dataCenter.elecPrice"), bill.electricPrice)
+                    row(localizedString("dataCenter.totalFee"), bill.totalElectricBill)
+                    row(localizedString("dataCenter.avgFee"), bill.averageElectricBill)
                 } header: {
-                    Text("查询结果")
+                    Text(localizedString("dataCenter.queryResult"))
                 }
             }
         }
-        .navigationTitle("电费查询")
+        .navigationTitle(localizedString("dataCenter.electricQuery"))
     }
 
     private func row(_ title: String, _ value: String) -> some View {
@@ -100,7 +100,7 @@ struct YellowPageView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.categories.isEmpty {
-                DSLoadingView(text: "正在加载校园黄页...")
+                DSLoadingView(text: localizedString("dataCenter.ypLoading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.categories.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
@@ -144,7 +144,7 @@ struct YellowPageView: View {
                 }
             }
         }
-        .navigationTitle("黄页查询")
+        .navigationTitle(localizedString("dataCenter.yellowPage"))
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -164,28 +164,28 @@ private struct YellowPageEntryDetailView: View {
     var body: some View {
         List {
             Section {
-                infoRow("部门单位", entry.section)
+                infoRow(localizedString("dataCenter.department"), entry.section)
                 if !entry.campus.isEmpty {
-                    infoRow("校区", entry.campus)
+                    infoRow(localizedString("dataCenter.campus"), entry.campus)
                 }
                 if !entry.address.isEmpty {
-                    infoRow("地址", entry.address)
+                    infoRow(localizedString("dataCenter.address"), entry.address)
                 }
             }
 
             if !entry.majorPhone.isEmpty || !entry.minorPhone.isEmpty {
-                Section("电话") {
+                Section(localizedString("dataCenter.phone")) {
                     if !entry.majorPhone.isEmpty {
-                        phoneActionRow(title: "主要电话", value: entry.majorPhone)
+                        phoneActionRow(title: localizedString("dataCenter.mainPhone"), value: entry.majorPhone)
                     }
                     if !entry.minorPhone.isEmpty {
-                        phoneActionRow(title: "备用电话", value: entry.minorPhone)
+                        phoneActionRow(title: localizedString("dataCenter.backupPhone"), value: entry.minorPhone)
                     }
                 }
             }
 
             if !entry.email.isEmpty || !entry.website.isEmpty {
-                Section("其他联系方式") {
+                Section(localizedString("dataCenter.otherContact")) {
                     if !entry.email.isEmpty {
                         Button {
                             if let url = URL(string: "mailto:\(entry.email)") {
@@ -206,10 +206,10 @@ private struct YellowPageEntryDetailView: View {
                 }
             }
         }
-        .navigationTitle("黄页详情")
+        .navigationTitle(localizedString("dataCenter.ypDetail"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("完成") { dismiss() }
+                Button(localizedString("dataCenter.done")) { dismiss() }
             }
         }
     }
@@ -231,13 +231,13 @@ private struct YellowPageEntryDetailView: View {
                 .foregroundStyle(DSColor.title)
 
             HStack(spacing: 10) {
-                Button("打电话") {
+                Button(localizedString("dataCenter.call")) {
                     guard let url = URL(string: "tel:\(sanitizedPhone(value))") else { return }
                     openURL(url)
                 }
                 .buttonStyle(.bordered)
 
-                Button("发短信") {
+                Button(localizedString("dataCenter.sms")) {
                     guard let url = URL(string: "sms:\(sanitizedPhone(value))") else { return }
                     openURL(url)
                 }
