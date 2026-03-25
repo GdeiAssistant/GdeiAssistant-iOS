@@ -14,7 +14,7 @@ struct MarketplaceView: View {
         List {
             Section {
                 HStack {
-                    TextField("搜索二手交易", text: $viewModel.searchQuery)
+                    TextField(localizedString("marketplace.search"), text: $viewModel.searchQuery)
                         .textFieldStyle(.roundedBorder)
                         .onSubmit { Task { await viewModel.search() } }
                     if !viewModel.searchQuery.isEmpty {
@@ -35,7 +35,7 @@ struct MarketplaceView: View {
 
             if viewModel.isLoading && viewModel.items.isEmpty {
                 Section {
-                    DSLoadingView(text: "正在加载二手交易...")
+                    DSLoadingView(text: localizedString("marketplace.loading"))
                 }
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 Section {
@@ -45,7 +45,7 @@ struct MarketplaceView: View {
                 }
             } else if viewModel.items.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "bag", title: "暂无二手交易信息", message: "当前分类下还没有内容")
+                    DSEmptyStateView(icon: "bag", title: localizedString("marketplace.emptyTitle"), message: localizedString("marketplace.emptyMessage"))
                 }
             } else {
                 Section {
@@ -98,11 +98,11 @@ struct MarketplaceView: View {
         .navigationTitle(AppDestination.marketplace.title)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("marketplace.mine")) {
                     MarketplaceProfileView(viewModel: viewModel)
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(localizedString("marketplace.publish")) {
                     PublishMarketplaceView(
                         listViewModel: viewModel,
                         publishViewModel: container.makePublishMarketplaceViewModel()
@@ -118,7 +118,7 @@ struct MarketplaceView: View {
     private var typeSelector: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                filterChip(title: "全部", isSelected: viewModel.selectedTypeID == nil) {
+                filterChip(title: localizedString("marketplace.all"), isSelected: viewModel.selectedTypeID == nil) {
                     Task {
                         viewModel.selectedTypeID = nil
                         await viewModel.refresh()
@@ -165,7 +165,7 @@ private struct MarketplaceProfileView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载个人中心...")
+                DSLoadingView(text: localizedString("marketplace.profileLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadData() }
@@ -188,7 +188,7 @@ private struct MarketplaceProfileView: View {
                 }
             }
         }
-        .navigationTitle("个人中心")
+        .navigationTitle(localizedString("marketplace.profileCenter"))
         .sheet(item: $editingDetail) { detail in
             NavigationStack {
                 EditMarketplaceView(
@@ -199,7 +199,7 @@ private struct MarketplaceProfileView: View {
                 }
             }
         }
-        .confirmationDialog("确认更新商品状态？", isPresented: Binding(
+        .confirmationDialog(localizedString("marketplace.confirmUpdateState"), isPresented: Binding(
             get: { pendingStateChange != nil },
             set: { if !$0 { pendingStateChange = nil } }
         )) {
@@ -208,7 +208,7 @@ private struct MarketplaceProfileView: View {
                     Task { await updateState(pendingStateChange) }
                 }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
         .task {
             await loadData()
@@ -257,7 +257,7 @@ private struct MarketplaceProfileView: View {
                 editingDetail = detail
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.detailLoadFailed")
         }
     }
 
@@ -268,7 +268,7 @@ private struct MarketplaceProfileView: View {
             actionMessage = context.successMessage
             await loadData()
         } catch {
-            actionMessage = (error as? LocalizedError)?.errorDescription ?? "操作失败"
+            actionMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.actionFailed")
         }
     }
 
@@ -280,7 +280,7 @@ private struct MarketplaceProfileView: View {
         do {
             summary = try await viewModel.fetchMySummary()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "个人中心加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.profileLoadFailed")
         }
     }
 }
@@ -406,33 +406,33 @@ private enum MarketplaceProfileTab: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .doing:
-            return "正在出售"
+            return localizedString("marketplace.tabSelling")
         case .sold:
-            return "已售出"
+            return localizedString("marketplace.tabSold")
         case .off:
-            return "已下架"
+            return localizedString("marketplace.tabOff")
         }
     }
 
     var emptyTitle: String {
         switch self {
         case .doing:
-            return "暂无正在出售的商品"
+            return localizedString("marketplace.emptySelling")
         case .sold:
-            return "暂无已售出的商品"
+            return localizedString("marketplace.emptySold")
         case .off:
-            return "暂无已下架的商品"
+            return localizedString("marketplace.emptyOff")
         }
     }
 
     var emptyMessage: String {
         switch self {
         case .doing:
-            return "去发布一件想出手的闲置"
+            return localizedString("marketplace.emptySellMsg")
         case .sold:
-            return "已完成交易的商品会出现在这里"
+            return localizedString("marketplace.emptySoldMsg")
         case .off:
-            return "暂时没有下架中的商品"
+            return localizedString("marketplace.emptyOffMsg")
         }
     }
 }
@@ -503,13 +503,13 @@ private enum MarketplaceProfileAction: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .edit:
-            return "编辑"
+            return localizedString("marketplace.edit")
         case .offShelf:
-            return "下架"
+            return localizedString("marketplace.offShelf")
         case .sold:
-            return "确认售出"
+            return localizedString("marketplace.confirmSold")
         case .putBack:
-            return "上架"
+            return localizedString("marketplace.putBack")
         }
     }
 
@@ -531,13 +531,13 @@ private struct MarketplaceStateChangeContext: Identifiable {
     var buttonTitle: String {
         switch state {
         case .offShelf:
-            return "确认下架"
+            return localizedString("marketplace.confirmOff")
         case .sold:
-            return "确认售出"
+            return localizedString("marketplace.confirmSold")
         case .selling:
-            return "确认上架"
+            return localizedString("marketplace.confirmSelling")
         case .systemDeleted:
-            return "确认"
+            return localizedString("marketplace.confirm")
         }
     }
 
@@ -548,13 +548,13 @@ private struct MarketplaceStateChangeContext: Identifiable {
     var successMessage: String {
         switch state {
         case .offShelf:
-            return "商品已下架"
+            return localizedString("marketplace.stateOffShelf")
         case .sold:
-            return "商品已标记为售出"
+            return localizedString("marketplace.stateSold")
         case .selling:
-            return "商品已重新上架"
+            return localizedString("marketplace.stateRelist")
         case .systemDeleted:
-            return "状态已更新"
+            return localizedString("marketplace.stateUpdated")
         }
     }
 }
@@ -576,7 +576,7 @@ struct MarketplaceDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载商品详情...")
+                DSLoadingView(text: localizedString("marketplace.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -626,11 +626,11 @@ struct MarketplaceDetailView: View {
                                 }
                             }
 
-                            infoRow(title: "卖家", value: detail.item.sellerName)
-                            infoRow(title: "状态", value: detail.item.state.title)
-                            infoRow(title: "分类", value: detail.condition)
-                            infoRow(title: "地点", value: detail.item.location)
-                            infoRow(title: "联系说明", value: detail.contactHint)
+                            infoRow(title: localizedString("marketplace.seller"), value: detail.item.sellerName)
+                            infoRow(title: localizedString("marketplace.status"), value: detail.item.state.title)
+                            infoRow(title: localizedString("marketplace.category"), value: detail.condition)
+                            infoRow(title: localizedString("marketplace.location"), value: detail.item.location)
+                            infoRow(title: localizedString("marketplace.contactHint"), value: detail.contactHint)
                         }
 
                         if isOwnedByCurrentUser(detail) {
@@ -642,24 +642,24 @@ struct MarketplaceDetailView: View {
                                 }
 
                                 if detail.item.state == .selling {
-                                    Button("编辑商品信息") {
+                                    Button(localizedString("marketplace.editItemInfo")) {
                                         editingDetail = detail
                                     }
                                     .buttonStyle(.bordered)
 
-                                    Button(isSubmitting ? "处理中..." : "标记已出售") {
+                                    Button(isSubmitting ? localizedString("marketplace.processing") : localizedString("marketplace.markSold")) {
                                         confirmState = .sold
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .disabled(isSubmitting)
 
-                                    Button("下架商品", role: .destructive) {
+                                    Button(localizedString("marketplace.removeItem"), role: .destructive) {
                                         confirmState = .offShelf
                                     }
                                     .buttonStyle(.bordered)
                                     .disabled(isSubmitting)
                                 } else {
-                                    Text("当前商品已不在大厅展示。若需重新发布，请按 Web 现有能力走发布流程。")
+                                    Text(localizedString("marketplace.itemNotInHall"))
                                         .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
@@ -671,8 +671,8 @@ struct MarketplaceDetailView: View {
                 .background(DSColor.background)
             }
         }
-        .navigationTitle("商品详情")
-        .confirmationDialog("确认更新商品状态？", isPresented: Binding(
+        .navigationTitle(localizedString("marketplace.detailTitle"))
+        .confirmationDialog(localizedString("marketplace.confirmUpdateState"), isPresented: Binding(
             get: { confirmState != nil },
             set: { if !$0 { confirmState = nil } }
         )) {
@@ -681,7 +681,7 @@ struct MarketplaceDetailView: View {
                     Task { await updateState(confirmState) }
                 }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
         .sheet(item: $editingDetail) { detail in
             NavigationStack {
@@ -708,7 +708,7 @@ struct MarketplaceDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(itemID: itemID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "商品详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.detailLoadFailed")
         }
     }
 
@@ -726,10 +726,10 @@ struct MarketplaceDetailView: View {
 
         do {
             try await viewModel.updateState(itemID: itemID, state: state)
-            resultMessage = "商品状态已更新"
+            resultMessage = localizedString("marketplace.itemStatusUpdated")
             dismiss()
         } catch {
-            resultMessage = (error as? LocalizedError)?.errorDescription ?? "状态更新失败"
+            resultMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.updateFailed")
         }
     }
 
@@ -797,7 +797,7 @@ struct PublishMarketplaceView: View {
                                 VStack(spacing: 8) {
                                     Image(systemName: "photo.badge.plus")
                                         .font(.title3)
-                                    Text("添加图片")
+                                    Text(localizedString("marketplace.addImage"))
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
@@ -809,40 +809,40 @@ struct PublishMarketplaceView: View {
                     .padding(.vertical, 4)
                 }
 
-                Text("请至少上传 1 张图片，最多 4 张。")
+                Text(localizedString("marketplace.imageHint"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("商品图片")
+                Text(localizedString("marketplace.itemImages"))
             }
 
             Section {
-                TextField("商品名称", text: $publishViewModel.title)
-                TextField("价格", text: $publishViewModel.priceText)
+                TextField(localizedString("marketplace.itemName"), text: $publishViewModel.title)
+                TextField(localizedString("marketplace.price"), text: $publishViewModel.priceText)
                     .keyboardType(.decimalPad)
-                Picker("商品分类", selection: $publishViewModel.selectedTypeID) {
+                Picker(localizedString("marketplace.itemCategory"), selection: $publishViewModel.selectedTypeID) {
                     ForEach(Array(publishViewModel.typeOptions.enumerated()), id: \.offset) { index, title in
                         Text(title).tag(index)
                     }
                 }
-                TextField("商品描述（100字内）", text: $publishViewModel.descriptionText, axis: .vertical)
+                TextField(localizedString("marketplace.itemDescription"), text: $publishViewModel.descriptionText, axis: .vertical)
                     .lineLimit(4...6)
-                TextField("交易地点", text: $publishViewModel.location)
-                TextField("附加标签，空格分隔", text: $publishViewModel.tagsText)
+                TextField(localizedString("marketplace.tradeLocation"), text: $publishViewModel.location)
+                TextField(localizedString("marketplace.tags"), text: $publishViewModel.tagsText)
             } header: {
-                Text("商品信息")
+                Text(localizedString("marketplace.itemInfo"))
             }
 
             Section {
-                TextField("QQ 号", text: $publishViewModel.qq)
+                TextField(localizedString("marketplace.qq"), text: $publishViewModel.qq)
                     .keyboardType(.numberPad)
-                TextField("手机号（选填）", text: $publishViewModel.phone)
+                TextField(localizedString("marketplace.phoneOptional"), text: $publishViewModel.phone)
                     .keyboardType(.numberPad)
-                Text("后端真实接口要求至少提供 QQ，手机号为补充联系方式。")
+                Text(localizedString("marketplace.qqHint"))
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("联系方式")
+                Text(localizedString("marketplace.contact"))
             }
 
             if let failureMessage = publishViewModel.failureMessage {
@@ -853,7 +853,7 @@ struct PublishMarketplaceView: View {
                 }
             }
         }
-        .navigationTitle("发布商品")
+        .navigationTitle(localizedString("marketplace.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -862,7 +862,7 @@ struct PublishMarketplaceView: View {
                     if publishViewModel.submitState.isSubmitting {
                         ProgressView()
                     } else {
-                        Text("提交")
+                        Text(localizedString("marketplace.submit"))
                     }
                 }
                 .disabled(publishViewModel.submitState.isSubmitting || !publishViewModel.isFormValid)
@@ -871,7 +871,7 @@ struct PublishMarketplaceView: View {
         .onChange(of: selectedPhotoItems) { _, newItems in
             Task { await loadSelectedImages(from: newItems) }
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("marketplace.notice"), isPresented: Binding(
             get: {
                 if case .success = publishViewModel.submitState {
                     return true
@@ -884,7 +884,7 @@ struct PublishMarketplaceView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("marketplace.understood")) {
                 publishViewModel.submitState = .idle
                 dismiss()
             }
@@ -900,9 +900,9 @@ struct PublishMarketplaceView: View {
 
         do {
             try await listViewModel.publish(draft: draft)
-            publishViewModel.submitState = .success("商品已发布，稍后会出现在列表中")
+            publishViewModel.submitState = .success(localizedString("marketplace.publishSuccess"))
         } catch {
-            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.publishFailed"))
         }
     }
 
@@ -967,28 +967,28 @@ private struct EditMarketplaceView: View {
     var body: some View {
         Form {
             Section {
-                TextField("商品名称", text: $viewModel.title)
-                TextField("价格", text: $viewModel.priceText)
+                TextField(localizedString("marketplace.itemName"), text: $viewModel.title)
+                TextField(localizedString("marketplace.price"), text: $viewModel.priceText)
                     .keyboardType(.decimalPad)
-                Picker("商品分类", selection: $viewModel.selectedTypeID) {
+                Picker(localizedString("marketplace.itemCategory"), selection: $viewModel.selectedTypeID) {
                     ForEach(Array(viewModel.typeOptions.enumerated()), id: \.offset) { index, title in
                         Text(title).tag(index)
                     }
                 }
-                TextField("商品描述（100字内）", text: $viewModel.descriptionText, axis: .vertical)
+                TextField(localizedString("marketplace.itemDescription"), text: $viewModel.descriptionText, axis: .vertical)
                     .lineLimit(4...6)
-                TextField("交易地点", text: $viewModel.location)
+                TextField(localizedString("marketplace.tradeLocation"), text: $viewModel.location)
             } header: {
-                Text("商品信息")
+                Text(localizedString("marketplace.itemInfo"))
             }
 
             Section {
-                TextField("QQ 号", text: $viewModel.qq)
+                TextField(localizedString("marketplace.qq"), text: $viewModel.qq)
                     .keyboardType(.numberPad)
-                TextField("手机号（选填）", text: $viewModel.phone)
+                TextField(localizedString("marketplace.phoneOptional"), text: $viewModel.phone)
                     .keyboardType(.numberPad)
             } header: {
-                Text("联系方式")
+                Text(localizedString("marketplace.contact"))
             }
 
             if let failureMessage = viewModel.failureMessage {
@@ -999,15 +999,15 @@ private struct EditMarketplaceView: View {
                 }
             }
         }
-        .navigationTitle("编辑商品")
+        .navigationTitle(localizedString("marketplace.editTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("取消") {
+                Button(localizedString("common.cancel")) {
                     dismiss()
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? "保存中..." : "保存") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("marketplace.saving") : localizedString("marketplace.save")) {
                     Task { await submit() }
                 }
                 .disabled(viewModel.submitState.isSubmitting || !viewModel.isFormValid)
@@ -1021,11 +1021,11 @@ private struct EditMarketplaceView: View {
 
         do {
             try await listViewModel.update(itemID: viewModel.itemID, draft: draft)
-            viewModel.submitState = .success("商品信息已更新")
+            viewModel.submitState = .success(localizedString("marketplace.itemUpdated"))
             await onSaved()
             dismiss()
         } catch {
-            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "保存失败")
+            viewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.saveFailed"))
         }
     }
 }
