@@ -195,6 +195,10 @@ final class AppContainerBootstrapTests: XCTestCase {
                 ["手机号：", "后端详情页未提供可展示联系方式"]
             ),
             (
+                "GdeiAssistant-iOS/Mock/MockSeedData+Marketplace.swift",
+                ["QQ：", "手机号："]
+            ),
+            (
                 "GdeiAssistant-iOS/Features/Profile/Views/SettingsView.swift",
                 ["Copyright © GdeiAssistant 2016-2026"]
             )

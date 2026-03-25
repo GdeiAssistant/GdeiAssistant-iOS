@@ -146,11 +146,11 @@ final class EditMarketplaceViewModel: ObservableObject {
         location = detail.item.location
         qq = Self.extractContactValue(
             from: detail.contactHint,
-            prefixes: [localizedString("marketplace.contactQQPrefix"), "QQ：", "QQ: "]
+            prefixes: Self.contactPrefixes(for: "marketplace.contactQQPrefix")
         ) ?? ""
         phone = Self.extractContactValue(
             from: detail.contactHint,
-            prefixes: [localizedString("marketplace.contactPhonePrefix"), "手机号：", "Phone: "]
+            prefixes: Self.contactPrefixes(for: "marketplace.contactPhonePrefix")
         ) ?? ""
     }
 
@@ -246,5 +246,16 @@ final class EditMarketplaceViewModel: ObservableObject {
                     }
             }
             .first
+    }
+
+    private static func contactPrefixes(for key: String) -> [String] {
+        var seen = Set<String>()
+        return [
+            localizedString(key),
+            localizedString(key, locale: "zh-CN"),
+            localizedString(key, locale: "en")
+        ].filter { prefix in
+            seen.insert(prefix).inserted
+        }
     }
 }
