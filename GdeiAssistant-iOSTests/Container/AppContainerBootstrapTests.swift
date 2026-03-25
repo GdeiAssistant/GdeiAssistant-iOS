@@ -216,6 +216,57 @@ final class AppContainerBootstrapTests: XCTestCase {
         }
     }
 
+    func testAppRootDoesNotResetViewIdentityWhenLocaleChanges() throws {
+        let appRootSource = try sourceFileContents(
+            at: "GdeiAssistant-iOS/App/AppRootView.swift"
+        )
+
+        XCTAssertFalse(
+            appRootSource.contains(".id(preferences.selectedLocale)"),
+            "语言切换不应通过重建 AppRootView 的 identity 来刷新文案，否则当前导航栈会被清空。"
+        )
+    }
+
+    func testAppearanceThemeRowsDoNotUseDynamicLocalizedStringKeys() throws {
+        let appearanceSource = try sourceFileContents(
+            at: "GdeiAssistant-iOS/Features/Profile/Views/AppearanceView.swift"
+        )
+
+        XCTAssertFalse(
+            appearanceSource.contains("Text(LocalizedStringKey(\"appearance.theme.\\(mode.rawValue)\"))"),
+            "主题文案不应依赖运行时拼接的 LocalizedStringKey，应走稳定的本地化查找。"
+        )
+    }
+
+    func testBindPhoneUsesDedicatedAreaCodeSelectorInsteadOfInlinePicker() throws {
+        let bindPhoneSource = try sourceFileContents(
+            at: "GdeiAssistant-iOS/Features/Profile/Views/BindPhoneView.swift"
+        )
+
+        XCTAssertFalse(
+            bindPhoneSource.contains("Picker(localizedString(\"bindPhone.intlCode\")"),
+            "绑定手机页不应继续使用受限的原生 Picker 展示区号，应切到完整区号选择交互。"
+        )
+    }
+
+    func testDownloadDataViewDoesNotRenderCachedLocalizedMessageField() throws {
+        let downloadDataViewSource = try sourceFileContents(
+            at: "GdeiAssistant-iOS/Features/Profile/Views/DownloadDataView.swift"
+        )
+        let supportViewModelSource = try sourceFileContents(
+            at: "GdeiAssistant-iOS/Features/Profile/ViewModels/SupportCenterViewModels.swift"
+        )
+
+        XCTAssertFalse(
+            downloadDataViewSource.contains("Text(viewModel.status.message)"),
+            "下载个人数据页不应直接渲染缓存字符串，否则切语言后会残留旧语言文案。"
+        )
+        XCTAssertFalse(
+            supportViewModelSource.contains("message: localizedString(\"downloadData.description\")"),
+            "下载个人数据默认状态不应把说明文案提前固化在 ViewModel 里。"
+        )
+    }
+
     private func sourceFileContents(at relativePath: String) throws -> String {
         let url = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

@@ -64,10 +64,57 @@ struct PhoneAttribution: Identifiable, Hashable {
     let code: Int
     let flag: String
     let name: String
+    let regionCode: String?
 
-    var displayText: String {
+    nonisolated init(id: Int, code: Int, flag: String, name: String, regionCode: String? = nil) {
+        self.id = id
+        self.code = code
+        self.flag = flag
+        self.name = name
+        self.regionCode = regionCode ?? Self.regionCode(from: flag)
+    }
+
+    nonisolated func displayName(locale: String? = nil) -> String {
+        let localeIdentifier = locale ?? UserPreferences.currentLocale
+        if let regionCode,
+           let localizedName = Locale(identifier: localeIdentifier).localizedString(forRegionCode: regionCode),
+           !localizedName.isEmpty {
+            return localizedName
+        }
+        return name.isEmpty ? "+\(code)" : name
+    }
+
+    nonisolated var displayText: String {
+        displayText(locale: UserPreferences.currentLocale)
+    }
+
+    nonisolated func displayText(locale: String? = nil) -> String {
         let prefix = flag.isEmpty ? "" : "\(flag) "
-        return "\(prefix)\(name) (+\(code))"
+        return "\(prefix)\(displayName(locale: locale)) (+\(code))"
+    }
+
+    nonisolated func merged(with overlay: PhoneAttribution) -> PhoneAttribution {
+        PhoneAttribution(
+            id: code,
+            code: code,
+            flag: overlay.flag.isEmpty ? flag : overlay.flag,
+            name: overlay.name.isEmpty ? name : overlay.name,
+            regionCode: overlay.regionCode ?? regionCode
+        )
+    }
+
+    private nonisolated static func regionCode(from flag: String) -> String? {
+        let scalars = Array(flag.unicodeScalars)
+        guard scalars.count == 2 else { return nil }
+        var result = ""
+        for scalar in scalars {
+            let value = scalar.value
+            guard let asciiScalar = UnicodeScalar(value - 127397) else {
+                return nil
+            }
+            result.unicodeScalars.append(asciiScalar)
+        }
+        return result
     }
 }
 
@@ -85,8 +132,18 @@ struct FeedbackSubmission: Hashable {
 
 struct DownloadDataStatus: Hashable {
     let state: DownloadExportState
-    let message: String
     let downloadURL: String?
+
+    nonisolated var localizedMessage: String {
+        switch state {
+        case .idle:
+            return localizedString("downloadData.description")
+        case .exporting:
+            return localizedString("downloadData.exportingMessage")
+        case .exported:
+            return localizedString("downloadData.exportedMessage")
+        }
+    }
 }
 
 struct AvatarState: Hashable {

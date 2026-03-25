@@ -21,7 +21,6 @@ final class MockAccountCenterRepository: AccountCenterRepository {
     )
     private var downloadState = DownloadDataStatus(
         state: .idle,
-        message: localizedString("downloadData.description"),
         downloadURL: nil
     )
     private var avatarState = AvatarState(url: MockFactory.makeUserProfile().avatarURL)
@@ -152,7 +151,6 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         try await Task.sleep(nanoseconds: 250_000_000)
         downloadState = DownloadDataStatus(
             state: .exporting,
-            message: localizedString("downloadData.exportingMessage"),
             downloadURL: nil
         )
         return downloadState
@@ -162,7 +160,6 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         try await Task.sleep(nanoseconds: 200_000_000)
         downloadState = DownloadDataStatus(
             state: .exported,
-            message: localizedString("downloadData.exportedMessage"),
             downloadURL: "https://mock.gdeiassistant.cn/export/userdata-demo.zip"
         )
         return downloadState

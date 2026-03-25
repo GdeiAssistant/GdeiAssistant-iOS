@@ -15,7 +15,7 @@ struct DownloadDataView: View {
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
-                    Text(viewModel.status.message)
+                    Text(viewModel.status.localizedMessage)
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
                         .lineSpacing(4)

@@ -34,7 +34,7 @@ struct AppearanceView: View {
                         preferences.selectedTheme = mode
                     } label: {
                         HStack {
-                            Text(LocalizedStringKey("appearance.theme.\(mode.rawValue)"))
+                            Text(localizedString(mode.localizationKey))
                                 .foregroundStyle(DSColor.title)
                             Spacer()
                             if preferences.selectedTheme == mode {
@@ -108,5 +108,18 @@ struct AppearanceView: View {
         }
         .listStyle(.insetGrouped)
         .navigationTitle(localizedString("appearance.title"))
+    }
+}
+
+private extension UserPreferences.ThemeMode {
+    var localizationKey: String {
+        switch self {
+        case .system:
+            return "appearance.theme.system"
+        case .light:
+            return "appearance.theme.light"
+        case .dark:
+            return "appearance.theme.dark"
+        }
     }
 }

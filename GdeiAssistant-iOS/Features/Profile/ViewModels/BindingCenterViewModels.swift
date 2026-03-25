@@ -28,15 +28,31 @@ final class BindPhoneViewModel: ObservableObject {
         countdown == 0 && !isSendingCode
     }
 
+    var selectedAttribution: PhoneAttribution? {
+        attributions.first(where: { $0.code == selectedAreaCode })
+    }
+
     func load() async {
         isLoading = true
         defer { isLoading = false }
+
+        let bundledAttributions = PhoneAttributionCatalog.load()
+        async let remoteAttributionTask = repository.fetchPhoneAttributions()
+        async let statusTask = repository.fetchPhoneStatus()
+
         do {
-            async let attributionTask = repository.fetchPhoneAttributions()
-            async let statusTask = repository.fetchPhoneStatus()
-            attributions = try await attributionTask
             status = try await statusTask
-            selectedAreaCode = status.countryCode ?? attributions.first?.code ?? 86
+            let remoteAttributions = (try? await remoteAttributionTask) ?? []
+            let mergedAttributions = PhoneAttributionCatalog.mergeAndSort(
+                primary: bundledAttributions,
+                overlay: remoteAttributions
+            )
+            attributions = mergedAttributions.isEmpty ? remoteAttributions : mergedAttributions
+            selectedAreaCode =
+                status.countryCode
+                ?? attributions.first(where: { $0.code == 86 })?.code
+                ?? attributions.first?.code
+                ?? 86
         } catch {
             submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindPhone.loadFailed"))
         }

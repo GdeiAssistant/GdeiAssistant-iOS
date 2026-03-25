@@ -51,7 +51,7 @@ final class FeedbackViewModel: ObservableObject {
 
 @MainActor
 final class DownloadDataViewModel: ObservableObject {
-    @Published var status = DownloadDataStatus(state: .idle, message: localizedString("downloadData.description"), downloadURL: nil)
+    @Published var status = DownloadDataStatus(state: .idle, downloadURL: nil)
     @Published var isLoading = false
     @Published var errorMessage: String?
 

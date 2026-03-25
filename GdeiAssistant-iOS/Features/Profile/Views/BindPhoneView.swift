@@ -3,6 +3,7 @@ import SwiftUI
 struct BindPhoneView: View {
     @StateObject private var viewModel: BindPhoneViewModel
     @State private var showUnbindConfirmation = false
+    @State private var showAreaCodePicker = false
 
     init(viewModel: BindPhoneViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -26,11 +27,30 @@ struct BindPhoneView: View {
                 }
 
                 DSCard {
-                    Picker(localizedString("bindPhone.intlCode"), selection: $viewModel.selectedAreaCode) {
-                        ForEach(viewModel.attributions) { item in
-                            Text(item.displayText).tag(item.code)
+                    Button {
+                        showAreaCodePicker = true
+                    } label: {
+                        HStack(spacing: 12) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(localizedString("bindPhone.intlCode"))
+                                    .font(.footnote)
+                                    .foregroundStyle(DSColor.subtitle)
+
+                                Text(selectedAreaCodeText)
+                                    .foregroundStyle(DSColor.title)
+                                    .multilineTextAlignment(.leading)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.footnote)
+                                .foregroundStyle(DSColor.subtitle)
                         }
                     }
+                    .buttonStyle(.plain)
+
+                    Divider()
 
                     DSInputField(title: localizedString("bindPhone.phone"), placeholder: localizedString("bindPhone.phonePlaceholder"), text: $viewModel.phone, keyboardType: .numberPad)
                     DSInputField(title: localizedString("bindPhone.code"), placeholder: localizedString("bindPhone.codePlaceholder"), text: $viewModel.randomCode, keyboardType: .numberPad)
@@ -73,6 +93,16 @@ struct BindPhoneView: View {
         .task {
             await viewModel.load()
         }
+        .sheet(isPresented: $showAreaCodePicker) {
+            NavigationStack {
+                BindPhoneAreaCodePickerView(
+                    attributions: viewModel.attributions,
+                    selectedAreaCode: viewModel.selectedAreaCode
+                ) { selectedCode in
+                    viewModel.selectedAreaCode = selectedCode
+                }
+            }
+        }
         .confirmationDialog(localizedString("bindPhone.confirmUnbind"), isPresented: $showUnbindConfirmation, titleVisibility: .visible) {
             Button(localizedString("bindPhone.confirmUnbindBtn"), role: .destructive) {
                 Task { await viewModel.unbind() }
@@ -90,6 +120,11 @@ struct BindPhoneView: View {
         } message: {
             Text(viewModel.submitState.message ?? "")
         }
+    }
+
+    private var selectedAreaCodeText: String {
+        viewModel.selectedAttribution?.displayText
+            ?? "+\(viewModel.selectedAreaCode)"
     }
 
     private func infoRow(_ title: String, _ value: String) -> some View {
@@ -112,5 +147,68 @@ struct BindPhoneView: View {
             locale: Locale(identifier: UserPreferences.currentLocale),
             viewModel.countdown
         )
+    }
+}
+
+private struct BindPhoneAreaCodePickerView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let attributions: [PhoneAttribution]
+    let selectedAreaCode: Int
+    let onSelect: (Int) -> Void
+
+    @State private var searchText = ""
+
+    var body: some View {
+        List(filteredAttributions) { attribution in
+            Button {
+                onSelect(attribution.code)
+                dismiss()
+            } label: {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(attribution.displayName())
+                            .foregroundStyle(DSColor.title)
+                        Text("+\(attribution.code)")
+                            .font(.footnote)
+                            .foregroundStyle(DSColor.subtitle)
+                    }
+
+                    Spacer()
+
+                    Text(attribution.flag)
+                        .font(.title3)
+
+                    if attribution.code == selectedAreaCode {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(DSColor.primary)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+        }
+        .searchable(text: $searchText)
+        .navigationTitle(localizedString("bindPhone.intlCode"))
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button(localizedString("common.cancel")) {
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private var filteredAttributions: [PhoneAttribution] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return attributions }
+
+        let normalizedQuery = query.lowercased()
+        let codeQuery = normalizedQuery.replacingOccurrences(of: "+", with: "")
+
+        return attributions.filter { attribution in
+            attribution.displayName().lowercased().contains(normalizedQuery)
+                || attribution.name.lowercased().contains(normalizedQuery)
+                || String(attribution.code).contains(codeQuery)
+        }
     }
 }
