@@ -168,6 +168,10 @@ final class ProfileViewModel: ObservableObject {
 
     @discardableResult
     func saveProfile() async -> Bool {
+        guard !isSaving else {
+            return false
+        }
+
         guard isFormValid else {
             saveErrorMessage = localizedString("profile.nicknameEmpty")
             return false

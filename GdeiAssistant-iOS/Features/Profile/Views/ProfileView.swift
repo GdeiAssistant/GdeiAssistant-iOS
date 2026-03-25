@@ -48,10 +48,10 @@ struct ProfileView: View {
                         switch pickerField {
                         case .location:
                             viewModel.updateLocationSelection(selection)
-                            Task { await viewModel.saveProfile() }
+                            return await viewModel.saveProfile()
                         case .hometown:
                             viewModel.updateHometownSelection(selection)
-                            Task { await viewModel.saveProfile() }
+                            return await viewModel.saveProfile()
                         }
                     }
                 )
@@ -500,12 +500,14 @@ private enum ProfileLocationPickerField: String, Identifiable {
 private struct ProfileLocationPickerSheet: View {
     let title: String
     let regions: [ProfileLocationRegion]
-    let onConfirm: (ProfileLocationSelection) -> Void
+    let onConfirm: (ProfileLocationSelection) async -> Bool
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedRegionCode = ""
     @State private var selectedStateCode = ""
     @State private var selectedCityCode = ""
+    @State private var isSaving = false
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -535,6 +537,14 @@ private struct ProfileLocationPickerSheet: View {
                                 }
                             }
                         }
+
+                        if let errorMessage {
+                            Section {
+                                Text(errorMessage)
+                                    .foregroundStyle(DSColor.danger)
+                                    .font(.footnote)
+                            }
+                        }
                     }
                 }
             }
@@ -543,14 +553,14 @@ private struct ProfileLocationPickerSheet: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(localizedString("common.cancel")) { dismiss() }
+                        .disabled(isSaving)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(localizedString("profile.confirm")) {
+                    Button(isSaving ? localizedString("common.saving") : localizedString("profile.confirm")) {
                         guard let selection = currentSelection else { return }
-                        onConfirm(selection)
-                        dismiss()
+                        Task { await confirm(selection) }
                     }
-                    .disabled(currentSelection == nil)
+                    .disabled(currentSelection == nil || isSaving)
                     .fontWeight(.semibold)
                 }
             }
@@ -611,6 +621,19 @@ private struct ProfileLocationPickerSheet: View {
     private func syncCityIfNeeded() {
         if !currentCities.contains(where: { $0.code == selectedCityCode }) {
             selectedCityCode = currentCities.first?.code ?? ""
+        }
+    }
+
+    private func confirm(_ selection: ProfileLocationSelection) async {
+        isSaving = true
+        errorMessage = nil
+        let didSave = await onConfirm(selection)
+        isSaving = false
+
+        if didSave {
+            dismiss()
+        } else {
+            errorMessage = localizedString("common.saveFailed")
         }
     }
 }
