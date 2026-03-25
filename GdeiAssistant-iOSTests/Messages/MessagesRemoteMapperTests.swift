@@ -20,8 +20,8 @@ final class MessagesRemoteMapperTests: XCTestCase {
 
         XCTAssertEqual(mapped.category, .comment)
         XCTAssertEqual(mapped.module, "dating")
-        XCTAssertEqual(mapped.title, "卖室友")
-        XCTAssertEqual(mapped.message, "你有一条新的互动消息")
+        XCTAssertEqual(mapped.title, localizedString("feature.dating"))
+        XCTAssertEqual(mapped.message, localizedString("messages.mapper.newInteractionMessage"))
         XCTAssertEqual(mapped.createdAt, "2024-01-01 08:00")
         XCTAssertEqual(mapped.destination, .datingCenter)
         XCTAssertEqual(mapped.targetType, "sent")
@@ -42,9 +42,9 @@ final class MessagesRemoteMapperTests: XCTestCase {
 
         XCTAssertEqual(mapped.count, 1)
         XCTAssertEqual(mapped[0].category, .system)
-        XCTAssertEqual(mapped[0].title, "系统公告")
-        XCTAssertEqual(mapped[0].message, "暂无公告内容")
-        XCTAssertEqual(mapped[0].createdAt, "刚刚")
+        XCTAssertEqual(mapped[0].title, localizedString("messages.mapper.announcementTitle"))
+        XCTAssertEqual(mapped[0].message, localizedString("messages.mapper.announcementEmptyContent"))
+        XCTAssertEqual(mapped[0].createdAt, localizedString("common.justNow"))
         XCTAssertNil(mapped[0].destination)
     }
 }

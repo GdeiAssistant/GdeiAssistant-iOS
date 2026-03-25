@@ -13,8 +13,8 @@ enum MessagesRemoteMapper {
                 category: notificationCategory(item.type),
                 module: module,
                 title: RemoteMapperSupport.firstNonEmpty(item.title, interactionTitle(module: module)),
-                message: RemoteMapperSupport.firstNonEmpty(item.content, "你有一条新的互动消息"),
-                createdAt: RemoteMapperSupport.dateText(item.createdAt, fallback: "刚刚"),
+                message: RemoteMapperSupport.firstNonEmpty(item.content, localizedString("messages.mapper.newInteractionMessage")),
+                createdAt: RemoteMapperSupport.dateText(item.createdAt, fallback: localizedString("common.justNow")),
                 isRead: item.isRead ?? false,
                 destination: interactionDestination(module: module),
                 targetType: normalizedKeyword(item.targetType),
@@ -27,9 +27,9 @@ enum MessagesRemoteMapper {
     nonisolated static func mapAnnouncementDetail(_ dto: AnnouncementRemoteDTO) -> AnnouncementDetailItem {
         AnnouncementDetailItem(
             id: RemoteMapperSupport.firstNonEmpty(dto.id, UUID().uuidString),
-            title: RemoteMapperSupport.firstNonEmpty(dto.title, "系统公告"),
-            content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无公告内容"),
-            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚")
+            title: RemoteMapperSupport.firstNonEmpty(dto.title, localizedString("messages.mapper.announcementTitle")),
+            content: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("messages.mapper.announcementEmptyContent")),
+            createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("common.justNow"))
         )
     }
 
@@ -44,9 +44,9 @@ enum MessagesRemoteMapper {
             id: RemoteMapperSupport.firstNonEmpty(announcement.id, UUID().uuidString),
             category: .system,
             module: nil,
-            title: RemoteMapperSupport.firstNonEmpty(announcement.title, "系统公告"),
-            message: RemoteMapperSupport.firstNonEmpty(announcement.content, "暂无公告内容"),
-            createdAt: RemoteMapperSupport.dateText(announcement.publishTime, fallback: "刚刚"),
+            title: RemoteMapperSupport.firstNonEmpty(announcement.title, localizedString("messages.mapper.announcementTitle")),
+            message: RemoteMapperSupport.firstNonEmpty(announcement.content, localizedString("messages.mapper.announcementEmptyContent")),
+            createdAt: RemoteMapperSupport.dateText(announcement.publishTime, fallback: localizedString("common.justNow")),
             isRead: false,
             destination: targetID == nil ? nil : .announcement,
             targetType: nil,
@@ -69,23 +69,23 @@ enum MessagesRemoteMapper {
     nonisolated private static func interactionTitle(module: String?) -> String {
         switch module {
         case "secret":
-            return "树洞互动"
+            return localizedString("messages.mapper.secretInteraction")
         case "express":
-            return "表白墙互动"
+            return localizedString("messages.mapper.expressInteraction")
         case "topic":
-            return "话题互动"
+            return localizedString("messages.mapper.topicInteraction")
         case "photograph":
-            return "拍好校园互动"
+            return localizedString("messages.mapper.photographInteraction")
         case "delivery":
-            return "全民快递提醒"
+            return localizedString("messages.mapper.deliveryInteraction")
         case "marketplace":
-            return "二手交易提醒"
+            return localizedString("messages.mapper.marketplaceInteraction")
         case "lostandfound":
-            return "失物招领提醒"
+            return localizedString("messages.mapper.lostFoundInteraction")
         case "dating":
-            return "卖室友"
+            return localizedString("feature.dating")
         default:
-            return "互动消息"
+            return localizedString("messages.interactionTitle")
         }
     }
 

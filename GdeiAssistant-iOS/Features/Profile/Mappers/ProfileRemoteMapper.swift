@@ -32,22 +32,27 @@ enum ProfileRemoteMapper {
     static func mapProfile(_ dto: UserProfileDTO) -> UserProfile {
         let locationSelection = selection(from: dto.location)
         let hometownSelection = selection(from: dto.hometown)
+        let options = ProfileFormSupport.defaultOptions
+        let collegeCode = dto.facultyCode
+        let majorCode = sanitized(dto.majorCode)
+        let collegeLabel = options.faculties.first(where: { $0.code == collegeCode })?.label ?? ""
+        let majorLabel = options.majorLabel(for: collegeLabel, majorCode: majorCode ?? "") ?? ""
 
         return UserProfile(
             id: dto.username,
             username: dto.username,
             nickname: trimmed(dto.nickname),
             avatarURL: trimmed(dto.avatar),
-            college: trimmed(dto.faculty?.label),
-            collegeCode: dto.faculty?.code,
-            major: trimmed(dto.major?.label),
-            majorCode: sanitized(dto.major?.code),
+            college: collegeLabel,
+            collegeCode: collegeCode,
+            major: majorLabel,
+            majorCode: majorCode,
             grade: trimmed(dto.enrollment),
             bio: trimmed(dto.introduction),
             birthday: trimmed(dto.birthday),
-            location: trimmed(dto.location?.displayName),
+            location: locationSelection?.displayName ?? "",
             locationSelection: locationSelection,
-            hometown: trimmed(dto.hometown?.displayName),
+            hometown: hometownSelection?.displayName ?? "",
             hometownSelection: hometownSelection,
             ipArea: trimmed(dto.ipArea)
         )
@@ -55,57 +60,56 @@ enum ProfileRemoteMapper {
 
     static func mapLocationRegions(_ dtos: [ProfileLocationRegionDTO]) -> [ProfileLocationRegion] {
         dtos.compactMap { region in
-            guard let regionCode = sanitized(region.code), let regionName = sanitized(region.name) ?? sanitized(region.aliasesName) else {
+            guard let regionCode = sanitized(region.code),
+                  let localizedRegion = ProfileLocationCatalog.regions.first(where: { $0.code == regionCode }) else {
                 return nil
             }
 
-            let states = (region.stateMap ?? [:])
-                .values
+            let states = (region.children ?? [])
                 .compactMap { state -> ProfileLocationState? in
-                    guard let stateCode = sanitized(state.code), let stateName = sanitized(state.name) ?? sanitized(state.aliasesName) else {
+                    guard let stateCode = sanitized(state.code),
+                          let localizedState = localizedRegion.states.first(where: { $0.code == stateCode }) else {
                         return nil
                     }
 
-                    let cities = (state.cityMap ?? [:])
-                        .values
+                    let cities = (state.children ?? [])
                         .compactMap { city -> ProfileLocationCity? in
-                            guard let cityCode = sanitized(city.code), let cityName = sanitized(city.name) ?? sanitized(city.aliasesName) else {
+                            guard let cityCode = sanitized(city.code),
+                                  let localizedCity = localizedState.cities.first(where: { $0.code == cityCode }) else {
                                 return nil
                             }
-                            return ProfileLocationCity(code: cityCode, name: cityName)
+                            return ProfileLocationCity(code: cityCode, name: localizedCity.name)
                         }
                         .sorted(by: localizedChineseOrder)
 
-                    return ProfileLocationState(code: stateCode, name: stateName, cities: cities)
+                    return ProfileLocationState(code: stateCode, name: localizedState.name, cities: cities)
                 }
                 .sorted(by: localizedChineseOrder)
 
-            return ProfileLocationRegion(code: regionCode, name: regionName, states: states)
+            return ProfileLocationRegion(code: regionCode, name: localizedRegion.name, states: states)
         }
         .sorted(by: localizedChineseOrder)
     }
 
     static func mapProfileOptions(_ dto: ProfileOptionsDTO) -> ProfileOptions {
+        let defaultOptions = ProfileFormSupport.defaultOptions
         let faculties = (dto.faculties ?? []).compactMap { faculty -> ProfileFacultyOption? in
-            guard let code = faculty.code, let label = sanitized(faculty.label) else {
+            guard let code = faculty.code,
+                  let fallbackFaculty = defaultOptions.faculties.first(where: { $0.code == code }) else {
                 return nil
             }
 
-            let majors = (faculty.majors ?? []).compactMap { major -> ProfileMajorOption? in
-                guard let majorCode = sanitized(major.code), let majorLabel = sanitized(major.label) else {
-                    return nil
+            let majors = (faculty.majors ?? [])
+                .compactMap { majorCode in
+                    fallbackFaculty.majors.first(where: { $0.code == majorCode })
                 }
-                return ProfileMajorOption(code: majorCode, label: majorLabel)
-            }
 
             return ProfileFacultyOption(
                 code: code,
-                label: label,
+                label: fallbackFaculty.label,
                 majors: majors.isEmpty ? makeFallbackMajorOptions() : majors
             )
         }
-
-        let defaultOptions = ProfileFormSupport.defaultOptions
 
         return ProfileOptions(
             faculties: faculties.isEmpty ? defaultOptions.faculties : faculties,
@@ -199,29 +203,21 @@ enum ProfileRemoteMapper {
         return trimmed.isEmpty ? nil : trimmed
     }
 
-    private static func mapDictionaryOptions(
-        _ values: [ProfileDictionaryOptionDTO]?,
-        fallback: [ProfileDictionaryOption]
-    ) -> [ProfileDictionaryOption] {
-        let mapped = (values ?? []).compactMap { option -> ProfileDictionaryOption? in
-            guard let code = option.code, let label = sanitized(option.label) else {
-                return nil
-            }
-            return ProfileDictionaryOption(code: code, label: label)
+    private static func mapDictionaryOptions(_ values: [Int]?, fallback: [ProfileDictionaryOption]) -> [ProfileDictionaryOption] {
+        let mapped = (values ?? []).compactMap { code in
+            fallback.first(where: { $0.code == code })
         }
         return mapped.isEmpty ? fallback : mapped
     }
 
     private static func selection(from dto: ProfileRemoteLocationValueDTO?) -> ProfileLocationSelection? {
-        guard let dto, let regionCode = sanitized(dto.region) else {
+        guard let dto,
+              let regionCode = sanitized(dto.regionCode),
+              let stateCode = sanitized(dto.stateCode),
+              let cityCode = sanitized(dto.cityCode) else {
             return nil
         }
-        return ProfileLocationSelection(
-            displayName: trimmed(dto.displayName),
-            regionCode: regionCode,
-            stateCode: trimmed(dto.state),
-            cityCode: trimmed(dto.city)
-        )
+        return ProfileLocationCatalog.selection(regionCode: regionCode, stateCode: stateCode, cityCode: cityCode)
     }
 
     private static func makeFallbackMajorOptions() -> [ProfileMajorOption] {

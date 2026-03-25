@@ -103,4 +103,38 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
             "Expected list endpoint, got: \(RepositoryTrackingURLProtocol.requestedPaths)"
         )
     }
+
+    func testMarketplaceRemoteMapperUsesLocalizedCatalogForTypeNames() {
+        UserDefaults.standard.set("en-US", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        XCTAssertEqual(
+            MarketplaceRemoteMapper.displayName(forType: 0),
+            "Campus Transportation"
+        )
+    }
+
+    func testMarketplaceRemoteMapperUsesLocalizedFallbacksForPersonalSummary() {
+        UserDefaults.standard.set("en-US", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        let summary = MarketplaceRemoteMapper.mapPersonalSummary(
+            MarketplacePersonalSummaryDTO(doing: nil, sold: nil, off: nil),
+            profile: UserProfileDTO(
+                username: "",
+                nickname: nil,
+                avatar: nil,
+                facultyCode: nil,
+                majorCode: nil,
+                enrollment: nil,
+                location: nil,
+                hometown: nil,
+                introduction: nil,
+                birthday: nil,
+                ipArea: nil,
+                age: nil
+            )
+        )
+
+        XCTAssertEqual(summary.nickname, "Marketplace User")
+        XCTAssertEqual(summary.introduction, "This person is lazy and left nothing here.")
+    }
 }

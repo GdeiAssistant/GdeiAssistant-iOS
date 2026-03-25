@@ -3,6 +3,28 @@ import Foundation
 enum ProfileLocationCatalog {
     static let regions: [ProfileLocationRegion] = loadRegions()
 
+    static func selection(regionCode: String, stateCode: String, cityCode: String) -> ProfileLocationSelection? {
+        guard let region = regions.first(where: { $0.code == regionCode }) else {
+            return nil
+        }
+        guard let state = region.states.first(where: { $0.code == stateCode }) else {
+            return nil
+        }
+        guard let city = state.cities.first(where: { $0.code == cityCode }) else {
+            return nil
+        }
+        return ProfileLocationSelection(
+            displayName: ProfileFormSupport.makeLocationDisplay(region: region.name, state: state.name, city: city.name),
+            regionCode: region.code,
+            stateCode: state.code,
+            cityCode: city.code
+        )
+    }
+
+    static func displayName(regionCode: String, stateCode: String, cityCode: String) -> String {
+        selection(regionCode: regionCode, stateCode: stateCode, cityCode: cityCode)?.displayName ?? ""
+    }
+
     private static func loadRegions() -> [ProfileLocationRegion] {
         guard let data = json.data(using: .utf8),
               let regions = try? JSONDecoder().decode([ProfileLocationRegion].self, from: data) else {
