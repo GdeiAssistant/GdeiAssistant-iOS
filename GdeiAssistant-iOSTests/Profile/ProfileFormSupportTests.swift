@@ -2,6 +2,20 @@ import XCTest
 @testable import GdeiAssistant_iOS
 
 final class ProfileFormSupportTests: XCTestCase {
+    func testProfileSaveResultPreservesDetailedErrorMessage() {
+        XCTAssertEqual(
+            ProfileSaveResult.from(didSave: false, errorMessage: "Nickname is required"),
+            .failure(message: "Nickname is required")
+        )
+    }
+
+    func testProfileSaveResultFallsBackWhenDetailedErrorMessageIsMissing() {
+        XCTAssertEqual(
+            ProfileSaveResult.from(didSave: false, errorMessage: nil),
+            .failure(message: localizedString("common.saveFailed"))
+        )
+    }
+
     func testMajorOptionsFollowSelectedFaculty() {
         XCTAssertEqual(
             ProfileFormSupport.defaultOptions.majorOptions(for: "计算机科学系"),

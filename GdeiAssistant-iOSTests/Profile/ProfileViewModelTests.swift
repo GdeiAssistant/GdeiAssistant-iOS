@@ -102,6 +102,27 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.nickname, repository.profile.nickname)
         XCTAssertEqual(viewModel.bio, repository.profile.bio)
     }
+
+    func testEmptyGradeTreatsUnselectedEnrollmentOptionAsCurrentSelection() async {
+        let repository = RecordingProfileRepository()
+        repository.profile = UserProfile(
+            id: "user-1",
+            username: "demo",
+            nickname: "Demo",
+            avatarURL: "",
+            college: "计算机科学系",
+            major: "软件工程",
+            grade: "",
+            bio: "bio",
+            birthday: "2001-02-03"
+        )
+        let sessionState = SessionState()
+        let viewModel = ProfileViewModel(repository: repository, sessionState: sessionState)
+
+        await viewModel.loadProfile()
+
+        XCTAssertTrue(viewModel.isEnrollmentOptionSelected(ProfileFormSupport.unselectedOption))
+    }
 }
 
 @MainActor

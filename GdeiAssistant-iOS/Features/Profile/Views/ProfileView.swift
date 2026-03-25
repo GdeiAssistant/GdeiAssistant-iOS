@@ -48,10 +48,16 @@ struct ProfileView: View {
                         switch pickerField {
                         case .location:
                             viewModel.updateLocationSelection(selection)
-                            return await viewModel.saveProfile()
+                            return ProfileSaveResult.from(
+                                didSave: await viewModel.saveProfile(),
+                                errorMessage: viewModel.saveErrorMessage
+                            )
                         case .hometown:
                             viewModel.updateHometownSelection(selection)
-                            return await viewModel.saveProfile()
+                            return ProfileSaveResult.from(
+                                didSave: await viewModel.saveProfile(),
+                                errorMessage: viewModel.saveErrorMessage
+                            )
                         }
                     }
                 )
@@ -367,10 +373,9 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(option).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
                                     Spacer()
-                                    let current = viewModel.grade.isEmpty ? localizedString("profile.notSelected") : viewModel.grade
-                                    if current == option {
+                                    if viewModel.isEnrollmentOptionSelected(option) {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
                                     }
                                 }
@@ -453,12 +458,16 @@ private struct ProfileFieldEditorSheet: View {
 
         isSaving = true
         errorMessage = nil
-        let success = await viewModel.saveProfile()
+        let result = ProfileSaveResult.from(
+            didSave: await viewModel.saveProfile(),
+            errorMessage: viewModel.saveErrorMessage
+        )
         isSaving = false
-        if success {
+        switch result {
+        case .success:
             dismiss()
-        } else {
-            errorMessage = viewModel.saveErrorMessage ?? localizedString("common.saveFailed")
+        case .failure(let message):
+            errorMessage = message
         }
     }
 }
@@ -500,7 +509,7 @@ private enum ProfileLocationPickerField: String, Identifiable {
 private struct ProfileLocationPickerSheet: View {
     let title: String
     let regions: [ProfileLocationRegion]
-    let onConfirm: (ProfileLocationSelection) async -> Bool
+    let onConfirm: (ProfileLocationSelection) async -> ProfileSaveResult
 
     @Environment(\.dismiss) private var dismiss
     @State private var selectedRegionCode = ""
@@ -627,13 +636,14 @@ private struct ProfileLocationPickerSheet: View {
     private func confirm(_ selection: ProfileLocationSelection) async {
         isSaving = true
         errorMessage = nil
-        let didSave = await onConfirm(selection)
+        let result = await onConfirm(selection)
         isSaving = false
 
-        if didSave {
+        switch result {
+        case .success:
             dismiss()
-        } else {
-            errorMessage = localizedString("common.saveFailed")
+        case .failure(let message):
+            errorMessage = message
         }
     }
 }
