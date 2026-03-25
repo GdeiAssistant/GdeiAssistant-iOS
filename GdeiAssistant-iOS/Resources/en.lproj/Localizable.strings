@@ -1133,3 +1133,116 @@
 "photograph.descriptionField" = "Caption (optional)";
 "photograph.submit" = "Submit";
 "photograph.submitting" = "Submitting...";
+
+// MARK: - Datacenter
+"dataCenter.electricQuery" = "Electricity Bill";
+"dataCenter.yellowPage" = "Yellow Pages";
+"dataCenter.year" = "Year";
+"dataCenter.name" = "Name";
+"dataCenter.studentId" = "Student ID";
+"dataCenter.queryElec" = "Query";
+"dataCenter.queryCondition" = "Query Criteria";
+"dataCenter.queryingElec" = "Querying electricity bill...";
+"dataCenter.dorm" = "Dormitory";
+"dataCenter.occupants" = "Occupants";
+"dataCenter.college" = "College";
+"dataCenter.usedElec" = "Usage";
+"dataCenter.freeElec" = "Free Allowance";
+"dataCenter.chargedElec" = "Charged Usage";
+"dataCenter.elecPrice" = "Unit Price";
+"dataCenter.totalFee" = "Total Fee";
+"dataCenter.avgFee" = "Avg. Fee";
+"dataCenter.queryResult" = "Results";
+"dataCenter.ypLoading" = "Loading yellow pages...";
+"dataCenter.department" = "Department";
+"dataCenter.campus" = "Campus";
+"dataCenter.address" = "Address";
+"dataCenter.phone" = "Phone";
+"dataCenter.mainPhone" = "Main Phone";
+"dataCenter.backupPhone" = "Backup Phone";
+"dataCenter.otherContact" = "Other Contact";
+"dataCenter.ypDetail" = "Detail";
+"dataCenter.done" = "Done";
+"dataCenter.call" = "Call";
+"dataCenter.sms" = "Message";
+
+// MARK: - Charge
+"charge.alipay" = "Alipay Payment";
+
+// MARK: - Graduateexam
+"graduateExam.name" = "Name";
+"graduateExam.examNumber" = "Exam Number";
+"graduateExam.idNumber" = "ID Number";
+"graduateExam.query" = "Query Score";
+"graduateExam.queryInfo" = "Query Info";
+"graduateExam.querying" = "Querying exam scores...";
+"graduateExam.result" = "Results";
+"graduateExam.regNumber" = "Registration No.";
+"graduateExam.politics" = "Politics";
+"graduateExam.foreignLang" = "Foreign Language";
+"graduateExam.course1" = "Subject 1";
+"graduateExam.course2" = "Subject 2";
+"graduateExam.altEntry" = "Alternative";
+"graduateExam.openAltEntry" = "Open CHSI alternative entry";
+"graduateExam.title" = "Graduate Exam";
+
+// MARK: - Collection
+"collection.searchPlaceholder" = "Search title, author";
+"collection.query" = "Search";
+"collection.catalogSearch" = "Catalog Search";
+"collection.myBorrow" = "My Borrows";
+"collection.borrowService" = "Borrow Service";
+"collection.searching" = "Searching catalog...";
+"collection.noResult" = "No results";
+"collection.searchHint" = "Enter title or author to search";
+"collection.searchResult" = "Search Results";
+"collection.library" = "Library";
+"collection.detailLoading" = "Loading details...";
+"collection.libPassword" = "Library Password";
+"collection.enterPassword" = "Enter library password";
+"collection.refreshBorrow" = "Refresh borrows";
+"collection.queryBorrow" = "Query borrows";
+"collection.borrowHint" = "Enter library password to view borrows. Password is re-verified on renewal.";
+"collection.borrowLoading" = "Loading borrow records...";
+"collection.notQueried" = "Not queried yet";
+"collection.borrowEmptyHint" = "Enter password to view borrow records";
+"collection.noBorrow" = "No borrow records";
+"collection.noBorrowMsg" = "No borrow records to display";
+"collection.renew" = "Renew";
+"collection.borrowList" = "Borrow List";
+"collection.notice" = "Notice";
+"collection.understood" = "Got it";
+"collection.subjectTheme" = "Subject: ";
+"collection.classification" = "Class No.: ";
+"collection.bookInfo" = "Book Info";
+"collection.callNumber" = "Call No.: ";
+"collection.distribution" = "Holdings";
+"collection.detailTitle" = "Catalog Detail";
+"collection.borrowLabel" = "Borrowed: ";
+"collection.returnLabel" = "Due: ";
+"collection.renewCount" = "Renewals: ";
+
+// MARK: - Grade
+"grade.loading" = "Loading grades...";
+"grade.emptyTitle" = "No grade data";
+"grade.emptyMsg" = "Please try again later";
+"grade.title" = "My Grades";
+"grade.academicYear" = "Year";
+"grade.semester" = "Semester";
+"grade.gpa" = "GPA";
+"grade.courseCount" = "Courses";
+"grade.noGrade" = "No grades this semester";
+"grade.credit" = " credits";
+
+// MARK: - Evaluate
+"evaluate.title" = "Course Evaluation";
+"evaluate.oneClick" = "Quick Evaluate";
+"evaluate.description" = "Submit evaluation directly";
+"evaluate.warning" = "Warning: Evaluations cannot be modified after submission. Please confirm you're ready.";
+"evaluate.submitting" = "Submitting";
+"evaluate.confirmTitle" = "Submit evaluation?";
+"evaluate.confirmSubmit" = "Confirm";
+"evaluate.irreversible" = "This action is irreversible.";
+"evaluate.notice" = "Notice";
+"evaluate.understood" = "Got it";
+"graduateExam.totalScore" = "Total: ";

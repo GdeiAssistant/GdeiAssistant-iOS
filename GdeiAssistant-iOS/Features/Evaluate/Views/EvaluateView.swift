@@ -10,12 +10,12 @@ struct EvaluateView: View {
     var body: some View {
         List {
             Section {
-                Toggle("直接提交评教信息", isOn: $viewModel.submission.directSubmit)
-                Text("注意：评教信息提交后将不能再次修改，请确认当前学期评教已准备完成。")
+                Toggle(localizedString("evaluate.description"), isOn: $viewModel.submission.directSubmit)
+                Text(localizedString("evaluate.warning"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
             } header: {
-                Text("教学评价")
+                Text(localizedString("evaluate.title"))
             }
 
             Section {
@@ -25,30 +25,30 @@ struct EvaluateView: View {
                     if viewModel.submitState.isSubmitting {
                         HStack {
                             ProgressView()
-                            Text("正在提交")
+                            Text(localizedString("evaluate.submitting"))
                         }
                     } else {
-                        Text("一键评教")
+                        Text(localizedString("evaluate.oneClick"))
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 .disabled(viewModel.submitState.isSubmitting)
             }
         }
-        .navigationTitle("教学评价")
-        .confirmationDialog("确认提交评教？", isPresented: $viewModel.showConfirm, titleVisibility: .visible) {
-            Button("确认提交", role: .destructive) {
+        .navigationTitle(localizedString("evaluate.title"))
+        .confirmationDialog(localizedString("evaluate.confirmTitle"), isPresented: $viewModel.showConfirm, titleVisibility: .visible) {
+            Button(localizedString("evaluate.confirmSubmit"), role: .destructive) {
                 Task { await viewModel.submit() }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         } message: {
-            Text("该操作不可逆，请确认后再继续。")
+            Text(localizedString("evaluate.irreversible"))
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("evaluate.notice"), isPresented: Binding(
             get: { viewModel.submitState.message != nil },
             set: { if !$0 { viewModel.submitState = .idle } }
         )) {
-            Button("知道了", role: .cancel) {}
+            Button(localizedString("evaluate.understood"), role: .cancel) {}
         } message: {
             Text(viewModel.submitState.message ?? "")
         }

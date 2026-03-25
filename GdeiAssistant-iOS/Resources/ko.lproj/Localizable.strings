@@ -1128,3 +1128,116 @@
 "photograph.descriptionField" = "설명 (선택)";
 "photograph.submit" = "제출";
 "photograph.submitting" = "제출 중...";
+
+// MARK: - Datacenter
+"dataCenter.electricQuery" = "전기요금 조회";
+"dataCenter.yellowPage" = "전화번호부";
+"dataCenter.year" = "연도";
+"dataCenter.name" = "이름";
+"dataCenter.studentId" = "학번";
+"dataCenter.queryElec" = "조회";
+"dataCenter.queryCondition" = "조회 조건";
+"dataCenter.queryingElec" = "전기요금 조회 중...";
+"dataCenter.dorm" = "기숙사";
+"dataCenter.occupants" = "입주 인원";
+"dataCenter.college" = "학과";
+"dataCenter.usedElec" = "사용량";
+"dataCenter.freeElec" = "무료 전력량";
+"dataCenter.chargedElec" = "유료 사용량";
+"dataCenter.elecPrice" = "전기 단가";
+"dataCenter.totalFee" = "총 전기요금";
+"dataCenter.avgFee" = "평균 전기요금";
+"dataCenter.queryResult" = "조회 결과";
+"dataCenter.ypLoading" = "전화번호부 로딩 중...";
+"dataCenter.department" = "부서";
+"dataCenter.campus" = "캠퍼스";
+"dataCenter.address" = "주소";
+"dataCenter.phone" = "전화";
+"dataCenter.mainPhone" = "대표 전화";
+"dataCenter.backupPhone" = "보조 전화";
+"dataCenter.otherContact" = "기타 연락처";
+"dataCenter.ypDetail" = "상세";
+"dataCenter.done" = "완료";
+"dataCenter.call" = "전화하기";
+"dataCenter.sms" = "문자 보내기";
+
+// MARK: - Charge
+"charge.alipay" = "Alipay 결제";
+
+// MARK: - Graduateexam
+"graduateExam.name" = "이름";
+"graduateExam.examNumber" = "수험번호";
+"graduateExam.idNumber" = "신분증 번호";
+"graduateExam.query" = "성적 조회";
+"graduateExam.queryInfo" = "조회 정보";
+"graduateExam.querying" = "대학원 시험 성적 조회 중...";
+"graduateExam.result" = "조회 결과";
+"graduateExam.regNumber" = "등록번호";
+"graduateExam.politics" = "정치이론";
+"graduateExam.foreignLang" = "외국어";
+"graduateExam.course1" = "전공과목 1";
+"graduateExam.course2" = "전공과목 2";
+"graduateExam.altEntry" = "대체 입구";
+"graduateExam.openAltEntry" = "CHSI 대체 입구 열기";
+"graduateExam.title" = "대학원 시험";
+
+// MARK: - Collection
+"collection.searchPlaceholder" = "서명, 저자 검색";
+"collection.query" = "검색";
+"collection.catalogSearch" = "소장 검색";
+"collection.myBorrow" = "내 대출";
+"collection.borrowService" = "대출 서비스";
+"collection.searching" = "소장 검색 중...";
+"collection.noResult" = "검색 결과 없음";
+"collection.searchHint" = "서명 또는 저자를 입력하여 검색";
+"collection.searchResult" = "검색 결과";
+"collection.library" = "도서관";
+"collection.detailLoading" = "상세 로딩 중...";
+"collection.libPassword" = "도서관 비밀번호";
+"collection.enterPassword" = "도서관 비밀번호 입력";
+"collection.refreshBorrow" = "대출 기록 새로고침";
+"collection.queryBorrow" = "대출 기록 조회";
+"collection.borrowHint" = "대출 기록 조회에는 도서관 비밀번호가 필요합니다.";
+"collection.borrowLoading" = "대출 기록 로딩 중...";
+"collection.notQueried" = "아직 조회하지 않았습니다";
+"collection.borrowEmptyHint" = "비밀번호를 입력하여 대출 기록 확인";
+"collection.noBorrow" = "대출 기록 없음";
+"collection.noBorrowMsg" = "표시할 대출 기록이 없습니다";
+"collection.renew" = "연장";
+"collection.borrowList" = "대출 목록";
+"collection.notice" = "알림";
+"collection.understood" = "확인";
+"collection.subjectTheme" = "주제: ";
+"collection.classification" = "분류번호: ";
+"collection.bookInfo" = "서지 정보";
+"collection.callNumber" = "청구기호: ";
+"collection.distribution" = "소장 분포";
+"collection.detailTitle" = "소장 상세";
+"collection.borrowLabel" = "대출: ";
+"collection.returnLabel" = "반납일: ";
+"collection.renewCount" = "연장: ";
+
+// MARK: - Grade
+"grade.loading" = "성적 로딩 중...";
+"grade.emptyTitle" = "성적 데이터 없음";
+"grade.emptyMsg" = "나중에 다시 시도하세요";
+"grade.title" = "내 성적표";
+"grade.academicYear" = "학년";
+"grade.semester" = "학기";
+"grade.gpa" = "GPA";
+"grade.courseCount" = "과목 수";
+"grade.noGrade" = "이번 학기 성적 없음";
+"grade.credit" = " 학점";
+
+// MARK: - Evaluate
+"evaluate.title" = "강의 평가";
+"evaluate.oneClick" = "빠른 평가";
+"evaluate.description" = "평가 바로 제출";
+"evaluate.warning" = "주의: 제출 후 수정이 불가능합니다. 준비가 완료되었는지 확인하세요.";
+"evaluate.submitting" = "제출 중";
+"evaluate.confirmTitle" = "평가를 제출하시겠습니까?";
+"evaluate.confirmSubmit" = "확인";
+"evaluate.irreversible" = "이 작업은 되돌릴 수 없습니다.";
+"evaluate.notice" = "알림";
+"evaluate.understood" = "확인";
+"graduateExam.totalScore" = "총점: ";

@@ -8,14 +8,14 @@ struct PaymentWebView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Button("返回填写页", action: onDismiss)
+                Button(localizedString("charge.backToForm"), action: onDismiss)
                     .font(.subheadline)
                 Spacer()
-                Text("支付宝付款")
+                Text(localizedString("charge.alipay"))
                     .font(.headline)
                 Spacer()
                 // Balance the layout
-                Button("返回填写页") {}.opacity(0)
+                Button(localizedString("charge.backToForm")) {}.opacity(0)
             }
             .padding()
 

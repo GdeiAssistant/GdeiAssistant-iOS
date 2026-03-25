@@ -10,7 +10,7 @@ struct GradeView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.report == nil {
-                DSLoadingView(text: "正在加载成绩...")
+                DSLoadingView(text: localizedString("grade.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.report == nil {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.loadIfNeeded() }
@@ -18,10 +18,10 @@ struct GradeView: View {
             } else if let report = viewModel.report {
                 content(report)
             } else {
-                DSEmptyStateView(icon: "chart.bar", title: "暂无成绩数据", message: "请稍后重试")
+                DSEmptyStateView(icon: "chart.bar", title: localizedString("grade.emptyTitle"), message: localizedString("grade.emptyMsg"))
             }
         }
-        .navigationTitle("我的成绩单")
+        .navigationTitle(localizedString("grade.title"))
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -31,11 +31,11 @@ struct GradeView: View {
         ScrollView {
             VStack(spacing: 14) {
                 DSCard {
-                    Text("学年")
+                    Text(localizedString("grade.academicYear"))
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
 
-                    Picker("学年", selection: yearBinding) {
+                    Picker(localizedString("grade.academicYear"), selection: yearBinding) {
                         ForEach(viewModel.displayYearOptions) { option in
                             Text(option.title).tag(option.id)
                         }
@@ -44,11 +44,11 @@ struct GradeView: View {
                 }
 
                 DSCard {
-                    Text("学期")
+                    Text(localizedString("grade.semester"))
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
 
-                    Picker("学期", selection: $viewModel.selectedTermID) {
+                    Picker(localizedString("grade.semester"), selection: $viewModel.selectedTermID) {
                         ForEach(report.terms) { term in
                             Text(term.title).tag(term.id)
                         }
@@ -63,12 +63,12 @@ struct GradeView: View {
                             .foregroundStyle(DSColor.title)
 
                         HStack {
-                            summaryItem(title: "绩点", value: String(format: "%.2f", term.gpa))
-                            summaryItem(title: "课程数", value: "\(term.items.count)")
+                            summaryItem(title: localizedString("grade.gpa"), value: String(format: "%.2f", term.gpa))
+                            summaryItem(title: localizedString("grade.courseCount"), value: "\(term.items.count)")
                         }
 
                         if term.items.isEmpty {
-                            Text("当前学期暂无成绩")
+                            Text(localizedString("grade.noGrade"))
                                 .font(.subheadline)
                                 .foregroundStyle(DSColor.subtitle)
                         } else {
@@ -84,7 +84,7 @@ struct GradeView: View {
                                             .foregroundStyle(DSColor.primary)
                                     }
 
-                                    Text("\(item.courseType) · \(item.credit, specifier: "%.1f") 学分")
+                                    Text("\(item.courseType) · \(item.credit, specifier: "%.1f")\(localizedString("grade.credit"))")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }

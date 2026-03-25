@@ -12,10 +12,10 @@ struct CollectionView: View {
         List {
             Section {
                 HStack(spacing: 12) {
-                    TextField("搜索馆藏书名、作者", text: $viewModel.keyword)
+                    TextField(localizedString("collection.searchPlaceholder"), text: $viewModel.keyword)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
-                    Button("查询") {
+                    Button(localizedString("collection.query")) {
                         Task { await viewModel.search() }
                     }
                     .buttonStyle(.borderedProminent)
@@ -27,26 +27,26 @@ struct CollectionView: View {
                         .foregroundStyle(DSColor.danger)
                 }
             } header: {
-                Text("馆藏检索")
+                Text(localizedString("collection.catalogSearch"))
             }
 
             Section {
                 Button {
                     showBorrowSheet = true
                 } label: {
-                    Label("我的借阅", systemImage: "books.vertical")
+                    Label(localizedString("collection.myBorrow"), systemImage: "books.vertical")
                 }
             } header: {
-                Text("借阅服务")
+                Text(localizedString("collection.borrowService"))
             }
 
             if viewModel.isLoading {
                 Section {
-                    DSLoadingView(text: "正在查询馆藏...")
+                    DSLoadingView(text: localizedString("collection.searching"))
                 }
             } else if viewModel.searchPage.items.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "magnifyingglass", title: "暂无检索结果", message: "输入书名、作者后开始查询")
+                    DSEmptyStateView(icon: "magnifyingglass", title: localizedString("collection.noResult"), message: localizedString("collection.searchHint"))
                 }
             } else {
                 Section {
@@ -69,14 +69,14 @@ struct CollectionView: View {
                         .buttonStyle(.plain)
                     }
                 } header: {
-                    Text("检索结果")
+                    Text(localizedString("collection.searchResult"))
                 }
             }
         }
-        .navigationTitle("图书馆")
+        .navigationTitle(localizedString("collection.library"))
         .overlay {
             if viewModel.isDetailLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("collection.detailLoading"))
                     .padding()
                     .background(.thinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -89,12 +89,12 @@ struct CollectionView: View {
             NavigationStack {
                 List {
                     Section {
-                        SecureFormField(title: "图书馆密码", placeholder: "请输入图书馆密码", text: $viewModel.borrowPassword)
-                        Button(viewModel.hasLoadedBorrowedBooks ? "刷新借阅记录" : "查询借阅记录") {
+                        SecureFormField(title: localizedString("collection.libPassword"), placeholder: localizedString("collection.enterPassword"), text: $viewModel.borrowPassword)
+                        Button(viewModel.hasLoadedBorrowedBooks ? localizedString("collection.refreshBorrow") : localizedString("collection.queryBorrow")) {
                             Task { await viewModel.loadBorrowedBooks() }
                         }
                         .disabled(viewModel.isBorrowLoading)
-                        Text("我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。")
+                        Text(localizedString("collection.borrowHint"))
                             .font(.footnote)
                             .foregroundStyle(DSColor.subtitle)
                         if let borrowMessage = viewModel.borrowMessage {
@@ -103,20 +103,20 @@ struct CollectionView: View {
                                 .foregroundStyle(DSColor.danger)
                         }
                     } header: {
-                        Text("我的借阅")
+                        Text(localizedString("collection.myBorrow"))
                     }
 
                     if viewModel.isBorrowLoading {
                         Section {
-                            DSLoadingView(text: "正在加载借阅记录...")
+                            DSLoadingView(text: localizedString("collection.borrowLoading"))
                         }
                     } else if !viewModel.hasLoadedBorrowedBooks {
                         Section {
-                            DSEmptyStateView(icon: "books.vertical", title: "还没有开始查询", message: "输入图书馆密码后即可查看当前借阅记录")
+                            DSEmptyStateView(icon: "books.vertical", title: localizedString("collection.notQueried"), message: localizedString("collection.borrowEmptyHint"))
                         }
                     } else if viewModel.borrowedBooks.isEmpty {
                         Section {
-                            DSEmptyStateView(icon: "books.vertical", title: "暂无借阅记录", message: "当前没有可展示的借阅记录")
+                            DSEmptyStateView(icon: "books.vertical", title: localizedString("collection.noBorrow"), message: localizedString("collection.noBorrowMsg"))
                         }
                     } else {
                         Section {
@@ -126,7 +126,7 @@ struct CollectionView: View {
                                         Text(item.title)
                                             .font(.headline)
                                         Spacer()
-                                        Button("续借") {
+                                        Button(localizedString("collection.renew")) {
                                             Task { await viewModel.renewBorrow(item: item) }
                                         }
                                         .buttonStyle(.bordered)
@@ -134,23 +134,23 @@ struct CollectionView: View {
                                     Text(item.author)
                                         .font(.subheadline)
                                         .foregroundStyle(DSColor.subtitle)
-                                    Text("借阅：\(item.borrowDate)  应还：\(item.returnDate)  续借：\(item.renewCount) 次")
+                                    Text("\(localizedString("collection.borrowLabel"))\(item.borrowDate)  \(localizedString("collection.returnLabel"))\(item.returnDate)  \(localizedString("collection.renewCount"))\(item.renewCount)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                                 .padding(.vertical, 4)
                             }
                         } header: {
-                            Text("借阅列表")
+                            Text(localizedString("collection.borrowList"))
                         }
                     }
                 }
-                .navigationTitle("我的借阅")
-                .alert("提示", isPresented: Binding(
+                .navigationTitle(localizedString("collection.myBorrow"))
+                .alert(localizedString("collection.notice"), isPresented: Binding(
                     get: { viewModel.submitState.message != nil },
                     set: { if !$0 { viewModel.submitState = .idle } }
                 )) {
-                    Button("知道了", role: .cancel) {}
+                    Button(localizedString("collection.understood"), role: .cancel) {}
                 } message: {
                     Text(viewModel.submitState.message ?? "")
                 }
@@ -176,10 +176,10 @@ private struct CollectionDetailSheet: View {
 
                 Section {
                     Text(detail.physicalDescription)
-                    Text("主题词：\(detail.subjectTheme)")
-                    Text("分类号：\(detail.classification)")
+                    Text("\(localizedString("collection.subjectTheme"))\(detail.subjectTheme)")
+                    Text("\(localizedString("collection.classification"))\(detail.classification)")
                 } header: {
-                    Text("书目信息")
+                    Text(localizedString("collection.bookInfo"))
                 }
 
                 Section {
@@ -187,19 +187,19 @@ private struct CollectionDetailSheet: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(item.location)
                                 .font(.headline)
-                            Text("索书号：\(item.callNumber)")
+                            Text("\(localizedString("collection.callNumber"))\(item.callNumber)")
                                 .font(.subheadline)
                                 .foregroundStyle(DSColor.subtitle)
-                            Text("条码：\(item.barcode)  状态：\(item.state)")
+                            Text("\(item.barcode) · \(item.state)")
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     }
                 } header: {
-                    Text("馆藏分布")
+                    Text(localizedString("collection.distribution"))
                 }
             }
-            .navigationTitle("馆藏详情")
+            .navigationTitle(localizedString("collection.detailTitle"))
         }
     }
 }
