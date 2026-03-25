@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     @EnvironmentObject private var container: AppContainer
+    @State private var activeEditor: ProfileEditorField?
     @State private var activeLocationPicker: ProfileLocationPickerField?
 
     init(viewModel: ProfileViewModel) {
@@ -33,6 +34,12 @@ struct ProfileView: View {
             .task {
                 await viewModel.loadIfNeeded()
             }
+            .sheet(item: $activeEditor) { field in
+                ProfileFieldEditorSheet(
+                    field: field,
+                    viewModel: viewModel
+                )
+            }
             .sheet(item: $activeLocationPicker) { pickerField in
                 ProfileLocationPickerSheet(
                     title: pickerField.title,
@@ -41,8 +48,10 @@ struct ProfileView: View {
                         switch pickerField {
                         case .location:
                             viewModel.updateLocationSelection(selection)
+                            Task { await viewModel.saveProfile() }
                         case .hometown:
                             viewModel.updateHometownSelection(selection)
+                            Task { await viewModel.saveProfile() }
                         }
                     }
                 )
@@ -85,20 +94,11 @@ struct ProfileView: View {
                             }
 
                             Spacer()
-
-                            Button(viewModel.isEditing ? "取消" : "编辑") {
-                                viewModel.isEditing ? viewModel.cancelEditing() : viewModel.startEditing()
-                            }
-                            .font(.subheadline.weight(.medium))
                         }
 
                         Divider()
 
-                        if viewModel.isEditing {
-                            editingSection
-                        } else {
-                            summarySection(profile)
-                        }
+                        profileFields(profile)
                     }
                 }
 
@@ -172,185 +172,66 @@ struct ProfileView: View {
         }
     }
 
-    private var editingSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            DSInputField(title: "昵称", placeholder: "请输入昵称", text: $viewModel.nickname)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("生日")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(DSColor.subtitle)
-
-                DatePicker(
-                    "",
-                    selection: Binding(
-                        get: { viewModel.birthdayDate },
-                        set: { viewModel.updateBirthday(date: $0) }
-                    ),
-                    in: ...Date(),
-                    displayedComponents: .date
-                )
-                .labelsHidden()
-                .datePickerStyle(.compact)
-
-                if !viewModel.birthday.isEmpty {
-                    Button("清空生日") {
-                        viewModel.clearBirthday()
-                    }
-                    .font(.footnote)
-                }
+    private func profileFields(_ profile: UserProfile) -> some View {
+        VStack(spacing: 0) {
+            editableRow(title: "昵称", value: viewModel.displayText(profile.nickname, fallback: "点击设置")) {
+                activeEditor = .nickname
             }
-
-            selectionSection(
-                title: "院系",
-                currentValue: viewModel.college,
-                options: viewModel.facultyOptions,
-                onSelect: viewModel.selectCollege
-            )
-
-            selectionSection(
-                title: "专业",
-                currentValue: viewModel.major,
-                options: viewModel.majorOptions,
-                isDisabled: !viewModel.canSelectMajor,
-                emptyMessage: "请先选择院系",
-                onSelect: viewModel.selectMajor
-            )
-
-            selectionSection(
-                title: "入学年份",
-                currentValue: viewModel.grade.isEmpty ? "未选择" : viewModel.grade,
-                options: viewModel.enrollmentOptions,
-                onSelect: viewModel.selectEnrollment
-            )
-
-            locationRow(title: "国家 / 地区", value: viewModel.location) {
+            Divider().padding(.leading, 0)
+            editableRow(title: "生日", value: viewModel.displayText(profile.birthday, fallback: "未设置")) {
+                activeEditor = .birthday
+            }
+            Divider()
+            editableRow(title: "院系", value: viewModel.displayText(profile.college, fallback: "未选择")) {
+                activeEditor = .college
+            }
+            Divider()
+            editableRow(title: "专业", value: viewModel.displayText(profile.major, fallback: "未选择")) {
+                activeEditor = .major
+            }
+            Divider()
+            editableRow(title: "入学年份", value: viewModel.displayText(profile.grade, fallback: "未选择")) {
+                activeEditor = .grade
+            }
+            Divider()
+            editableRow(title: "国家 / 地区", value: viewModel.displayText(profile.location, fallback: "未选择")) {
                 activeLocationPicker = .location
             }
-
-            locationRow(title: "家乡", value: viewModel.hometown) {
+            Divider()
+            editableRow(title: "家乡", value: viewModel.displayText(profile.hometown, fallback: "未选择")) {
                 activeLocationPicker = .hometown
             }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("个人简介")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(DSColor.subtitle)
-
-                TextField("一句话介绍自己...", text: $viewModel.bio, axis: .vertical)
-                    .lineLimit(3...6)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
-                    .background(Color(.tertiarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            }
-
-            if let saveErrorMessage = viewModel.saveErrorMessage {
-                Text(saveErrorMessage)
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.danger)
-            }
-
-            HStack(spacing: 10) {
-                DSButton(title: "取消", variant: .secondary) {
-                    viewModel.cancelEditing()
-                }
-
-                DSButton(
-                    title: "保存资料",
-                    icon: "checkmark",
-                    isLoading: viewModel.isSaving,
-                    isDisabled: !viewModel.isFormValid
-                ) {
-                    Task { await viewModel.saveProfile() }
-                }
+            Divider()
+            editableRow(title: "个人简介", value: viewModel.displayText(profile.bio, fallback: "去填写"), multiline: true) {
+                activeEditor = .bio
             }
         }
     }
 
-    private func summarySection(_ profile: UserProfile) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            infoRow(title: "昵称", value: viewModel.displayText(profile.nickname, fallback: "点击设置"))
-            infoRow(title: "生日", value: viewModel.displayText(profile.birthday, fallback: "未选择"))
-            infoRow(title: "院系", value: viewModel.displayText(profile.college, fallback: "未选择"))
-            infoRow(title: "专业", value: viewModel.displayText(profile.major, fallback: "未选择"))
-            infoRow(title: "入学年份", value: viewModel.displayText(profile.grade, fallback: "未选择"))
-            infoRow(title: "国家 / 地区", value: viewModel.displayText(profile.location, fallback: "未选择"))
-            infoRow(title: "家乡", value: viewModel.displayText(profile.hometown, fallback: "未选择"))
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text("个人简介")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(DSColor.title)
-                Text(viewModel.displayText(profile.bio, fallback: "去填写"))
+    private func editableRow(title: String, value: String, multiline: Bool = false, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(alignment: multiline ? .top : .center) {
+                Text(title)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
+                    .frame(width: 80, alignment: .leading)
+
+                Text(value)
+                    .font(.subheadline)
+                    .foregroundStyle(DSColor.title)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(multiline ? 3 : 1)
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(DSColor.subtitle)
             }
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
         }
-    }
-
-    private func selectionSection(
-        title: String,
-        currentValue: String,
-        options: [String],
-        isDisabled: Bool = false,
-        emptyMessage: String? = nil,
-        onSelect: @escaping (String) -> Void
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(DSColor.subtitle)
-
-            Menu {
-                if isDisabled, let emptyMessage {
-                    Text(emptyMessage)
-                } else {
-                    ForEach(options, id: \.self) { option in
-                        Button(option) {
-                            onSelect(option)
-                        }
-                    }
-                }
-            } label: {
-                HStack {
-                    Text(currentValue.isEmpty ? "未选择" : currentValue)
-                        .foregroundStyle(isDisabled ? DSColor.subtitle : DSColor.title)
-                    Spacer()
-                    Image(systemName: "chevron.up.chevron.down")
-                        .foregroundStyle(DSColor.subtitle)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(Color(.tertiarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            }
-            .disabled(isDisabled)
-        }
-    }
-
-    private func locationRow(title: String, value: String, action: @escaping () -> Void) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(DSColor.subtitle)
-
-            Button(action: action) {
-                HStack {
-                    Text(viewModel.displayText(value, fallback: "未选择"))
-                        .foregroundStyle(DSColor.title)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(DSColor.subtitle)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(Color(.tertiarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            }
-            .buttonStyle(.plain)
-            .disabled(viewModel.locationRegions.isEmpty)
-        }
+        .buttonStyle(.plain)
     }
 
     private func profileMenuLink<Destination: View>(title: String, systemImage: String, @ViewBuilder destination: () -> Destination) -> some View {
@@ -375,22 +256,213 @@ struct ProfileView: View {
         }
         .buttonStyle(.plain)
     }
+}
 
-    private func infoRow(title: String, value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(title)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
+// MARK: - Editor field enum
 
-            Spacer(minLength: 16)
+private enum ProfileEditorField: String, Identifiable {
+    case nickname, birthday, college, major, grade, bio
+    var id: String { rawValue }
+}
 
-            Text(value)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(DSColor.title)
-                .multilineTextAlignment(.trailing)
+// MARK: - Field editor sheet
+
+private struct ProfileFieldEditorSheet: View {
+    let field: ProfileEditorField
+    @ObservedObject var viewModel: ProfileViewModel
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var text = ""
+    @State private var selectedDate = Date()
+    @State private var isSaving = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                switch field {
+                case .nickname:
+                    Section {
+                        TextField("请输入昵称", text: $text)
+                    } header: {
+                        Text("昵称")
+                    }
+
+                case .birthday:
+                    Section {
+                        DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
+                            .labelsHidden()
+                            .datePickerStyle(.wheel)
+                        Button("清空生日", role: .destructive) {
+                            viewModel.clearBirthday()
+                            Task { await save() }
+                        }
+                    } header: {
+                        Text("生日")
+                    }
+
+                case .college:
+                    Section {
+                        ForEach(viewModel.facultyOptions, id: \.self) { option in
+                            Button {
+                                viewModel.selectCollege(option)
+                                Task { await save() }
+                            } label: {
+                                HStack {
+                                    Text(option).foregroundStyle(DSColor.title)
+                                    Spacer()
+                                    if viewModel.college == option {
+                                        Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    } header: {
+                        Text("院系")
+                    }
+
+                case .major:
+                    Section {
+                        if !viewModel.canSelectMajor {
+                            Text("请先选择院系")
+                                .foregroundStyle(DSColor.subtitle)
+                        } else {
+                            ForEach(viewModel.majorOptions, id: \.self) { option in
+                                Button {
+                                    viewModel.selectMajor(option)
+                                    Task { await save() }
+                                } label: {
+                                    HStack {
+                                        Text(option).foregroundStyle(DSColor.title)
+                                        Spacer()
+                                        if viewModel.major == option {
+                                            Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
+                                        }
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    } header: {
+                        Text("专业")
+                    }
+
+                case .grade:
+                    Section {
+                        ForEach(viewModel.enrollmentOptions, id: \.self) { option in
+                            Button {
+                                viewModel.selectEnrollment(option)
+                                Task { await save() }
+                            } label: {
+                                HStack {
+                                    Text(option).foregroundStyle(DSColor.title)
+                                    Spacer()
+                                    let current = viewModel.grade.isEmpty ? "未选择" : viewModel.grade
+                                    if current == option {
+                                        Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    } header: {
+                        Text("入学年份")
+                    }
+
+                case .bio:
+                    Section {
+                        TextField("一句话介绍自己...", text: $text, axis: .vertical)
+                            .lineLimit(4...8)
+                    } header: {
+                        Text("个人简介")
+                    }
+                }
+
+                if let errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .foregroundStyle(DSColor.danger)
+                            .font(.footnote)
+                    }
+                }
+            }
+            .navigationTitle(field.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("取消") { dismiss() }
+                }
+                if field.needsManualSave {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(isSaving ? "保存中..." : "保存") {
+                            Task { await save() }
+                        }
+                        .disabled(isSaving)
+                        .fontWeight(.semibold)
+                    }
+                }
+            }
+            .onAppear { syncInitialValues() }
+        }
+    }
+
+    private func syncInitialValues() {
+        switch field {
+        case .nickname:
+            text = viewModel.nickname
+        case .birthday:
+            selectedDate = viewModel.birthdayDate
+        case .bio:
+            text = viewModel.bio
+        default:
+            break
+        }
+    }
+
+    private func save() async {
+        switch field {
+        case .nickname:
+            viewModel.nickname = text
+        case .birthday:
+            viewModel.updateBirthday(date: selectedDate)
+        case .bio:
+            viewModel.bio = text
+        default:
+            break
+        }
+
+        isSaving = true
+        errorMessage = nil
+        let success = await viewModel.saveProfile()
+        isSaving = false
+        if success {
+            dismiss()
+        } else {
+            errorMessage = viewModel.saveErrorMessage ?? "保存失败"
         }
     }
 }
+
+private extension ProfileEditorField {
+    var title: String {
+        switch self {
+        case .nickname: return "昵称"
+        case .birthday: return "生日"
+        case .college: return "院系"
+        case .major: return "专业"
+        case .grade: return "入学年份"
+        case .bio: return "个人简介"
+        }
+    }
+
+    // Fields that need an explicit Save button (vs auto-save on selection)
+    var needsManualSave: Bool {
+        self == .nickname || self == .birthday || self == .bio
+    }
+}
+
+// MARK: - Location picker
 
 private enum ProfileLocationPickerField: String, Identifiable {
     case location
@@ -400,10 +472,8 @@ private enum ProfileLocationPickerField: String, Identifiable {
 
     var title: String {
         switch self {
-        case .location:
-            return "选择国家 / 地区"
-        case .hometown:
-            return "选择家乡"
+        case .location: return "选择国家 / 地区"
+        case .hometown: return "选择家乡"
         }
     }
 }
@@ -462,17 +532,12 @@ private struct ProfileLocationPickerSheet: View {
                         dismiss()
                     }
                     .disabled(currentSelection == nil)
+                    .fontWeight(.semibold)
                 }
             }
-            .onAppear {
-                syncSelectionIfNeeded()
-            }
-            .onChange(of: selectedRegionCode) { _, _ in
-                syncStateAndCity()
-            }
-            .onChange(of: selectedStateCode) { _, _ in
-                syncCityIfNeeded()
-            }
+            .onAppear { syncSelectionIfNeeded() }
+            .onChange(of: selectedRegionCode) { _, _ in syncStateAndCity() }
+            .onChange(of: selectedStateCode) { _, _ in syncCityIfNeeded() }
         }
     }
 
@@ -498,13 +563,11 @@ private struct ProfileLocationPickerSheet: View {
 
     private var currentSelection: ProfileLocationSelection? {
         guard let currentRegion else { return nil }
-        let stateName = currentState?.name ?? ""
-        let cityName = currentCity?.name ?? ""
         return ProfileLocationSelection(
             displayName: ProfileFormSupport.makeLocationDisplay(
                 region: currentRegion.name,
-                state: stateName,
-                city: cityName
+                state: currentState?.name ?? "",
+                city: currentCity?.name ?? ""
             ),
             regionCode: currentRegion.code,
             stateCode: currentState?.code ?? "",

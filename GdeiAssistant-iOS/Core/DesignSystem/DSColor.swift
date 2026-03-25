@@ -21,10 +21,10 @@ enum DSColor {
     static let background = Color(.systemGroupedBackground)
     static let cardBackground = Color(.secondarySystemGroupedBackground)
 
-    static let primary = Color(dsLight: 0x047857, dark: 0x34D399)
-    static let onPrimary = Color(dsLight: 0xFFFFFF, dark: 0x0F1117)
+    static let primary = Color(dsLight: 0x007AFF, dark: 0x0A84FF)
+    static let onPrimary = Color(dsLight: 0xFFFFFF, dark: 0xFFFFFF)
 
-    static let secondary = Color(dsLight: 0x0FA67A, dark: 0x39C79D)
+    static let secondary = Color(dsLight: 0x5AC8FA, dark: 0x64D2FF)
     static let warning = Color(dsLight: 0xF2A93B, dark: 0xFFC56B)
     static let danger = Color(dsLight: 0xD94A4A, dark: 0xFF7C7C)
 
