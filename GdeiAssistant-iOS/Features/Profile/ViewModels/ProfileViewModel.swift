@@ -49,6 +49,10 @@ final class ProfileViewModel: ObservableObject {
         [ProfileFormSupport.unselectedOption] + ProfileFormSupport.enrollmentOptions
     }
 
+    var selectedEnrollmentOption: String {
+        grade.isEmpty ? ProfileFormSupport.unselectedOption : grade
+    }
+
     var canSelectMajor: Bool {
         profileOptions.canSelectMajor(for: college)
     }
@@ -131,6 +135,10 @@ final class ProfileViewModel: ObservableObject {
 
     func selectEnrollment(_ value: String) {
         grade = value == ProfileFormSupport.unselectedOption ? "" : value
+    }
+
+    func isEnrollmentOptionSelected(_ value: String) -> Bool {
+        selectedEnrollmentOption == value
     }
 
     func updateBirthday(date: Date) {
