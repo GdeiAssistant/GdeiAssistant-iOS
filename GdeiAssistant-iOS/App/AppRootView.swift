@@ -42,7 +42,6 @@ struct AppRootView: View {
                 router.resetAfterLogout()
             }
         }
-        .id(preferences.selectedLocale)
         .environment(\.locale, Locale(identifier: preferences.selectedLocale))
         .environment(\.sizeCategory, preferences.sizeCategory)
         .alert(Text(LocalizedStringKey("startup.alert.title")), isPresented: $showAuthAlert) {

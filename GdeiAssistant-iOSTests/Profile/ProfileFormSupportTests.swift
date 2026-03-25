@@ -46,4 +46,81 @@ final class ProfileFormSupportTests: XCTestCase {
         XCTAssertEqual(options.marketplaceItemTypes.first?.label, "校园代步")
         XCTAssertEqual(options.lostFoundModes.last?.label, "失物招领")
     }
+
+    @MainActor
+    func testBindPhoneLoadExpandsSparseRepositoryAttributionsWithBundledCatalog() async {
+        let repository = RecordingAccountCenterRepository()
+        repository.phoneAttributions = [
+            PhoneAttribution(id: 86, code: 86, flag: "🇨🇳", name: "China")
+        ]
+        let viewModel = BindPhoneViewModel(repository: repository)
+
+        await viewModel.load()
+
+        XCTAssertGreaterThan(viewModel.attributions.count, 150)
+        XCTAssertTrue(viewModel.attributions.contains(where: { $0.code == 1 }))
+        XCTAssertTrue(viewModel.attributions.contains(where: { $0.code == 44 }))
+        XCTAssertTrue(viewModel.attributions.contains(where: { $0.code == 81 }))
+        XCTAssertTrue(viewModel.attributions.contains(where: { $0.code == 852 }))
+        XCTAssertTrue(viewModel.attributions.contains(where: { $0.code == 886 }))
+    }
+
+}
+
+@MainActor
+private final class RecordingAccountCenterRepository: AccountCenterRepository {
+    var phoneAttributions: [PhoneAttribution] = [
+        PhoneAttribution(id: 86, code: 86, flag: "🇨🇳", name: "China")
+    ]
+    var phoneStatus = ContactBindingStatus(
+        isBound: false,
+        rawValue: nil,
+        maskedValue: localizedString("bindPhone.notBound"),
+        note: localizedString("bindPhone.notBoundHint"),
+        countryCode: nil,
+        username: nil
+    )
+    func fetchPrivacySettings() async throws -> PrivacySettings { .default }
+    func updatePrivacySettings(_ settings: PrivacySettings) async throws -> PrivacySettings { settings }
+    func fetchLoginRecords() async throws -> [LoginRecordItem] { [] }
+    func fetchPhoneAttributions() async throws -> [PhoneAttribution] { phoneAttributions }
+    func fetchPhoneStatus() async throws -> ContactBindingStatus { phoneStatus }
+    func sendPhoneVerification(areaCode: Int, phone: String) async throws {}
+
+    func bindPhone(request: PhoneBindRequest) async throws -> ContactBindingStatus {
+        phoneStatus = ContactBindingStatus(
+            isBound: true,
+            rawValue: request.phone,
+            maskedValue: request.phone,
+            note: localizedString("bindPhone.boundHintWithoutAreaCode"),
+            countryCode: request.areaCode,
+            username: nil
+        )
+        return phoneStatus
+    }
+
+    func unbindPhone() async throws -> ContactBindingStatus {
+        phoneStatus = ContactBindingStatus(
+            isBound: false,
+            rawValue: nil,
+            maskedValue: localizedString("bindPhone.notBound"),
+            note: localizedString("bindPhone.notBoundHint"),
+            countryCode: nil,
+            username: nil
+        )
+        return phoneStatus
+    }
+
+    func fetchEmailStatus() async throws -> ContactBindingStatus { phoneStatus }
+    func sendEmailVerification(email: String) async throws {}
+    func bindEmail(email: String, randomCode: String) async throws -> ContactBindingStatus { phoneStatus }
+    func unbindEmail() async throws -> ContactBindingStatus { phoneStatus }
+    func submitFeedback(_ submission: FeedbackSubmission) async throws {}
+    func fetchDownloadStatus() async throws -> DownloadDataStatus { DownloadDataStatus(state: .idle, downloadURL: nil) }
+    func startDataExport() async throws -> DownloadDataStatus { DownloadDataStatus(state: .idle, downloadURL: nil) }
+    func fetchDownloadURL() async throws -> DownloadDataStatus { DownloadDataStatus(state: .idle, downloadURL: nil) }
+    func fetchAvatarState() async throws -> AvatarState { AvatarState(url: nil) }
+    func uploadAvatar(_ avatar: UploadImageAsset) async throws -> AvatarState { AvatarState(url: nil) }
+    func deleteAvatar() async throws -> AvatarState { AvatarState(url: nil) }
+    func deleteAccount(password: String) async throws {}
 }

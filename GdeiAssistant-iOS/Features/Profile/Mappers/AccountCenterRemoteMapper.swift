@@ -104,17 +104,7 @@ enum AccountCenterRemoteMapper {
 
     nonisolated static func mapExportStatus(_ rawValue: Int?, downloadURL: String? = nil) -> DownloadDataStatus {
         let state = DownloadExportState(rawValue: rawValue ?? 0) ?? .idle
-        let message: String
-        switch state {
-        case .idle:
-            message = localizedString("downloadData.description")
-        case .exporting:
-            message = localizedString("downloadData.exportingMessage")
-        case .exported:
-            message = localizedString("downloadData.exportedMessage")
-        }
-
-        return DownloadDataStatus(state: state, message: message, downloadURL: downloadURL)
+        return DownloadDataStatus(state: state, downloadURL: downloadURL)
     }
 
     nonisolated static func mapAvatarState(_ url: String?) -> AvatarState {

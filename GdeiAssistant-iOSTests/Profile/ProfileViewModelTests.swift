@@ -123,6 +123,7 @@ final class ProfileViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isEnrollmentOptionSelected(ProfileFormSupport.unselectedOption))
     }
+
 }
 
 @MainActor
