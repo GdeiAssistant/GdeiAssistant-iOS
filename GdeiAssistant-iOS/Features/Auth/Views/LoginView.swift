@@ -1,7 +1,24 @@
 import SwiftUI
 
+private struct LanguageOption: Identifiable {
+    let code: String
+    let nativeName: String
+    var id: String { code }
+}
+
+private let loginLanguageOptions = [
+    LanguageOption(code: "zh-CN", nativeName: "简体中文"),
+    LanguageOption(code: "zh-HK", nativeName: "繁體中文（香港）"),
+    LanguageOption(code: "zh-TW", nativeName: "繁體中文（台灣）"),
+    LanguageOption(code: "en", nativeName: "English"),
+    LanguageOption(code: "ja", nativeName: "日本語"),
+    LanguageOption(code: "ko", nativeName: "한국어")
+]
+
 struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
+    @EnvironmentObject private var preferences: UserPreferences
+    @EnvironmentObject private var environment: AppEnvironment
 
     init(viewModel: LoginViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -22,6 +39,7 @@ struct LoginView: View {
                         header
                         form
                         privacyNote
+                        devPanel
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 28)
@@ -107,9 +125,71 @@ struct LoginView: View {
             .lineSpacing(4)
             .padding(.horizontal, 4)
     }
+
+    private var devPanel: some View {
+        VStack(spacing: 12) {
+            // Language selector (always visible)
+            DSCard {
+                HStack {
+                    Text(LocalizedStringKey("appearance.language.label"))
+                        .font(.subheadline)
+                        .foregroundStyle(DSColor.title)
+                    Spacer()
+                    Menu {
+                        ForEach(loginLanguageOptions) { option in
+                            Button {
+                                preferences.selectedLocale = option.code
+                            } label: {
+                                HStack {
+                                    Text(option.nativeName)
+                                    if preferences.selectedLocale == option.code {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(loginLanguageOptions.first(where: { $0.code == preferences.selectedLocale })?.nativeName ?? preferences.selectedLocale)
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.subtitle)
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption2)
+                                .foregroundStyle(DSColor.subtitle)
+                        }
+                    }
+                }
+            }
+
+            // Mock toggle (debug builds only)
+            if environment.isDebug {
+                DSCard {
+                    VStack(spacing: 8) {
+                        Toggle(isOn: Binding(
+                            get: { preferences.useMockData },
+                            set: { preferences.setUseMockData($0) }
+                        )) {
+                            Text(LocalizedStringKey("settings.useMockData"))
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.title)
+                        }
+
+                        if preferences.useMockData {
+                            Text(AppConstants.Debug.mockCredentialsHint)
+                                .font(.caption)
+                                .foregroundStyle(DSColor.subtitle)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #Preview {
     let container = AppContainer.preview
     return LoginView(viewModel: LoginViewModel(authManager: container.authManager))
+        .environmentObject(container.userPreferences)
+        .environmentObject(container.environment)
 }
