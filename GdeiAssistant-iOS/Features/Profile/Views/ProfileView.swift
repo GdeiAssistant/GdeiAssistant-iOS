@@ -278,6 +278,7 @@ private struct ProfileFieldEditorSheet: View {
 
     @State private var text = ""
     @State private var selectedDate = Date()
+    @State private var didRequestBirthdayClear = false
     @State private var isSaving = false
     @State private var errorMessage: String?
 
@@ -297,8 +298,11 @@ private struct ProfileFieldEditorSheet: View {
                         DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
                             .labelsHidden()
                             .datePickerStyle(.wheel)
+                            .onChange(of: selectedDate) { _, _ in
+                                didRequestBirthdayClear = false
+                            }
                         Button(localizedString("profile.clearBirthday"), role: .destructive) {
-                            viewModel.clearBirthday()
+                            didRequestBirthdayClear = true
                             Task { await save() }
                         }
                     } header: {
@@ -417,6 +421,7 @@ private struct ProfileFieldEditorSheet: View {
             text = viewModel.nickname
         case .birthday:
             selectedDate = viewModel.birthdayDate
+            didRequestBirthdayClear = false
         case .bio:
             text = viewModel.bio
         default:
@@ -429,7 +434,10 @@ private struct ProfileFieldEditorSheet: View {
         case .nickname:
             viewModel.nickname = text
         case .birthday:
-            viewModel.updateBirthday(date: selectedDate)
+            viewModel.applyBirthdayEditorChange(
+                selectedDate: selectedDate,
+                didRequestClear: didRequestBirthdayClear
+            )
         case .bio:
             viewModel.bio = text
         default:

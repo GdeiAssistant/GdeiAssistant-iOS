@@ -141,6 +141,14 @@ final class ProfileViewModel: ObservableObject {
         birthday = ""
     }
 
+    func applyBirthdayEditorChange(selectedDate: Date, didRequestClear: Bool) {
+        if didRequestClear {
+            clearBirthday()
+        } else {
+            updateBirthday(date: selectedDate)
+        }
+    }
+
     func updateLocationSelection(_ selection: ProfileLocationSelection) {
         locationSelection = selection
         location = selection.displayName
