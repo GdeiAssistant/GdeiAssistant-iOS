@@ -42,11 +42,11 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             .map(\.item)
             .sorted { $0.postedAt > $1.postedAt }
         let sold = detailsByID.values
-            .filter { $0.sellerUsername == MockSeedData.demoProfile.username && $0.item.state == .offShelf }
+            .filter { $0.sellerUsername == MockSeedData.demoProfile.username && $0.item.state == .sold }
             .map(\.item)
             .sorted { $0.postedAt > $1.postedAt }
         let off = detailsByID.values
-            .filter { $0.sellerUsername == MockSeedData.demoProfile.username && $0.item.state == .sold }
+            .filter { $0.sellerUsername == MockSeedData.demoProfile.username && $0.item.state == .offShelf }
             .map(\.item)
             .sorted { $0.postedAt > $1.postedAt }
 
