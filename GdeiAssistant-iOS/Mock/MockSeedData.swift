@@ -1,34 +1,54 @@
 import Foundation
 
 enum MockSeedData {
-    static let demoProfile = UserProfile(
-        id: "u_gdeiassistant",
-        username: "gdeiassistant",
-        nickname: "林知远",
-        avatarURL: "https://example.com/avatar/student.png",
-        college: "计算机科学系",
-        collegeCode: 11,
-        major: "软件工程",
-        majorCode: "software_engineering",
-        grade: "2023",
-        bio: "喜欢做实用的小工具，也在准备 iOS 开发实习。",
-        birthday: "2004-09-16",
-        location: "中国 广东省 广州市",
-        locationSelection: ProfileLocationSelection(
-            displayName: "中国 广东省 广州市",
-            regionCode: "CN",
-            stateCode: "44",
-            cityCode: "1"
-        ),
-        hometown: "中国 广东省 汕头市",
-        hometownSelection: ProfileLocationSelection(
-            displayName: "中国 广东省 汕头市",
-            regionCode: "CN",
-            stateCode: "44",
-            cityCode: "5"
-        ),
-        ipArea: "广东"
-    )
+    static var demoProfile: UserProfile {
+        let localeIdentifier = AppLanguage.currentIdentifier()
+        let labels = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
+        let computerFaculty = labels.faculties.first(where: { $0.code == 11 })
+        let softwareEngineering = computerFaculty?.majors.first(where: { $0.code == "software_engineering" })
+        let location = localizedMockLocation(localeIdentifier)
+        let hometown = localizedMockHometown(localeIdentifier)
+
+        return UserProfile(
+            id: "u_gdeiassistant",
+            username: "gdeiassistant",
+            nickname: localizedMockProfileText(
+                simplifiedChinese: "林知远",
+                traditionalChinese: "林知遠",
+                english: "Lin Zhiyuan",
+                japanese: "リン・ジーユエン",
+                korean: "린즈위안",
+                localeIdentifier: localeIdentifier
+            ),
+            avatarURL: "https://example.com/avatar/student.png",
+            college: computerFaculty?.label ?? "",
+            collegeCode: 11,
+            major: softwareEngineering?.label ?? "",
+            majorCode: "software_engineering",
+            grade: "2023",
+            bio: localizedMockProfileText(
+                simplifiedChinese: "喜欢做实用的小工具，也在准备 iOS 开发实习。",
+                traditionalChinese: "喜歡做實用的小工具，也在準備 iOS 開發實習。",
+                english: "Enjoys building practical tools and is preparing for an iOS development internship.",
+                japanese: "実用的な小さなツールを作るのが好きで、iOS 開発インターンの準備もしています。",
+                korean: "실용적인 작은 도구를 만드는 것을 좋아하고, iOS 개발 인턴도 준비하고 있습니다.",
+                localeIdentifier: localeIdentifier
+            ),
+            birthday: "2004-09-16",
+            location: location.displayName,
+            locationSelection: location,
+            hometown: hometown.displayName,
+            hometownSelection: hometown,
+            ipArea: localizedMockProfileText(
+                simplifiedChinese: "广东",
+                traditionalChinese: "廣東",
+                english: "Guangdong",
+                japanese: "広東",
+                korean: "광둥",
+                localeIdentifier: localeIdentifier
+            )
+        )
+    }
 
     static let dashboard = HomeDashboard(
         greeting: "早上好，林知远",
@@ -586,6 +606,60 @@ enum MockSeedData {
                 )
             ]
         )
+    }
+}
+
+private func localizedMockLocation(_ localeIdentifier: String) -> ProfileLocationSelection {
+    ProfileLocationSelection(
+        displayName: localizedMockProfileText(
+            simplifiedChinese: "中国 广东省 广州市",
+            traditionalChinese: "中國 廣東省 廣州市",
+            english: "China Guangdong Province Guangzhou",
+            japanese: "中国 広東省 広州市",
+            korean: "중국 광둥성 광저우시",
+            localeIdentifier: localeIdentifier
+        ),
+        regionCode: "CN",
+        stateCode: "44",
+        cityCode: "1"
+    )
+}
+
+private func localizedMockHometown(_ localeIdentifier: String) -> ProfileLocationSelection {
+    ProfileLocationSelection(
+        displayName: localizedMockProfileText(
+            simplifiedChinese: "中国 广东省 汕头市",
+            traditionalChinese: "中國 廣東省 汕頭市",
+            english: "China Guangdong Province Shantou",
+            japanese: "中国 広東省 汕頭市",
+            korean: "중국 광둥성 산터우시",
+            localeIdentifier: localeIdentifier
+        ),
+        regionCode: "CN",
+        stateCode: "44",
+        cityCode: "5"
+    )
+}
+
+private func localizedMockProfileText(
+    simplifiedChinese: String,
+    traditionalChinese: String,
+    english: String,
+    japanese: String,
+    korean: String,
+    localeIdentifier: String
+) -> String {
+    switch AppLanguage.normalizedIdentifier(from: localeIdentifier) {
+    case "zh-HK", "zh-TW":
+        return traditionalChinese
+    case "en":
+        return english
+    case "ja":
+        return japanese
+    case "ko":
+        return korean
+    default:
+        return simplifiedChinese
     }
 }
 

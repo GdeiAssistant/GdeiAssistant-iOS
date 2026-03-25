@@ -8,11 +8,11 @@ final class ProfileViewModelTests: XCTestCase {
             username: "demo",
             nickname: "Demo",
             avatar: "https://example.com/avatar.png",
-            faculty: ProfileValueLabelIntDTO(code: 11, label: "计算机科学系"),
-            major: ProfileValueLabelStringDTO(code: "software_engineering", label: "软件工程"),
+            facultyCode: 11,
+            majorCode: "software_engineering",
             enrollment: "2023",
-            location: ProfileRemoteLocationValueDTO(region: "CN", state: "44", city: "1", displayName: "中国 广东 广州"),
-            hometown: ProfileRemoteLocationValueDTO(region: "CN", state: "44", city: "5", displayName: "中国 广东 汕头"),
+            location: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: "44", cityCode: "1"),
+            hometown: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: "44", cityCode: "5"),
             introduction: "bio",
             birthday: "2001-02-03",
             ipArea: "广东省",
@@ -22,7 +22,10 @@ final class ProfileViewModelTests: XCTestCase {
         let profile = ProfileRemoteMapper.mapProfile(dto)
 
         XCTAssertEqual(profile.collegeCode, 11)
+        XCTAssertEqual(profile.college, "计算机科学系")
         XCTAssertEqual(profile.majorCode, "software_engineering")
+        XCTAssertEqual(profile.major, "软件工程")
+        XCTAssertEqual(profile.location, "中国 广东 广州")
         XCTAssertEqual(profile.locationSelection?.regionCode, "CN")
         XCTAssertEqual(profile.locationSelection?.cityCode, "1")
         XCTAssertEqual(profile.hometownSelection?.cityCode, "5")
@@ -34,22 +37,42 @@ final class ProfileViewModelTests: XCTestCase {
                 faculties: [
                     ProfileFacultyOptionDTO(
                         code: 11,
-                        label: "计算机科学系",
-                        majors: [
-                            ProfileMajorOptionDTO(code: "unselected", label: "未选择"),
-                            ProfileMajorOptionDTO(code: "software_engineering", label: "软件工程")
-                        ]
+                        majors: ["software_engineering"]
                     )
                 ],
-                marketplaceItemTypes: nil,
-                lostFoundItemTypes: nil,
-                lostFoundModes: nil
+                marketplaceItemTypes: [0, 11],
+                lostFoundItemTypes: [0, 11],
+                lostFoundModes: [0, 1]
             )
         )
 
-        XCTAssertEqual(options.faculties.first?.majors.first?.code, "unselected")
+        XCTAssertEqual(options.faculties.first?.label, "计算机科学系")
+        XCTAssertEqual(options.faculties.first?.majors.first?.code, "software_engineering")
+        XCTAssertEqual(options.faculties.first?.majors.first?.label, "软件工程")
         XCTAssertEqual(options.majorCode(for: "计算机科学系", majorLabel: "软件工程"), "software_engineering")
         XCTAssertEqual(options.majorLabel(for: "计算机科学系", majorCode: "software_engineering"), "软件工程")
+        XCTAssertEqual(options.marketplaceItemTypes.last?.label, "其他")
+        XCTAssertEqual(options.lostFoundModes.first?.label, "寻物启事")
+    }
+
+    func testMapLocationRegionsLocalizesCodeOnlyTreeFromCatalog() {
+        let regions = ProfileRemoteMapper.mapLocationRegions([
+            ProfileLocationRegionDTO(
+                code: "CN",
+                children: [
+                    ProfileLocationStateDTO(
+                        code: "44",
+                        children: [
+                            ProfileLocationCityDTO(code: "1")
+                        ]
+                    )
+                ]
+            )
+        ])
+
+        XCTAssertEqual(regions.first?.name, "中国")
+        XCTAssertEqual(regions.first?.states.first?.name, "广东")
+        XCTAssertEqual(regions.first?.states.first?.cities.first?.name, "广州")
     }
 
     func testClearingBirthdayDoesNotRestoreExistingPickerDateWhenSaving() async {

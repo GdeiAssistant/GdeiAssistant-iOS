@@ -13,17 +13,17 @@ enum NotificationCategory: String, Codable, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .all:
-            return "全部"
+            return localizedString("messages.category.all")
         case .comment:
-            return "评论"
+            return localizedString("messages.category.comment")
         case .like:
-            return "点赞"
+            return localizedString("messages.category.like")
         case .system:
-            return "系统"
+            return localizedString("messages.category.system")
         case .service:
-            return "服务"
+            return localizedString("messages.category.service")
         case .interaction:
-            return "互动"
+            return localizedString("messages.category.interaction")
         }
     }
 }
@@ -66,70 +66,70 @@ struct AppNotificationItem: Codable, Identifiable, Hashable {
     var moduleBadgeText: String? {
         switch destination {
         case .announcement:
-            return "公告"
+            return localizedString("messages.badge.announcement")
         case .news:
-            return "新闻"
+            return localizedString("messages.badge.news")
         default:
             break
         }
 
         switch normalizedModule {
         case "marketplace":
-            return "二手"
+            return localizedString("messages.badge.marketplace")
         case "lostandfound":
-            return "失物招领"
+            return localizedString("messages.badge.lostFound")
         case "delivery":
-            return "全民快递"
+            return localizedString("messages.badge.delivery")
         case "secret":
-            return "树洞"
+            return localizedString("messages.badge.secret")
         case "express":
-            return "表白墙"
+            return localizedString("messages.badge.express")
         case "topic":
-            return "话题"
+            return localizedString("messages.badge.topic")
         case "photograph":
-            return "拍好校园"
+            return localizedString("messages.badge.photograph")
         case "dating":
-            return "卖室友"
+            return localizedString("feature.dating")
         case nil:
             switch category {
             case .system:
-                return "系统"
+                return localizedString("messages.category.system")
             case .service:
-                return "服务"
+                return localizedString("messages.category.service")
             case .interaction, .comment, .like:
-                return "其它互动"
+                return localizedString("messages.badge.otherInteraction")
             case .all:
                 return nil
             }
         default:
-            return "其它互动"
+            return localizedString("messages.badge.otherInteraction")
         }
     }
 
     var actionBadgeText: String? {
         switch normalizedTargetType {
         case "comment":
-            return "评论"
+            return localizedString("messages.action.comment")
         case "like":
-            return "点赞"
+            return localizedString("messages.action.like")
         case "guess":
-            return "猜名字"
+            return localizedString("messages.action.guess")
         case "posts":
-            return "我的发布"
+            return localizedString("messages.action.posts")
         case "published":
-            return "我发布的"
+            return localizedString("messages.action.published")
         case "accepted":
-            return "我接的"
+            return localizedString("messages.action.accepted")
         case "sent":
-            return "我发出的"
+            return localizedString("messages.action.sent")
         case "received":
-            return "我收到的"
+            return localizedString("messages.action.received")
         default:
             switch category {
             case .comment, .like:
                 return category.title
             case .interaction:
-                return "新动态"
+                return localizedString("messages.action.newActivity")
             default:
                 return nil
             }
@@ -138,7 +138,7 @@ struct AppNotificationItem: Codable, Identifiable, Hashable {
 
     var readBadgeText: String? {
         guard isInteractionItem else { return nil }
-        return isRead ? "已读" : "未读"
+        return isRead ? localizedString("messages.read.read") : localizedString("messages.read.unread")
     }
 
     var datingCenterTab: DatingCenterTab {

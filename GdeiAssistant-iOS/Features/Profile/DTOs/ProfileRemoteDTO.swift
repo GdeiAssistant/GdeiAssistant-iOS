@@ -4,8 +4,8 @@ struct UserProfileDTO: Decodable {
     let username: String
     let nickname: String?
     let avatar: String?
-    let faculty: ProfileValueLabelIntDTO?
-    let major: ProfileValueLabelStringDTO?
+    let facultyCode: Int?
+    let majorCode: String?
     let enrollment: String?
     let location: ProfileRemoteLocationValueDTO?
     let hometown: ProfileRemoteLocationValueDTO?
@@ -15,21 +15,10 @@ struct UserProfileDTO: Decodable {
     let age: Int?
 }
 
-struct ProfileValueLabelIntDTO: Decodable {
-    let code: Int?
-    let label: String?
-}
-
-struct ProfileValueLabelStringDTO: Decodable {
-    let code: String?
-    let label: String?
-}
-
 struct ProfileRemoteLocationValueDTO: Decodable {
-    let region: String?
-    let state: String?
-    let city: String?
-    let displayName: String?
+    let regionCode: String?
+    let stateCode: String?
+    let cityCode: String?
 }
 
 struct NicknameUpdateDTO: Encodable {
@@ -66,43 +55,26 @@ struct LocationUpdateDTO: Encodable {
 
 struct ProfileLocationCityDTO: Decodable {
     let code: String?
-    let name: String?
-    let aliasesName: String?
 }
 
 struct ProfileLocationStateDTO: Decodable {
     let code: String?
-    let name: String?
-    let aliasesName: String?
-    let cityMap: [String: ProfileLocationCityDTO]?
+    let children: [ProfileLocationCityDTO]?
 }
 
 struct ProfileLocationRegionDTO: Decodable {
     let code: String?
-    let name: String?
-    let aliasesName: String?
-    let stateMap: [String: ProfileLocationStateDTO]?
-}
-
-struct ProfileDictionaryOptionDTO: Decodable {
-    let code: Int?
-    let label: String?
+    let children: [ProfileLocationStateDTO]?
 }
 
 struct ProfileFacultyOptionDTO: Decodable {
     let code: Int?
-    let label: String?
-    let majors: [ProfileMajorOptionDTO]?
-}
-
-struct ProfileMajorOptionDTO: Decodable {
-    let code: String?
-    let label: String?
+    let majors: [String]?
 }
 
 struct ProfileOptionsDTO: Decodable {
     let faculties: [ProfileFacultyOptionDTO]?
-    let marketplaceItemTypes: [ProfileDictionaryOptionDTO]?
-    let lostFoundItemTypes: [ProfileDictionaryOptionDTO]?
-    let lostFoundModes: [ProfileDictionaryOptionDTO]?
+    let marketplaceItemTypes: [Int]?
+    let lostFoundItemTypes: [Int]?
+    let lostFoundModes: [Int]?
 }

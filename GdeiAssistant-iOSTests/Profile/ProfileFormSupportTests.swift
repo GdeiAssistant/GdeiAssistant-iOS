@@ -2,6 +2,11 @@ import XCTest
 @testable import GdeiAssistant_iOS
 
 final class ProfileFormSupportTests: XCTestCase {
+    override func tearDown() {
+        UserDefaults.standard.removeObject(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+        super.tearDown()
+    }
+
     func testProfileSaveResultPreservesDetailedErrorMessage() {
         XCTAssertEqual(
             ProfileSaveResult.from(didSave: false, errorMessage: "Nickname is required"),
@@ -45,6 +50,28 @@ final class ProfileFormSupportTests: XCTestCase {
         XCTAssertEqual(options.facultyCode(for: "中文系"), 3)
         XCTAssertEqual(options.marketplaceItemTypes.first?.label, "校园代步")
         XCTAssertEqual(options.lostFoundModes.last?.label, "失物招领")
+    }
+
+    func testDefaultProfileOptionsFollowSelectedLocale() {
+        UserDefaults.standard.set("en-US", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        let options = ProfileFormSupport.defaultOptions
+
+        XCTAssertEqual(ProfileFormSupport.unselectedOption, "Not selected")
+        XCTAssertEqual(options.faculties.first(where: { $0.code == 11 })?.label, "Department of Computer Science")
+        XCTAssertEqual(options.majorOptions(for: "Department of Computer Science"), ["Not selected", "Software Engineering", "Network Engineering", "Computer Science and Technology", "Internet of Things Engineering"])
+    }
+
+    func testMockProfileUsesLocalizedLabelsAndLocation() {
+        UserDefaults.standard.set("ja-JP", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        let profile = MockSeedData.demoProfile
+
+        XCTAssertEqual(profile.college, "計算機科学科")
+        XCTAssertEqual(profile.major, "ソフトウェア工学")
+        XCTAssertEqual(profile.location, "中国 広東省 広州市")
+        XCTAssertEqual(profile.hometown, "中国 広東省 汕頭市")
+        XCTAssertEqual(profile.ipArea, "広東")
     }
 
     @MainActor

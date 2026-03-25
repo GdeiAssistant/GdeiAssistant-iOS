@@ -1,26 +1,9 @@
 import Foundation
 
 enum MarketplaceRemoteMapper {
-    nonisolated static let itemTypes = ["校园代步", "手机", "电脑", "数码配件", "数码", "电器", "运动健身", "衣物伞帽", "图书教材", "租赁", "生活娱乐", "其他"]
-    nonisolated static let facultyOptions = [
-        "未选择",
-        "教育学院",
-        "政法系",
-        "中文系",
-        "数学系",
-        "外语系",
-        "物理与信息工程系",
-        "化学系",
-        "生物与食品工程学院",
-        "体育学院",
-        "美术学院",
-        "计算机科学系",
-        "音乐系",
-        "教师研修学院",
-        "成人教育学院",
-        "网络教育学院",
-        "马克思主义学院"
-    ]
+    nonisolated static var itemTypes: [String] {
+        LocalizedProfileCatalog.current.defaultOptions.marketplaceItemTypes.map(\.label)
+    }
 
     nonisolated static func mapItems(_ dtos: [MarketplaceItemDTO]) -> [MarketplaceItem] {
         dtos
@@ -84,7 +67,7 @@ enum MarketplaceRemoteMapper {
     }
 
     nonisolated static func displayName(forType typeID: Int) -> String {
-        displayName(in: itemTypes, index: typeID, fallback: "其他")
+        displayName(in: itemTypes, index: typeID, fallback: localizedString("marketplace.mapper.other"))
     }
 
     nonisolated static func mapDetail(_ dto: MarketplaceDetailDTO) throws -> MarketplaceDetail {
@@ -92,9 +75,14 @@ enum MarketplaceRemoteMapper {
             throw NetworkError.noData
         }
 
-        let sellerName = RemoteMapperSupport.firstNonEmpty(dto.profile?.nickname, dto.profile?.username, itemDTO.username, "校园卖家")
+        let sellerName = RemoteMapperSupport.firstNonEmpty(
+            dto.profile?.nickname,
+            dto.profile?.username,
+            itemDTO.username,
+            localizedString("marketplace.mapper.defaultSeller")
+        )
         let item = mapItem(itemDTO, sellerName: sellerName, sellerAvatarURL: dto.profile?.avatarURL)
-        let typeName = displayName(in: itemTypes, index: itemDTO.type, fallback: "闲置物品")
+        let typeName = displayName(in: itemTypes, index: itemDTO.type, fallback: localizedString("marketplace.mapper.defaultType"))
         let contactHint = [
             itemDTO.qq.flatMap { $0.isEmpty ? nil : localizedString("marketplace.contactQQPrefix") + $0 },
             itemDTO.phone.flatMap { $0.isEmpty ? nil : localizedString("marketplace.contactPhonePrefix") + $0 }
@@ -104,7 +92,7 @@ enum MarketplaceRemoteMapper {
         return MarketplaceDetail(
             item: item,
             condition: typeName,
-            description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, "暂无详细说明"),
+            description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, localizedString("marketplace.mapper.noDescription")),
             contactHint: contactHint.isEmpty ? localizedString("marketplace.contactUnavailable") : contactHint,
             sellerUsername: dto.profile?.username ?? itemDTO.username,
             sellerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
@@ -118,8 +106,8 @@ enum MarketplaceRemoteMapper {
     nonisolated static func mapPersonalSummary(_ dto: MarketplacePersonalSummaryDTO, profile: UserProfileDTO) -> MarketplacePersonalSummary {
         MarketplacePersonalSummary(
             avatarURL: RemoteMapperSupport.sanitizedText(profile.avatar),
-            nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, "二手用户"),
-            introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, "这个人很懒，什么都没写_(:3 」∠)_"),
+            nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, localizedString("marketplace.mapper.defaultUser")),
+            introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, localizedString("marketplace.mapper.defaultIntro")),
             doing: (dto.doing ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
             sold: (dto.sold ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
             off: (dto.off ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) }
@@ -127,19 +115,19 @@ enum MarketplaceRemoteMapper {
     }
 
     nonisolated private static func mapItem(_ dto: MarketplaceItemDTO, sellerName: String?, sellerAvatarURL: String? = nil) -> MarketplaceItem {
-        let typeName = displayName(in: itemTypes, index: dto.type, fallback: "其他")
+        let typeName = displayName(in: itemTypes, index: dto.type, fallback: localizedString("marketplace.mapper.other"))
         let state = mapState(dto.state)
         let imageURLs = RemoteMapperSupport.sanitizedTextList(dto.pictureURL)
 
         return MarketplaceItem(
             id: String(dto.id ?? Int.random(in: 1...999_999)),
-            title: RemoteMapperSupport.firstNonEmpty(dto.name, "未命名商品"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("marketplace.mapper.unnamedItem")),
             price: RemoteMapperSupport.double(dto.price),
-            summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, "暂无描述"), limit: 60),
-            sellerName: RemoteMapperSupport.firstNonEmpty(sellerName, dto.username, "校园卖家"),
+            summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, localizedString("marketplace.mapper.noSummary")), limit: 60),
+            sellerName: RemoteMapperSupport.firstNonEmpty(sellerName, dto.username, localizedString("marketplace.mapper.defaultSeller")),
             sellerAvatarURL: RemoteMapperSupport.sanitizedText(sellerAvatarURL),
-            postedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: "刚刚"),
-            location: RemoteMapperSupport.firstNonEmpty(dto.location, "校内自提"),
+            postedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("common.justNow")),
+            location: RemoteMapperSupport.firstNonEmpty(dto.location, localizedString("marketplace.mapper.onCampusPickup")),
             state: state,
             tags: [typeName],
             previewImageURL: imageURLs.first
@@ -165,9 +153,10 @@ enum MarketplaceRemoteMapper {
     }
 
     nonisolated private static func facultyName(_ code: Int?) -> String? {
-        guard let code, facultyOptions.indices.contains(code) else { return nil }
-        let value = facultyOptions[code]
-        return value == "未选择" ? nil : value
+        guard let code else { return nil }
+        let faculty = LocalizedProfileCatalog.current.defaultOptions.faculties.first(where: { $0.code == code })
+        guard let faculty, faculty.code != 0 else { return nil }
+        return faculty.label
     }
 
     nonisolated private static func enrollmentText(_ enrollment: Int?) -> String? {
