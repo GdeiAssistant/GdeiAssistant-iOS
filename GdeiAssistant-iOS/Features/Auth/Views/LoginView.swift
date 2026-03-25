@@ -1,20 +1,5 @@
 import SwiftUI
 
-private struct LanguageOption: Identifiable {
-    let code: String
-    let nativeName: String
-    var id: String { code }
-}
-
-private let loginLanguageOptions = [
-    LanguageOption(code: "zh-CN", nativeName: "简体中文"),
-    LanguageOption(code: "zh-HK", nativeName: "繁體中文（香港）"),
-    LanguageOption(code: "zh-TW", nativeName: "繁體中文（台灣）"),
-    LanguageOption(code: "en", nativeName: "English"),
-    LanguageOption(code: "ja", nativeName: "日本語"),
-    LanguageOption(code: "ko", nativeName: "한국어")
-]
-
 struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
     @EnvironmentObject private var preferences: UserPreferences
@@ -56,13 +41,13 @@ struct LoginView: View {
 
     private var languageMenuButton: some View {
         Menu {
-            ForEach(loginLanguageOptions) { option in
+            ForEach(AppLanguage.allCases) { option in
                 Button {
-                    preferences.selectedLocale = option.code
+                    preferences.selectedLocale = option.localeIdentifier
                 } label: {
                     HStack {
                         Text(option.nativeName)
-                        if preferences.selectedLocale == option.code {
+                        if preferences.selectedLocale == option.localeIdentifier {
                             Image(systemName: "checkmark")
                         }
                     }

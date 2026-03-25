@@ -112,7 +112,7 @@ enum RemoteMapperSupport {
             let seconds = raw.count == 13 ? timestamp / 1000 : timestamp
             let date = Date(timeIntervalSince1970: seconds)
             let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "zh_CN")
+            formatter.locale = AppLanguage.locale(for: UserPreferences.currentLocale)
             formatter.timeZone = TimeZone(identifier: "Asia/Shanghai")
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
             return formatter.string(from: date)

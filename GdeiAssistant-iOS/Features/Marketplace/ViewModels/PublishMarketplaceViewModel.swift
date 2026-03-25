@@ -257,13 +257,13 @@ final class EditMarketplaceViewModel: ObservableObject {
         }
     }
 
-    private static let supportedContactPrefixLocales = [
-        UserPreferences.currentLocale,
-        "en",
-        "ja",
-        "ko",
-        "zh-CN",
-        "zh-HK",
-        "zh-TW"
-    ]
+    private static var supportedContactPrefixLocales: [String] {
+        var orderedLocales = [UserPreferences.currentLocale]
+        orderedLocales.append(contentsOf: AppLanguage.supportedLocaleIdentifiers)
+
+        var seen = Set<String>()
+        return orderedLocales.filter { locale in
+            seen.insert(locale).inserted
+        }
+    }
 }

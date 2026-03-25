@@ -21,7 +21,7 @@ final class CardViewModel: ObservableObject {
     }
 
     var selectedDateText: String {
-        Self.dateFormatter.string(from: selectedDate)
+        Self.makeDateFormatter().string(from: selectedDate)
     }
 
     func loadDashboard(for date: Date? = nil) async {
@@ -58,10 +58,10 @@ final class CardViewModel: ObservableObject {
         submitState = .idle
     }
 
-    private static let dateFormatter: DateFormatter = {
+    private static func makeDateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.locale = AppLanguage.locale(for: UserPreferences.currentLocale)
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
-    }()
+    }
 }
