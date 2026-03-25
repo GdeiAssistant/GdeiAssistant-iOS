@@ -22,18 +22,28 @@ final class MockProfileRepository: ProfileRepository {
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {
         try await Task.sleep(nanoseconds: 280_000_000)
 
+        let options = ProfileFormSupport.defaultOptions
+        let normalizedCollege = request.college.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedMajor = request.major.trimmingCharacters(in: .whitespacesAndNewlines)
+        let collegeCode = options.facultyCode(for: normalizedCollege) ?? currentProfile.collegeCode
+        let majorCode = options.majorCode(for: normalizedCollege, majorLabel: normalizedMajor) ?? currentProfile.majorCode
+
         currentProfile = UserProfile(
             id: currentProfile.id,
             username: currentProfile.username,
             nickname: request.nickname,
             avatarURL: currentProfile.avatarURL,
             college: request.college,
+            collegeCode: collegeCode,
             major: request.major,
+            majorCode: majorCode,
             grade: request.grade,
             bio: request.bio,
             birthday: request.birthday,
             location: request.location?.displayName ?? currentProfile.location,
+            locationSelection: request.location ?? currentProfile.locationSelection,
             hometown: request.hometown?.displayName ?? currentProfile.hometown,
+            hometownSelection: request.hometown ?? currentProfile.hometownSelection,
             ipArea: currentProfile.ipArea
         )
 

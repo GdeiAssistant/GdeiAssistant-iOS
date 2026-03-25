@@ -7,12 +7,26 @@ enum MockSeedData {
         nickname: "林知远",
         avatarURL: "https://example.com/avatar/student.png",
         college: "计算机科学系",
+        collegeCode: 11,
         major: "软件工程",
+        majorCode: "software_engineering",
         grade: "2023",
         bio: "喜欢做实用的小工具，也在准备 iOS 开发实习。",
         birthday: "2004-09-16",
         location: "中国 广东省 广州市",
+        locationSelection: ProfileLocationSelection(
+            displayName: "中国 广东省 广州市",
+            regionCode: "CN",
+            stateCode: "44",
+            cityCode: "1"
+        ),
         hometown: "中国 广东省 汕头市",
+        hometownSelection: ProfileLocationSelection(
+            displayName: "中国 广东省 汕头市",
+            regionCode: "CN",
+            stateCode: "44",
+            cityCode: "5"
+        ),
         ipArea: "广东"
     )
 

@@ -220,14 +220,20 @@ final class ProfileViewModel: ObservableObject {
         let normalizedCollege = profile.college.isEmpty ? ProfileFormSupport.unselectedOption : profile.college
         let validMajors = profileOptions.majorOptions(for: normalizedCollege)
         college = facultyOptions.contains(normalizedCollege) ? normalizedCollege : ProfileFormSupport.unselectedOption
-        major = validMajors.contains(profile.major) ? profile.major : ProfileFormSupport.unselectedOption
+        if let majorCode = profile.majorCode,
+           let restoredMajor = profileOptions.majorLabel(for: college, majorCode: majorCode),
+           validMajors.contains(restoredMajor) {
+            major = restoredMajor
+        } else {
+            major = validMajors.contains(profile.major) ? profile.major : ProfileFormSupport.unselectedOption
+        }
         grade = profile.grade
         bio = profile.bio
         birthday = profile.birthday
         location = profile.location
         hometown = profile.hometown
-        locationSelection = nil
-        hometownSelection = nil
+        locationSelection = profile.locationSelection
+        hometownSelection = profile.hometownSelection
     }
 
     private func bindSessionState() {

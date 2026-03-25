@@ -30,18 +30,25 @@ struct ProfileRemoteUpdatePlan {
 
 enum ProfileRemoteMapper {
     static func mapProfile(_ dto: UserProfileDTO) -> UserProfile {
-        UserProfile(
+        let locationSelection = selection(from: dto.location)
+        let hometownSelection = selection(from: dto.hometown)
+
+        return UserProfile(
             id: dto.username,
             username: dto.username,
             nickname: trimmed(dto.nickname),
             avatarURL: trimmed(dto.avatar),
-            college: trimmed(dto.faculty),
-            major: trimmed(dto.major),
+            college: trimmed(dto.faculty?.label),
+            collegeCode: dto.faculty?.code,
+            major: trimmed(dto.major?.label),
+            majorCode: sanitized(dto.major?.code),
             grade: trimmed(dto.enrollment),
             bio: trimmed(dto.introduction),
             birthday: trimmed(dto.birthday),
-            location: trimmed(dto.location),
-            hometown: trimmed(dto.hometown),
+            location: trimmed(dto.location?.displayName),
+            locationSelection: locationSelection,
+            hometown: trimmed(dto.hometown?.displayName),
+            hometownSelection: hometownSelection,
             ipArea: trimmed(dto.ipArea)
         )
     }
@@ -84,14 +91,17 @@ enum ProfileRemoteMapper {
                 return nil
             }
 
-            let majors = (faculty.majors ?? [])
-                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                .filter { !$0.isEmpty }
+            let majors = (faculty.majors ?? []).compactMap { major -> ProfileMajorOption? in
+                guard let majorCode = sanitized(major.code), let majorLabel = sanitized(major.label) else {
+                    return nil
+                }
+                return ProfileMajorOption(code: majorCode, label: majorLabel)
+            }
 
             return ProfileFacultyOption(
                 code: code,
                 label: label,
-                majors: majors.isEmpty ? [ProfileFormSupport.unselectedOption] : majors
+                majors: majors.isEmpty ? makeFallbackMajorOptions() : majors
             )
         }
 
@@ -116,7 +126,7 @@ enum ProfileRemoteMapper {
         return ProfileRemoteUpdatePlan(
             nickname: NicknameUpdateDTO(nickname: request.nickname),
             faculty: FacultyUpdateDTO(faculty: facultyCode),
-            major: majorDTO(from: request.major),
+            major: try majorDTO(from: request.major, faculty: request.college, options: options),
             enrollment: EnrollmentUpdateDTO(year: enrollmentYear),
             introduction: IntroductionUpdateDTO(introduction: request.bio),
             birthday: try birthdayDTO(from: request.birthday),
@@ -147,10 +157,13 @@ enum ProfileRemoteMapper {
         return Int(grade[range])
     }
 
-    private static func majorDTO(from major: String) -> MajorUpdateDTO? {
+    private static func majorDTO(from major: String, faculty: String, options: ProfileOptions) throws -> MajorUpdateDTO? {
         let normalized = normalizeOptionalSelection(major)
         guard let normalized, !normalized.isEmpty else { return nil }
-        return MajorUpdateDTO(major: normalized)
+        guard let majorCode = options.majorCode(for: faculty, majorLabel: normalized) else {
+            throw ProfileRemoteMapperError.unsupportedCollege(faculty)
+        }
+        return MajorUpdateDTO(major: majorCode)
     }
 
     private static func birthdayDTO(from birthday: String) throws -> BirthdayUpdateDTO? {
@@ -197,6 +210,22 @@ enum ProfileRemoteMapper {
             return ProfileDictionaryOption(code: code, label: label)
         }
         return mapped.isEmpty ? fallback : mapped
+    }
+
+    private static func selection(from dto: ProfileRemoteLocationValueDTO?) -> ProfileLocationSelection? {
+        guard let dto, let regionCode = sanitized(dto.region) else {
+            return nil
+        }
+        return ProfileLocationSelection(
+            displayName: trimmed(dto.displayName),
+            regionCode: regionCode,
+            stateCode: trimmed(dto.state),
+            cityCode: trimmed(dto.city)
+        )
+    }
+
+    private static func makeFallbackMajorOptions() -> [ProfileMajorOption] {
+        [ProfileMajorOption(code: "unselected", label: ProfileFormSupport.unselectedOption)]
     }
 
     private static func normalize(_ value: String) -> String {
