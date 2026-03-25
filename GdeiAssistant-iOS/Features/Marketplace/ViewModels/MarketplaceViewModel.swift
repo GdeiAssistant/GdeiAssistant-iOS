@@ -38,7 +38,7 @@ final class MarketplaceViewModel: ObservableObject {
                 items = try await repository.fetchItems(typeID: selectedTypeID)
             }
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "二手列表加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("marketplace.listLoadFailed")
         }
     }
 
