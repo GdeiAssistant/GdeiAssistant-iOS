@@ -3,18 +3,18 @@ import Combine
 
 @MainActor
 final class FeedbackViewModel: ObservableObject {
-    @Published var selectedType = "应用功能异常"
+    @Published var selectedType = localizedString("feedback.defaultType")
     @Published var content = ""
     @Published var contact = ""
     @Published var submitState: SubmitState = .idle
 
     let typeOptions = [
-        "闪退或卡顿",
-        "账号与安全",
-        "校园服务问题",
-        "社区内容问题",
-        "应用功能异常",
-        "其它"
+        localizedString("feedback.type.crash"),
+        localizedString("feedback.type.account"),
+        localizedString("feedback.type.campus"),
+        localizedString("feedback.type.community"),
+        localizedString("feedback.type.malfunction"),
+        localizedString("feedback.type.other")
     ]
 
     private let repository: any AccountCenterRepository
@@ -29,7 +29,7 @@ final class FeedbackViewModel: ObservableObject {
 
     func submit() async {
         guard isFormValid else {
-            submitState = .failure("请填写反馈内容")
+            submitState = .failure(localizedString("feedback.contentEmpty"))
             return
         }
 
@@ -42,16 +42,16 @@ final class FeedbackViewModel: ObservableObject {
                     type: selectedType
                 )
             )
-            submitState = .success("感谢反馈，我们会尽快处理")
+            submitState = .success(localizedString("feedback.success"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "提交反馈失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("feedback.failed"))
         }
     }
 }
 
 @MainActor
 final class DownloadDataViewModel: ObservableObject {
-    @Published var status = DownloadDataStatus(state: .idle, message: "你可以随时导出个人数据副本。", downloadURL: nil)
+    @Published var status = DownloadDataStatus(state: .idle, message: localizedString("downloadData.description"), downloadURL: nil)
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -68,7 +68,7 @@ final class DownloadDataViewModel: ObservableObject {
         do {
             status = try await repository.fetchDownloadStatus()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载导出状态失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("downloadData.loadFailed")
         }
     }
 
@@ -79,7 +79,7 @@ final class DownloadDataViewModel: ObservableObject {
         do {
             status = try await repository.startDataExport()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "提交导出失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("downloadData.exportFailed")
         }
     }
 
@@ -90,7 +90,7 @@ final class DownloadDataViewModel: ObservableObject {
         do {
             status = try await repository.fetchDownloadURL()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "获取下载地址失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("downloadData.urlFailed")
         }
     }
 }
@@ -116,7 +116,7 @@ final class AvatarEditViewModel: ObservableObject {
             avatarState = try await repository.fetchAvatarState()
             updateSessionAvatarURL(avatarState.url)
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "加载头像失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("avatar.loadFailed"))
         }
     }
 
@@ -125,9 +125,9 @@ final class AvatarEditViewModel: ObservableObject {
         do {
             avatarState = try await repository.uploadAvatar(avatar)
             updateSessionAvatarURL(avatarState.url)
-            submitState = .success("头像已更新")
+            submitState = .success(localizedString("avatar.updateSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "上传头像失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("avatar.updateFailed"))
         }
     }
 
@@ -136,9 +136,9 @@ final class AvatarEditViewModel: ObservableObject {
         do {
             avatarState = try await repository.deleteAvatar()
             updateSessionAvatarURL(avatarState.url)
-            submitState = .success("已恢复默认头像")
+            submitState = .success(localizedString("avatar.deleteSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "删除头像失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("avatar.deleteFailed"))
         }
     }
 
@@ -179,15 +179,15 @@ final class DeleteAccountViewModel: ObservableObject {
 
     func submit() async {
         guard canSubmit else {
-            submitState = .failure("请确认风险提示并输入账号密码")
+            submitState = .failure(localizedString("deleteAccount.validation"))
             return
         }
         submitState = .submitting
         do {
             try await repository.deleteAccount(password: FormValidationSupport.trimmed(password))
-            submitState = .success("账号注销已提交")
+            submitState = .success(localizedString("deleteAccount.success"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "注销账号失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("deleteAccount.failed"))
         }
     }
 }

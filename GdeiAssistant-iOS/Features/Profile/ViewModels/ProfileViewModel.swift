@@ -11,8 +11,8 @@ final class ProfileViewModel: ObservableObject {
     @Published var isSaving = false
     @Published var saveErrorMessage: String?
     @Published var nickname = ""
-    @Published var college = "未选择"
-    @Published var major = "未选择"
+    @Published var college = ProfileFormSupport.unselectedOption
+    @Published var major = ProfileFormSupport.unselectedOption
     @Published var grade = ""
     @Published var bio = ""
     @Published var birthday = ""
@@ -85,7 +85,7 @@ final class ProfileViewModel: ObservableObject {
             sessionState.currentUser = fetchedProfile
             syncDraft(with: fetchedProfile)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载个人信息失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.loadFailed")
         }
     }
 
@@ -94,7 +94,7 @@ final class ProfileViewModel: ObservableObject {
             locationRegions = try await repository.fetchLocationRegions()
         } catch {
             if profile == nil {
-                errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载资料选项失败"
+                errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.optionsFailed")
             }
         }
     }
@@ -108,7 +108,7 @@ final class ProfileViewModel: ObservableObject {
             }
         } catch {
             if profile == nil {
-                errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载资料选项失败"
+                errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.optionsFailed")
             }
         }
     }
@@ -123,7 +123,7 @@ final class ProfileViewModel: ObservableObject {
 
     func selectMajor(_ value: String) {
         guard canSelectMajor else {
-            saveErrorMessage = "请先选择院系"
+            saveErrorMessage = localizedString("profile.selectFacultyFirst")
             return
         }
         major = value
@@ -154,7 +154,7 @@ final class ProfileViewModel: ObservableObject {
     @discardableResult
     func saveProfile() async -> Bool {
         guard isFormValid else {
-            saveErrorMessage = "请填写昵称"
+            saveErrorMessage = localizedString("profile.nicknameEmpty")
             return false
         }
 
@@ -180,7 +180,7 @@ final class ProfileViewModel: ObservableObject {
             syncDraft(with: updatedProfile)
             return true
         } catch {
-            saveErrorMessage = (error as? LocalizedError)?.errorDescription ?? "保存资料失败"
+            saveErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.saveFailed")
             return false
         }
     }

@@ -36,7 +36,7 @@ final class CardViewModel: ObservableObject {
             dashboard = try await repository.fetchDashboard(on: targetDate)
         } catch {
             dashboard = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "校园卡数据加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("card.loadFailed")
         }
     }
 
@@ -47,10 +47,10 @@ final class CardViewModel: ObservableObject {
         do {
             let request = CardLossRequest(cardPassword: cardPassword)
             try await repository.reportLoss(request: request)
-            submitState = .success("校园卡已挂失，请尽快前往服务中心处理")
+            submitState = .success(localizedString("card.lostSuccess"))
             await loadDashboard()
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "挂失失败，请稍后重试")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("card.lostFailed"))
         }
     }
 

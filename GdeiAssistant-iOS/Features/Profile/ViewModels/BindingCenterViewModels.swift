@@ -7,7 +7,7 @@ final class BindPhoneViewModel: ObservableObject {
     @Published var selectedAreaCode = 86
     @Published var phone = ""
     @Published var randomCode = ""
-    @Published var status = ContactBindingStatus(isBound: false, rawValue: nil, maskedValue: "未绑定", note: "尚未绑定手机号", countryCode: nil, username: nil)
+    @Published var status = ContactBindingStatus(isBound: false, rawValue: nil, maskedValue: localizedString("bindPhone.notBound"), note: localizedString("bindPhone.notBoundHint"), countryCode: nil, username: nil)
     @Published var isLoading = false
     @Published var isSendingCode = false
     @Published var countdown = 0
@@ -38,7 +38,7 @@ final class BindPhoneViewModel: ObservableObject {
             status = try await statusTask
             selectedAreaCode = status.countryCode ?? attributions.first?.code ?? 86
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "加载手机号信息失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindPhone.loadFailed"))
         }
     }
 
@@ -46,7 +46,7 @@ final class BindPhoneViewModel: ObservableObject {
         let normalizedPhone = FormValidationSupport.digitsOnly(phone, maxLength: 11)
         phone = normalizedPhone
         guard normalizedPhone.count >= 7 else {
-            submitState = .failure("请输入正确的手机号")
+            submitState = .failure(localizedString("bindPhone.invalidFormat"))
             return
         }
         isSendingCode = true
@@ -54,9 +54,9 @@ final class BindPhoneViewModel: ObservableObject {
         do {
             try await repository.sendPhoneVerification(areaCode: selectedAreaCode, phone: normalizedPhone)
             startCountdown()
-            submitState = .success("验证码已发送，请查收短信")
+            submitState = .success(localizedString("bindPhone.codeSent"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发送验证码失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindPhone.codeFailed"))
         }
     }
 
@@ -64,7 +64,7 @@ final class BindPhoneViewModel: ObservableObject {
         let normalizedPhone = FormValidationSupport.digitsOnly(phone, maxLength: 11)
         phone = normalizedPhone
         guard normalizedPhone.count >= 7, FormValidationSupport.hasText(randomCode) else {
-            submitState = .failure("请填写手机号和验证码")
+            submitState = .failure(localizedString("bindPhone.formEmpty"))
             return
         }
         submitState = .submitting
@@ -76,9 +76,9 @@ final class BindPhoneViewModel: ObservableObject {
                     randomCode: FormValidationSupport.trimmed(randomCode)
                 )
             )
-            submitState = .success("手机号绑定成功")
+            submitState = .success(localizedString("bindPhone.bindSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "手机号绑定失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindPhone.bindFailed"))
         }
     }
 
@@ -86,9 +86,9 @@ final class BindPhoneViewModel: ObservableObject {
         submitState = .submitting
         do {
             status = try await repository.unbindPhone()
-            submitState = .success("手机号已解绑")
+            submitState = .success(localizedString("bindPhone.unbindSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "手机号解绑失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindPhone.unbindFailed"))
         }
     }
 
@@ -112,7 +112,7 @@ final class BindPhoneViewModel: ObservableObject {
 final class BindEmailViewModel: ObservableObject {
     @Published var email = ""
     @Published var randomCode = ""
-    @Published var status = ContactBindingStatus(isBound: false, rawValue: nil, maskedValue: "未绑定", note: "尚未绑定邮箱", countryCode: nil, username: nil)
+    @Published var status = ContactBindingStatus(isBound: false, rawValue: nil, maskedValue: localizedString("bindEmail.notBound"), note: localizedString("bindEmail.notBoundHint"), countryCode: nil, username: nil)
     @Published var isLoading = false
     @Published var isSendingCode = false
     @Published var countdown = 0
@@ -139,7 +139,7 @@ final class BindEmailViewModel: ObservableObject {
         do {
             status = try await repository.fetchEmailStatus()
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "加载邮箱状态失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindEmail.loadFailed"))
         }
     }
 
@@ -150,7 +150,7 @@ final class BindEmailViewModel: ObservableObject {
               let atIndex = normalizedEmail.firstIndex(of: "@"),
               normalizedEmail[normalizedEmail.startIndex..<atIndex].count >= 1,
               normalizedEmail[normalizedEmail.index(after: atIndex)...].contains(".") else {
-            submitState = .failure("请输入正确的邮箱地址")
+            submitState = .failure(localizedString("bindEmail.invalidFormat"))
             return
         }
         isSendingCode = true
@@ -158,9 +158,9 @@ final class BindEmailViewModel: ObservableObject {
         do {
             try await repository.sendEmailVerification(email: normalizedEmail)
             startCountdown()
-            submitState = .success("验证码已发送，请查收邮件")
+            submitState = .success(localizedString("bindEmail.codeSent"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发送验证码失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindEmail.codeFailed"))
         }
     }
 
@@ -170,7 +170,7 @@ final class BindEmailViewModel: ObservableObject {
         guard normalizedEmail.contains("@"), normalizedEmail.contains("."),
               normalizedEmail.firstIndex(of: "@").map({ normalizedEmail[$0...].contains(".") }) == true,
               FormValidationSupport.hasText(randomCode) else {
-            submitState = .failure("请填写邮箱和验证码")
+            submitState = .failure(localizedString("bindEmail.formEmpty"))
             return
         }
         submitState = .submitting
@@ -179,9 +179,9 @@ final class BindEmailViewModel: ObservableObject {
                 email: normalizedEmail,
                 randomCode: FormValidationSupport.trimmed(randomCode)
             )
-            submitState = .success("邮箱绑定成功")
+            submitState = .success(localizedString("bindEmail.bindSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "邮箱绑定失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindEmail.bindFailed"))
         }
     }
 
@@ -189,9 +189,9 @@ final class BindEmailViewModel: ObservableObject {
         submitState = .submitting
         do {
             status = try await repository.unbindEmail()
-            submitState = .success("邮箱已解绑")
+            submitState = .success(localizedString("bindEmail.unbindSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "邮箱解绑失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("bindEmail.unbindFailed"))
         }
     }
 

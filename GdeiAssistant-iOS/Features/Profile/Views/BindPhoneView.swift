@@ -36,7 +36,7 @@ struct BindPhoneView: View {
                     DSInputField(title: localizedString("bindPhone.code"), placeholder: localizedString("bindPhone.codePlaceholder"), text: $viewModel.randomCode, keyboardType: .numberPad)
 
                     DSButton(
-                        title: viewModel.countdown > 0 ? "\(viewModel.countdown)s 后重试" : localizedString("bindPhone.getCode"),
+                        title: retryCodeButtonTitle,
                         icon: "message.badge",
                         variant: .secondary,
                         isLoading: viewModel.isSendingCode,
@@ -100,5 +100,17 @@ struct BindPhoneView: View {
             Text(value)
                 .foregroundStyle(DSColor.title)
         }
+    }
+
+    private var retryCodeButtonTitle: String {
+        guard viewModel.countdown > 0 else {
+            return localizedString("bindPhone.getCode")
+        }
+
+        return String(
+            format: localizedString("common.retryAfterSeconds"),
+            locale: Locale(identifier: UserPreferences.currentLocale),
+            viewModel.countdown
+        )
     }
 }

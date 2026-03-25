@@ -24,7 +24,7 @@ struct CaptchaImageView: View {
                     VStack(spacing: 6) {
                         Image(systemName: "arrow.clockwise")
                             .font(.headline)
-                        Text("点击刷新")
+                        Text(localizedString("captcha.tapToRefresh"))
                             .font(.caption)
                     }
                     .foregroundStyle(DSColor.subtitle)
@@ -33,7 +33,7 @@ struct CaptchaImageView: View {
             .frame(width: 110, height: 52)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("刷新验证码")
+        .accessibilityLabel(localizedString("captcha.refreshAccessibility"))
     }
 
     private var imageData: Data? {

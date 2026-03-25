@@ -133,7 +133,7 @@ struct LoginView: View {
                 }
 
                 if viewModel.shouldShowMockHint {
-                    Text(AppConstants.Debug.mockCredentialsHint)
+                    Text(localizedString("login.mockCredentialsHint"))
                         .font(.caption)
                         .foregroundStyle(DSColor.subtitle)
                         .multilineTextAlignment(.center)
@@ -170,7 +170,7 @@ struct LoginView: View {
                     }
 
                     if preferences.useMockData {
-                        Text(AppConstants.Debug.mockCredentialsHint)
+                        Text(localizedString("login.mockCredentialsHint"))
                             .font(.caption)
                             .foregroundStyle(DSColor.subtitle)
                             .frame(maxWidth: .infinity, alignment: .leading)

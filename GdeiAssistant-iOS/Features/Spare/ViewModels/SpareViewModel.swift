@@ -21,7 +21,7 @@ final class SpareViewModel: ObservableObject {
         do {
             items = try await repository.queryRooms(query)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "空教室查询失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("spare.loadFailed")
             items = []
         }
     }

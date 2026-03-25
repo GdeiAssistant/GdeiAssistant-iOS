@@ -47,7 +47,7 @@ final class GradeViewModel: ObservableObject {
             selectedTermID = preferredTerm ?? fetched.terms.first(where: { !$0.items.isEmpty })?.id ?? "1"
         } catch {
             report = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "成绩加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("grade.loadFailed")
         }
     }
 
@@ -56,7 +56,7 @@ final class GradeViewModel: ObservableObject {
     }
 
     var displayYearOptions: [DisplayYearOption] {
-        let labels = ["大一", "大二", "大三", "大四"]
+        let labels = [localizedString("grade.year.freshman"), localizedString("grade.year.sophomore"), localizedString("grade.year.junior"), localizedString("grade.year.senior")]
         return yearOptions.enumerated().map { index, option in
             let title = index < labels.count ? labels[index] : option.title
             return DisplayYearOption(id: option.id, title: title)

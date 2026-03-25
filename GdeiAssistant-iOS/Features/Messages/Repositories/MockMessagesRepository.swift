@@ -31,7 +31,7 @@ final class MockMessagesRepository: MessagesRepository {
             return detail
         }
 
-        throw NetworkError.server(code: 404, message: "公告不存在")
+        throw NetworkError.server(code: 404, message: localizedString("messages.announcementNotFound"))
     }
 
     func fetchFestival() async throws -> Festival? {

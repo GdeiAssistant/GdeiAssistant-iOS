@@ -36,7 +36,11 @@ struct PhotographView: View {
                 }
             } else if viewModel.posts.isEmpty {
                 Section {
-                    DSEmptyStateView(icon: "camera", title: localizedString("photograph.noWorks"), message: "当前分类下还没有内容，去发布第一张校园照片")
+                    DSEmptyStateView(
+                        icon: "camera",
+                        title: localizedString("photograph.noWorks"),
+                        message: localizedString("photograph.emptyCategoryMessage")
+                    )
                 }
             } else {
                 Section {
@@ -401,7 +405,13 @@ private struct MyPhotographPostsView: View {
                     Task { await loadData() }
                 }
             } else if visiblePosts.isEmpty {
-                DSEmptyStateView(icon: "camera.macro", title: localizedString("photograph.myEmpty"), message: selectedFilter == .all ? localizedString("photograph.myEmptyMsg") : "当前分类下还没有发布作品")
+                DSEmptyStateView(
+                    icon: "camera.macro",
+                    title: localizedString("photograph.myEmpty"),
+                    message: selectedFilter == .all
+                        ? localizedString("photograph.myEmptyMsg")
+                        : localizedString("photograph.myEmptyFilteredMessage")
+                )
             } else {
                 List {
                     Section {
@@ -531,7 +541,7 @@ private struct PublishPhotographView: View {
         .navigationTitle(localizedString("photograph.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(viewModel.submitState.isSubmitting ? localizedString("photograph.submitting") : "提交") {
+                Button(viewModel.submitState.isSubmitting ? localizedString("photograph.submitting") : localizedString("common.submit")) {
                     Task {
                         let success = await viewModel.submit()
                         if success {

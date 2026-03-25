@@ -5,7 +5,7 @@ final class MockDataCenterRepository: DataCenterRepository {
     func queryElectricity(_ query: ElectricityQuery) async throws -> ElectricityBill {
         try await Task.sleep(nanoseconds: 180_000_000)
         guard FormValidationSupport.hasText(query.name), FormValidationSupport.hasText(query.studentNumber) else {
-            throw NetworkError.server(code: 400, message: "请完整填写姓名和学号")
+            throw NetworkError.server(code: 400, message: localizedString("dataCenter.nameOrIDEmpty"))
         }
         return ElectricityBill(year: query.year, buildingNumber: "11 栋", roomNumber: "503", peopleNumber: "4", department: "信息工程学院", usedElectricAmount: "128.50", freeElectricAmount: "30.00", feeBasedElectricAmount: "98.50", electricPrice: "0.68", totalElectricBill: "66.98", averageElectricBill: "16.75")
     }

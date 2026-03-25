@@ -7,7 +7,7 @@ enum AuthManagerError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .repositoryNotConfigured:
-            return "认证仓储未配置"
+            return localizedString("auth.repositoryNotConfigured")
         }
     }
 }
@@ -72,7 +72,9 @@ final class AuthManager: ObservableObject {
             if case NetworkError.unauthorized = error {
                 handleUnauthorized()
             } else {
-                sessionState.markLoggedOut(message: (error as? LocalizedError)?.errorDescription ?? "恢复登录态失败")
+                sessionState.markLoggedOut(
+                    message: (error as? LocalizedError)?.errorDescription ?? localizedString("auth.restoreFailed")
+                )
             }
         }
     }
@@ -113,6 +115,6 @@ final class AuthManager: ObservableObject {
 
     func handleUnauthorized() {
         clearToken()
-        sessionState.markLoggedOut(message: "登录状态已过期，请重新登录")
+        sessionState.markLoggedOut(message: localizedString("auth.sessionExpired"))
     }
 }

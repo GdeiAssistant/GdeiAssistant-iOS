@@ -16,7 +16,7 @@ final class GraduateExamViewModel: ObservableObject {
 
     func submit() async {
         guard FormValidationSupport.hasText(query.name), FormValidationSupport.hasText(query.examNumber), FormValidationSupport.hasText(query.idNumber) else {
-            errorMessage = "请完整填写查询信息"
+            errorMessage = localizedString("graduateExam.formIncomplete")
             score = nil
             return
         }
@@ -26,7 +26,7 @@ final class GraduateExamViewModel: ObservableObject {
         do {
             score = try await repository.queryScore(query)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "考研成绩查询失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("graduateExam.loadFailed")
             score = nil
         }
     }

@@ -19,7 +19,7 @@ enum AppConstants {
     enum API {
         static let devBaseURLString = "http://localhost:8080/api"
         static let stagingBaseURLString = "https://gdeiassistant.azurewebsites.net/api"
-        static let prodBaseURLString = "https://gdeiassistant.azurewebsites.net/api"
+        static let prodBaseURLString = "https://gdeiassistant.cn/api"
 
         static let authorizationHeader = "Authorization"
         static let clientTypeHeader = "X-Client-Type"

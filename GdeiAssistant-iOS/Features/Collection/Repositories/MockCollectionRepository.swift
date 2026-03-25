@@ -48,7 +48,7 @@ final class MockCollectionRepository: CollectionRepository {
         try await Task.sleep(nanoseconds: 140_000_000)
         let normalizedPassword = FormValidationSupport.trimmed(password)
         if normalizedPassword != "123456" && normalizedPassword != "library123" {
-            throw NetworkError.server(code: 400, message: "图书馆密码不正确")
+            throw NetworkError.server(code: 400, message: localizedString("collection.invalidPassword"))
         }
         return borrowedBooks
     }
@@ -57,10 +57,10 @@ final class MockCollectionRepository: CollectionRepository {
         try await Task.sleep(nanoseconds: 150_000_000)
         let normalizedPassword = FormValidationSupport.trimmed(password)
         if normalizedPassword != "123456" && normalizedPassword != "library123" {
-            throw NetworkError.server(code: 400, message: "图书馆密码不正确")
+            throw NetworkError.server(code: 400, message: localizedString("collection.invalidPassword"))
         }
         guard let index = borrowedBooks.firstIndex(where: { $0.sn == sn && $0.code == code }) else {
-            throw NetworkError.server(code: 404, message: "未找到可续借记录")
+            throw NetworkError.server(code: 404, message: localizedString("collection.renewNotFound"))
         }
         let current = borrowedBooks[index]
         borrowedBooks[index] = CollectionBorrowItem(

@@ -10,16 +10,6 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                NavigationLink {
-                    AppearanceView()
-                } label: {
-                    Label(LocalizedStringKey("appearance.title"), systemImage: "paintbrush")
-                }
-            } header: {
-                Text(LocalizedStringKey("appearance.title"))
-            }
-
-            Section {
                 Toggle(LocalizedStringKey("settings.useMockData"), isOn: mockBinding)
                     .disabled(!viewModel.isDebug)
 
@@ -70,7 +60,7 @@ struct SettingsView: View {
                     Text(LocalizedStringKey("settings.iOSClient"))
                         .font(.footnote)
                         .foregroundStyle(DSColor.subtitle)
-                    Text("Copyright \u{00A9} GdeiAssistant 2016-2026")
+                    Text(LocalizedStringKey("settings.copyright"))
                         .font(.footnote)
                         .foregroundStyle(DSColor.subtitle)
                 }

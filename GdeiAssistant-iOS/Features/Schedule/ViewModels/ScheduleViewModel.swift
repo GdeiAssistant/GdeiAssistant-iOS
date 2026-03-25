@@ -39,7 +39,7 @@ final class ScheduleViewModel: ObservableObject {
             schedule = try await repository.fetchWeeklySchedule(weekIndex: selectedWeekIndex)
         } catch {
             schedule = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "课表加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("schedule.loadFailed")
         }
     }
 
