@@ -85,6 +85,23 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertTrue(firstSaveResult)
         XCTAssertEqual(repository.updateCallCount, 1)
     }
+
+    func testSaveProfileRestoresPersistedDraftWhenRequestFails() async {
+        let repository = RecordingProfileRepository()
+        repository.updateError = URLError(.notConnectedToInternet)
+        let sessionState = SessionState()
+        let viewModel = ProfileViewModel(repository: repository, sessionState: sessionState)
+
+        await viewModel.loadProfile()
+        viewModel.nickname = "Edited nickname"
+        viewModel.bio = "Edited bio"
+
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertFalse(didSave)
+        XCTAssertEqual(viewModel.nickname, repository.profile.nickname)
+        XCTAssertEqual(viewModel.bio, repository.profile.bio)
+    }
 }
 
 @MainActor
@@ -100,6 +117,7 @@ private final class RecordingProfileRepository: ProfileRepository {
         bio: "bio",
         birthday: "2001-02-03"
     )
+    var updateError: Error?
     private(set) var updateRequests: [ProfileUpdateRequest] = []
 
     func fetchProfile() async throws -> UserProfile {
@@ -115,6 +133,9 @@ private final class RecordingProfileRepository: ProfileRepository {
     }
 
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {
+        if let updateError {
+            throw updateError
+        }
         updateRequests.append(request)
         profile = UserProfile(
             id: profile.id,
