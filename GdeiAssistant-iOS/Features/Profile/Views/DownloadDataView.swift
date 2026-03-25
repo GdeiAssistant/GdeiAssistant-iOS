@@ -37,7 +37,7 @@ struct DownloadDataView: View {
             .padding(16)
         }
         .background(DSColor.background)
-        .navigationTitle("下载个人数据")
+        .navigationTitle(localizedString("downloadData.title"))
         .task {
             await viewModel.load()
         }
@@ -47,15 +47,15 @@ struct DownloadDataView: View {
     private var actionButton: some View {
         switch viewModel.status.state {
         case .idle:
-            DSButton(title: "开始导出", icon: "archivebox", isLoading: viewModel.isLoading) {
+            DSButton(title: localizedString("downloadData.startExport"), icon: "archivebox", isLoading: viewModel.isLoading) {
                 Task { await viewModel.startExport() }
             }
         case .exporting:
-            DSButton(title: "刷新导出状态", icon: "arrow.clockwise", variant: .secondary, isLoading: viewModel.isLoading) {
+            DSButton(title: localizedString("downloadData.refreshStatus"), icon: "arrow.clockwise", variant: .secondary, isLoading: viewModel.isLoading) {
                 Task { await viewModel.load() }
             }
         case .exported:
-            DSButton(title: "获取下载地址", icon: "arrow.down.circle", isLoading: viewModel.isLoading) {
+            DSButton(title: localizedString("downloadData.getURL"), icon: "arrow.down.circle", isLoading: viewModel.isLoading) {
                 Task { await viewModel.fetchDownloadURL() }
             }
         }

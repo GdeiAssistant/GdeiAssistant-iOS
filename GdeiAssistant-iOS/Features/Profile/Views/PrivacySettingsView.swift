@@ -10,31 +10,31 @@ struct PrivacySettingsView: View {
     var body: some View {
         List {
             Section {
-                toggleRow("公开我的院系", value: viewModel.settings.facultyOpen) { value in
+                toggleRow(localizedString("privacy.faculty"), value: viewModel.settings.facultyOpen) { value in
                     await viewModel.update { $0.facultyOpen = value }
                 }
-                toggleRow("公开我的专业", value: viewModel.settings.majorOpen) { value in
+                toggleRow(localizedString("privacy.major"), value: viewModel.settings.majorOpen) { value in
                     await viewModel.update { $0.majorOpen = value }
                 }
-                toggleRow("公开我的个人简介", value: viewModel.settings.introductionOpen) { value in
+                toggleRow(localizedString("privacy.intro"), value: viewModel.settings.introductionOpen) { value in
                     await viewModel.update { $0.introductionOpen = value }
                 }
-                toggleRow("公开我的入学年份", value: viewModel.settings.enrollmentOpen) { value in
+                toggleRow(localizedString("privacy.enrollment"), value: viewModel.settings.enrollmentOpen) { value in
                     await viewModel.update { $0.enrollmentOpen = value }
                 }
-                toggleRow("公开我的国家/地区", value: viewModel.settings.locationOpen) { value in
+                toggleRow(localizedString("privacy.location"), value: viewModel.settings.locationOpen) { value in
                     await viewModel.update { $0.locationOpen = value }
                 }
-                toggleRow("公开我的家乡", value: viewModel.settings.hometownOpen) { value in
+                toggleRow(localizedString("privacy.hometown"), value: viewModel.settings.hometownOpen) { value in
                     await viewModel.update { $0.hometownOpen = value }
                 }
-                toggleRow("公开我的年龄", value: viewModel.settings.ageOpen) { value in
+                toggleRow(localizedString("privacy.age"), value: viewModel.settings.ageOpen) { value in
                     await viewModel.update { $0.ageOpen = value }
                 }
-                toggleRow("缓存我的教务数据", value: viewModel.settings.cacheAllow) { value in
+                toggleRow(localizedString("privacy.cache"), value: viewModel.settings.cacheAllow) { value in
                     await viewModel.update { $0.cacheAllow = value }
                 }
-                toggleRow("允许搜索引擎收录个人页", value: viewModel.settings.robotsIndexAllow) { value in
+                toggleRow(localizedString("privacy.robotsIndex"), value: viewModel.settings.robotsIndexAllow) { value in
                     await viewModel.update { $0.robotsIndexAllow = value }
                 }
             }
@@ -47,10 +47,10 @@ struct PrivacySettingsView: View {
                 }
             }
         }
-        .navigationTitle("隐私设置")
+        .navigationTitle(localizedString("privacy.title"))
         .overlay(alignment: .center) {
             if viewModel.isLoading {
-                ProgressView("正在加载...")
+                ProgressView(localizedString("privacy.loading"))
                     .padding()
                     .background(.thinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -59,11 +59,11 @@ struct PrivacySettingsView: View {
         .task {
             await viewModel.load()
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("common.notice"), isPresented: Binding(
             get: { viewModel.successMessage != nil },
             set: { if !$0 { viewModel.successMessage = nil } }
         )) {
-            Button("知道了", role: .cancel) {}
+            Button(localizedString("common.understood"), role: .cancel) {}
         } message: {
             Text(viewModel.successMessage ?? "")
         }

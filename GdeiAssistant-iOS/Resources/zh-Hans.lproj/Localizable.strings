@@ -1246,3 +1246,148 @@
 "evaluate.notice" = "提示";
 "evaluate.understood" = "知道了";
 "graduateExam.totalScore" = "总分：";
+
+// MARK: - Profile
+"profile.loading" = "正在加载个人信息...";
+"profile.emptyTitle" = "暂无个人资料";
+"profile.emptyMsg" = "请稍后重试";
+"profile.center" = "个人中心";
+"profile.accountInfo" = "账号资料";
+"profile.tapToSet" = "点击设置";
+"profile.usernameLabel" = "用户名：";
+"profile.ipAreaLabel" = "IP 属地：";
+"profile.accountFunctions" = "账号功能";
+"profile.privacySettings" = "隐私设置";
+"profile.loginRecord" = "登录记录";
+"profile.moreServices" = "更多服务";
+"profile.helpFeedback" = "帮助与反馈";
+"profile.nickname" = "昵称";
+"profile.birthday" = "生日";
+"profile.faculty" = "院系";
+"profile.major" = "专业";
+"profile.enrollment" = "入学年份";
+"profile.country" = "国家 / 地区";
+"profile.hometown" = "家乡";
+"profile.bio" = "个人简介";
+"profile.notSet" = "未设置";
+"profile.notSelected" = "未选择";
+"profile.goWrite" = "去填写";
+"profile.nicknamePlaceholder" = "请输入昵称";
+"profile.bioPlaceholder" = "一句话介绍自己...";
+"profile.clearBirthday" = "清空生日";
+"profile.selectFacultyFirst" = "请先选择院系";
+"profile.selectCountry" = "选择国家 / 地区";
+"profile.selectHometown" = "选择家乡";
+"profile.noLocationData" = "暂无地区数据";
+"profile.locationRetry" = "请稍后重试";
+"profile.regionPicker" = "国家 / 地区";
+"profile.statePicker" = "省 / 州";
+"profile.cityPicker" = "城市";
+"profile.confirm" = "确定";
+
+// MARK: - Common
+"common.saving" = "保存中...";
+"common.saveFailed" = "保存失败";
+
+// MARK: - News
+"news.loading" = "正在加载新闻...";
+"news.emptyTitle" = "暂无新闻";
+"news.emptyMsg" = "当前没有可展示的资讯内容";
+"news.title" = "新闻";
+"news.retry" = "点击重试";
+"news.openOriginal" = "打开原文链接";
+"news.loadFailed" = "新闻加载失败";
+
+// MARK: - Avatar
+"avatar.title" = "头像管理";
+"avatar.hint" = "建议选择清晰的正方形头像图片。上传后会同步更新普通头像与高清头像。";
+"avatar.selectNew" = "选择新头像";
+"avatar.upload" = "上传头像";
+"avatar.restoreDefault" = "恢复默认头像";
+"avatar.confirmDelete" = "确认删除头像？";
+
+// MARK: - Bind Phone
+"bindPhone.title" = "绑定手机号";
+"bindPhone.status" = "当前状态";
+"bindPhone.bound" = "已绑定";
+"bindPhone.unbound" = "未绑定";
+"bindPhone.account" = "绑定账号";
+"bindPhone.areaCode" = "当前区号";
+"bindPhone.currentNumber" = "当前号码";
+"bindPhone.intlCode" = "国际区号";
+"bindPhone.phone" = "手机号";
+"bindPhone.phonePlaceholder" = "请输入手机号";
+"bindPhone.code" = "验证码";
+"bindPhone.codePlaceholder" = "请输入短信验证码";
+"bindPhone.getCode" = "获取验证码";
+"bindPhone.retryIn" = "s 后重试";
+"bindPhone.bind" = "绑定手机号";
+"bindPhone.unbind" = "解绑手机号";
+"bindPhone.confirmUnbind" = "确认解绑手机号？";
+"bindPhone.confirmUnbindBtn" = "确认解绑";
+
+// MARK: - Bind Email
+"bindEmail.title" = "绑定邮箱";
+"bindEmail.status" = "当前状态";
+"bindEmail.currentEmail" = "当前邮箱";
+"bindEmail.email" = "邮箱地址";
+"bindEmail.emailPlaceholder" = "请输入邮箱地址";
+"bindEmail.code" = "验证码";
+"bindEmail.codePlaceholder" = "请输入邮箱验证码";
+"bindEmail.bind" = "绑定邮箱";
+"bindEmail.unbind" = "解绑邮箱";
+"bindEmail.confirmUnbind" = "确认解绑邮箱？";
+
+// MARK: - Delete Account
+"deleteAccount.title" = "注销账号";
+"deleteAccount.warning" = "注销后以下数据将被永久删除";
+"deleteAccount.risk1" = "账号及个人资料将被清空";
+"deleteAccount.risk2" = "表白墙、话题、跑腿等发布内容将被删除";
+"deleteAccount.risk3" = "评论、点赞、互动记录将被清除";
+"deleteAccount.risk4" = "自定义课程与已保存证件信息会被删除";
+"deleteAccount.risk5" = "绑定的手机号和邮箱会被解绑";
+"deleteAccount.password" = "账号密码";
+"deleteAccount.passwordPlaceholder" = "请输入当前账号密码";
+"deleteAccount.agree" = "我已知晓以上风险并确认注销";
+"deleteAccount.confirmBtn" = "确认注销账号";
+"deleteAccount.confirmDialog" = "确认执行不可逆的账号注销？";
+"deleteAccount.proceed" = "继续注销";
+"deleteAccount.verifyNote" = "系统会先校验密码和账号状态，成功后将清除本地登录态。";
+
+// MARK: - Download Data
+"downloadData.title" = "下载个人数据";
+"downloadData.startExport" = "开始导出";
+"downloadData.refreshStatus" = "刷新导出状态";
+"downloadData.getURL" = "获取下载地址";
+
+// MARK: - Feedback
+"feedback.title" = "帮助与反馈";
+"feedback.type" = "反馈类型";
+"feedback.content" = "反馈内容";
+"feedback.contact" = "联系方式";
+"feedback.contactPlaceholder" = "邮箱 / 手机号（选填）";
+"feedback.submit" = "提交反馈";
+"feedback.done" = "完成";
+
+// MARK: - Login Record
+"loginRecord.title" = "登录记录";
+"loginRecord.loading" = "正在加载登录记录...";
+"loginRecord.emptyTitle" = "暂无登录记录";
+"loginRecord.emptyMsg" = "近期没有可展示的登录记录";
+
+// MARK: - Privacy
+"privacy.title" = "隐私设置";
+"privacy.faculty" = "公开我的院系";
+"privacy.major" = "公开我的专业";
+"privacy.intro" = "公开我的个人简介";
+"privacy.enrollment" = "公开我的入学年份";
+"privacy.location" = "公开我的国家/地区";
+"privacy.hometown" = "公开我的家乡";
+"privacy.age" = "公开我的年龄";
+"privacy.cache" = "缓存我的教务数据";
+"privacy.robotsIndex" = "允许搜索引擎收录个人页";
+"privacy.loading" = "正在加载...";
+
+// MARK: - Common
+"common.notice" = "提示";
+"common.understood" = "知道了";

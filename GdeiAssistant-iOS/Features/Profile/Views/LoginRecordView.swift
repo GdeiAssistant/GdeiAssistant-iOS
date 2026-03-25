@@ -10,13 +10,13 @@ struct LoginRecordView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.records.isEmpty {
-                DSLoadingView(text: "正在加载登录记录...")
+                DSLoadingView(text: localizedString("loginRecord.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.records.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.load() }
                 }
             } else if viewModel.records.isEmpty {
-                DSEmptyStateView(icon: "clock.arrow.circlepath", title: "暂无登录记录", message: "近期没有可展示的登录记录")
+                DSEmptyStateView(icon: "clock.arrow.circlepath", title: localizedString("loginRecord.emptyTitle"), message: localizedString("loginRecord.emptyMsg"))
             } else {
                 List(viewModel.records) { record in
                     VStack(alignment: .leading, spacing: 6) {
@@ -40,7 +40,7 @@ struct LoginRecordView: View {
                 .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("登录记录")
+        .navigationTitle(localizedString("loginRecord.title"))
         .task {
             await viewModel.load()
         }

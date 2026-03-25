@@ -1246,3 +1246,148 @@
 "evaluate.notice" = "Notice";
 "evaluate.understood" = "Got it";
 "graduateExam.totalScore" = "Total: ";
+
+// MARK: - Profile
+"profile.loading" = "Loading profile...";
+"profile.emptyTitle" = "No profile data";
+"profile.emptyMsg" = "Please try again later";
+"profile.center" = "Profile";
+"profile.accountInfo" = "Account Info";
+"profile.tapToSet" = "Tap to set";
+"profile.usernameLabel" = "Username: ";
+"profile.ipAreaLabel" = "IP Region: ";
+"profile.accountFunctions" = "Account";
+"profile.privacySettings" = "Privacy";
+"profile.loginRecord" = "Login Records";
+"profile.moreServices" = "More";
+"profile.helpFeedback" = "Help & Feedback";
+"profile.nickname" = "Nickname";
+"profile.birthday" = "Birthday";
+"profile.faculty" = "Faculty";
+"profile.major" = "Major";
+"profile.enrollment" = "Enrollment Year";
+"profile.country" = "Country / Region";
+"profile.hometown" = "Hometown";
+"profile.bio" = "Bio";
+"profile.notSet" = "Not set";
+"profile.notSelected" = "Not selected";
+"profile.goWrite" = "Add";
+"profile.nicknamePlaceholder" = "Enter nickname";
+"profile.bioPlaceholder" = "Introduce yourself...";
+"profile.clearBirthday" = "Clear birthday";
+"profile.selectFacultyFirst" = "Select faculty first";
+"profile.selectCountry" = "Select Country / Region";
+"profile.selectHometown" = "Select Hometown";
+"profile.noLocationData" = "No location data";
+"profile.locationRetry" = "Try again later";
+"profile.regionPicker" = "Country / Region";
+"profile.statePicker" = "State / Province";
+"profile.cityPicker" = "City";
+"profile.confirm" = "Confirm";
+
+// MARK: - Common
+"common.saving" = "Saving...";
+"common.saveFailed" = "Save failed";
+
+// MARK: - News
+"news.loading" = "Loading news...";
+"news.emptyTitle" = "No news";
+"news.emptyMsg" = "No news to display";
+"news.title" = "News";
+"news.retry" = "Tap to retry";
+"news.openOriginal" = "Open original";
+"news.loadFailed" = "Failed to load news";
+
+// MARK: - Avatar
+"avatar.title" = "Avatar";
+"avatar.hint" = "Choose a clear square image. Both standard and HD avatars will be updated.";
+"avatar.selectNew" = "Select new avatar";
+"avatar.upload" = "Upload";
+"avatar.restoreDefault" = "Restore default";
+"avatar.confirmDelete" = "Delete avatar?";
+
+// MARK: - Bind Phone
+"bindPhone.title" = "Bind Phone";
+"bindPhone.status" = "Status";
+"bindPhone.bound" = "Bound";
+"bindPhone.unbound" = "Not bound";
+"bindPhone.account" = "Bound account";
+"bindPhone.areaCode" = "Area code";
+"bindPhone.currentNumber" = "Current number";
+"bindPhone.intlCode" = "Country code";
+"bindPhone.phone" = "Phone";
+"bindPhone.phonePlaceholder" = "Enter phone number";
+"bindPhone.code" = "Code";
+"bindPhone.codePlaceholder" = "Enter SMS code";
+"bindPhone.getCode" = "Get Code";
+"bindPhone.retryIn" = "s retry";
+"bindPhone.bind" = "Bind Phone";
+"bindPhone.unbind" = "Unbind Phone";
+"bindPhone.confirmUnbind" = "Unbind phone?";
+"bindPhone.confirmUnbindBtn" = "Confirm unbind";
+
+// MARK: - Bind Email
+"bindEmail.title" = "Bind Email";
+"bindEmail.status" = "Status";
+"bindEmail.currentEmail" = "Current email";
+"bindEmail.email" = "Email";
+"bindEmail.emailPlaceholder" = "Enter email";
+"bindEmail.code" = "Code";
+"bindEmail.codePlaceholder" = "Enter email code";
+"bindEmail.bind" = "Bind Email";
+"bindEmail.unbind" = "Unbind Email";
+"bindEmail.confirmUnbind" = "Unbind email?";
+
+// MARK: - Delete Account
+"deleteAccount.title" = "Delete Account";
+"deleteAccount.warning" = "The following data will be permanently deleted";
+"deleteAccount.risk1" = "Account and profile will be cleared";
+"deleteAccount.risk2" = "Posts, topics, and deliveries will be deleted";
+"deleteAccount.risk3" = "Comments, likes, and interactions will be cleared";
+"deleteAccount.risk4" = "Custom courses and saved ID info will be deleted";
+"deleteAccount.risk5" = "Phone and email bindings will be removed";
+"deleteAccount.password" = "Password";
+"deleteAccount.passwordPlaceholder" = "Enter password";
+"deleteAccount.agree" = "I understand the risks and confirm deletion";
+"deleteAccount.confirmBtn" = "Delete Account";
+"deleteAccount.confirmDialog" = "Confirm irreversible account deletion?";
+"deleteAccount.proceed" = "Proceed";
+"deleteAccount.verifyNote" = "Password and account status will be verified first.";
+
+// MARK: - Download Data
+"downloadData.title" = "Download Data";
+"downloadData.startExport" = "Start Export";
+"downloadData.refreshStatus" = "Refresh Status";
+"downloadData.getURL" = "Get Download URL";
+
+// MARK: - Feedback
+"feedback.title" = "Help & Feedback";
+"feedback.type" = "Type";
+"feedback.content" = "Content";
+"feedback.contact" = "Contact";
+"feedback.contactPlaceholder" = "Email / Phone (optional)";
+"feedback.submit" = "Submit";
+"feedback.done" = "Done";
+
+// MARK: - Login Record
+"loginRecord.title" = "Login Records";
+"loginRecord.loading" = "Loading login records...";
+"loginRecord.emptyTitle" = "No login records";
+"loginRecord.emptyMsg" = "No recent login records";
+
+// MARK: - Privacy
+"privacy.title" = "Privacy Settings";
+"privacy.faculty" = "Show faculty";
+"privacy.major" = "Show major";
+"privacy.intro" = "Show bio";
+"privacy.enrollment" = "Show enrollment year";
+"privacy.location" = "Show country/region";
+"privacy.hometown" = "Show hometown";
+"privacy.age" = "Show age";
+"privacy.cache" = "Cache academic data";
+"privacy.robotsIndex" = "Allow search engine indexing";
+"privacy.loading" = "Loading...";
+
+// MARK: - Common
+"common.notice" = "Notice";
+"common.understood" = "Got it";

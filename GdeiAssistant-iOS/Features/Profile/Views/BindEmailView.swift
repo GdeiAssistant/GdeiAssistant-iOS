@@ -12,16 +12,16 @@ struct BindEmailView: View {
         ScrollView {
             VStack(spacing: 16) {
                 DSCard {
-                    infoRow("当前状态", viewModel.status.isBound ? "已绑定" : "未绑定")
-                    infoRow("当前邮箱", viewModel.status.maskedValue)
+                    infoRow(localizedString("bindEmail.status"), viewModel.status.isBound ? localizedString("bindPhone.bound") : localizedString("bindPhone.unbound"))
+                    infoRow(localizedString("bindEmail.currentEmail"), viewModel.status.maskedValue)
                 }
 
                 DSCard {
-                    DSInputField(title: "邮箱地址", placeholder: "请输入邮箱地址", text: $viewModel.email, keyboardType: .emailAddress)
-                    DSInputField(title: "验证码", placeholder: "请输入邮箱验证码", text: $viewModel.randomCode, keyboardType: .numberPad)
+                    DSInputField(title: localizedString("bindEmail.email"), placeholder: localizedString("bindEmail.emailPlaceholder"), text: $viewModel.email, keyboardType: .emailAddress)
+                    DSInputField(title: localizedString("bindEmail.code"), placeholder: localizedString("bindEmail.codePlaceholder"), text: $viewModel.randomCode, keyboardType: .numberPad)
 
                     DSButton(
-                        title: viewModel.countdown > 0 ? "\(viewModel.countdown)s 后重试" : "获取验证码",
+                        title: viewModel.countdown > 0 ? "\(viewModel.countdown)s 后重试" : localizedString("bindPhone.getCode"),
                         icon: "envelope.badge",
                         variant: .secondary,
                         isLoading: viewModel.isSendingCode,
@@ -38,7 +38,7 @@ struct BindEmailView: View {
                 }
 
                 DSButton(
-                    title: "绑定邮箱",
+                    title: localizedString("bindEmail.bind"),
                     icon: "envelope.badge.person.crop",
                     isLoading: viewModel.submitState.isSubmitting
                 ) {
@@ -46,7 +46,7 @@ struct BindEmailView: View {
                 }
 
                 if viewModel.status.isBound {
-                    DSButton(title: "解绑邮箱", icon: "envelope.open.fill", variant: .destructive) {
+                    DSButton(title: localizedString("bindEmail.unbind"), icon: "envelope.open.fill", variant: .destructive) {
                         showUnbindConfirmation = true
                     }
                 }
@@ -54,24 +54,24 @@ struct BindEmailView: View {
             .padding(16)
         }
         .background(DSColor.background)
-        .navigationTitle("绑定邮箱")
+        .navigationTitle(localizedString("bindEmail.title"))
         .task {
             await viewModel.load()
         }
-        .confirmationDialog("确认解绑邮箱？", isPresented: $showUnbindConfirmation, titleVisibility: .visible) {
-            Button("确认解绑", role: .destructive) {
+        .confirmationDialog(localizedString("bindEmail.confirmUnbind"), isPresented: $showUnbindConfirmation, titleVisibility: .visible) {
+            Button(localizedString("bindPhone.confirmUnbindBtn"), role: .destructive) {
                 Task { await viewModel.unbind() }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("common.notice"), isPresented: Binding(
             get: {
                 if case .success = viewModel.submitState { return true }
                 return false
             },
             set: { if !$0 { viewModel.submitState = .idle } }
         )) {
-            Button("知道了") { viewModel.submitState = .idle }
+            Button(localizedString("common.understood")) { viewModel.submitState = .idle }
         } message: {
             Text(viewModel.submitState.message ?? "")
         }

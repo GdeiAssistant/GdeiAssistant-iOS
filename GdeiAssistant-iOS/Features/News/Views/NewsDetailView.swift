@@ -46,7 +46,7 @@ struct NewsDetailView: View {
                     Button {
                         openURL(url)
                     } label: {
-                        Label("打开原文链接", systemImage: "safari")
+                        Label(localizedString("news.openOriginal"), systemImage: "safari")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(DSColor.primary)
                     }
@@ -103,7 +103,7 @@ struct NewsDetailView: View {
             detail = try await container.newsRepository.fetchNewsDetail(id: newsID)
         } catch {
             detail = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "新闻加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("news.loadFailed")
         }
     }
 }
