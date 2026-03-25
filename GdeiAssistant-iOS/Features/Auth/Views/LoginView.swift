@@ -46,7 +46,32 @@ struct LoginView: View {
                     .padding(.bottom, 20)
                 }
             }
-            .toolbar(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    languageMenuButton
+                }
+            }
+        }
+    }
+
+    private var languageMenuButton: some View {
+        Menu {
+            ForEach(loginLanguageOptions) { option in
+                Button {
+                    preferences.selectedLocale = option.code
+                } label: {
+                    HStack {
+                        Text(option.nativeName)
+                        if preferences.selectedLocale == option.code {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        } label: {
+            Image(systemName: "globe")
+                .font(.body)
+                .foregroundStyle(DSColor.subtitle)
         }
     }
 
@@ -126,60 +151,29 @@ struct LoginView: View {
             .padding(.horizontal, 4)
     }
 
+    @ViewBuilder
     private var devPanel: some View {
-        VStack(spacing: 12) {
-            // Language selector (always visible)
+        // Mock toggle (debug builds only)
+        if environment.isDebug {
             DSCard {
-                HStack {
-                    Text(LocalizedStringKey("appearance.language.label"))
-                        .font(.subheadline)
-                        .foregroundStyle(DSColor.title)
-                    Spacer()
-                    Menu {
-                        ForEach(loginLanguageOptions) { option in
-                            Button {
-                                preferences.selectedLocale = option.code
-                            } label: {
-                                HStack {
-                                    Text(option.nativeName)
-                                    if preferences.selectedLocale == option.code {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
+                VStack(spacing: 8) {
+                    Toggle(isOn: Binding(
+                        get: { preferences.useMockData },
+                        set: { newValue in
+                            preferences.setUseMockData(newValue)
+                            environment.updateDataSourceMode(newValue ? .mock : .remote)
                         }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text(loginLanguageOptions.first(where: { $0.code == preferences.selectedLocale })?.nativeName ?? preferences.selectedLocale)
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.subtitle)
-                            Image(systemName: "chevron.up.chevron.down")
-                                .font(.caption2)
-                                .foregroundStyle(DSColor.subtitle)
-                        }
+                    )) {
+                        Text(LocalizedStringKey("settings.useMockData"))
+                            .font(.subheadline)
+                            .foregroundStyle(DSColor.title)
                     }
-                }
-            }
 
-            // Mock toggle (debug builds only)
-            if environment.isDebug {
-                DSCard {
-                    VStack(spacing: 8) {
-                        Toggle(isOn: Binding(
-                            get: { preferences.useMockData },
-                            set: { preferences.setUseMockData($0) }
-                        )) {
-                            Text(LocalizedStringKey("settings.useMockData"))
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.title)
-                        }
-
-                        if preferences.useMockData {
-                            Text(AppConstants.Debug.mockCredentialsHint)
-                                .font(.caption)
-                                .foregroundStyle(DSColor.subtitle)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                    if preferences.useMockData {
+                        Text(AppConstants.Debug.mockCredentialsHint)
+                            .font(.caption)
+                            .foregroundStyle(DSColor.subtitle)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
             }
