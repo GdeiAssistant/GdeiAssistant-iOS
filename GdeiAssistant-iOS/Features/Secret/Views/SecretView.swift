@@ -13,13 +13,13 @@ struct SecretView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.posts.isEmpty {
-                DSLoadingView(text: "正在加载树洞内容...")
+                DSLoadingView(text: localizedString("secret.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.posts.isEmpty {
-                DSEmptyStateView(icon: "moon.stars", title: "树洞还很安静", message: "来写下今天的心情")
+                DSEmptyStateView(icon: "moon.stars", title: localizedString("secret.emptyTitle"), message: localizedString("secret.emptyMessage"))
             } else {
                 List {
                     Section {
@@ -44,14 +44,14 @@ struct SecretView: View {
                 }
             }
         }
-        .navigationTitle("校园树洞")
+        .navigationTitle(localizedString("secret.title"))
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink("我的") {
+                NavigationLink(localizedString("secret.mine")) {
                     MySecretPostsView(viewModel: viewModel)
                 }
 
-                NavigationLink("发布") {
+                NavigationLink(localizedString("secret.publish")) {
                     PublishSecretView(
                         listViewModel: viewModel,
                         publishViewModel: container.makePublishSecretViewModel()
@@ -74,7 +74,7 @@ private struct SecretPostCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(post.isVoice ? "语音树洞" : "文本树洞")
+                Text(post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(theme.textColor.opacity(0.85))
                 Spacer()
@@ -154,7 +154,7 @@ struct SecretDetailView: View {
     var body: some View {
         Group {
             if isLoading {
-                DSLoadingView(text: "正在加载详情...")
+                DSLoadingView(text: localizedString("secret.detailLoading"))
             } else if let errorMessage {
                 DSErrorStateView(message: errorMessage) {
                     Task { await loadDetail() }
@@ -171,12 +171,12 @@ struct SecretDetailView: View {
                                     .foregroundStyle(DSColor.primary)
                             }
 
-                            Text("评论")
+                            Text(localizedString("secret.comment"))
                                 .font(.headline)
                                 .foregroundStyle(DSColor.title)
 
                             HStack(alignment: .bottom, spacing: 10) {
-                                TextField("写下你的回应...", text: $commentText, axis: .vertical)
+                                TextField(localizedString("secret.commentPlaceholder"), text: $commentText, axis: .vertical)
                                     .lineLimit(2...4)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 10)
@@ -184,7 +184,7 @@ struct SecretDetailView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                                 DSButton(
-                                    title: "发送",
+                                    title: localizedString("secret.send"),
                                     variant: .primary,
                                     isLoading: isSubmittingComment,
                                     isDisabled: commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -195,7 +195,7 @@ struct SecretDetailView: View {
                             }
 
                             if detail.comments.isEmpty {
-                                Text("还没有评论，欢迎留下第一条回应。")
+                                Text(localizedString("secret.emptyComments"))
                                     .font(.subheadline)
                                     .foregroundStyle(DSColor.subtitle)
                             } else {
@@ -224,7 +224,7 @@ struct SecretDetailView: View {
                 }
             }
         }
-        .navigationTitle("匿名详情")
+        .navigationTitle(localizedString("secret.anonymousDetail"))
         .task {
             await loadDetail()
         }
@@ -235,7 +235,7 @@ struct SecretDetailView: View {
         let theme = SecretThemeStyle.palette(for: detail.post.themeID)
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text(detail.post.isVoice ? "语音树洞" : "文本树洞")
+                Text(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(theme.textColor.opacity(0.85))
                 Spacer()
@@ -254,8 +254,8 @@ struct SecretDetailView: View {
                 .lineSpacing(5)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("发布者：\(detail.post.username)")
-                Text("内容类型：\(detail.post.isVoice ? "语音树洞" : "文本树洞")")
+                Text("\(localizedString("secret.publisher"))\(detail.post.username)")
+                Text("\(localizedString("secret.contentType"))\(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))")
                 if let timerText = detail.post.timerText {
                     Text(timerText)
                 }
@@ -300,18 +300,18 @@ struct SecretDetailView: View {
         do {
             detail = try await viewModel.fetchDetail(postID: postID)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("secret.detailLoadFailed")
         }
     }
 
     private func submitComment() async {
         let trimmedContent = commentText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedContent.isEmpty else {
-            errorMessage = "请输入评论内容"
+            errorMessage = localizedString("secret.commentEmpty")
             return
         }
         guard trimmedContent.count <= 50 else {
-            errorMessage = "评论内容不能超过 50 个字"
+            errorMessage = localizedString("secret.commentTooLong")
             return
         }
 
@@ -322,7 +322,7 @@ struct SecretDetailView: View {
             detail = try await viewModel.submitComment(postID: postID, content: trimmedContent)
             commentText = ""
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "评论发送失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("secret.commentFailed")
         }
     }
 
@@ -333,7 +333,7 @@ struct SecretDetailView: View {
         do {
             detail = try await viewModel.setLike(postID: postID, liked: !post.isLiked)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "点赞操作失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("secret.likeFailed")
         }
     }
 
@@ -345,11 +345,11 @@ struct SecretDetailView: View {
         guard notificationID != nil else { return nil }
         switch normalizedNotificationTargetType {
         case "comment":
-            return "来自互动消息：有新评论，打开详情即可查看"
+            return localizedString("secret.fromInteractionComment")
         case "like":
-            return "来自互动消息：有人点赞了这条树洞"
+            return localizedString("secret.fromInteractionLike")
         default:
-            return "来自互动消息"
+            return localizedString("secret.fromInteraction")
         }
     }
 
@@ -371,7 +371,7 @@ private struct MySecretPostsView: View {
     var body: some View {
         Group {
             if viewModel.myPosts.isEmpty && !viewModel.isLoading {
-                DSEmptyStateView(icon: "moon.stars", title: "暂无发布的树洞", message: "去写下第一条匿名心情")
+                DSEmptyStateView(icon: "moon.stars", title: localizedString("secret.myEmpty"), message: localizedString("secret.myEmptyMsg"))
             } else {
                 List {
                     ForEach(viewModel.myPosts) { post in
@@ -399,7 +399,7 @@ private struct MySecretPostsView: View {
                         HStack {
                             Spacer()
                             ProgressView()
-                            Text("加载中...")
+                            Text(localizedString("secret.loadingMore"))
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
                             Spacer()
@@ -409,7 +409,7 @@ private struct MySecretPostsView: View {
                     } else if !viewModel.hasMoreMyPosts && !viewModel.myPosts.isEmpty {
                         HStack {
                             Spacer()
-                            Text("没有更多了")
+                            Text(localizedString("secret.noMore"))
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
                             Spacer()
@@ -423,7 +423,7 @@ private struct MySecretPostsView: View {
                 .background(DSColor.background)
             }
         }
-        .navigationTitle("我的树洞")
+        .navigationTitle(localizedString("secret.myTitle"))
         .refreshable {
             await viewModel.refresh()
         }
@@ -447,7 +447,7 @@ private struct SecretVoicePlayer: View {
             HStack(spacing: 10) {
                 Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     .font(.title3)
-                Text(isPlaying ? "暂停语音" : "播放语音")
+                Text(isPlaying ? localizedString("secret.pauseVoice") : localizedString("secret.playVoice"))
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 Image(systemName: "waveform")
@@ -505,9 +505,9 @@ struct PublishSecretView: View {
     var body: some View {
         Form {
             Section {
-                Picker("模式", selection: $publishViewModel.mode) {
-                    Text("文字").tag(SecretDraftMode.text)
-                    Text("语音").tag(SecretDraftMode.voice)
+                Picker(localizedString("secret.modeLabel"), selection: $publishViewModel.mode) {
+                    Text(localizedString("secret.modeText")).tag(SecretDraftMode.text)
+                    Text(localizedString("secret.modeVoice")).tag(SecretDraftMode.voice)
                 }
                 .pickerStyle(.segmented)
             }
@@ -515,27 +515,27 @@ struct PublishSecretView: View {
             Section {
                 SecretThemePalette(selectedThemeID: $publishViewModel.selectedThemeID)
             } header: {
-                Text("选择颜色")
+                Text(localizedString("secret.colorPicker"))
             }
 
             if publishViewModel.mode == .text {
                 Section {
-                    TextField("写下你想说的话", text: $publishViewModel.content, axis: .vertical)
+                    TextField(localizedString("secret.textPlaceholder"), text: $publishViewModel.content, axis: .vertical)
                         .lineLimit(5...8)
-                    Toggle("24 小时后自动删除", isOn: $publishViewModel.deleteAfter24Hours)
+                    Toggle(localizedString("secret.autoDelete"), isOn: $publishViewModel.deleteAfter24Hours)
                 } header: {
-                    Text("文本树洞")
+                    Text(localizedString("secret.textTitle"))
                 }
             } else {
                 Section {
                     HStack {
-                        Button(isRecording ? "结束录音" : "开始录音") {
+                        Button(isRecording ? localizedString("secret.stopRecording") : localizedString("secret.startRecording")) {
                             Task { await toggleRecording() }
                         }
                         .buttonStyle(.borderedProminent)
 
                         if voiceFileURL != nil {
-                            Button(player?.isPlaying == true ? "停止试听" : "试听语音") {
+                            Button(player?.isPlaying == true ? localizedString("secret.stopPreview") : localizedString("secret.previewVoice")) {
                                 togglePreviewPlayback()
                             }
                             .buttonStyle(.bordered)
@@ -543,22 +543,22 @@ struct PublishSecretView: View {
                     }
 
                     if isRecording {
-                        Label("录音中 · \(formatDuration(recordingDuration))", systemImage: "waveform.circle")
+                        Label("\(localizedString("secret.recording")) · \(formatDuration(recordingDuration))", systemImage: "waveform.circle")
                             .foregroundStyle(DSColor.primary)
                     } else if voiceFileURL != nil {
-                        Label("已录制 · \(formatDuration(recordingDuration))", systemImage: "checkmark.circle")
+                        Label("\(localizedString("secret.recorded")) · \(formatDuration(recordingDuration))", systemImage: "checkmark.circle")
                             .foregroundStyle(DSColor.secondary)
                     } else {
-                        Text("点击开始录音，最长 60 秒。")
+                        Text(localizedString("secret.recordingHint"))
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                     }
 
-                    Toggle("24 小时后自动删除", isOn: $publishViewModel.deleteAfter24Hours)
+                    Toggle(localizedString("secret.autoDelete"), isOn: $publishViewModel.deleteAfter24Hours)
                 } header: {
-                    Text("语音树洞")
+                    Text(localizedString("secret.voiceTitle"))
                 } footer: {
-                    Text("与 Web 一致，语音树洞通过 `voice` 文件上传到 `/secret/info`。当前 iOS 只接本地录音上传，不接微信 `voiceId`。")
+                    Text(localizedString("secret.voiceNote"))
                 }
             }
 
@@ -570,7 +570,7 @@ struct PublishSecretView: View {
                 }
             }
         }
-        .navigationTitle("发布树洞")
+        .navigationTitle(localizedString("secret.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -579,13 +579,13 @@ struct PublishSecretView: View {
                     if publishViewModel.submitState.isSubmitting {
                         ProgressView()
                     } else {
-                        Text("发布")
+                        Text(localizedString("secret.publish"))
                     }
                 }
                 .disabled(publishViewModel.submitState.isSubmitting || !canSubmit)
             }
         }
-        .alert("提示", isPresented: Binding(
+        .alert(localizedString("secret.notice"), isPresented: Binding(
             get: {
                 if case .success = publishViewModel.submitState { return true }
                 return false
@@ -596,7 +596,7 @@ struct PublishSecretView: View {
                 }
             }
         )) {
-            Button("知道了") {
+            Button(localizedString("secret.understood")) {
                 publishViewModel.submitState = .idle
                 dismiss()
             }
@@ -624,7 +624,7 @@ struct PublishSecretView: View {
         if publishViewModel.mode == .voice {
             guard let voiceFileURL,
                   let data = try? Data(contentsOf: voiceFileURL) else {
-                publishViewModel.submitState = .failure("请先录制一段语音")
+                publishViewModel.submitState = .failure(localizedString("secret.noRecording"))
                 return
             }
             voiceDraft = SecretVoiceDraft(fileData: data, fileName: voiceFileURL.lastPathComponent, mimeType: "audio/m4a")
@@ -638,9 +638,9 @@ struct PublishSecretView: View {
 
         do {
             try await listViewModel.publish(draft: draft)
-            publishViewModel.submitState = .success("树洞内容已发布")
+            publishViewModel.submitState = .success(localizedString("secret.published"))
         } catch {
-            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            publishViewModel.submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("secret.publishFailed"))
         }
     }
 
@@ -655,7 +655,7 @@ struct PublishSecretView: View {
     private func startRecording() async {
         let granted = await requestMicrophonePermission()
         guard granted else {
-            publishViewModel.submitState = .failure("未获得麦克风权限")
+            publishViewModel.submitState = .failure(localizedString("secret.micDenied"))
             return
         }
 
@@ -687,7 +687,7 @@ struct PublishSecretView: View {
                 }
             }
         } catch {
-            publishViewModel.submitState = .failure("录音启动失败")
+            publishViewModel.submitState = .failure(localizedString("secret.recordFailed"))
         }
     }
 
@@ -713,7 +713,7 @@ struct PublishSecretView: View {
             player.play()
             self.player = player
         } catch {
-            publishViewModel.submitState = .failure("语音试听失败")
+            publishViewModel.submitState = .failure(localizedString("secret.previewFailed"))
         }
     }
 
