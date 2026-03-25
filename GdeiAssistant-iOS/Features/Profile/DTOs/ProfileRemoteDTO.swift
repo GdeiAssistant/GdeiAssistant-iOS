@@ -4,15 +4,32 @@ struct UserProfileDTO: Decodable {
     let username: String
     let nickname: String?
     let avatar: String?
-    let faculty: String?
-    let major: String?
+    let faculty: ProfileValueLabelIntDTO?
+    let major: ProfileValueLabelStringDTO?
     let enrollment: String?
-    let location: String?
-    let hometown: String?
+    let location: ProfileRemoteLocationValueDTO?
+    let hometown: ProfileRemoteLocationValueDTO?
     let introduction: String?
     let birthday: String?
     let ipArea: String?
     let age: Int?
+}
+
+struct ProfileValueLabelIntDTO: Decodable {
+    let code: Int?
+    let label: String?
+}
+
+struct ProfileValueLabelStringDTO: Decodable {
+    let code: String?
+    let label: String?
+}
+
+struct ProfileRemoteLocationValueDTO: Decodable {
+    let region: String?
+    let state: String?
+    let city: String?
+    let displayName: String?
 }
 
 struct NicknameUpdateDTO: Encodable {
@@ -75,7 +92,12 @@ struct ProfileDictionaryOptionDTO: Decodable {
 struct ProfileFacultyOptionDTO: Decodable {
     let code: Int?
     let label: String?
-    let majors: [String]?
+    let majors: [ProfileMajorOptionDTO]?
+}
+
+struct ProfileMajorOptionDTO: Decodable {
+    let code: String?
+    let label: String?
 }
 
 struct ProfileOptionsDTO: Decodable {
