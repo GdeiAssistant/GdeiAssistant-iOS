@@ -13,21 +13,21 @@ enum NetworkError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "请求地址无效"
+            return localizedString("network.invalidURL")
         case .invalidResponse:
-            return "服务响应异常"
+            return localizedString("network.invalidResponse")
         case .transport:
-            return "网络连接失败，请检查网络后重试"
+            return localizedString("network.transport")
         case .unauthorized:
-            return "登录状态已过期，请重新登录"
+            return localizedString("network.unauthorized")
         case .httpStatus(let status, let message):
-            return message.isEmpty ? "请求失败（\(status)）" : message
+            return message.isEmpty ? String(format: localizedString("network.httpStatus"), Int(status)) : message
         case .server(_, let message):
-            return message.isEmpty ? "服务暂时不可用，请稍后重试" : message
+            return message.isEmpty ? localizedString("network.serverUnavailable") : message
         case .noData:
-            return "服务返回数据为空"
+            return localizedString("network.noData")
         case .decoding:
-            return "数据解析失败"
+            return localizedString("network.decoding")
         }
     }
 }

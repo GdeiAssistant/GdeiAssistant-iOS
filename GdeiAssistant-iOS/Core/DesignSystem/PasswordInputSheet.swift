@@ -23,7 +23,7 @@ struct PasswordInputSheet: View {
                         .lineSpacing(4)
 
                     SecureFormField(
-                        title: "安全验证",
+                        title: localizedString("passwordSheet.verificationTitle"),
                         placeholder: placeholder,
                         text: $password,
                         textContentType: .password,
@@ -52,7 +52,7 @@ struct PasswordInputSheet: View {
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("取消", action: onCancel)
+                    Button(localizedString("common.cancel"), action: onCancel)
                 }
             }
         }

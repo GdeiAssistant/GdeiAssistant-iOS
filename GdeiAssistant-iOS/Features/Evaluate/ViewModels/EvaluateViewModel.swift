@@ -22,9 +22,9 @@ final class EvaluateViewModel: ObservableObject {
         submitState = .submitting
         do {
             try await repository.submit(submission)
-            submitState = .success("评教提交成功")
+            submitState = .success(localizedString("evaluate.success"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "评教提交失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("evaluate.failed"))
         }
     }
 }

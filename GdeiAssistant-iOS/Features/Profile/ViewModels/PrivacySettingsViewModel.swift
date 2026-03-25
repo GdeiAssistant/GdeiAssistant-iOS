@@ -23,7 +23,7 @@ final class PrivacySettingsViewModel: ObservableObject {
         do {
             settings = try await repository.fetchPrivacySettings()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载隐私设置失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("privacy.loadFailed")
         }
     }
 
@@ -36,9 +36,9 @@ final class PrivacySettingsViewModel: ObservableObject {
 
         do {
             settings = try await repository.updatePrivacySettings(next)
-            successMessage = "隐私设置已更新"
+            successMessage = localizedString("privacy.updateSuccess")
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "保存隐私设置失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("privacy.updateFailed")
         }
     }
 }

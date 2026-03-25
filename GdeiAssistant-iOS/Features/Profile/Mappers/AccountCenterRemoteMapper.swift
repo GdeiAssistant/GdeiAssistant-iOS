@@ -36,7 +36,7 @@ enum AccountCenterRemoteMapper {
                 id: code,
                 code: code,
                 flag: dto.flag ?? "",
-                name: RemoteMapperSupport.firstNonEmpty(dto.name, "未知地区")
+                name: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("loginRecord.unknownArea"))
             )
         }
     }
@@ -46,11 +46,11 @@ enum AccountCenterRemoteMapper {
         let code = dto?.code
         let note: String
         if phone == nil || phone?.isEmpty == true {
-            note = "尚未绑定手机号"
+            note = localizedString("bindPhone.notBoundHint")
         } else if let code {
-            note = "已绑定手机号（+\(code)），可用于安全验证与通知提醒"
+            note = String(format: localizedString("bindPhone.boundHint"), code)
         } else {
-            note = "已绑定手机号，可用于安全验证与通知提醒"
+            note = localizedString("bindPhone.boundHintWithoutAreaCode")
         }
         return ContactBindingStatus(
             isBound: !(phone?.isEmpty ?? true),
@@ -68,7 +68,9 @@ enum AccountCenterRemoteMapper {
             isBound: !(email?.isEmpty ?? true),
             rawValue: email,
             maskedValue: maskEmail(email),
-            note: email == nil || email?.isEmpty == true ? "尚未绑定邮箱" : "已绑定邮箱，可用于接收验证码与服务通知",
+            note: email == nil || email?.isEmpty == true
+                ? localizedString("bindEmail.notBoundHint")
+                : localizedString("bindEmail.boundHint"),
             countryCode: nil,
             username: nil
         )
@@ -87,15 +89,15 @@ enum AccountCenterRemoteMapper {
             let area = RemoteMapperSupport.firstNonEmpty(
                 dto.area,
                 [dto.country, dto.province, dto.city].compactMap { $0 }.joined(separator: " "),
-                "未知地区"
+                localizedString("loginRecord.unknownArea")
             )
             return LoginRecordItem(
                 id: String(dto.id ?? Int.random(in: 1...999_999)),
-                timeText: RemoteMapperSupport.dateText(dto.time, fallback: "刚刚"),
-                ip: RemoteMapperSupport.firstNonEmpty(dto.ip, "未知 IP"),
+                timeText: RemoteMapperSupport.dateText(dto.time, fallback: localizedString("common.justNow")),
+                ip: RemoteMapperSupport.firstNonEmpty(dto.ip, localizedString("loginRecord.unknownIP")),
                 area: area,
                 device: displayDevice(dto.network),
-                statusText: "登录成功"
+                statusText: localizedString("loginRecord.success")
             )
         }
     }
@@ -105,11 +107,11 @@ enum AccountCenterRemoteMapper {
         let message: String
         switch state {
         case .idle:
-            message = "你可以随时导出个人数据副本。"
+            message = localizedString("downloadData.description")
         case .exporting:
-            message = "系统正在打包你的数据，请稍后回来查看。"
+            message = localizedString("downloadData.exportingMessage")
         case .exported:
-            message = "数据已打包完成，可立即下载。"
+            message = localizedString("downloadData.exportedMessage")
         }
 
         return DownloadDataStatus(state: state, message: message, downloadURL: downloadURL)
@@ -127,7 +129,7 @@ enum AccountCenterRemoteMapper {
     }
 
     nonisolated private static func maskPhone(_ phone: String?) -> String {
-        guard let phone, !phone.isEmpty else { return "未绑定" }
+        guard let phone, !phone.isEmpty else { return localizedString("bindPhone.notBound") }
         if phone.count >= 11 {
             let prefix = phone.prefix(3)
             let suffix = phone.suffix(4)
@@ -142,7 +144,7 @@ enum AccountCenterRemoteMapper {
     }
 
     nonisolated private static func maskEmail(_ email: String?) -> String {
-        guard let email, !email.isEmpty else { return "未绑定" }
+        guard let email, !email.isEmpty else { return localizedString("bindEmail.notBound") }
         let parts = email.split(separator: "@")
         guard parts.count == 2 else { return email }
         let local = String(parts[0])
@@ -152,7 +154,7 @@ enum AccountCenterRemoteMapper {
     }
 
     nonisolated private static func displayDevice(_ rawValue: String?) -> String {
-        let value = RemoteMapperSupport.firstNonEmpty(rawValue, "未知设备")
+        let value = RemoteMapperSupport.firstNonEmpty(rawValue, localizedString("loginRecord.unknownDevice"))
             .replacingOccurrences(of: "客户端", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let lowercased = value.lowercased()
@@ -169,6 +171,6 @@ enum AccountCenterRemoteMapper {
         if lowercased.contains("android") {
             return "Android"
         }
-        return value.isEmpty ? "未知设备" : value
+        return value.isEmpty ? localizedString("loginRecord.unknownDevice") : value
     }
 }

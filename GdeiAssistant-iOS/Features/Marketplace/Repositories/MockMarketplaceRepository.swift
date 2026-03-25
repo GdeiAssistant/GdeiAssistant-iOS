@@ -28,7 +28,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
         try await Task.sleep(nanoseconds: 160_000_000)
 
         guard let detail = detailsByID[itemID] else {
-            throw NetworkError.server(code: 404, message: "商品不存在")
+            throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
 
         return detail
@@ -64,7 +64,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
         try await Task.sleep(nanoseconds: 220_000_000)
 
         guard !draft.images.isEmpty else {
-            throw NetworkError.server(code: 400, message: "请至少上传一张商品图片")
+            throw NetworkError.server(code: 400, message: localizedString("marketplace.imageEmpty"))
         }
 
         let itemID = "market_\(UUID().uuidString)"
@@ -81,10 +81,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             tags: draft.tags,
             previewImageURL: nil
         )
-        let contactHintParts = [
-            draft.qq.isEmpty ? nil : "QQ：\(draft.qq)",
-            draft.phone.flatMap { $0.isEmpty ? nil : "手机号：\($0)" }
-        ].compactMap { $0 }
+        let contactHintParts = contactHintParts(qq: draft.qq, phone: draft.phone)
         let newDetail = MarketplaceDetail(
             item: newItem,
             condition: draft.condition,
@@ -104,12 +101,9 @@ final class MockMarketplaceRepository: MarketplaceRepository {
 
     func updateItem(itemID: String, draft: MarketplaceUpdateDraft) async throws {
         guard let detail = detailsByID[itemID] else {
-            throw NetworkError.server(code: 404, message: "商品不存在")
+            throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
-        let contactHintParts = [
-            "QQ：\(draft.qq)",
-            draft.phone.flatMap { $0.isEmpty ? nil : "手机号：\($0)" }
-        ].compactMap { $0 }
+        let contactHintParts = contactHintParts(qq: draft.qq, phone: draft.phone)
         let updatedItem = MarketplaceItem(
             id: detail.item.id,
             title: draft.title,
@@ -140,7 +134,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
 
     func updateItemState(itemID: String, state: MarketplaceItemState) async throws {
         guard var detail = detailsByID[itemID] else {
-            throw NetworkError.server(code: 404, message: "商品不存在")
+            throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
 
         let updatedItem = MarketplaceItem(
@@ -179,6 +173,15 @@ final class MockMarketplaceRepository: MarketplaceRepository {
         }
     }
 
+    private func contactHintParts(qq: String, phone: String?) -> [String] {
+        [
+            qq.isEmpty ? nil : localizedString("marketplace.contactQQPrefix") + qq,
+            phone.flatMap { value in
+                value.isEmpty ? nil : localizedString("marketplace.contactPhonePrefix") + value
+            }
+        ].compactMap { $0 }
+    }
+
     private func seedPersonalItemsIfNeeded() {
         guard detailsByID["market_personal_off_001"] == nil else { return }
 
@@ -213,7 +216,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             item: offShelfItem,
             condition: "图书教材",
             description: "四六级复习资料整理完成后会重新上架，当前先在个人中心保留记录。",
-            contactHint: "QQ：231245678",
+            contactHint: localizedString("marketplace.contactQQPrefix") + "231245678",
             sellerUsername: MockSeedData.demoProfile.username,
             sellerNickname: MockSeedData.demoProfile.nickname,
             sellerCollege: MockSeedData.demoProfile.college,
@@ -225,7 +228,7 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             item: soldItem,
             condition: "生活娱乐",
             description: "已与同学完成交易，这里仅保留成交记录。",
-            contactHint: "QQ：231245678",
+            contactHint: localizedString("marketplace.contactQQPrefix") + "231245678",
             sellerUsername: MockSeedData.demoProfile.username,
             sellerNickname: MockSeedData.demoProfile.nickname,
             sellerCollege: MockSeedData.demoProfile.college,

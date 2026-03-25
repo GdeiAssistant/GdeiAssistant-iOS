@@ -21,7 +21,7 @@ final class MockSecretRepository: SecretRepository {
         try await Task.sleep(nanoseconds: 160_000_000)
 
         guard let detail = detailsByID[postID] else {
-            throw NetworkError.server(code: 404, message: "内容不存在")
+            throw NetworkError.server(code: 404, message: localizedString("secret.notFound"))
         }
 
         return detail
@@ -58,13 +58,13 @@ final class MockSecretRepository: SecretRepository {
     func submitComment(postID: String, content: String) async throws {
         let trimmedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedContent.isEmpty else {
-            throw NetworkError.server(code: 400, message: "评论内容不能为空")
+            throw NetworkError.server(code: 400, message: localizedString("secret.commentEmpty"))
         }
         guard trimmedContent.count <= 50 else {
-            throw NetworkError.server(code: 400, message: "评论内容不能超过 50 个字")
+            throw NetworkError.server(code: 400, message: localizedString("secret.commentTooLong"))
         }
         guard let detail = detailsByID[postID] else {
-            throw NetworkError.server(code: 404, message: "内容不存在")
+            throw NetworkError.server(code: 404, message: localizedString("secret.notFound"))
         }
 
         let comment = SecretComment(
@@ -96,7 +96,7 @@ final class MockSecretRepository: SecretRepository {
 
     func setLike(postID: String, liked: Bool) async throws {
         guard let detail = detailsByID[postID] else {
-            throw NetworkError.server(code: 404, message: "内容不存在")
+            throw NetworkError.server(code: 404, message: localizedString("secret.notFound"))
         }
 
         let updatedPost = SecretPost(

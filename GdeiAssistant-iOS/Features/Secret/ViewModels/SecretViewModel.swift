@@ -36,7 +36,7 @@ final class SecretViewModel: ObservableObject {
             myPosts = myPostsResult
             hasMoreMyPosts = myPostsResult.count >= pageSize
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "树洞内容加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("secret.loadFailed")
         }
     }
 
@@ -50,7 +50,7 @@ final class SecretViewModel: ObservableObject {
             myPosts.append(contentsOf: newPosts)
             hasMoreMyPosts = newPosts.count >= pageSize
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载更多失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("secret.loadMoreFailed")
         }
     }
 

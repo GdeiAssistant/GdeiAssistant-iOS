@@ -12,7 +12,7 @@ final class MockAuthRepository: AuthRepository {
         let password = request.password.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard username == validUsername, password == validPassword else {
-            throw NetworkError.server(code: 40001, message: "账号或密码错误，请检查后重试")
+            throw NetworkError.server(code: 40001, message: localizedString("auth.invalidCredentials"))
         }
 
         return MockFactory.makeLoginResponse(username: username)

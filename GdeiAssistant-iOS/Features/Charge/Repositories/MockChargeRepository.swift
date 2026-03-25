@@ -17,7 +17,7 @@ final class MockChargeRepository: ChargeRepository {
     }
 
     func submitCharge(amount: Int, password: String) async throws -> ChargePayment {
-        guard !password.isEmpty else { throw NetworkError.server(code: 400, message: "密码不能为空") }
+        guard !password.isEmpty else { throw NetworkError.server(code: 400, message: localizedString("charge.passwordEmpty")) }
         try await Task.sleep(for: .milliseconds(500))
         return ChargePayment(
             alipayURL: "https://gdeiassistant.cn/?mockCharge=\(amount)",

@@ -58,7 +58,11 @@ struct DSInputField: View {
                             .foregroundStyle(DSColor.subtitle)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(secureToggle.wrappedValue ? "显示密码" : "隐藏密码")
+                    .accessibilityLabel(
+                        localizedString(
+                            secureToggle.wrappedValue ? "common.showPassword" : "common.hidePassword"
+                        )
+                    )
                 }
             }
             .padding(.horizontal, 14)

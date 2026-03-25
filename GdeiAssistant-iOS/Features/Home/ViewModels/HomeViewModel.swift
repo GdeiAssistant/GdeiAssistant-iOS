@@ -28,7 +28,7 @@ final class HomeViewModel: ObservableObject {
             dashboard = try await repository.fetchDashboard()
         } catch {
             dashboard = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载功能主页失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("home.loadFailed")
         }
     }
 

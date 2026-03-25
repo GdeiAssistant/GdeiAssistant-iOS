@@ -25,7 +25,7 @@ final class CollectionViewModel: ObservableObject {
     func search() async {
         let trimmed = FormValidationSupport.trimmed(keyword)
         guard !trimmed.isEmpty else {
-            errorMessage = "请输入检索关键词"
+            errorMessage = localizedString("collection.keywordEmpty")
             searchPage = CollectionSearchPage(items: [], sumPage: 0)
             return
         }
@@ -35,7 +35,7 @@ final class CollectionViewModel: ObservableObject {
         do {
             searchPage = try await repository.search(keyword: trimmed, page: 1)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "馆藏检索失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("collection.searchFailed")
         }
     }
 
@@ -45,14 +45,14 @@ final class CollectionViewModel: ObservableObject {
         do {
             selectedDetail = try await repository.fetchDetail(detailURL: item.detailURL)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "馆藏详情加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("collection.detailFailed")
         }
     }
 
     func loadBorrowedBooks() async {
         let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
         guard !normalizedPassword.isEmpty else {
-            borrowMessage = "请输入图书馆密码"
+            borrowMessage = localizedString("collection.passwordEmpty")
             hasLoadedBorrowedBooks = false
             borrowedBooks = []
             return
@@ -67,23 +67,23 @@ final class CollectionViewModel: ObservableObject {
         } catch {
             hasLoadedBorrowedBooks = false
             borrowedBooks = []
-            borrowMessage = (error as? LocalizedError)?.errorDescription ?? "借阅信息加载失败"
+            borrowMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("collection.borrowFailed")
         }
     }
 
     func renewBorrow(item: CollectionBorrowItem) async {
         let normalizedPassword = FormValidationSupport.trimmed(borrowPassword)
         guard !normalizedPassword.isEmpty else {
-            submitState = .failure("请输入图书馆密码")
+            submitState = .failure(localizedString("collection.passwordEmpty"))
             return
         }
         submitState = .submitting
         do {
             try await repository.renewBorrow(sn: item.sn, code: item.code, password: normalizedPassword)
             await loadBorrowedBooks()
-            submitState = .success("已提交续借请求")
+            submitState = .success(localizedString("collection.renewSuccess"))
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "续借失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("collection.renewFailed"))
         }
     }
 }

@@ -55,7 +55,7 @@ final class AuthManagerTests: XCTestCase {
 
         XCTAssertNil(tokenStorage.token)
         XCTAssertFalse(sessionState.isLoggedIn)
-        XCTAssertEqual(sessionState.authErrorMessage, "登录状态已过期，请重新登录")
+        XCTAssertEqual(sessionState.authErrorMessage, localizedString("auth.sessionExpired"))
         XCTAssertFalse(sessionState.isRestoringSession)
     }
 }

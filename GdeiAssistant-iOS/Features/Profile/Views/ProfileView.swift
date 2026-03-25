@@ -142,6 +142,10 @@ struct ProfileView: View {
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
+                        profileMenuLink(title: localizedString("appearance.title"), systemImage: "paintbrush") {
+                            AppearanceView()
+                        }
+                        Divider()
                         profileMenuLink(title: localizedString("profile.downloadData"), systemImage: "arrow.down.doc") {
                             DownloadDataView(viewModel: container.makeDownloadDataViewModel())
                         }
@@ -309,7 +313,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(option).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.college == option {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -334,7 +338,7 @@ private struct ProfileFieldEditorSheet: View {
                                     Task { await save() }
                                 } label: {
                                     HStack {
-                                        Text(option).foregroundStyle(DSColor.title)
+                                        Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
                                         Spacer()
                                         if viewModel.major == option {
                                             Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -599,7 +603,11 @@ private struct ProfileLocationPickerSheet: View {
 private extension ProfileViewModel {
     func displayText(_ value: String, fallback: String) -> String {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? fallback : trimmed
+        return trimmed.isEmpty || trimmed == ProfileFormSupport.unselectedOption ? fallback : trimmed
+    }
+
+    func displaySelectionOption(_ value: String) -> String {
+        value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected") : value
     }
 }
 

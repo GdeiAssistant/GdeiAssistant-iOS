@@ -8,11 +8,11 @@ enum DownloadExportState: Int, Codable, CaseIterable {
     var title: String {
         switch self {
         case .idle:
-            return "未开始"
+            return localizedString("downloadData.state.idle")
         case .exporting:
-            return "正在导出"
+            return localizedString("downloadData.state.exporting")
         case .exported:
-            return "已生成"
+            return localizedString("downloadData.state.exported")
         }
     }
 }

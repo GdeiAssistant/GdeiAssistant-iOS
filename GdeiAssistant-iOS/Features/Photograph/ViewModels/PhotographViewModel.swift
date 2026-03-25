@@ -28,7 +28,7 @@ final class PhotographViewModel: ObservableObject {
         do {
             posts = try await repository.fetchPosts(category: selectedCategory, start: 0, size: pageSize)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "摄影内容加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("photograph.loadFailed")
         }
     }
 
@@ -113,7 +113,7 @@ final class PublishPhotographViewModel: ObservableObject {
 
     func addImage(_ image: UploadImageAsset) {
         guard images.count < 4 else {
-            submitState = .failure("最多上传 4 张图片")
+            submitState = .failure(localizedString("photograph.maxImages"))
             return
         }
         images.append(image)
@@ -127,20 +127,20 @@ final class PublishPhotographViewModel: ObservableObject {
         let trimmedTitle = FormValidationSupport.trimmed(title)
         let trimmedContent = FormValidationSupport.trimmed(content)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: "请输入标题") {
+        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("photograph.titleEmpty")) {
             submitState = .failure(message)
             return false
         }
         if trimmedTitle.count > 25 {
-            submitState = .failure("标题不能超过 25 个字")
+            submitState = .failure(localizedString("photograph.titleTooLong"))
             return false
         }
         if trimmedContent.count > 150 {
-            submitState = .failure("内容不能超过 150 个字")
+            submitState = .failure(localizedString("photograph.contentTooLong"))
             return false
         }
         if images.isEmpty {
-            submitState = .failure("请至少选择一张图片")
+            submitState = .failure(localizedString("photograph.noImage"))
             return false
         }
 
@@ -149,10 +149,10 @@ final class PublishPhotographViewModel: ObservableObject {
             try await repository.publish(
                 draft: PhotographDraft(title: trimmedTitle, content: trimmedContent, category: category, images: images)
             )
-            submitState = .success("作品已发布")
+            submitState = .success(localizedString("photograph.publishSuccess"))
             return true
         } catch {
-            submitState = .failure((error as? LocalizedError)?.errorDescription ?? "发布失败")
+            submitState = .failure((error as? LocalizedError)?.errorDescription ?? localizedString("photograph.publishFailed"))
             return false
         }
     }

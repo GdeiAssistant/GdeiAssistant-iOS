@@ -20,13 +20,13 @@ final class ElectricityFeesViewModel: ObservableObject {
 
     func submit() async {
         guard FormValidationSupport.hasText(query.name), FormValidationSupport.hasText(query.studentNumber) else {
-            errorMessage = "请填写姓名与学号"
+            errorMessage = localizedString("dataCenter.nameOrIDEmpty")
             bill = nil
             return
         }
         let trimmedNumber = FormValidationSupport.trimmed(query.studentNumber)
         if FormValidationSupport.digitsOnly(trimmedNumber, maxLength: 11) != trimmedNumber || trimmedNumber.count != 11 {
-            errorMessage = "请输入正确的学号（11位数字）"
+            errorMessage = localizedString("dataCenter.invalidStudentID")
             bill = nil
             return
         }
@@ -36,7 +36,7 @@ final class ElectricityFeesViewModel: ObservableObject {
         do {
             bill = try await repository.queryElectricity(query)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "电费查询失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dataCenter.electricFailed")
         }
     }
 }
@@ -65,7 +65,7 @@ final class YellowPageViewModel: ObservableObject {
         do {
             categories = try await repository.fetchYellowPages()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "黄页加载失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("dataCenter.yellowPageFailed")
         }
     }
 }

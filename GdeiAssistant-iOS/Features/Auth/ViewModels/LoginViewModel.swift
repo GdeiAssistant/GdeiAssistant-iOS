@@ -31,7 +31,7 @@ final class LoginViewModel: ObservableObject {
 
     func login() async {
         guard canSubmit else {
-            errorMessage = "请输入账号和密码"
+            errorMessage = localizedString("login.formEmpty")
             return
         }
 
@@ -43,7 +43,7 @@ final class LoginViewModel: ObservableObject {
         do {
             _ = try await authManager.login(username: username, password: password)
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "登录失败，请稍后重试"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("login.failed")
         }
     }
 }

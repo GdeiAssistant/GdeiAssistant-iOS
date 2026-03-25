@@ -21,7 +21,7 @@ final class LoginRecordViewModel: ObservableObject {
         do {
             records = try await repository.fetchLoginRecords()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "加载登录记录失败"
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("security.loginRecordFailed")
         }
     }
 }

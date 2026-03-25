@@ -14,10 +14,10 @@ final class MockCardRepository: CardRepository {
 
         let password = FormValidationSupport.trimmed(request.cardPassword)
         guard !password.isEmpty else {
-            throw NetworkError.server(code: 400, message: "请输入校园卡查询密码")
+            throw NetworkError.server(code: 400, message: localizedString("card.passwordEmpty"))
         }
         guard password == "246810" else {
-            throw NetworkError.server(code: 400, message: "模拟挂失失败：校园卡查询密码不正确")
+            throw NetworkError.server(code: 400, message: localizedString("card.mockInvalidPassword"))
         }
 
         isReportedLoss = true

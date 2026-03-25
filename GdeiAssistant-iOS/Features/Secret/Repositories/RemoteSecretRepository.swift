@@ -36,7 +36,7 @@ final class RemoteSecretRepository: SecretRepository {
             )
         case .voice:
             guard let voice = draft.voice else {
-                throw NetworkError.server(code: 400, message: "语音内容不能为空")
+                throw NetworkError.server(code: 400, message: localizedString("secret.voiceEmpty"))
             }
             let _: EmptyPayload = try await apiClient.postMultipart(
                 "/secret/info",

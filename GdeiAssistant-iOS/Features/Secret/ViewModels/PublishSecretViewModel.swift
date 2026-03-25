@@ -33,23 +33,23 @@ final class PublishSecretViewModel: ObservableObject {
         let trimmedContent = FormValidationSupport.trimmed(content)
 
         if mode == .text {
-            if let message = FormValidationSupport.requireText(trimmedContent, message: "请填写树洞内容") {
+            if let message = FormValidationSupport.requireText(trimmedContent, message: localizedString("secret.contentEmpty")) {
                 submitState = .failure(message)
                 return nil
             }
             if trimmedContent.count > 100 {
-                submitState = .failure("树洞内容不能超过 100 个字")
+                submitState = .failure(localizedString("secret.contentTooLong"))
                 return nil
             }
         } else if voice == nil {
-            submitState = .failure("请先录制一段语音")
+            submitState = .failure(localizedString("secret.noVoice"))
             return nil
         }
 
         submitState = .idle
 
         return SecretDraft(
-            title: mode == .text ? RemoteMapperSupport.truncated(trimmedContent, limit: 18) : "语音树洞",
+            title: mode == .text ? RemoteMapperSupport.truncated(trimmedContent, limit: 18) : localizedString("secret.voiceTitle"),
             content: mode == .text ? trimmedContent : nil,
             themeID: selectedThemeID,
             timerEnabled: deleteAfter24Hours,

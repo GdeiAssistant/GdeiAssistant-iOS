@@ -36,7 +36,7 @@ final class PublishMarketplaceViewModel: ObservableObject {
 
     func addImage(_ image: UploadImageAsset) {
         guard images.count < 4 else {
-            submitState = .failure("最多只能选择 4 张图片")
+            submitState = .failure(localizedString("marketplace.maxImages"))
             return
         }
         images.append(image)
@@ -56,48 +56,48 @@ final class PublishMarketplaceViewModel: ObservableObject {
         let trimmedQQ = FormValidationSupport.trimmed(qq)
         let trimmedPhone = FormValidationSupport.trimmed(phone)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: "请填写商品名称") {
+        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("marketplace.titleEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedTitle.count > 25 {
-            submitState = .failure("商品名称不能超过 25 个字")
+            submitState = .failure(localizedString("marketplace.titleTooLong"))
             return nil
         }
         guard let price = FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") else {
-            submitState = .failure("请填写有效的商品价格")
+            submitState = .failure(localizedString("marketplace.invalidPrice"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: "请填写商品描述") {
+        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("marketplace.descEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedDescription.count > 100 {
-            submitState = .failure("商品描述不能超过 100 个字")
+            submitState = .failure(localizedString("marketplace.descTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: "请填写交易地点") {
+        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("marketplace.locationEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedLocation.count > 30 {
-            submitState = .failure("交易地点不能超过 30 个字")
+            submitState = .failure(localizedString("marketplace.locationTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedQQ, message: "请填写 QQ 号") {
+        if let message = FormValidationSupport.requireText(trimmedQQ, message: localizedString("marketplace.qqEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedQQ.count > 20 {
-            submitState = .failure("QQ 号不能超过 20 位")
+            submitState = .failure(localizedString("marketplace.qqTooLong"))
             return nil
         }
         if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure("手机号不能超过 11 位")
+            submitState = .failure(localizedString("marketplace.phoneTooLong"))
             return nil
         }
         if images.isEmpty {
-            submitState = .failure("请至少选择一张商品图片")
+            submitState = .failure(localizedString("marketplace.imageEmpty"))
             return nil
         }
 
@@ -144,8 +144,14 @@ final class EditMarketplaceViewModel: ObservableObject {
         descriptionText = detail.description
         selectedTypeID = MarketplaceRemoteMapper.itemTypes.firstIndex(of: detail.condition) ?? 0
         location = detail.item.location
-        qq = Self.extractContactValue(from: detail.contactHint, prefix: "QQ：") ?? ""
-        phone = Self.extractContactValue(from: detail.contactHint, prefix: "手机号：") ?? ""
+        qq = Self.extractContactValue(
+            from: detail.contactHint,
+            prefixes: [localizedString("marketplace.contactQQPrefix"), "QQ：", "QQ: "]
+        ) ?? ""
+        phone = Self.extractContactValue(
+            from: detail.contactHint,
+            prefixes: [localizedString("marketplace.contactPhonePrefix"), "手机号：", "Phone: "]
+        ) ?? ""
     }
 
     var typeOptions: [String] {
@@ -174,44 +180,44 @@ final class EditMarketplaceViewModel: ObservableObject {
         let trimmedQQ = FormValidationSupport.trimmed(qq)
         let trimmedPhone = FormValidationSupport.trimmed(phone)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: "请填写商品名称") {
+        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("marketplace.titleEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedTitle.count > 25 {
-            submitState = .failure("商品名称不能超过 25 个字")
+            submitState = .failure(localizedString("marketplace.titleTooLong"))
             return nil
         }
         guard let price = FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") else {
-            submitState = .failure("请填写有效的商品价格")
+            submitState = .failure(localizedString("marketplace.invalidPrice"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: "请填写商品描述") {
+        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("marketplace.descEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedDescription.count > 100 {
-            submitState = .failure("商品描述不能超过 100 个字")
+            submitState = .failure(localizedString("marketplace.descTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: "请填写交易地点") {
+        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("marketplace.locationEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedLocation.count > 30 {
-            submitState = .failure("交易地点不能超过 30 个字")
+            submitState = .failure(localizedString("marketplace.locationTooLong"))
             return nil
         }
-        if let message = FormValidationSupport.requireText(trimmedQQ, message: "请填写 QQ 号") {
+        if let message = FormValidationSupport.requireText(trimmedQQ, message: localizedString("marketplace.qqEmpty")) {
             submitState = .failure(message)
             return nil
         }
         if trimmedQQ.count > 20 {
-            submitState = .failure("QQ 号不能超过 20 位")
+            submitState = .failure(localizedString("marketplace.qqTooLong"))
             return nil
         }
         if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure("手机号不能超过 11 位")
+            submitState = .failure(localizedString("marketplace.phoneTooLong"))
             return nil
         }
 
@@ -228,11 +234,17 @@ final class EditMarketplaceViewModel: ObservableObject {
         )
     }
 
-    private static func extractContactValue(from hint: String, prefix: String) -> String? {
+    private static func extractContactValue(from hint: String, prefixes: [String]) -> String? {
         hint
             .split(separator: "/")
             .map { $0.trimmingCharacters(in: .whitespaces) }
-            .first(where: { $0.hasPrefix(prefix) })
-            .map { String($0.dropFirst(prefix.count)) }
+            .compactMap { segment in
+                prefixes
+                    .first(where: { segment.hasPrefix($0) })
+                    .map { prefix in
+                        String(segment.dropFirst(prefix.count))
+                    }
+            }
+            .first
     }
 }
