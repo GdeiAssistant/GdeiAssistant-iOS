@@ -15,7 +15,14 @@ final class UserPreferences: ObservableObject {
         didSet { persistNetworkEnvironmentIfNeeded() }
     }
     @Published var selectedLocale: String {
-        didSet { persistLocaleIfNeeded() }
+        didSet {
+            let normalizedLocale = AppLanguage.normalizedIdentifier(from: selectedLocale)
+            if selectedLocale != normalizedLocale {
+                selectedLocale = normalizedLocale
+                return
+            }
+            persistLocaleIfNeeded()
+        }
     }
     @Published var selectedTheme: ThemeMode = .system {
         didSet { persistThemeIfNeeded() }
@@ -57,7 +64,7 @@ final class UserPreferences: ObservableObject {
             self.networkEnvironment = .prod
         }
         if let storedLocale = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) {
-            self.selectedLocale = storedLocale
+            self.selectedLocale = AppLanguage.normalizedIdentifier(from: storedLocale)
         } else {
             self.selectedLocale = Self.detectSystemLocale()
         }
@@ -75,8 +82,7 @@ final class UserPreferences: ObservableObject {
     /// non-SwiftUI code (computed properties, utility functions) can resolve
     /// the correct localization bundle without holding an instance reference.
     nonisolated static var currentLocale: String {
-        UserDefaults.standard.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
-            ?? detectSystemLocale()
+        AppLanguage.currentIdentifier()
     }
 
     var currentDataSourceMode: DataSourceMode {
@@ -107,7 +113,10 @@ final class UserPreferences: ObservableObject {
 
     private func persistLocaleIfNeeded() {
         guard hasInitialized else { return }
-        defaults.set(selectedLocale, forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+        defaults.set(
+            AppLanguage.normalizedIdentifier(from: selectedLocale),
+            forKey: AppConstants.UserDefaultsKeys.selectedLocale
+        )
     }
 
     private func persistThemeIfNeeded() {
@@ -121,20 +130,7 @@ final class UserPreferences: ObservableObject {
     }
 
     private nonisolated static func detectSystemLocale() -> String {
-        let lang = Locale.current.language.languageCode?.identifier ?? "zh"
-        let region = Locale.current.region?.identifier ?? ""
-        switch "\(lang)-\(region)" {
-        case "zh-HK": return "zh-HK"
-        case "zh-TW": return "zh-TW"
-        default: break
-        }
-        switch lang {
-        case "zh": return "zh-CN"
-        case "ja": return "ja"
-        case "ko": return "ko"
-        case "en": return "en"
-        default: return "zh-CN"
-        }
+        AppLanguage.detectSystemLanguage()
     }
 }
 

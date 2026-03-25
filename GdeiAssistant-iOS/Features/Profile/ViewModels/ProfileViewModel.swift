@@ -248,7 +248,7 @@ final class ProfileViewModel: ObservableObject {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.locale = AppLanguage.locale(for: UserPreferences.currentLocale)
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()

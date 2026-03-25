@@ -17,6 +17,11 @@ private enum RequestBuilderTestContext {
 
 @MainActor
 final class RequestBuilderTests: XCTestCase {
+    override func tearDown() {
+        UserDefaults.standard.removeObject(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+        super.tearDown()
+    }
+
     func testBuildNormalizesPathAndAppliesDefaultHeaders() throws {
         let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { "token-123" })
         let request = APIRequest.post(
@@ -68,6 +73,24 @@ final class RequestBuilderTests: XCTestCase {
         let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { nil })
         let urlRequest = try builder.build(from: APIRequest.get(path: "test"))
 
-        XCTAssertNotNil(urlRequest.value(forHTTPHeaderField: "Accept-Language"))
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: "Accept-Language"), "zh-CN")
+    }
+
+    func testBuildNormalizesStoredLocaleBeforeSettingAcceptLanguageHeader() throws {
+        UserDefaults.standard.set("en-US", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { nil })
+        let urlRequest = try builder.build(from: APIRequest.get(path: "test"))
+
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: "Accept-Language"), "en")
+    }
+
+    func testBuildFallsBackWhenStoredLocaleIsUnsupported() throws {
+        UserDefaults.standard.set("fr-FR", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+
+        let builder = RequestBuilder(environment: RequestBuilderTestContext.environment, tokenProvider: { nil })
+        let urlRequest = try builder.build(from: APIRequest.get(path: "test"))
+
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: "Accept-Language"), "zh-CN")
     }
 }

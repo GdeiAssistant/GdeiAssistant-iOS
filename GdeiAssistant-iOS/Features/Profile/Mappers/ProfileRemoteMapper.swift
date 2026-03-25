@@ -236,7 +236,7 @@ enum ProfileRemoteMapper {
             rhsName,
             options: [],
             range: nil,
-            locale: Locale(identifier: "zh_CN")
+            locale: AppLanguage.locale(for: UserPreferences.currentLocale)
         ) == .orderedAscending
     }
 }

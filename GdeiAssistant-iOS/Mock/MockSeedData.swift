@@ -429,7 +429,7 @@ enum MockSeedData {
     static func cardDashboard(isLoss: Bool, queryDate: Date) -> CampusCardDashboard {
         let status: CardStatus = isLoss ? .lost : .normal
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "zh_CN")
+        formatter.locale = AppLanguage.locale(for: UserPreferences.currentLocale)
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let calendar = Calendar(identifier: .gregorian)
         let previousDay = calendar.date(byAdding: .day, value: -1, to: queryDate) ?? queryDate
