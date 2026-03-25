@@ -14,7 +14,7 @@ struct ProfileView: View {
         NavigationStack {
             Group {
                 if viewModel.isLoading && viewModel.displayProfile == nil {
-                    DSLoadingView(text: "正在加载个人信息...")
+                    DSLoadingView(text: localizedString("profile.loading"))
                 } else if let errorMessage = viewModel.errorMessage, viewModel.displayProfile == nil {
                     DSErrorStateView(message: errorMessage) {
                         Task { await viewModel.loadProfile() }
@@ -24,12 +24,12 @@ struct ProfileView: View {
                 } else {
                     DSEmptyStateView(
                         icon: "person.crop.circle",
-                        title: "暂无个人资料",
-                        message: "请稍后重试"
+                        title: localizedString("profile.emptyTitle"),
+                        message: localizedString("profile.emptyMsg")
                     )
                 }
             }
-            .navigationTitle("个人中心")
+            .navigationTitle(localizedString("profile.center"))
             .navigationBarTitleDisplayMode(.large)
             .task {
                 await viewModel.loadIfNeeded()
@@ -65,7 +65,7 @@ struct ProfileView: View {
             VStack(spacing: 0) {
                 DSCard {
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("账号资料")
+                        Text(localizedString("profile.accountInfo"))
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 
@@ -78,16 +78,16 @@ struct ProfileView: View {
                             .buttonStyle(.plain)
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(viewModel.displayText(profile.nickname, fallback: "点击设置"))
+                                Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
                                     .font(.title3.weight(.bold))
                                     .foregroundStyle(DSColor.title)
 
-                                Text("用户名：\(profile.username)")
+                                Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
 
                                 if !profile.ipArea.isEmpty {
-                                    Text("IP 属地：\(profile.ipArea)")
+                                    Text("\(localizedString("profile.ipAreaLabel"))\(profile.ipArea)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
@@ -106,28 +106,28 @@ struct ProfileView: View {
 
                 DSCard {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("账号功能")
+                        Text(localizedString("profile.accountFunctions"))
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
-                        profileMenuLink(title: "隐私设置", systemImage: "lock.shield") {
+                        profileMenuLink(title: localizedString("profile.privacySettings"), systemImage: "lock.shield") {
                             PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "登录记录", systemImage: "clock.arrow.circlepath") {
+                        profileMenuLink(title: localizedString("profile.loginRecord"), systemImage: "clock.arrow.circlepath") {
                             LoginRecordView(viewModel: container.makeLoginRecordViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "绑定手机", systemImage: "phone") {
+                        profileMenuLink(title: localizedString("profile.bindPhone"), systemImage: "phone") {
                             BindPhoneView(viewModel: container.makeBindPhoneViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "绑定邮箱", systemImage: "envelope") {
+                        profileMenuLink(title: localizedString("profile.bindEmail"), systemImage: "envelope") {
                             BindEmailView(viewModel: container.makeBindEmailViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "注销账号", systemImage: "person.crop.circle.badge.xmark") {
+                        profileMenuLink(title: localizedString("profile.deleteAccount"), systemImage: "person.crop.circle.badge.xmark") {
                             DeleteAccountView(viewModel: container.makeDeleteAccountViewModel())
                         }
                     }
@@ -137,20 +137,20 @@ struct ProfileView: View {
 
                 DSCard {
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("更多服务")
+                        Text(localizedString("profile.moreServices"))
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
-                        profileMenuLink(title: "下载个人数据", systemImage: "arrow.down.doc") {
+                        profileMenuLink(title: localizedString("profile.downloadData"), systemImage: "arrow.down.doc") {
                             DownloadDataView(viewModel: container.makeDownloadDataViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "帮助与反馈", systemImage: "questionmark.bubble") {
+                        profileMenuLink(title: localizedString("profile.helpFeedback"), systemImage: "questionmark.bubble") {
                             FeedbackView(viewModel: container.makeFeedbackViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: "设置", systemImage: "gearshape") {
+                        profileMenuLink(title: localizedString("profile.settings"), systemImage: "gearshape") {
                             SettingsView(viewModel: container.makeSettingsViewModel())
                         }
                     }
@@ -158,7 +158,7 @@ struct ProfileView: View {
 
                 Color.clear.frame(height: 20)
 
-                DSButton(title: "退出账号", icon: "rectangle.portrait.and.arrow.right", variant: .destructive) {
+                DSButton(title: localizedString("profile.logout"), icon: "rectangle.portrait.and.arrow.right", variant: .destructive) {
                     Task {
                         await container.authManager.logout()
                     }
@@ -174,35 +174,35 @@ struct ProfileView: View {
 
     private func profileFields(_ profile: UserProfile) -> some View {
         VStack(spacing: 0) {
-            editableRow(title: "昵称", value: viewModel.displayText(profile.nickname, fallback: "点击设置")) {
+            editableRow(title: localizedString("profile.nickname"), value: viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet"))) {
                 activeEditor = .nickname
             }
             Divider().padding(.leading, 0)
-            editableRow(title: "生日", value: viewModel.displayText(profile.birthday, fallback: "未设置")) {
+            editableRow(title: localizedString("profile.birthday"), value: viewModel.displayText(profile.birthday, fallback: localizedString("profile.notSet"))) {
                 activeEditor = .birthday
             }
             Divider()
-            editableRow(title: "院系", value: viewModel.displayText(profile.college, fallback: "未选择")) {
+            editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.college, fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .college
             }
             Divider()
-            editableRow(title: "专业", value: viewModel.displayText(profile.major, fallback: "未选择")) {
+            editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.major, fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .major
             }
             Divider()
-            editableRow(title: "入学年份", value: viewModel.displayText(profile.grade, fallback: "未选择")) {
+            editableRow(title: localizedString("profile.enrollment"), value: viewModel.displayText(profile.grade, fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .grade
             }
             Divider()
-            editableRow(title: "国家 / 地区", value: viewModel.displayText(profile.location, fallback: "未选择")) {
+            editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.location, fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .location
             }
             Divider()
-            editableRow(title: "家乡", value: viewModel.displayText(profile.hometown, fallback: "未选择")) {
+            editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometown, fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .hometown
             }
             Divider()
-            editableRow(title: "个人简介", value: viewModel.displayText(profile.bio, fallback: "去填写"), multiline: true) {
+            editableRow(title: localizedString("profile.bio"), value: viewModel.displayText(profile.bio, fallback: localizedString("profile.goWrite")), multiline: true) {
                 activeEditor = .bio
             }
         }
@@ -283,9 +283,9 @@ private struct ProfileFieldEditorSheet: View {
                 switch field {
                 case .nickname:
                     Section {
-                        TextField("请输入昵称", text: $text)
+                        TextField(localizedString("profile.nicknamePlaceholder"), text: $text)
                     } header: {
-                        Text("昵称")
+                        Text(localizedString("profile.nickname"))
                     }
 
                 case .birthday:
@@ -293,12 +293,12 @@ private struct ProfileFieldEditorSheet: View {
                         DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
                             .labelsHidden()
                             .datePickerStyle(.wheel)
-                        Button("清空生日", role: .destructive) {
+                        Button(localizedString("profile.clearBirthday"), role: .destructive) {
                             viewModel.clearBirthday()
                             Task { await save() }
                         }
                     } header: {
-                        Text("生日")
+                        Text(localizedString("profile.birthday"))
                     }
 
                 case .college:
@@ -319,13 +319,13 @@ private struct ProfileFieldEditorSheet: View {
                             .buttonStyle(.plain)
                         }
                     } header: {
-                        Text("院系")
+                        Text(localizedString("profile.faculty"))
                     }
 
                 case .major:
                     Section {
                         if !viewModel.canSelectMajor {
-                            Text("请先选择院系")
+                            Text(localizedString("profile.selectFacultyFirst"))
                                 .foregroundStyle(DSColor.subtitle)
                         } else {
                             ForEach(viewModel.majorOptions, id: \.self) { option in
@@ -345,7 +345,7 @@ private struct ProfileFieldEditorSheet: View {
                             }
                         }
                     } header: {
-                        Text("专业")
+                        Text(localizedString("profile.major"))
                     }
 
                 case .grade:
@@ -358,7 +358,7 @@ private struct ProfileFieldEditorSheet: View {
                                 HStack {
                                     Text(option).foregroundStyle(DSColor.title)
                                     Spacer()
-                                    let current = viewModel.grade.isEmpty ? "未选择" : viewModel.grade
+                                    let current = viewModel.grade.isEmpty ? localizedString("profile.notSelected") : viewModel.grade
                                     if current == option {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
                                     }
@@ -367,15 +367,15 @@ private struct ProfileFieldEditorSheet: View {
                             .buttonStyle(.plain)
                         }
                     } header: {
-                        Text("入学年份")
+                        Text(localizedString("profile.enrollment"))
                     }
 
                 case .bio:
                     Section {
-                        TextField("一句话介绍自己...", text: $text, axis: .vertical)
+                        TextField(localizedString("profile.bioPlaceholder"), text: $text, axis: .vertical)
                             .lineLimit(4...8)
                     } header: {
-                        Text("个人简介")
+                        Text(localizedString("profile.bio"))
                     }
                 }
 
@@ -391,11 +391,11 @@ private struct ProfileFieldEditorSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("取消") { dismiss() }
+                    Button(localizedString("common.cancel")) { dismiss() }
                 }
                 if field.needsManualSave {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button(isSaving ? "保存中..." : "保存") {
+                        Button(isSaving ? localizedString("common.saving") : localizedString("common.save")) {
                             Task { await save() }
                         }
                         .disabled(isSaving)
@@ -439,7 +439,7 @@ private struct ProfileFieldEditorSheet: View {
         if success {
             dismiss()
         } else {
-            errorMessage = viewModel.saveErrorMessage ?? "保存失败"
+            errorMessage = viewModel.saveErrorMessage ?? localizedString("common.saveFailed")
         }
     }
 }
@@ -447,12 +447,12 @@ private struct ProfileFieldEditorSheet: View {
 private extension ProfileEditorField {
     var title: String {
         switch self {
-        case .nickname: return "昵称"
-        case .birthday: return "生日"
-        case .college: return "院系"
-        case .major: return "专业"
-        case .grade: return "入学年份"
-        case .bio: return "个人简介"
+        case .nickname: return localizedString("profile.nickname")
+        case .birthday: return localizedString("profile.birthday")
+        case .college: return localizedString("profile.faculty")
+        case .major: return localizedString("profile.major")
+        case .grade: return localizedString("profile.enrollment")
+        case .bio: return localizedString("profile.bio")
         }
     }
 
@@ -472,8 +472,8 @@ private enum ProfileLocationPickerField: String, Identifiable {
 
     var title: String {
         switch self {
-        case .location: return "选择国家 / 地区"
-        case .hometown: return "选择家乡"
+        case .location: return localizedString("profile.selectCountry")
+        case .hometown: return localizedString("profile.selectHometown")
         }
     }
 }
@@ -492,17 +492,17 @@ private struct ProfileLocationPickerSheet: View {
         NavigationStack {
             Group {
                 if regions.isEmpty {
-                    DSEmptyStateView(icon: "globe.asia.australia", title: "暂无地区数据", message: "请稍后重试")
+                    DSEmptyStateView(icon: "globe.asia.australia", title: localizedString("profile.noLocationData"), message: localizedString("profile.emptyMsg"))
                 } else {
                     Form {
-                        Picker("国家 / 地区", selection: $selectedRegionCode) {
+                        Picker(localizedString("profile.regionPicker"), selection: $selectedRegionCode) {
                             ForEach(regions) { region in
                                 Text(region.name).tag(region.code)
                             }
                         }
 
                         if !currentStates.isEmpty {
-                            Picker("省 / 州", selection: $selectedStateCode) {
+                            Picker(localizedString("profile.statePicker"), selection: $selectedStateCode) {
                                 ForEach(currentStates) { state in
                                     Text(state.name).tag(state.code)
                                 }
@@ -510,7 +510,7 @@ private struct ProfileLocationPickerSheet: View {
                         }
 
                         if !currentCities.isEmpty {
-                            Picker("城市", selection: $selectedCityCode) {
+                            Picker(localizedString("profile.cityPicker"), selection: $selectedCityCode) {
                                 ForEach(currentCities) { city in
                                     Text(city.name).tag(city.code)
                                 }
@@ -523,10 +523,10 @@ private struct ProfileLocationPickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("取消") { dismiss() }
+                    Button(localizedString("common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("确定") {
+                    Button(localizedString("profile.confirm")) {
                         guard let selection = currentSelection else { return }
                         onConfirm(selection)
                         dismiss()

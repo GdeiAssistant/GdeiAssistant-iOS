@@ -10,13 +10,13 @@ struct NewsView: View {
     var body: some View {
         Group {
             if viewModel.isLoading && viewModel.items.isEmpty {
-                DSLoadingView(text: "正在加载新闻...")
+                DSLoadingView(text: localizedString("news.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "newspaper", title: "暂无新闻", message: "当前没有可展示的资讯内容")
+                DSEmptyStateView(icon: "newspaper", title: localizedString("news.emptyTitle"), message: localizedString("news.emptyMsg"))
             } else {
                 List {
                     ForEach(viewModel.items) { item in
@@ -69,7 +69,7 @@ struct NewsView: View {
                 }
             }
         }
-        .navigationTitle("新闻")
+        .navigationTitle(localizedString("news.title"))
         .task {
             await viewModel.loadIfNeeded()
         }
@@ -91,7 +91,7 @@ struct NewsView: View {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
-                Text("点击重试")
+                Text(localizedString("news.retry"))
                     .font(.caption)
                     .foregroundStyle(DSColor.primary)
             }

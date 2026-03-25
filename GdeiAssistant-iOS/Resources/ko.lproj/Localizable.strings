@@ -1241,3 +1241,148 @@
 "evaluate.notice" = "알림";
 "evaluate.understood" = "확인";
 "graduateExam.totalScore" = "총점: ";
+
+// MARK: - Profile
+"profile.loading" = "프로필 로딩 중...";
+"profile.emptyTitle" = "프로필 데이터 없음";
+"profile.emptyMsg" = "나중에 다시 시도하세요";
+"profile.center" = "프로필";
+"profile.accountInfo" = "계정 정보";
+"profile.tapToSet" = "탭하여 설정";
+"profile.usernameLabel" = "사용자명: ";
+"profile.ipAreaLabel" = "IP 지역: ";
+"profile.accountFunctions" = "계정";
+"profile.privacySettings" = "개인정보";
+"profile.loginRecord" = "로그인 기록";
+"profile.moreServices" = "더보기";
+"profile.helpFeedback" = "도움말";
+"profile.nickname" = "닉네임";
+"profile.birthday" = "생일";
+"profile.faculty" = "학과";
+"profile.major" = "전공";
+"profile.enrollment" = "입학년도";
+"profile.country" = "국가 / 지역";
+"profile.hometown" = "고향";
+"profile.bio" = "자기소개";
+"profile.notSet" = "미설정";
+"profile.notSelected" = "선택 안 함";
+"profile.goWrite" = "작성하기";
+"profile.nicknamePlaceholder" = "닉네임 입력";
+"profile.bioPlaceholder" = "한 줄 자기소개...";
+"profile.clearBirthday" = "생일 지우기";
+"profile.selectFacultyFirst" = "먼저 학과를 선택하세요";
+"profile.selectCountry" = "국가 / 지역 선택";
+"profile.selectHometown" = "고향 선택";
+"profile.noLocationData" = "지역 데이터 없음";
+"profile.locationRetry" = "나중에 다시 시도하세요";
+"profile.regionPicker" = "국가 / 지역";
+"profile.statePicker" = "시/도";
+"profile.cityPicker" = "도시";
+"profile.confirm" = "확인";
+
+// MARK: - Common
+"common.saving" = "저장 중...";
+"common.saveFailed" = "저장 실패";
+
+// MARK: - News
+"news.loading" = "뉴스 로딩 중...";
+"news.emptyTitle" = "뉴스 없음";
+"news.emptyMsg" = "표시할 뉴스가 없습니다";
+"news.title" = "뉴스";
+"news.retry" = "탭하여 재시도";
+"news.openOriginal" = "원문 열기";
+"news.loadFailed" = "뉴스 로딩 실패";
+
+// MARK: - Avatar
+"avatar.title" = "프로필 사진";
+"avatar.hint" = "선명한 정사각형 사진을 선택하세요.";
+"avatar.selectNew" = "새 프로필 사진 선택";
+"avatar.upload" = "업로드";
+"avatar.restoreDefault" = "기본 사진 복원";
+"avatar.confirmDelete" = "프로필 사진을 삭제하시겠습니까?";
+
+// MARK: - Bind Phone
+"bindPhone.title" = "전화번호 연동";
+"bindPhone.status" = "현재 상태";
+"bindPhone.bound" = "연동됨";
+"bindPhone.unbound" = "미연동";
+"bindPhone.account" = "연동 계정";
+"bindPhone.areaCode" = "지역번호";
+"bindPhone.currentNumber" = "현재 번호";
+"bindPhone.intlCode" = "국가번호";
+"bindPhone.phone" = "전화번호";
+"bindPhone.phonePlaceholder" = "전화번호 입력";
+"bindPhone.code" = "인증코드";
+"bindPhone.codePlaceholder" = "SMS 인증코드 입력";
+"bindPhone.getCode" = "코드 받기";
+"bindPhone.retryIn" = "초 후 재시도";
+"bindPhone.bind" = "전화번호 연동";
+"bindPhone.unbind" = "전화번호 연동 해제";
+"bindPhone.confirmUnbind" = "전화번호 연동을 해제하시겠습니까?";
+"bindPhone.confirmUnbindBtn" = "해제 확인";
+
+// MARK: - Bind Email
+"bindEmail.title" = "이메일 연동";
+"bindEmail.status" = "현재 상태";
+"bindEmail.currentEmail" = "현재 이메일";
+"bindEmail.email" = "이메일 주소";
+"bindEmail.emailPlaceholder" = "이메일 입력";
+"bindEmail.code" = "인증코드";
+"bindEmail.codePlaceholder" = "이메일 인증코드 입력";
+"bindEmail.bind" = "이메일 연동";
+"bindEmail.unbind" = "이메일 연동 해제";
+"bindEmail.confirmUnbind" = "이메일 연동을 해제하시겠습니까?";
+
+// MARK: - Delete Account
+"deleteAccount.title" = "계정 삭제";
+"deleteAccount.warning" = "다음 데이터가 영구 삭제됩니다";
+"deleteAccount.risk1" = "계정 및 프로필이 삭제됩니다";
+"deleteAccount.risk2" = "게시물, 주제, 배달 내용이 삭제됩니다";
+"deleteAccount.risk3" = "댓글, 좋아요, 상호작용 기록이 삭제됩니다";
+"deleteAccount.risk4" = "맞춤 과목 및 저장된 신분증 정보가 삭제됩니다";
+"deleteAccount.risk5" = "전화번호 및 이메일 연동이 해제됩니다";
+"deleteAccount.password" = "비밀번호";
+"deleteAccount.passwordPlaceholder" = "비밀번호 입력";
+"deleteAccount.agree" = "위험을 이해하고 삭제를 확인합니다";
+"deleteAccount.confirmBtn" = "계정 삭제";
+"deleteAccount.confirmDialog" = "되돌릴 수 없는 계정 삭제를 실행하시겠습니까?";
+"deleteAccount.proceed" = "삭제 진행";
+"deleteAccount.verifyNote" = "비밀번호와 계정 상태 확인 후 로그아웃됩니다.";
+
+// MARK: - Download Data
+"downloadData.title" = "데이터 다운로드";
+"downloadData.startExport" = "내보내기 시작";
+"downloadData.refreshStatus" = "상태 새로고침";
+"downloadData.getURL" = "다운로드 URL 가져오기";
+
+// MARK: - Feedback
+"feedback.title" = "도움말 및 피드백";
+"feedback.type" = "유형";
+"feedback.content" = "내용";
+"feedback.contact" = "연락처";
+"feedback.contactPlaceholder" = "이메일 / 전화 (선택)";
+"feedback.submit" = "제출";
+"feedback.done" = "완료";
+
+// MARK: - Login Record
+"loginRecord.title" = "로그인 기록";
+"loginRecord.loading" = "로그인 기록 로딩 중...";
+"loginRecord.emptyTitle" = "로그인 기록 없음";
+"loginRecord.emptyMsg" = "최근 로그인 기록 없음";
+
+// MARK: - Privacy
+"privacy.title" = "개인정보 설정";
+"privacy.faculty" = "학과 공개";
+"privacy.major" = "전공 공개";
+"privacy.intro" = "자기소개 공개";
+"privacy.enrollment" = "입학년도 공개";
+"privacy.location" = "국가/지역 공개";
+"privacy.hometown" = "고향 공개";
+"privacy.age" = "나이 공개";
+"privacy.cache" = "학사 데이터 캐시";
+"privacy.robotsIndex" = "검색 엔진 색인 허용";
+"privacy.loading" = "로딩 중...";
+
+// MARK: - Common
+"common.notice" = "알림";
+"common.understood" = "확인";

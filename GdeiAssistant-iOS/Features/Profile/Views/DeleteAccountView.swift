@@ -13,21 +13,21 @@ struct DeleteAccountView: View {
         ScrollView {
             VStack(spacing: 16) {
                 DSCard {
-                    Label("注销后以下数据将被永久删除", systemImage: "exclamationmark.triangle.fill")
+                    Label(localizedString("deleteAccount.warning"), systemImage: "exclamationmark.triangle.fill")
                         .font(.headline)
                         .foregroundStyle(DSColor.danger)
 
-                    riskRow("账号及个人资料将被清空")
-                    riskRow("表白墙、话题、跑腿等发布内容将被删除")
-                    riskRow("评论、点赞、互动记录将被清除")
-                    riskRow("自定义课程与已保存证件信息会被删除")
-                    riskRow("绑定的手机号和邮箱会被解绑")
+                    riskRow(localizedString("deleteAccount.risk1"))
+                    riskRow(localizedString("deleteAccount.risk2"))
+                    riskRow(localizedString("deleteAccount.risk3"))
+                    riskRow(localizedString("deleteAccount.risk4"))
+                    riskRow(localizedString("deleteAccount.risk5"))
                 }
 
                 DSCard {
-                    SecureFormField(title: "账号密码", placeholder: "请输入当前账号密码", text: $viewModel.password)
+                    SecureFormField(title: localizedString("deleteAccount.password"), placeholder: localizedString("deleteAccount.passwordPlaceholder"), text: $viewModel.password)
 
-                    Toggle("我已知晓以上风险并确认注销", isOn: $viewModel.agreed)
+                    Toggle(localizedString("deleteAccount.agree"), isOn: $viewModel.agreed)
 
                     if case .failure(let message) = viewModel.submitState {
                         Text(message)
@@ -37,7 +37,7 @@ struct DeleteAccountView: View {
                 }
 
                 DSButton(
-                    title: "确认注销账号",
+                    title: localizedString("deleteAccount.confirmBtn"),
                     icon: "person.crop.circle.badge.xmark",
                     variant: .destructive,
                     isLoading: viewModel.submitState.isSubmitting,
@@ -49,9 +49,9 @@ struct DeleteAccountView: View {
             .padding(16)
         }
         .background(DSColor.background)
-        .navigationTitle("注销账号")
-        .confirmationDialog("确认执行不可逆的账号注销？", isPresented: $showConfirmation, titleVisibility: .visible) {
-            Button("继续注销", role: .destructive) {
+        .navigationTitle(localizedString("deleteAccount.title"))
+        .confirmationDialog(localizedString("deleteAccount.confirmDialog"), isPresented: $showConfirmation, titleVisibility: .visible) {
+            Button(localizedString("deleteAccount.proceed"), role: .destructive) {
                 Task {
                     await viewModel.submit()
                     if case .success = viewModel.submitState {
@@ -59,9 +59,9 @@ struct DeleteAccountView: View {
                     }
                 }
             }
-            Button("取消", role: .cancel) {}
+            Button(localizedString("common.cancel"), role: .cancel) {}
         } message: {
-            Text("系统会先校验密码和账号状态，成功后将清除本地登录态。")
+            Text(localizedString("deleteAccount.verifyNote"))
         }
     }
 

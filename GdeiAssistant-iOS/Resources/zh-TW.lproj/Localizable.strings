@@ -1241,3 +1241,148 @@
 "evaluate.notice" = "提示";
 "evaluate.understood" = "知道了";
 "graduateExam.totalScore" = "總分：";
+
+// MARK: - Profile
+"profile.loading" = "正在載入個人資訊...";
+"profile.emptyTitle" = "暫無個人資料";
+"profile.emptyMsg" = "請稍後重試";
+"profile.center" = "個人中心";
+"profile.accountInfo" = "帳號資料";
+"profile.tapToSet" = "點擊設定";
+"profile.usernameLabel" = "使用者名稱：";
+"profile.ipAreaLabel" = "IP 屬地：";
+"profile.accountFunctions" = "帳號功能";
+"profile.privacySettings" = "隱私設定";
+"profile.loginRecord" = "登入記錄";
+"profile.moreServices" = "更多服務";
+"profile.helpFeedback" = "幫助與回饋";
+"profile.nickname" = "暱稱";
+"profile.birthday" = "生日";
+"profile.faculty" = "院系";
+"profile.major" = "專業";
+"profile.enrollment" = "入學年份";
+"profile.country" = "國家 / 地區";
+"profile.hometown" = "家鄉";
+"profile.bio" = "個人簡介";
+"profile.notSet" = "未設定";
+"profile.notSelected" = "未選擇";
+"profile.goWrite" = "去填寫";
+"profile.nicknamePlaceholder" = "請輸入暱稱";
+"profile.bioPlaceholder" = "一句話介紹自己...";
+"profile.clearBirthday" = "清空生日";
+"profile.selectFacultyFirst" = "請先選擇院系";
+"profile.selectCountry" = "選擇國家 / 地區";
+"profile.selectHometown" = "選擇家鄉";
+"profile.noLocationData" = "暫無地區資料";
+"profile.locationRetry" = "請稍後重試";
+"profile.regionPicker" = "國家 / 地區";
+"profile.statePicker" = "省 / 州";
+"profile.cityPicker" = "城市";
+"profile.confirm" = "確定";
+
+// MARK: - Common
+"common.saving" = "儲存中...";
+"common.saveFailed" = "儲存失敗";
+
+// MARK: - News
+"news.loading" = "正在載入新聞...";
+"news.emptyTitle" = "暫無新聞";
+"news.emptyMsg" = "目前沒有可展示的資訊內容";
+"news.title" = "新聞";
+"news.retry" = "點擊重試";
+"news.openOriginal" = "開啟原文連結";
+"news.loadFailed" = "新聞載入失敗";
+
+// MARK: - Avatar
+"avatar.title" = "頭像管理";
+"avatar.hint" = "建議選擇清晰的正方形頭像圖片。上傳後會同步更新普通頭像與高清頭像。";
+"avatar.selectNew" = "選擇新頭像";
+"avatar.upload" = "上傳頭像";
+"avatar.restoreDefault" = "恢復預設頭像";
+"avatar.confirmDelete" = "確認刪除頭像？";
+
+// MARK: - Bind Phone
+"bindPhone.title" = "綁定手機號";
+"bindPhone.status" = "目前狀態";
+"bindPhone.bound" = "已綁定";
+"bindPhone.unbound" = "未綁定";
+"bindPhone.account" = "綁定帳號";
+"bindPhone.areaCode" = "目前區號";
+"bindPhone.currentNumber" = "目前號碼";
+"bindPhone.intlCode" = "國際區號";
+"bindPhone.phone" = "手機號";
+"bindPhone.phonePlaceholder" = "請輸入手機號";
+"bindPhone.code" = "驗證碼";
+"bindPhone.codePlaceholder" = "請輸入簡訊驗證碼";
+"bindPhone.getCode" = "取得驗證碼";
+"bindPhone.retryIn" = "s 後重試";
+"bindPhone.bind" = "綁定手機號";
+"bindPhone.unbind" = "解綁手機號";
+"bindPhone.confirmUnbind" = "確認解綁手機號？";
+"bindPhone.confirmUnbindBtn" = "確認解綁";
+
+// MARK: - Bind Email
+"bindEmail.title" = "綁定信箱";
+"bindEmail.status" = "目前狀態";
+"bindEmail.currentEmail" = "目前信箱";
+"bindEmail.email" = "信箱地址";
+"bindEmail.emailPlaceholder" = "請輸入信箱地址";
+"bindEmail.code" = "驗證碼";
+"bindEmail.codePlaceholder" = "請輸入信箱驗證碼";
+"bindEmail.bind" = "綁定信箱";
+"bindEmail.unbind" = "解綁信箱";
+"bindEmail.confirmUnbind" = "確認解綁信箱？";
+
+// MARK: - Delete Account
+"deleteAccount.title" = "註銷帳號";
+"deleteAccount.warning" = "註銷後以下資料將被永久刪除";
+"deleteAccount.risk1" = "帳號及個人資料將被清空";
+"deleteAccount.risk2" = "表白牆、話題、跑腿等發布內容將被刪除";
+"deleteAccount.risk3" = "評論、點讚、互動記錄將被清除";
+"deleteAccount.risk4" = "自訂課程與已儲存證件資訊會被刪除";
+"deleteAccount.risk5" = "綁定的手機號和信箱會被解綁";
+"deleteAccount.password" = "帳號密碼";
+"deleteAccount.passwordPlaceholder" = "請輸入目前帳號密碼";
+"deleteAccount.agree" = "我已知曉以上風險並確認註銷";
+"deleteAccount.confirmBtn" = "確認註銷帳號";
+"deleteAccount.confirmDialog" = "確認執行不可逆的帳號註銷？";
+"deleteAccount.proceed" = "繼續註銷";
+"deleteAccount.verifyNote" = "系統會先校驗密碼和帳號狀態，成功後將清除本地登入狀態。";
+
+// MARK: - Download Data
+"downloadData.title" = "下載個人資料";
+"downloadData.startExport" = "開始匯出";
+"downloadData.refreshStatus" = "重新整理匯出狀態";
+"downloadData.getURL" = "取得下載網址";
+
+// MARK: - Feedback
+"feedback.title" = "幫助與回饋";
+"feedback.type" = "回饋類型";
+"feedback.content" = "回饋內容";
+"feedback.contact" = "聯繫方式";
+"feedback.contactPlaceholder" = "信箱 / 手機號（選填）";
+"feedback.submit" = "提交回饋";
+"feedback.done" = "完成";
+
+// MARK: - Login Record
+"loginRecord.title" = "登入記錄";
+"loginRecord.loading" = "正在載入登入記錄...";
+"loginRecord.emptyTitle" = "暫無登入記錄";
+"loginRecord.emptyMsg" = "近期沒有可展示的登入記錄";
+
+// MARK: - Privacy
+"privacy.title" = "隱私設定";
+"privacy.faculty" = "公開我的院系";
+"privacy.major" = "公開我的專業";
+"privacy.intro" = "公開我的個人簡介";
+"privacy.enrollment" = "公開我的入學年份";
+"privacy.location" = "公開我的國家/地區";
+"privacy.hometown" = "公開我的家鄉";
+"privacy.age" = "公開我的年齡";
+"privacy.cache" = "快取我的教務資料";
+"privacy.robotsIndex" = "允許搜尋引擎收錄個人頁";
+"privacy.loading" = "正在載入...";
+
+// MARK: - Common
+"common.notice" = "提示";
+"common.understood" = "知道了";
