@@ -11,7 +11,15 @@ enum ScheduleRemoteMapper {
         }
 
         let groupedCourses = Dictionary(grouping: courseItems, by: \.dayOfWeek)
-        let daySymbols = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+        let daySymbols = [
+            localizedString("schedule.weekday.mon"),
+            localizedString("schedule.weekday.tue"),
+            localizedString("schedule.weekday.wed"),
+            localizedString("schedule.weekday.thu"),
+            localizedString("schedule.weekday.fri"),
+            localizedString("schedule.weekday.sat"),
+            localizedString("schedule.weekday.sun")
+        ]
 
         let days = daySymbols.enumerated().map { index, title in
             let dayOfWeek = index + 1
@@ -46,9 +54,9 @@ enum ScheduleRemoteMapper {
 
         return CourseItem(
             id: dto.id ?? UUID().uuidString,
-            courseName: nonEmpty(dto.scheduleName, fallback: "未命名课程"),
-            teacherName: nonEmpty(dto.scheduleTeacher, fallback: "待定教师"),
-            location: nonEmpty(dto.scheduleLocation, fallback: "待定地点"),
+            courseName: nonEmpty(dto.scheduleName, fallback: localizedString("schedule.mapper.unnamedCourse")),
+            teacherName: nonEmpty(dto.scheduleTeacher, fallback: localizedString("schedule.mapper.pendingTeacher")),
+            location: nonEmpty(dto.scheduleLocation, fallback: localizedString("schedule.mapper.pendingLocation")),
             dayOfWeek: dayOfWeek,
             startSection: startSection,
             endSection: endSection,
@@ -118,8 +126,10 @@ enum ScheduleRemoteMapper {
         let currentYear = calendar.component(.year, from: currentDate)
         let currentMonth = calendar.component(.month, from: currentDate)
         let startYear = currentMonth >= 8 ? currentYear : currentYear - 1
-        let termText = (2 ... 7).contains(currentMonth) ? "第二学期" : "第一学期"
-        return "\(startYear)-\(startYear + 1) 学年\(termText)"
+        let termText = (2 ... 7).contains(currentMonth)
+            ? localizedString("schedule.mapper.secondTerm")
+            : localizedString("schedule.mapper.firstTerm")
+        return String(format: localizedString("schedule.mapper.academicYear"), startYear, startYear + 1, termText)
     }
 
     private static func firstInteger(in text: String) -> Int? {

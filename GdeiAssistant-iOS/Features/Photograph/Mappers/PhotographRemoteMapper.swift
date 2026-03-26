@@ -7,10 +7,10 @@ enum PhotographRemoteMapper {
         let imageURLs = RemoteMapperSupport.sanitizedTextList(dto.imageUrls)
         return PhotographPost(
             id: RemoteMapperSupport.text(dto.id, fallback: UUID().uuidString),
-            title: RemoteMapperSupport.firstNonEmpty(dto.title, "校园随手拍"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.title, localizedString("photograph.mapper.defaultTitle")),
             contentPreview: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.content), limit: 60),
-            authorName: RemoteMapperSupport.firstNonEmpty(dto.username, "校园摄影社"),
-            createdAt: RemoteMapperSupport.dateText(dto.createTime, fallback: "刚刚"),
+            authorName: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("photograph.mapper.defaultAuthor")),
+            createdAt: RemoteMapperSupport.dateText(dto.createTime, fallback: localizedString("common.justNow")),
             likeCount: RemoteMapperSupport.int(dto.likeCount),
             commentCount: RemoteMapperSupport.int(dto.commentCount),
             photoCount: max(RemoteMapperSupport.int(dto.count), imageURLs.count, firstImageURL == nil ? 0 : 1),
@@ -35,9 +35,13 @@ enum PhotographRemoteMapper {
         PhotographCommentItem(
             id: RemoteMapperSupport.text(dto.commentId, fallback: UUID().uuidString),
             photoID: RemoteMapperSupport.sanitizedText(RemoteMapperSupport.text(dto.photoId)),
-            authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, "同学"),
+            authorName: RemoteMapperSupport.firstNonEmpty(
+                dto.nickname,
+                dto.username,
+                localizedString("photograph.mapper.defaultCommentAuthor")
+            ),
             content: RemoteMapperSupport.firstNonEmpty(dto.comment),
-            createdAt: RemoteMapperSupport.dateText(dto.createTime, fallback: "刚刚")
+            createdAt: RemoteMapperSupport.dateText(dto.createTime, fallback: localizedString("common.justNow"))
         )
     }
 

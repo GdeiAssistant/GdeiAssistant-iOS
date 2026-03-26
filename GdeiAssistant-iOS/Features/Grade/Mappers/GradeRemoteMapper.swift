@@ -24,13 +24,13 @@ enum GradeRemoteMapper {
         let terms = [
             GradeTermReport(
                 id: "1",
-                title: "第一学期",
+                title: localizedString("grade.mapper.firstTerm"),
                 gpa: dto.firstTermGPA ?? calculateTermGPA(firstTermItems),
                 items: firstTermItems
             ),
             GradeTermReport(
                 id: "2",
-                title: "第二学期",
+                title: localizedString("grade.mapper.secondTerm"),
                 gpa: dto.secondTermGPA ?? calculateTermGPA(secondTermItems),
                 items: secondTermItems
             )
@@ -69,9 +69,9 @@ enum GradeRemoteMapper {
         let termValue = nonEmpty(dto.gradeTerm, fallback: fallbackTerm)
 
         return GradeItem(
-            id: dto.gradeId ?? "\(gradeYear)-\(termValue)-\(nonEmpty(dto.gradeName, fallback: "unknown"))",
-            courseName: nonEmpty(dto.gradeName, fallback: "未命名课程"),
-            courseType: nonEmpty(dto.gradeType, fallback: "未分类"),
+            id: dto.gradeId ?? "\(gradeYear)-\(termValue)-\(nonEmpty(dto.gradeName, fallback: localizedString("grade.mapper.unknownId")))",
+            courseName: nonEmpty(dto.gradeName, fallback: localizedString("grade.mapper.unnamedCourse")),
+            courseType: nonEmpty(dto.gradeType, fallback: localizedString("grade.mapper.uncategorized")),
             credit: numericValue(from: dto.gradeCredit),
             score: numericValue(from: dto.gradeScore),
             gradePoint: numericValue(from: dto.gradeGpa),

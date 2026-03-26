@@ -1,9 +1,32 @@
 import Foundation
 
 enum SpareRemoteMapper {
-    static let zoneTitles = ["白云校区", "龙洞校区", "三水校区", "东莞校区", "外部教学点"]
-    static let typeTitles = ["普通课室", "多媒体课室", "机房", "实验室", "阶梯教室", "智慧课室"]
-    static let weekTypeTitles = ["全部", "单周", "双周"]
+    static var zoneTitles: [String] {
+        [
+        localizedString("spare.mapper.zone.baiyun"),
+        localizedString("spare.mapper.zone.longdong"),
+        localizedString("spare.mapper.zone.sanshui"),
+        localizedString("spare.mapper.zone.dongguan"),
+        localizedString("spare.mapper.zone.external")
+        ]
+    }
+    static var typeTitles: [String] {
+        [
+        localizedString("spare.mapper.type.classroom"),
+        localizedString("spare.mapper.type.multimedia"),
+        localizedString("spare.mapper.type.computerLab"),
+        localizedString("spare.mapper.type.laboratory"),
+        localizedString("spare.mapper.type.lectureHall"),
+        localizedString("spare.mapper.type.smartClassroom")
+        ]
+    }
+    static var weekTypeTitles: [String] {
+        [
+        localizedString("spare.mapper.weekType.all"),
+        localizedString("spare.mapper.weekType.odd"),
+        localizedString("spare.mapper.weekType.even")
+        ]
+    }
 
     nonisolated static func mapQuery(_ query: SpareQuery) -> SpareQueryRemoteDTO {
         SpareQueryRemoteDTO(
@@ -26,11 +49,11 @@ enum SpareRemoteMapper {
             return SpareRoomItem(
                 id: number,
                 roomNumber: number,
-                roomName: RemoteMapperSupport.firstNonEmpty(dto.name, "空教室"),
-                roomType: RemoteMapperSupport.firstNonEmpty(dto.type, "普通课室"),
-                zoneName: RemoteMapperSupport.firstNonEmpty(dto.zone, "校区待定"),
+                roomName: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("spare.mapper.emptyRoomName")),
+                roomType: RemoteMapperSupport.firstNonEmpty(dto.type, localizedString("spare.mapper.defaultRoomType")),
+                zoneName: RemoteMapperSupport.firstNonEmpty(dto.zone, localizedString("spare.mapper.defaultZone")),
                 classSeating: RemoteMapperSupport.firstNonEmpty(dto.classSeating, "0"),
-                sectionText: RemoteMapperSupport.firstNonEmpty(dto.section, "时段待定"),
+                sectionText: RemoteMapperSupport.firstNonEmpty(dto.section, localizedString("spare.mapper.defaultSection")),
                 examSeating: RemoteMapperSupport.firstNonEmpty(dto.examSeating, "0")
             )
         }

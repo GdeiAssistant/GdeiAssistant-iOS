@@ -161,6 +161,10 @@ enum MarketplaceRemoteMapper {
 
     nonisolated private static func enrollmentText(_ enrollment: Int?) -> String? {
         guard let enrollment else { return nil }
-        return "\(enrollment)级"
+        return String(
+            format: localizedString("marketplace.mapper.enrollment"),
+            locale: Locale.current,
+            enrollment
+        )
     }
 }

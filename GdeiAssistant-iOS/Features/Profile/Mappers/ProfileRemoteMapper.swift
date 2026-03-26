@@ -8,11 +8,11 @@ enum ProfileRemoteMapperError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unsupportedCollege(let college):
-            return "当前院系“\(college)”暂不支持同步到服务端，请使用系统支持的院系名称"
+            return String(format: localizedString("profile.mapper.unsupportedCollege"), college)
         case .invalidGrade(let grade):
-            return "入学年份“\(grade)”无法解析为服务端需要的年份"
+            return String(format: localizedString("profile.mapper.invalidGrade"), grade)
         case .invalidBirthday(let birthday):
-            return "生日“\(birthday)”格式无效，请重新选择"
+            return String(format: localizedString("profile.mapper.invalidBirthday"), birthday)
         }
     }
 }

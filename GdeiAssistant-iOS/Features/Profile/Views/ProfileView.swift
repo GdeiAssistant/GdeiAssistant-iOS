@@ -44,6 +44,14 @@ struct ProfileView: View {
                 ProfileLocationPickerSheet(
                     title: pickerField.title,
                     regions: viewModel.locationRegions,
+                    currentSelection: {
+                        switch pickerField {
+                        case .location:
+                            return viewModel.displayProfile?.locationSelection
+                        case .hometown:
+                            return viewModel.displayProfile?.hometownSelection
+                        }
+                    }(),
                     onConfirm: { selection in
                         switch pickerField {
                         case .location:
@@ -509,6 +517,7 @@ private enum ProfileLocationPickerField: String, Identifiable {
 private struct ProfileLocationPickerSheet: View {
     let title: String
     let regions: [ProfileLocationRegion]
+    let currentSelection: ProfileLocationSelection?
     let onConfirm: (ProfileLocationSelection) async -> ProfileSaveResult
 
     @Environment(\.dismiss) private var dismiss
@@ -566,10 +575,10 @@ private struct ProfileLocationPickerSheet: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(isSaving ? localizedString("common.saving") : localizedString("profile.confirm")) {
-                        guard let selection = currentSelection else { return }
+                        guard let selection = selectedLocation else { return }
                         Task { await confirm(selection) }
                     }
-                    .disabled(currentSelection == nil || isSaving)
+                    .disabled(selectedLocation == nil || isSaving)
                     .fontWeight(.semibold)
                 }
             }
@@ -599,7 +608,7 @@ private struct ProfileLocationPickerSheet: View {
         currentCities.first(where: { $0.code == selectedCityCode }) ?? currentCities.first
     }
 
-    private var currentSelection: ProfileLocationSelection? {
+    private var selectedLocation: ProfileLocationSelection? {
         guard let currentRegion else { return nil }
         return ProfileLocationSelection(
             displayName: ProfileFormSupport.makeLocationDisplay(
@@ -615,7 +624,13 @@ private struct ProfileLocationPickerSheet: View {
 
     private func syncSelectionIfNeeded() {
         if selectedRegionCode.isEmpty {
-            selectedRegionCode = regions.first?.code ?? ""
+            selectedRegionCode = resolvedSelection?.regionCode ?? regions.first?.code ?? ""
+        }
+        if selectedStateCode.isEmpty {
+            selectedStateCode = resolvedSelection?.stateCode ?? ""
+        }
+        if selectedCityCode.isEmpty {
+            selectedCityCode = resolvedSelection?.cityCode ?? ""
         }
         syncStateAndCity()
     }
@@ -645,6 +660,26 @@ private struct ProfileLocationPickerSheet: View {
         case .failure(let message):
             errorMessage = message
         }
+    }
+
+    private var resolvedSelection: ProfileLocationSelection? {
+        guard let currentSelection else { return nil }
+        guard let region = regions.first(where: { $0.code == currentSelection.regionCode }) else {
+            return nil
+        }
+        if currentSelection.stateCode.isEmpty {
+            return currentSelection
+        }
+        guard let state = region.states.first(where: { $0.code == currentSelection.stateCode }) else {
+            return nil
+        }
+        if currentSelection.cityCode.isEmpty {
+            return currentSelection
+        }
+        guard state.cities.contains(where: { $0.code == currentSelection.cityCode }) else {
+            return nil
+        }
+        return currentSelection
     }
 }
 
