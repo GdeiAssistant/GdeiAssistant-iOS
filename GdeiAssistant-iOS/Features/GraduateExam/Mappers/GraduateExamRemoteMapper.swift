@@ -11,9 +11,9 @@ enum GraduateExamRemoteMapper {
 
     nonisolated static func mapScore(_ dto: GraduateExamScoreRemoteDTO) -> GraduateExamScore {
         GraduateExamScore(
-            name: RemoteMapperSupport.firstNonEmpty(dto.name, "未命名考生"),
-            signupNumber: RemoteMapperSupport.firstNonEmpty(dto.signUpNumber, "暂无"),
-            examNumber: RemoteMapperSupport.firstNonEmpty(dto.examNumber, "暂无"),
+            name: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("graduateExam.mapper.unnamedCandidate")),
+            signupNumber: RemoteMapperSupport.firstNonEmpty(dto.signUpNumber, localizedString("graduateExam.mapper.unavailable")),
+            examNumber: RemoteMapperSupport.firstNonEmpty(dto.examNumber, localizedString("graduateExam.mapper.unavailable")),
             totalScore: RemoteMapperSupport.firstNonEmpty(dto.totalScore, "0"),
             politicsScore: RemoteMapperSupport.firstNonEmpty(dto.firstScore, "0"),
             foreignLanguageScore: RemoteMapperSupport.firstNonEmpty(dto.secondScore, "0"),

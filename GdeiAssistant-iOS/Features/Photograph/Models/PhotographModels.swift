@@ -9,9 +9,9 @@ enum PhotographCategory: Int, CaseIterable, Identifiable, Codable {
     var title: String {
         switch self {
         case .campus:
-            return "最美校园照"
+            return localizedString("photograph.category.campus")
         case .life:
-            return "最美生活照"
+            return localizedString("photograph.category.life")
         }
     }
 

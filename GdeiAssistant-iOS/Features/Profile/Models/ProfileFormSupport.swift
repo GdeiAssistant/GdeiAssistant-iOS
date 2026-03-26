@@ -3,6 +3,8 @@ import Foundation
 struct ProfileLocationCity: Codable, Identifiable, Hashable {
     let code: String
     let name: String
+    var latinName: String? = nil
+    var localizedNames: [String: String]? = nil
 
     var id: String { code }
 }
@@ -11,6 +13,8 @@ struct ProfileLocationState: Codable, Identifiable, Hashable {
     let code: String
     let name: String
     let cities: [ProfileLocationCity]
+    var latinName: String? = nil
+    var localizedNames: [String: String]? = nil
 
     var id: String { code }
 }
@@ -19,6 +23,9 @@ struct ProfileLocationRegion: Codable, Identifiable, Hashable {
     let code: String
     let name: String
     let states: [ProfileLocationState]
+    var latinName: String? = nil
+    var localizedNames: [String: String]? = nil
+    var iso: String? = nil
 
     var id: String { code }
 }
@@ -112,8 +119,13 @@ enum ProfileFormSupport {
         return (2014...currentYear).map(String.init)
     }
 
-    static func makeLocationDisplay(region: String, state: String, city: String) -> String {
-        [region, state, city]
+    static func makeLocationDisplay(
+        region: String,
+        state: String,
+        city: String,
+        localeIdentifier: String = AppLanguage.currentIdentifier()
+    ) -> String {
+        let parts = [region, state, city]
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
             .reduce(into: [String]()) { result, item in
@@ -121,7 +133,13 @@ enum ProfileFormSupport {
                     result.append(item)
                 }
             }
-            .joined(separator: " ")
+
+        let normalizedLocale = AppLanguage.normalizedIdentifier(from: localeIdentifier)
+        if normalizedLocale == "en" || normalizedLocale == "ja" || normalizedLocale == "ko" {
+            return parts.reversed().joined(separator: ", ")
+        }
+
+        return parts.joined(separator: " ")
     }
 }
 

@@ -20,18 +20,18 @@ enum CardRemoteMapper {
     ) -> CampusCardDashboard {
         let resolvedInfo = queryDTO?.cardInfo ?? infoDTO
         let transactions = (queryDTO?.cardList ?? []).map(mapTransaction)
-        let lastUpdated = transactions.first?.timeText ?? "刚刚更新"
+        let lastUpdated = transactions.first?.timeText ?? localizedString("card.mapper.justUpdated")
 
         return CampusCardDashboard(
             info: CampusCardInfo(
                 cardNumber: RemoteMapperSupport.firstNonEmpty(
                     RemoteMapperSupport.text(resolvedInfo.cardNumber),
                     RemoteMapperSupport.text(resolvedInfo.number),
-                    "未获取卡号"
+                    localizedString("card.mapper.defaultCardNumber")
                 ),
                 ownerName: RemoteMapperSupport.firstNonEmpty(
                     RemoteMapperSupport.text(resolvedInfo.name),
-                    "校园卡用户"
+                    localizedString("card.mapper.defaultOwner")
                 ),
                 balance: RemoteMapperSupport.double(resolvedInfo.cardBalance),
                 status: mapStatus(info: resolvedInfo),
@@ -57,15 +57,15 @@ enum CardRemoteMapper {
     }
 
     nonisolated private static func mapTransaction(_ dto: CardTransactionDTO) -> CardTransaction {
-        let timeText = RemoteMapperSupport.dateText(dto.tradeTime, fallback: "待定时间")
+        let timeText = RemoteMapperSupport.dateText(dto.tradeTime, fallback: localizedString("card.mapper.pendingTime"))
         let merchantName = RemoteMapperSupport.firstNonEmpty(
             RemoteMapperSupport.text(dto.merchantName),
             RemoteMapperSupport.text(dto.tradeName),
-            "未知商户"
+            localizedString("card.mapper.unknownMerchant")
         )
         let category = RemoteMapperSupport.firstNonEmpty(
             RemoteMapperSupport.text(dto.tradeName),
-            "校园消费"
+            localizedString("card.mapper.campusSpending")
         )
         let amount = abs(RemoteMapperSupport.double(dto.tradePrice))
 
