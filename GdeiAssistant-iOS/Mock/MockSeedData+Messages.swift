@@ -1,227 +1,33 @@
 import Foundation
 
 extension MockSeedData {
-    static let announcementDetailsByID: [String: AnnouncementDetailItem] = [
-        "announcement_001": AnnouncementDetailItem(
-            id: "announcement_001",
-            title: "系统维护通知",
-            content: "为配合学期中服务器扩容，本周三 18:00 至 20:00 将进行例行维护。维护期间消息中心、校园社区和部分查询服务可能出现短暂不可用，建议提前保存正在编辑的内容。",
-            createdAt: "1小时前"
-        ),
-        "announcement_002": AnnouncementDetailItem(
-            id: "announcement_002",
-            title: "春季双选会入场安排",
-            content: "春季校园双选会将于本周五 14:30 在体育馆举行。请已报名同学提前准备校园卡，按学院分批入场，现场会同步开放企业岗位二维码与志愿者咨询台。",
-            createdAt: "今天 09:10"
-        ),
-        "announcement_003": AnnouncementDetailItem(
-            id: "announcement_003",
-            title: "图书馆夜间开放时段调整",
-            content: "从下周起，图书馆一楼自习区开放时间延长至 23:00，二楼研讨室仍需预约。若遇到插座、座位预约或入馆设备异常，可直接在资讯页提交反馈。",
-            createdAt: "昨天"
-        ),
-        "announcement_004": AnnouncementDetailItem(
-            id: "announcement_004",
-            title: "校医院门诊排班更新",
-            content: "校医院本周起调整晚间门诊排班，工作日 18:30 后优先接待急诊与发热相关问诊，普通门诊请尽量在白天时段前往。",
-            createdAt: "昨天 18:40"
-        ),
-        "announcement_005": AnnouncementDetailItem(
-            id: "announcement_005",
-            title: "宿舍门禁系统升级提醒",
-            content: "北区与中区宿舍门禁将于本周末夜间分批升级，升级期间刷卡开门可能存在短暂延迟，请提前留意楼栋群通知。",
-            createdAt: "前天"
-        ),
-        "announcement_006": AnnouncementDetailItem(
-            id: "announcement_006",
-            title: "就业指导中心咨询时段开放",
-            content: "就业指导中心新增春招一对一简历咨询时段，已开放线上预约。需要模拟面试或简历修改的同学可在工作日预约。",
-            createdAt: "2026-03-01"
-        )
-    ]
+    static var announcementDetailsByID: [String: AnnouncementDetailItem] {
+        [
+            "announcement_001": AnnouncementDetailItem(id: "announcement_001", title: mockLocalizedText(simplifiedChinese: "系统维护通知", traditionalChinese: "系統維護通知", english: "System maintenance notice", japanese: "システムメンテナンスのお知らせ", korean: "시스템 점검 안내"), content: mockLocalizedText(simplifiedChinese: "为配合学期中服务器扩容，本周三 18:00 至 20:00 将进行例行维护。维护期间消息中心、校园社区和部分查询服务可能出现短暂不可用，建议提前保存正在编辑的内容。", traditionalChinese: "為配合學期中伺服器擴容，本週三 18:00 至 20:00 將進行例行維護。維護期間消息中心、校園社區和部分查詢服務可能出現短暫不可用，建議提前保存正在編輯的內容。", english: "To support a mid-semester server expansion, routine maintenance will run this Wednesday from 18:00 to 20:00. During that time, the message center, campus community, and some query services may be briefly unavailable. Please save anything you are editing in advance.", japanese: "学期中のサーバー増強に伴い、今週水曜日 18:00 から 20:00 まで定期メンテナンスを実施します。期間中はメッセージセンター、学内コミュニティ、一部の照会機能が一時的に利用できない場合があります。編集中の内容は事前に保存してください。", korean: "학기 중 서버 증설 작업으로 인해 이번 주 수요일 18:00부터 20:00까지 정기 점검이 진행됩니다. 이 시간 동안 메시지 센터, 캠퍼스 커뮤니티, 일부 조회 서비스가 잠시 이용 불가할 수 있으니 작성 중인 내용은 미리 저장해 주세요."), createdAt: mockLocalizedText(simplifiedChinese: "1小时前", traditionalChinese: "1小時前", english: "1 hr ago", japanese: "1時間前", korean: "1시간 전")),
+            "announcement_002": AnnouncementDetailItem(id: "announcement_002", title: mockLocalizedText(simplifiedChinese: "春季双选会入场安排", traditionalChinese: "春季雙選會入場安排", english: "Spring job fair entry arrangement", japanese: "春の合同説明会の入場案内", korean: "봄 채용 박람회 입장 안내"), content: mockLocalizedText(simplifiedChinese: "春季校园双选会将于本周五 14:30 在体育馆举行。请已报名同学提前准备校园卡，按学院分批入场，现场会同步开放企业岗位二维码与志愿者咨询台。", traditionalChinese: "春季校園雙選會將於本週五 14:30 在體育館舉行。請已報名同學提前準備校園卡，按學院分批入場，現場會同步開放企業崗位二維碼與志願者諮詢台。", english: "The spring campus job fair will be held this Friday at 14:30 in the gym. Students who registered should prepare their campus cards in advance and enter by college group. Employer QR codes and volunteer help desks will also be available on site.", japanese: "春の学内合同説明会は今週金曜日 14:30 から体育館で開催されます。参加申込済みの学生は学生証を準備し、学部ごとの案内に従って入場してください。会場では企業求人のQRコードとボランティア相談ブースも利用できます。", korean: "봄 학내 채용 박람회가 이번 주 금요일 14:30에 체육관에서 열립니다. 신청한 학생은 학생증을 미리 준비하고 단과대별로 순서대로 입장해 주세요. 현장에서는 기업 채용 QR코드와 봉사자 안내 데스크도 운영됩니다."), createdAt: mockLocalizedText(simplifiedChinese: "今天 09:10", traditionalChinese: "今天 09:10", english: "Today 09:10", japanese: "今日 09:10", korean: "오늘 09:10")),
+            "announcement_003": AnnouncementDetailItem(id: "announcement_003", title: mockLocalizedText(simplifiedChinese: "图书馆夜间开放时段调整", traditionalChinese: "圖書館夜間開放時段調整", english: "Library evening hours updated", japanese: "図書館の夜間開館時間調整", korean: "도서관 야간 운영 시간 조정"), content: mockLocalizedText(simplifiedChinese: "从下周起，图书馆一楼自习区开放时间延长至 23:00，二楼研讨室仍需预约。若遇到插座、座位预约或入馆设备异常，可直接在资讯页提交反馈。", traditionalChinese: "從下週起，圖書館一樓自習區開放時間延長至 23:00，二樓研討室仍需預約。若遇到插座、座位預約或入館設備異常，可直接在資訊頁提交反饋。", english: "Starting next week, the first-floor study area in the library will stay open until 23:00. Seminar rooms on the second floor still require reservations. If you run into outlet, seat reservation, or entry device issues, you can submit feedback directly from the info page.", japanese: "来週から、図書館1階の自習エリアは 23:00 まで開放されます。2階の討論室は引き続き予約が必要です。コンセント、座席予約、入館設備に不具合があれば、情報ページから直接フィードバックできます。", korean: "다음 주부터 도서관 1층 자습 구역 운영 시간이 23:00까지 연장됩니다. 2층 세미나실은 계속 예약이 필요합니다. 콘센트, 좌석 예약, 출입 장비에 문제가 있으면 정보 페이지에서 바로 제보할 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "昨天", traditionalChinese: "昨天", english: "Yesterday", japanese: "昨日", korean: "어제")),
+            "announcement_004": AnnouncementDetailItem(id: "announcement_004", title: mockLocalizedText(simplifiedChinese: "校医院门诊排班更新", traditionalChinese: "校醫院門診排班更新", english: "Campus clinic schedule update", japanese: "学内診療所の外来スケジュール更新", korean: "교내 병원 외래 일정 업데이트"), content: mockLocalizedText(simplifiedChinese: "校医院本周起调整晚间门诊排班，工作日 18:30 后优先接待急诊与发热相关问诊，普通门诊请尽量在白天时段前往。", traditionalChinese: "校醫院本週起調整晚間門診排班，工作日 18:30 後優先接待急診與發熱相關問診，普通門診請盡量在白天時段前往。", english: "The campus clinic has adjusted its evening outpatient schedule starting this week. After 18:30 on weekdays, emergency cases and fever-related visits will be prioritized. For regular appointments, please try to visit during daytime hours.", japanese: "今週から学内診療所の夜間外来体制が調整されます。平日 18:30 以降は救急と発熱関連の受診が優先され、一般外来はできるだけ日中に来院してください。", korean: "교내 병원이 이번 주부터 야간 외래 일정을 조정합니다. 평일 18:30 이후에는 응급 및 발열 관련 진료를 우선하며, 일반 진료는 가능한 주간에 방문해 주세요."), createdAt: mockLocalizedText(simplifiedChinese: "昨天 18:40", traditionalChinese: "昨天 18:40", english: "Yesterday 18:40", japanese: "昨日 18:40", korean: "어제 18:40")),
+            "announcement_005": AnnouncementDetailItem(id: "announcement_005", title: mockLocalizedText(simplifiedChinese: "宿舍门禁系统升级提醒", traditionalChinese: "宿舍門禁系統升級提醒", english: "Dorm access system upgrade reminder", japanese: "寮の入退館システム更新のお知らせ", korean: "기숙사 출입 시스템 업그레이드 안내"), content: mockLocalizedText(simplifiedChinese: "北区与中区宿舍门禁将于本周末夜间分批升级，升级期间刷卡开门可能存在短暂延迟，请提前留意楼栋群通知。", traditionalChinese: "北區與中區宿舍門禁將於本週末夜間分批升級，升級期間刷卡開門可能存在短暫延遲，請提前留意樓棟群通知。", english: "Dorm access systems in the North and Central areas will be upgraded in batches this weekend at night. During the upgrade, there may be short delays when unlocking with campus cards, so please pay attention to notices from your dorm building group.", japanese: "北区と中区の寮の入退館システムは今週末の夜に順次アップグレードされます。期間中はカード開錠に少し遅れが出る可能性があるため、各寮グループの案内を確認してください。", korean: "북구와 중구 기숙사 출입 시스템이 이번 주말 밤에 순차적으로 업그레이드됩니다. 업그레이드 중에는 카드 출입에 잠시 지연이 있을 수 있으니 각 동 공지를 미리 확인해 주세요."), createdAt: mockLocalizedText(simplifiedChinese: "前天", traditionalChinese: "前天", english: "2 days ago", japanese: "一昨日", korean: "그저께")),
+            "announcement_006": AnnouncementDetailItem(id: "announcement_006", title: mockLocalizedText(simplifiedChinese: "就业指导中心咨询时段开放", traditionalChinese: "就業指導中心諮詢時段開放", english: "Career center consultation slots open", japanese: "就職支援センター相談枠の受付開始", korean: "취업지원센터 상담 시간 오픈"), content: mockLocalizedText(simplifiedChinese: "就业指导中心新增春招一对一简历咨询时段，已开放线上预约。需要模拟面试或简历修改的同学可在工作日预约。", traditionalChinese: "就業指導中心新增春招一對一簡歷諮詢時段，已開放線上預約。需要模擬面試或簡歷修改的同學可在工作日預約。", english: "The career center has added one-on-one resume consultation slots for spring recruitment, and online booking is now open. Students who want mock interviews or resume reviews can make appointments on weekdays.", japanese: "就職支援センターでは春採用向けの1対1履歴書相談枠を追加し、オンライン予約を開始しました。模擬面接や履歴書添削が必要な学生は平日に予約できます。", korean: "취업지원센터에서 봄 채용 대비 1:1 이력서 상담 시간을 새로 열었고 온라인 예약도 가능합니다. 모의 면접이나 이력서 첨삭이 필요한 학생은 평일에 예약할 수 있습니다."), createdAt: "2026-03-01")
+        ]
+    }
 
-    static let notifications: [AppNotificationItem] = [
-        AppNotificationItem(
-            id: "announcement_notice_001",
-            category: .system,
-            module: nil,
-            title: "系统维护通知",
-            message: "本周三 18:00 至 20:00 将进行例行维护，消息中心和部分查询服务可能短暂不可用。",
-            createdAt: "1小时前",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_001",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "announcement_notice_002",
-            category: .system,
-            module: nil,
-            title: "春季双选会入场安排",
-            message: "双选会本周五在体育馆举行，已报名同学请提前准备校园卡并按学院分批入场。",
-            createdAt: "今天 09:10",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_002",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "announcement_notice_003",
-            category: .system,
-            module: nil,
-            title: "图书馆夜间开放时段调整",
-            message: "下周起一楼自习区开放到 23:00，二楼研讨室仍需预约。",
-            createdAt: "昨天",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_003",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "announcement_notice_004",
-            category: .system,
-            module: nil,
-            title: "校医院门诊排班更新",
-            message: "晚间门诊优先接待急诊与发热相关问诊，普通门诊请尽量在白天时段前往。",
-            createdAt: "昨天 18:40",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_004",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "announcement_notice_005",
-            category: .system,
-            module: nil,
-            title: "宿舍门禁系统升级提醒",
-            message: "本周末夜间将分批升级门禁系统，刷卡开门可能出现短暂延迟。",
-            createdAt: "前天",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_005",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "announcement_notice_006",
-            category: .system,
-            module: nil,
-            title: "就业指导中心咨询时段开放",
-            message: "春招简历咨询与模拟面试已开放线上预约。",
-            createdAt: "2026-03-01",
-            isRead: true,
-            destination: .announcement,
-            targetType: nil,
-            targetID: "announcement_006",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_001",
-            category: .interaction,
-            module: "dating",
-            title: "卖室友",
-            message: "你发出的卖室友申请已被对方查看，去 sent 页看看最新状态。",
-            createdAt: "刚刚",
-            isRead: false,
-            destination: .datingCenter,
-            targetType: "sent",
-            targetID: "pick_002",
-            targetSubID: "dating_001"
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_002",
-            category: .interaction,
-            module: "delivery",
-            title: "全民快递提醒",
-            message: "你发布的订单已被接单，建议尽快和接单同学确认送达时间。",
-            createdAt: "6分钟前",
-            isRead: false,
-            destination: .delivery,
-            targetType: "published",
-            targetID: "delivery_002",
-            targetSubID: "trade_001"
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_003",
-            category: .interaction,
-            module: "delivery",
-            title: "全民快递提醒",
-            message: "你接的订单已完成，系统已同步为已完成状态。",
-            createdAt: "12分钟前",
-            isRead: false,
-            destination: .delivery,
-            targetType: "accepted",
-            targetID: "delivery_004",
-            targetSubID: "trade_004"
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_004",
-            category: .comment,
-            module: "secret",
-            title: "树洞互动",
-            message: "有人回复了你的树洞，打开详情即可查看最新评论。",
-            createdAt: "10分钟前",
-            isRead: false,
-            destination: .secret,
-            targetType: "comment",
-            targetID: "secret_001",
-            targetSubID: "secret_comment_002"
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_005",
-            category: .comment,
-            module: "express",
-            title: "表白墙互动",
-            message: "有人给你的表白留了言，打开详情即可查看最新评论。",
-            createdAt: "14分钟前",
-            isRead: false,
-            destination: .express,
-            targetType: "comment",
-            targetID: "express_001",
-            targetSubID: "express_comment_001"
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_006",
-            category: .interaction,
-            module: "express",
-            title: "表白墙互动",
-            message: "有人参与了你的猜名字互动，去看看最新猜测次数。",
-            createdAt: "18分钟前",
-            isRead: true,
-            destination: .express,
-            targetType: "guess",
-            targetID: "express_001",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_007",
-            category: .like,
-            module: "topic",
-            title: "话题互动",
-            message: "你的话题收到了新的点赞。",
-            createdAt: "25分钟前",
-            isRead: true,
-            destination: .topic,
-            targetType: "like",
-            targetID: "topic_001",
-            targetSubID: nil
-        ),
-        AppNotificationItem(
-            id: "msg_interaction_008",
-            category: .comment,
-            module: "photograph",
-            title: "拍好校园互动",
-            message: "有人评论了你的作品，打开详情即可查看最新评论。",
-            createdAt: "40分钟前",
-            isRead: false,
-            destination: .photograph,
-            targetType: "comment",
-            targetID: "photo_001",
-            targetSubID: "photo_comment_001"
-        )
-    ]
+    static var notifications: [AppNotificationItem] {
+        [
+            AppNotificationItem(id: "announcement_notice_001", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "系统维护通知", traditionalChinese: "系統維護通知", english: "System maintenance notice", japanese: "システムメンテナンスのお知らせ", korean: "시스템 점검 안내"), message: mockLocalizedText(simplifiedChinese: "本周三 18:00 至 20:00 将进行例行维护，消息中心和部分查询服务可能短暂不可用。", traditionalChinese: "本週三 18:00 至 20:00 將進行例行維護，消息中心和部分查詢服務可能短暫不可用。", english: "Routine maintenance will run this Wednesday from 18:00 to 20:00. The message center and some query services may be briefly unavailable.", japanese: "今週水曜日 18:00 から 20:00 まで定期メンテナンスを実施します。メッセージセンターと一部照会機能が一時的に利用できない場合があります。", korean: "이번 주 수요일 18:00부터 20:00까지 정기 점검이 진행됩니다. 메시지 센터와 일부 조회 서비스가 잠시 이용 불가할 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "1小时前", traditionalChinese: "1小時前", english: "1 hr ago", japanese: "1時間前", korean: "1시간 전"), isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_001", targetSubID: nil),
+            AppNotificationItem(id: "announcement_notice_002", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "春季双选会入场安排", traditionalChinese: "春季雙選會入場安排", english: "Spring job fair entry arrangement", japanese: "春の合同説明会の入場案内", korean: "봄 채용 박람회 입장 안내"), message: mockLocalizedText(simplifiedChinese: "双选会本周五在体育馆举行，已报名同学请提前准备校园卡并按学院分批入场。", traditionalChinese: "雙選會本週五在體育館舉行，已報名同學請提前準備校園卡並按學院分批入場。", english: "The job fair will be held this Friday in the gym. Registered students should prepare their campus cards and enter by college group.", japanese: "合同説明会は今週金曜日に体育館で開催されます。申込済みの学生は学生証を準備し、学部ごとに入場してください。", korean: "채용 박람회는 이번 주 금요일 체육관에서 열립니다. 신청한 학생은 학생증을 준비하고 단과대별로 입장해 주세요."), createdAt: mockLocalizedText(simplifiedChinese: "今天 09:10", traditionalChinese: "今天 09:10", english: "Today 09:10", japanese: "今日 09:10", korean: "오늘 09:10"), isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_002", targetSubID: nil),
+            AppNotificationItem(id: "announcement_notice_003", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "图书馆夜间开放时段调整", traditionalChinese: "圖書館夜間開放時段調整", english: "Library evening hours updated", japanese: "図書館の夜間開館時間調整", korean: "도서관 야간 운영 시간 조정"), message: mockLocalizedText(simplifiedChinese: "下周起一楼自习区开放到 23:00，二楼研讨室仍需预约。", traditionalChinese: "下週起一樓自習區開放到 23:00，二樓研討室仍需預約。", english: "Starting next week, the first-floor study area will stay open until 23:00. Seminar rooms on the second floor still require reservations.", japanese: "来週から1階の自習エリアは23:00まで開放され、2階の討論室は引き続き予約制です。", korean: "다음 주부터 1층 자습 구역은 23:00까지 운영되고, 2층 세미나실은 계속 예약이 필요합니다."), createdAt: mockLocalizedText(simplifiedChinese: "昨天", traditionalChinese: "昨天", english: "Yesterday", japanese: "昨日", korean: "어제"), isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_003", targetSubID: nil),
+            AppNotificationItem(id: "announcement_notice_004", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "校医院门诊排班更新", traditionalChinese: "校醫院門診排班更新", english: "Campus clinic schedule update", japanese: "学内診療所の外来スケジュール更新", korean: "교내 병원 외래 일정 업데이트"), message: mockLocalizedText(simplifiedChinese: "晚间门诊优先接待急诊与发热相关问诊，普通门诊请尽量在白天时段前往。", traditionalChinese: "晚間門診優先接待急診與發熱相關問診，普通門診請盡量在白天時段前往。", english: "Evening outpatient visits will prioritize emergencies and fever-related cases. For regular appointments, please visit during daytime hours.", japanese: "夜間外来は救急と発熱関連の受診を優先します。一般外来はできるだけ日中に来院してください。", korean: "야간 외래는 응급 및 발열 관련 진료를 우선합니다. 일반 진료는 가능한 주간에 방문해 주세요."), createdAt: mockLocalizedText(simplifiedChinese: "昨天 18:40", traditionalChinese: "昨天 18:40", english: "Yesterday 18:40", japanese: "昨日 18:40", korean: "어제 18:40"), isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_004", targetSubID: nil),
+            AppNotificationItem(id: "announcement_notice_005", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "宿舍门禁系统升级提醒", traditionalChinese: "宿舍門禁系統升級提醒", english: "Dorm access system upgrade reminder", japanese: "寮の入退館システム更新のお知らせ", korean: "기숙사 출입 시스템 업그레이드 안내"), message: mockLocalizedText(simplifiedChinese: "本周末夜间将分批升级门禁系统，刷卡开门可能出现短暂延迟。", traditionalChinese: "本週末夜間將分批升級門禁系統，刷卡開門可能出現短暫延遲。", english: "The dorm access system will be upgraded in batches this weekend at night. There may be short delays when unlocking with campus cards.", japanese: "今週末の夜に入退館システムが順次アップグレードされます。カード開錠に少し遅れが出る場合があります。", korean: "이번 주말 밤에 출입 시스템이 순차적으로 업그레이드됩니다. 카드 출입에 잠시 지연이 있을 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "前天", traditionalChinese: "前天", english: "2 days ago", japanese: "一昨日", korean: "그저께"), isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_005", targetSubID: nil),
+            AppNotificationItem(id: "announcement_notice_006", category: .system, module: nil, title: mockLocalizedText(simplifiedChinese: "就业指导中心咨询时段开放", traditionalChinese: "就業指導中心諮詢時段開放", english: "Career center consultation slots open", japanese: "就職支援センター相談枠の受付開始", korean: "취업지원센터 상담 시간 오픈"), message: mockLocalizedText(simplifiedChinese: "春招简历咨询与模拟面试已开放线上预约。", traditionalChinese: "春招簡歷諮詢與模擬面試已開放線上預約。", english: "Online booking is now open for spring recruitment resume consultations and mock interviews.", japanese: "春採用向けの履歴書相談と模擬面接はオンライン予約を開始しました。", korean: "봄 채용 이력서 상담과 모의 면접의 온라인 예약이 시작되었습니다."), createdAt: "2026-03-01", isRead: true, destination: .announcement, targetType: nil, targetID: "announcement_006", targetSubID: nil),
+            AppNotificationItem(id: "msg_interaction_001", category: .interaction, module: "dating", title: mockLocalizedText(simplifiedChinese: "卖室友", traditionalChinese: "賣室友", english: "Dating", japanese: "ルームメイト募集", korean: "룸메이트"), message: mockLocalizedText(simplifiedChinese: "你发出的卖室友申请已被对方查看，去 sent 页看看最新状态。", traditionalChinese: "你發出的賣室友申請已被對方查看，去 sent 頁看看最新狀態。", english: "The pick you sent has been viewed. Open the sent page to check the latest status.", japanese: "送信したピックは相手に確認されました。sent ページで最新状態を見てみましょう。", korean: "보낸 찔러보기가 상대에게 확인됐어요. sent 페이지에서 최신 상태를 확인해 보세요."), createdAt: mockLocalizedText(simplifiedChinese: "刚刚", traditionalChinese: "剛剛", english: "Just now", japanese: "たった今", korean: "방금 전"), isRead: false, destination: .datingCenter, targetType: "sent", targetID: "pick_002", targetSubID: "dating_001"),
+            AppNotificationItem(id: "msg_interaction_002", category: .interaction, module: "delivery", title: mockLocalizedText(simplifiedChinese: "全民快递提醒", traditionalChinese: "全民快遞提醒", english: "Errand reminder", japanese: "配送リマインダー", korean: "심부름 알림"), message: mockLocalizedText(simplifiedChinese: "你发布的订单已被接单，建议尽快和接单同学确认送达时间。", traditionalChinese: "你發布的訂單已被接單，建議盡快和接單同學確認送達時間。", english: "Your order has been accepted. It is a good idea to confirm the delivery time with the student who picked it up.", japanese: "投稿した注文は受注されました。受注した学生と受け渡し時間を早めに確認してください。", korean: "게시한 주문이 접수됐어요. 맡은 학생과 전달 시간을 빨리 확인하는 게 좋습니다."), createdAt: mockLocalizedText(simplifiedChinese: "6分钟前", traditionalChinese: "6分鐘前", english: "6 min ago", japanese: "6分前", korean: "6분 전"), isRead: false, destination: .delivery, targetType: "published", targetID: "delivery_002", targetSubID: "trade_001"),
+            AppNotificationItem(id: "msg_interaction_003", category: .interaction, module: "delivery", title: mockLocalizedText(simplifiedChinese: "全民快递提醒", traditionalChinese: "全民快遞提醒", english: "Errand reminder", japanese: "配送リマインダー", korean: "심부름 알림"), message: mockLocalizedText(simplifiedChinese: "你接的订单已完成，系统已同步为已完成状态。", traditionalChinese: "你接的訂單已完成，系統已同步為已完成狀態。", english: "The order you accepted has been completed, and the system has already synced it as completed.", japanese: "受注した注文は完了し、システム上でも完了状態に更新されました。", korean: "수락한 주문이 완료되어 시스템에도 완료 상태로 반영됐습니다."), createdAt: mockLocalizedText(simplifiedChinese: "12分钟前", traditionalChinese: "12分鐘前", english: "12 min ago", japanese: "12分前", korean: "12분 전"), isRead: false, destination: .delivery, targetType: "accepted", targetID: "delivery_004", targetSubID: "trade_004"),
+            AppNotificationItem(id: "msg_interaction_004", category: .comment, module: "secret", title: mockLocalizedText(simplifiedChinese: "树洞互动", traditionalChinese: "樹洞互動", english: "Secret interaction", japanese: "ツリーホール通知", korean: "트리홀 알림"), message: mockLocalizedText(simplifiedChinese: "有人回复了你的树洞，打开详情即可查看最新评论。", traditionalChinese: "有人回覆了你的樹洞，打開詳情即可查看最新評論。", english: "Someone replied to your secret. Open the detail page to read the latest comment.", japanese: "あなたのツリーホールに返信がありました。詳細を開くと最新コメントを確認できます。", korean: "당신의 트리홀에 답글이 달렸어요. 상세 화면에서 최신 댓글을 확인할 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "10分钟前", traditionalChinese: "10分鐘前", english: "10 min ago", japanese: "10分前", korean: "10분 전"), isRead: false, destination: .secret, targetType: "comment", targetID: "secret_001", targetSubID: "secret_comment_002"),
+            AppNotificationItem(id: "msg_interaction_005", category: .comment, module: "express", title: mockLocalizedText(simplifiedChinese: "表白墙互动", traditionalChinese: "表白牆互動", english: "Confession wall interaction", japanese: "告白ウォール通知", korean: "고백 게시판 알림"), message: mockLocalizedText(simplifiedChinese: "有人给你的表白留了言，打开详情即可查看最新评论。", traditionalChinese: "有人給你的表白留了言，打開詳情即可查看最新評論。", english: "Someone left a comment on your confession. Open the detail page to read the latest comment.", japanese: "あなたの告白にコメントが付きました。詳細を開くと最新コメントを確認できます。", korean: "당신의 고백 글에 댓글이 달렸어요. 상세 화면에서 최신 댓글을 확인할 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "14分钟前", traditionalChinese: "14分鐘前", english: "14 min ago", japanese: "14分前", korean: "14분 전"), isRead: false, destination: .express, targetType: "comment", targetID: "express_001", targetSubID: "express_comment_001"),
+            AppNotificationItem(id: "msg_interaction_006", category: .interaction, module: "express", title: mockLocalizedText(simplifiedChinese: "表白墙互动", traditionalChinese: "表白牆互動", english: "Confession wall interaction", japanese: "告白ウォール通知", korean: "고백 게시판 알림"), message: mockLocalizedText(simplifiedChinese: "有人参与了你的猜名字互动，去看看最新猜测次数。", traditionalChinese: "有人參與了你的猜名字互動，去看看最新猜測次數。", english: "Someone joined your name-guessing interaction. Check the latest guess count.", japanese: "誰かが名前当てに参加しました。最新の推測回数を確認してみましょう。", korean: "누군가 이름 맞히기 상호작용에 참여했어요. 최신 추측 횟수를 확인해 보세요."), createdAt: mockLocalizedText(simplifiedChinese: "18分钟前", traditionalChinese: "18分鐘前", english: "18 min ago", japanese: "18分前", korean: "18분 전"), isRead: true, destination: .express, targetType: "guess", targetID: "express_001", targetSubID: nil),
+            AppNotificationItem(id: "msg_interaction_007", category: .like, module: "topic", title: mockLocalizedText(simplifiedChinese: "话题互动", traditionalChinese: "話題互動", english: "Topic interaction", japanese: "トピック通知", korean: "토픽 알림"), message: mockLocalizedText(simplifiedChinese: "你的话题收到了新的点赞。", traditionalChinese: "你的話題收到了新的點讚。", english: "Your topic received a new like.", japanese: "あなたのトピックに新しいいいねが付きました。", korean: "당신의 토픽에 새로운 좋아요가 달렸어요."), createdAt: mockLocalizedText(simplifiedChinese: "25分钟前", traditionalChinese: "25分鐘前", english: "25 min ago", japanese: "25分前", korean: "25분 전"), isRead: true, destination: .topic, targetType: "like", targetID: "topic_001", targetSubID: nil),
+            AppNotificationItem(id: "msg_interaction_008", category: .comment, module: "photograph", title: mockLocalizedText(simplifiedChinese: "拍好校园互动", traditionalChinese: "拍好校園互動", english: "Photo interaction", japanese: "写真通知", korean: "사진 알림"), message: mockLocalizedText(simplifiedChinese: "有人评论了你的作品，打开详情即可查看最新评论。", traditionalChinese: "有人評論了你的作品，打開詳情即可查看最新評論。", english: "Someone commented on your work. Open the detail page to read the latest comment.", japanese: "あなたの作品にコメントが付きました。詳細を開くと最新コメントを確認できます。", korean: "당신의 작품에 댓글이 달렸어요. 상세 화면에서 최신 댓글을 확인할 수 있습니다."), createdAt: mockLocalizedText(simplifiedChinese: "40分钟前", traditionalChinese: "40分鐘前", english: "40 min ago", japanese: "40分前", korean: "40분 전"), isRead: false, destination: .photograph, targetType: "comment", targetID: "photo_001", targetSubID: "photo_comment_001")
+        ]
+    }
 }

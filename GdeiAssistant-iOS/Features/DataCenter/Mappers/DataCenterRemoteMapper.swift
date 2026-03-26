@@ -12,10 +12,10 @@ enum DataCenterRemoteMapper {
     nonisolated static func mapElectricityBill(_ dto: ElectricityBillRemoteDTO) -> ElectricityBill {
         ElectricityBill(
             year: dto.year ?? 0,
-            buildingNumber: RemoteMapperSupport.firstNonEmpty(dto.buildingNumber, "宿舍楼"),
+            buildingNumber: RemoteMapperSupport.firstNonEmpty(dto.buildingNumber, localizedString("dataCenter.fallback.building")),
             roomNumber: String(dto.roomNumber ?? 0),
             peopleNumber: String(dto.peopleNumber ?? 0),
-            department: RemoteMapperSupport.firstNonEmpty(dto.department, "学院暂缺"),
+            department: RemoteMapperSupport.firstNonEmpty(dto.department, localizedString("dataCenter.fallback.department")),
             usedElectricAmount: String(format: "%.2f", dto.usedElectricAmount ?? 0),
             freeElectricAmount: String(format: "%.2f", dto.freeElectricAmount ?? 0),
             feeBasedElectricAmount: String(format: "%.2f", dto.feeBasedElectricAmount ?? 0),
@@ -39,7 +39,7 @@ enum DataCenterRemoteMapper {
             categories.append(
                 YellowPageCategory(
                     id: String(typeCode),
-                    name: RemoteMapperSupport.firstNonEmpty(type.typeName, "黄页分类"),
+                    name: RemoteMapperSupport.firstNonEmpty(type.typeName, localizedString("dataCenter.fallback.yellowPageCategory")),
                     items: entries.map(mapYellowPageEntry)
                 )
             )
@@ -49,7 +49,7 @@ enum DataCenterRemoteMapper {
             categories.append(
                 YellowPageCategory(
                     id: String(typeCode),
-                    name: RemoteMapperSupport.firstNonEmpty(grouped[typeCode]?.first?.typeName, "黄页分类"),
+                    name: RemoteMapperSupport.firstNonEmpty(grouped[typeCode]?.first?.typeName, localizedString("dataCenter.fallback.yellowPageCategory")),
                     items: (grouped[typeCode] ?? []).map(mapYellowPageEntry)
                 )
             )
@@ -61,7 +61,7 @@ enum DataCenterRemoteMapper {
     nonisolated private static func mapYellowPageEntry(_ entry: YellowPageEntryRemoteDTO) -> YellowPageEntry {
         YellowPageEntry(
             id: String(entry.id ?? Int.random(in: 1...999_999)),
-            section: RemoteMapperSupport.firstNonEmpty(entry.section, "未知部门"),
+            section: RemoteMapperSupport.firstNonEmpty(entry.section, localizedString("dataCenter.fallback.departmentName")),
             campus: RemoteMapperSupport.firstNonEmpty(entry.campus, ""),
             majorPhone: RemoteMapperSupport.firstNonEmpty(entry.majorPhone, ""),
             minorPhone: RemoteMapperSupport.firstNonEmpty(entry.minorPhone, ""),

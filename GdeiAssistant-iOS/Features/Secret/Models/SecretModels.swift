@@ -18,17 +18,17 @@ struct SecretPost: Codable, Identifiable, Hashable {
     var isVoice: Bool { type != 0 }
 
     var timerText: String? {
-        timer == 1 ? "24 小时后自动删除" : nil
+        timer == 1 ? localizedString("secret.autoDelete") : nil
     }
 
     var stateText: String {
         switch state {
         case 1:
-            return "定时删除"
+            return localizedString("secret.state.timedDelete")
         case 2:
-            return "管理员删除"
+            return localizedString("secret.state.adminDeleted")
         default:
-            return "已发布"
+            return localizedString("secret.state.published")
         }
     }
 }

@@ -9,13 +9,13 @@ enum NewsCategoryType: Int, CaseIterable {
     var title: String {
         switch self {
         case .schoolHeadlines:
-            return "学校要闻"
+            return localizedString("news.category.schoolHeadlines")
         case .collegeNotices:
-            return "院部通知"
+            return localizedString("news.category.collegeNotices")
         case .campusNotices:
-            return "通知公告"
+            return localizedString("news.category.campusNotices")
         case .academicUpdates:
-            return "学术动态"
+            return localizedString("news.category.academicUpdates")
         }
     }
 }
@@ -29,6 +29,6 @@ struct NewsItem: Identifiable, Hashable {
     let sourceURL: String?
 
     var sourceTitle: String {
-        NewsCategoryType(rawValue: type)?.title ?? "新闻"
+        NewsCategoryType(rawValue: type)?.title ?? localizedString("news.category.default")
     }
 }

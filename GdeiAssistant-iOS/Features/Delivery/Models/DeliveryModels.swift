@@ -8,22 +8,22 @@ enum DeliveryOrderState: Int, Codable, Hashable {
     var title: String {
         switch self {
         case .pending:
-            return "待接单"
+            return localizedString("delivery.state.pending")
         case .delivering:
-            return "配送中"
+            return localizedString("delivery.state.delivering")
         case .completed:
-            return "已完成"
+            return localizedString("delivery.state.completed")
         }
     }
 
     var descriptionText: String {
         switch self {
         case .pending:
-            return "任务仍在大厅中，等待同学接单。"
+            return localizedString("delivery.stateDescription.pending")
         case .delivering:
-            return "订单已被接单，正在进行取件或送达。"
+            return localizedString("delivery.stateDescription.delivering")
         case .completed:
-            return "订单已完成交付。"
+            return localizedString("delivery.stateDescription.completed")
         }
     }
 }
@@ -39,13 +39,13 @@ enum DeliveryOrderFilter: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .all:
-            return "全部"
+            return localizedString("marketplace.all")
         case .pending:
-            return "待接单"
+            return localizedString("delivery.state.pending")
         case .delivering:
-            return "配送中"
+            return localizedString("delivery.state.delivering")
         case .completed:
-            return "已完成"
+            return localizedString("delivery.state.completed")
         }
     }
 }
@@ -59,9 +59,9 @@ enum DeliveryMineTab: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .published:
-            return "我发布的"
+            return localizedString("delivery.publishedTab")
         case .accepted:
-            return "我接的"
+            return localizedString("delivery.acceptedTab")
         }
     }
 }
@@ -77,13 +77,13 @@ enum DeliveryMineStatusFilter: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .all:
-            return "全部"
+            return localizedString("marketplace.all")
         case .pending:
-            return "待接单"
+            return localizedString("delivery.state.pending")
         case .delivering:
-            return "配送中"
+            return localizedString("delivery.state.delivering")
         case .completed:
-            return "已完成"
+            return localizedString("delivery.state.completed")
         }
     }
 }
@@ -124,11 +124,11 @@ struct DeliveryOrderDetail: Codable, Identifiable, Hashable {
     var userRoleTitle: String {
         switch detailType {
         case 0:
-            return "发布者"
+            return localizedString("delivery.role.publisher")
         case 3:
-            return "接单者"
+            return localizedString("delivery.role.acceptor")
         default:
-            return "大厅访客"
+            return localizedString("delivery.role.visitor")
         }
     }
 
@@ -139,22 +139,22 @@ struct DeliveryOrderDetail: Codable, Identifiable, Hashable {
     var statusDescription: String {
         switch (order.state, detailType) {
         case (.pending, 0):
-            return "订单正在等待同学接单，保持电话畅通即可。"
+            return localizedString("delivery.statusDescription.pending.publisher")
         case (.pending, 1):
-            return "当前仍在大厅中，接单后才能看到完整取件码和联系方式。"
+            return localizedString("delivery.statusDescription.pending.visitor")
         case (.delivering, 0):
-            return "已有同学接单，确认收件后可在这里完成交易。"
+            return localizedString("delivery.statusDescription.delivering.publisher")
         case (.delivering, 3):
-            return "你已成功接单，请及时完成取件并送达。"
+            return localizedString("delivery.statusDescription.delivering.acceptor")
         case (.completed, _):
-            return "这笔订单已经完成，可回看记录。"
+            return localizedString("delivery.statusDescription.completed")
         default:
             return order.state.descriptionText
         }
     }
 
     var displayPickupCode: String {
-        guard hasMeaningfulPickupCode else { return "未提供" }
+        guard hasMeaningfulPickupCode else { return localizedString("common.notProvided") }
         return canViewSensitiveInfo ? order.pickupCode : masked(order.pickupCode)
     }
 

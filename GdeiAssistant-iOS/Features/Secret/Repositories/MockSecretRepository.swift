@@ -36,8 +36,30 @@ final class MockSecretRepository: SecretRepository {
             username: MockSeedData.demoProfile.username,
             themeID: draft.themeID,
             title: draft.title,
-            summary: draft.mode == .text ? String((draft.content ?? "").prefix(44)) : "点击进入详情播放语音内容",
-            createdAt: draft.timerEnabled ? "刚刚 · 24 小时后自动删除" : "刚刚",
+            summary: draft.mode == .text
+                ? String((draft.content ?? "").prefix(44))
+                : mockLocalizedText(
+                    simplifiedChinese: "点击进入详情播放语音内容",
+                    traditionalChinese: "點擊進入詳情播放語音內容",
+                    english: "Open details to play the voice post",
+                    japanese: "詳細を開いて音声を再生",
+                    korean: "상세 화면에서 음성 재생"
+                ),
+            createdAt: draft.timerEnabled
+                ? mockLocalizedText(
+                    simplifiedChinese: "刚刚 · 24 小时后自动删除",
+                    traditionalChinese: "剛剛 · 24 小時後自動刪除",
+                    english: "Just now · Auto-delete in 24 hours",
+                    japanese: "たった今 ・ 24時間後に自動削除",
+                    korean: "방금 전 · 24시간 후 자동 삭제"
+                )
+                : mockLocalizedText(
+                    simplifiedChinese: "刚刚",
+                    traditionalChinese: "剛剛",
+                    english: "Just now",
+                    japanese: "たった今",
+                    korean: "방금 전"
+                ),
             likeCount: 0,
             commentCount: 0,
             isLiked: false,
@@ -50,7 +72,13 @@ final class MockSecretRepository: SecretRepository {
         posts.insert(post, at: 0)
         detailsByID[postID] = SecretPostDetail(
             post: post,
-            content: draft.content ?? "这是一条新发布的语音树洞，点击播放即可试听。",
+            content: draft.content ?? mockLocalizedText(
+                simplifiedChinese: "这是一条新发布的语音树洞，点击播放即可试听。",
+                traditionalChinese: "這是一條新發布的語音樹洞，點擊播放即可試聽。",
+                english: "This is a newly posted voice secret. Tap play to preview it.",
+                japanese: "新しく投稿された音声ツリーです。再生をタップすると試聴できます。",
+                korean: "새로 올라온 음성 트리홀입니다. 재생을 눌러 들어볼 수 있어요."
+            ),
             comments: []
         )
     }
@@ -71,7 +99,13 @@ final class MockSecretRepository: SecretRepository {
             id: "secret_comment_\(UUID().uuidString)",
             authorName: MockSeedData.demoProfile.nickname,
             content: trimmedContent,
-            createdAt: "刚刚",
+            createdAt: mockLocalizedText(
+                simplifiedChinese: "刚刚",
+                traditionalChinese: "剛剛",
+                english: "Just now",
+                japanese: "たった今",
+                korean: "방금 전"
+            ),
             avatarTheme: 1
         )
         let updatedComments = [comment] + detail.comments

@@ -2,13 +2,13 @@ import Foundation
 
 enum DatingRemoteMapper {
     nonisolated static func mapProfile(_ dto: DatingProfileDTO, isMine: Bool = false) -> DatingProfile {
-        let faculty = RemoteMapperSupport.firstNonEmpty(dto.faculty, "未填写学院")
-        let hometown = RemoteMapperSupport.firstNonEmpty(dto.hometown, "未填写家乡")
+        let faculty = RemoteMapperSupport.firstNonEmpty(dto.faculty, localizedString("dating.fallback.faculty"))
+        let hometown = RemoteMapperSupport.firstNonEmpty(dto.hometown, localizedString("dating.fallback.hometown"))
         let grade = gradeText(dto.grade)
         let area = DatingArea(rawValue: dto.area ?? 0) ?? .girl
         return DatingProfile(
             id: dto.profileId.map(String.init) ?? UUID().uuidString,
-            nickname: RemoteMapperSupport.firstNonEmpty(dto.nickname, "匿名"),
+            nickname: RemoteMapperSupport.firstNonEmpty(dto.nickname, localizedString("common.anonymous")),
             headline: "\(grade) · \(faculty)",
             college: faculty,
             major: hometown,
@@ -17,7 +17,7 @@ enum DatingRemoteMapper {
                 DatingTag(id: "area", title: area.title),
                 DatingTag(id: "hometown", title: hometown)
             ],
-            bio: RemoteMapperSupport.firstNonEmpty(dto.content, "这个人还没有留下更多介绍。"),
+            bio: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("dating.fallback.bio")),
             imageURL: RemoteMapperSupport.sanitizedText(dto.pictureURL),
             hometown: hometown,
             qq: RemoteMapperSupport.sanitizedText(dto.qq),
@@ -81,9 +81,9 @@ enum DatingRemoteMapper {
         let profile = dto.roommateProfile
         return DatingReceivedPick(
             id: dto.pickId.map(String.init) ?? UUID().uuidString,
-            senderName: RemoteMapperSupport.firstNonEmpty(profile?.nickname, dto.username, "匿名"),
-            content: RemoteMapperSupport.firstNonEmpty(dto.content, "对方没有留下更多信息"),
-            time: "最近更新",
+            senderName: RemoteMapperSupport.firstNonEmpty(profile?.nickname, dto.username, localizedString("common.anonymous")),
+            content: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("dating.fallback.noMessage")),
+            time: localizedString("common.updatedRecently"),
             status: pickStatus(dto.state),
             avatarURL: RemoteMapperSupport.sanitizedText(profile?.pictureURL)
         )
@@ -93,8 +93,8 @@ enum DatingRemoteMapper {
         let profile = dto.roommateProfile
         return DatingSentPick(
             id: dto.pickId.map(String.init) ?? UUID().uuidString,
-            targetName: RemoteMapperSupport.firstNonEmpty(profile?.nickname, "匿名"),
-            content: RemoteMapperSupport.firstNonEmpty(dto.content, "未填写留言"),
+            targetName: RemoteMapperSupport.firstNonEmpty(profile?.nickname, localizedString("common.anonymous")),
+            content: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("dating.fallback.noMessage")),
             status: pickStatus(dto.state),
             targetQq: profile?.qq,
             targetWechat: profile?.wechat,
@@ -108,7 +108,7 @@ enum DatingRemoteMapper {
             id: profile.id,
             name: profile.nickname,
             imageURL: profile.imageURL,
-            publishTime: "已发布",
+            publishTime: localizedString("common.published"),
             grade: profile.grade,
             faculty: profile.college,
             hometown: profile.hometown,
@@ -120,15 +120,15 @@ enum DatingRemoteMapper {
     nonisolated private static func gradeText(_ value: Int?) -> String {
         switch value {
         case 1:
-            return "大一"
+            return localizedString("dating.grade1")
         case 2:
-            return "大二"
+            return localizedString("dating.grade2")
         case 3:
-            return "大三"
+            return localizedString("dating.grade3")
         case 4:
-            return "大四"
+            return localizedString("dating.grade4")
         default:
-            return "未知年级"
+            return localizedString("dating.gradeUnknown")
         }
     }
 
