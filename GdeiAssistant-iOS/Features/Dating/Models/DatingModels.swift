@@ -9,9 +9,9 @@ enum DatingArea: Int, CaseIterable, Identifiable, Codable {
     nonisolated var title: String {
         switch self {
         case .girl:
-            return "小姐姐"
+            return localizedString("dating.area.girl")
         case .boy:
-            return "小哥哥"
+            return localizedString("dating.area.boy")
         }
     }
 }
@@ -24,11 +24,11 @@ enum DatingPickStatus: Int, Codable, Hashable {
     nonisolated var title: String {
         switch self {
         case .pending:
-            return "待处理"
+            return localizedString("dating.pickStatus.pending")
         case .accepted:
-            return "已同意"
+            return localizedString("dating.pickStatus.accepted")
         case .rejected:
-            return "已拒绝"
+            return localizedString("dating.pickStatus.rejected")
         }
     }
 }
@@ -43,11 +43,11 @@ enum DatingCenterTab: String, CaseIterable, Identifiable, Codable, Hashable {
     nonisolated var title: String {
         switch self {
         case .received:
-            return "收到的撩"
+            return localizedString("dating.center.received")
         case .sent:
-            return "我发出的"
+            return localizedString("dating.center.sent")
         case .posts:
-            return "我的发布"
+            return localizedString("dating.center.posts")
         }
     }
 }
@@ -83,7 +83,7 @@ struct DatingProfile: Codable, Identifiable, Hashable {
         tags: [DatingTag],
         bio: String,
         imageURL: String? = nil,
-        hometown: String = "未公开地区",
+        hometown: String = localizedString("dating.fallback.hometown"),
         qq: String? = nil,
         wechat: String? = nil,
         isContactVisible: Bool = false,

@@ -12,9 +12,9 @@ enum CollectionRemoteMapper {
         let detailURL = RemoteMapperSupport.firstNonEmpty(dto.detailURL, UUID().uuidString)
         return CollectionSearchItem(
             id: detailURL,
-            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, "未命名馆藏"),
-            author: RemoteMapperSupport.firstNonEmpty(dto.author, "作者暂缺"),
-            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, "出版社暂缺"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, localizedString("collection.fallback.untitled")),
+            author: RemoteMapperSupport.firstNonEmpty(dto.author, localizedString("collection.fallback.author")),
+            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, localizedString("collection.fallback.publisher")),
             detailURL: detailURL
         )
     }
@@ -22,14 +22,14 @@ enum CollectionRemoteMapper {
     nonisolated static func mapDetail(_ dto: CollectionDetailDTO) -> CollectionDetailInfo {
         CollectionDetailInfo(
             id: RemoteMapperSupport.firstNonEmpty(dto.bookname, UUID().uuidString),
-            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, "馆藏详情"),
-            author: RemoteMapperSupport.firstNonEmpty(dto.author, "作者暂缺"),
-            principal: RemoteMapperSupport.firstNonEmpty(dto.principal, dto.personalPrincipal, "无责任者信息"),
-            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, "出版社暂缺"),
-            price: RemoteMapperSupport.firstNonEmpty(dto.price, "价格暂缺"),
-            physicalDescription: RemoteMapperSupport.firstNonEmpty(dto.physicalDescriptionArea, "暂无馆藏描述"),
-            subjectTheme: RemoteMapperSupport.firstNonEmpty(dto.subjectTheme, "暂无主题词"),
-            classification: RemoteMapperSupport.firstNonEmpty(dto.chineseLibraryClassification, "暂无分类号"),
+            title: RemoteMapperSupport.firstNonEmpty(dto.bookname, localizedString("collection.fallback.detailTitle")),
+            author: RemoteMapperSupport.firstNonEmpty(dto.author, localizedString("collection.fallback.author")),
+            principal: RemoteMapperSupport.firstNonEmpty(dto.principal, dto.personalPrincipal, localizedString("collection.fallback.principal")),
+            publisher: RemoteMapperSupport.firstNonEmpty(dto.publishingHouse, localizedString("collection.fallback.publisher")),
+            price: RemoteMapperSupport.firstNonEmpty(dto.price, localizedString("collection.fallback.price")),
+            physicalDescription: RemoteMapperSupport.firstNonEmpty(dto.physicalDescriptionArea, localizedString("collection.fallback.description")),
+            subjectTheme: RemoteMapperSupport.firstNonEmpty(dto.subjectTheme, localizedString("collection.fallback.subject")),
+            classification: RemoteMapperSupport.firstNonEmpty(dto.chineseLibraryClassification, localizedString("collection.fallback.classification")),
             distributions: (dto.collectionDistributionList ?? []).map(mapDistribution)
         )
     }
@@ -38,10 +38,10 @@ enum CollectionRemoteMapper {
         let barcode = RemoteMapperSupport.firstNonEmpty(dto.barcode, UUID().uuidString)
         return CollectionDistributionItem(
             id: barcode,
-            location: RemoteMapperSupport.firstNonEmpty(dto.location, "馆藏位置待补充"),
-            callNumber: RemoteMapperSupport.firstNonEmpty(dto.callNumber, "索书号暂缺"),
+            location: RemoteMapperSupport.firstNonEmpty(dto.location, localizedString("collection.fallback.location")),
+            callNumber: RemoteMapperSupport.firstNonEmpty(dto.callNumber, localizedString("collection.fallback.callNumber")),
             barcode: barcode,
-            state: RemoteMapperSupport.firstNonEmpty(dto.state, "状态未知")
+            state: RemoteMapperSupport.firstNonEmpty(dto.state, localizedString("collection.fallback.state"))
         )
     }
 
@@ -51,10 +51,10 @@ enum CollectionRemoteMapper {
                 id: RemoteMapperSupport.firstNonEmpty(dto.id, dto.sn, UUID().uuidString),
                 sn: RemoteMapperSupport.firstNonEmpty(dto.sn, ""),
                 code: RemoteMapperSupport.firstNonEmpty(dto.code, ""),
-                title: RemoteMapperSupport.firstNonEmpty(dto.name, "未知图书"),
-                author: RemoteMapperSupport.firstNonEmpty(dto.author, "作者暂缺"),
-                borrowDate: RemoteMapperSupport.firstNonEmpty(dto.borrowDate, "借阅时间未知"),
-                returnDate: RemoteMapperSupport.firstNonEmpty(dto.returnDate, "归还时间未知"),
+                title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("collection.fallback.unknownBook")),
+                author: RemoteMapperSupport.firstNonEmpty(dto.author, localizedString("collection.fallback.author")),
+                borrowDate: RemoteMapperSupport.firstNonEmpty(dto.borrowDate, localizedString("collection.fallback.borrowDate")),
+                returnDate: RemoteMapperSupport.firstNonEmpty(dto.returnDate, localizedString("collection.fallback.returnDate")),
                 renewCount: dto.renewTime ?? 0
             )
         }

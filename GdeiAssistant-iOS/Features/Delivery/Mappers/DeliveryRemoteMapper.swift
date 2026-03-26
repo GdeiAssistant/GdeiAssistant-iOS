@@ -4,16 +4,16 @@ enum DeliveryRemoteMapper {
     nonisolated static func mapOrder(_ dto: DeliveryOrderRemoteDTO) -> DeliveryOrder {
         DeliveryOrder(
             orderID: RemoteMapperSupport.text(dto.orderId, fallback: UUID().uuidString),
-            username: RemoteMapperSupport.firstNonEmpty(dto.username, "校园同学"),
-            name: RemoteMapperSupport.firstNonEmpty(dto.name, "代收"),
+            username: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("delivery.fallback.campusUser")),
+            name: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("delivery.fallback.taskName")),
             pickupCode: RemoteMapperSupport.firstNonEmpty(dto.number),
             contactPhone: RemoteMapperSupport.firstNonEmpty(dto.phone),
             price: RemoteMapperSupport.double(dto.price),
-            company: RemoteMapperSupport.firstNonEmpty(dto.company, "取件点"),
-            address: RemoteMapperSupport.firstNonEmpty(dto.address, "待补充"),
+            company: RemoteMapperSupport.firstNonEmpty(dto.company, localizedString("delivery.fallback.pickupPoint")),
+            address: RemoteMapperSupport.firstNonEmpty(dto.address, localizedString("common.notProvided")),
             state: DeliveryOrderState(rawValue: RemoteMapperSupport.int(dto.state)) ?? .pending,
             remarks: RemoteMapperSupport.firstNonEmpty(dto.remarks),
-            orderTime: RemoteMapperSupport.dateText(dto.orderTime, fallback: "刚刚")
+            orderTime: RemoteMapperSupport.dateText(dto.orderTime, fallback: localizedString("common.justNow"))
         )
     }
 
@@ -22,7 +22,7 @@ enum DeliveryRemoteMapper {
             tradeID: RemoteMapperSupport.text(dto.tradeId, fallback: UUID().uuidString),
             orderID: RemoteMapperSupport.text(dto.orderId),
             username: RemoteMapperSupport.firstNonEmpty(dto.username, "runner"),
-            createTime: RemoteMapperSupport.dateText(dto.createTime, fallback: "刚刚"),
+            createTime: RemoteMapperSupport.dateText(dto.createTime, fallback: localizedString("common.justNow")),
             state: RemoteMapperSupport.int(dto.state)
         )
     }

@@ -8,11 +8,11 @@ enum CardStatus: String, Codable {
     var displayName: String {
         switch self {
         case .normal:
-            return "正常"
+            return localizedString("card.status.normal")
         case .lost:
-            return "已挂失"
+            return localizedString("card.status.lost")
         case .frozen:
-            return "已冻结"
+            return localizedString("card.status.frozen")
         }
     }
 }

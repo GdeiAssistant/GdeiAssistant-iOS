@@ -9,13 +9,13 @@ enum MarketplaceItemState: Int, Codable, Hashable {
     var title: String {
         switch self {
         case .offShelf:
-            return "已下架"
+            return localizedString("marketplace.offShelf")
         case .selling:
-            return "待出售"
+            return localizedString("marketplace.stateSelling")
         case .sold:
-            return "已出售"
+            return localizedString("marketplace.stateSold")
         case .systemDeleted:
-            return "系统删除"
+            return localizedString("marketplace.stateSystemDeleted")
         }
     }
 }

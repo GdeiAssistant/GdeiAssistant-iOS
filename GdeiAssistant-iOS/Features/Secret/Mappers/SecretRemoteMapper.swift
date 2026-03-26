@@ -36,7 +36,7 @@ enum SecretRemoteMapper {
 
         return SecretPostDetail(
             post: mapPost(dto),
-            content: RemoteMapperSupport.firstNonEmpty(dto.content, "暂无内容"),
+            content: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("common.noContent")),
             comments: mapComments(resolvedComments)
         )
     }
@@ -47,7 +47,7 @@ enum SecretRemoteMapper {
     }
 
     nonisolated private static func mapPost(_ dto: SecretPostDTO) -> SecretPost {
-        let content = RemoteMapperSupport.firstNonEmpty(dto.content, dto.voiceURL, "暂无内容")
+        let content = RemoteMapperSupport.firstNonEmpty(dto.content, dto.voiceURL, localizedString("common.noContent"))
         let type = dto.type ?? 0
         let timer = dto.timer ?? 0
         let state = dto.state ?? 0
@@ -55,10 +55,10 @@ enum SecretRemoteMapper {
 
         return SecretPost(
             id: String(dto.id ?? Int.random(in: 1...999_999)),
-            username: RemoteMapperSupport.firstNonEmpty(dto.username, "匿名同学"),
+            username: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("common.anonymousStudent")),
             themeID: themeID,
-            title: type == 0 ? RemoteMapperSupport.truncated(content, limit: 18) : "语音树洞",
-            summary: type == 0 ? RemoteMapperSupport.truncated(content, limit: 48) : "点击进入详情播放语音内容",
+            title: type == 0 ? RemoteMapperSupport.truncated(content, limit: 18) : localizedString("secret.voicePostTitle"),
+            summary: type == 0 ? RemoteMapperSupport.truncated(content, limit: 48) : localizedString("secret.voiceSummary"),
             createdAt: createdAtText(dto.publishTime, timer: timer),
             likeCount: dto.likeCount ?? 0,
             commentCount: dto.commentCount ?? 0,
@@ -74,16 +74,16 @@ enum SecretRemoteMapper {
         dtos.map {
             SecretComment(
                 id: String($0.id ?? Int.random(in: 1...999_999)),
-                authorName: RemoteMapperSupport.firstNonEmpty($0.username, "匿名同学"),
+                authorName: RemoteMapperSupport.firstNonEmpty($0.username, localizedString("common.anonymousStudent")),
                 content: RemoteMapperSupport.firstNonEmpty($0.comment, ""),
-                createdAt: RemoteMapperSupport.dateText($0.publishTime, fallback: "刚刚"),
+                createdAt: RemoteMapperSupport.dateText($0.publishTime, fallback: localizedString("common.justNow")),
                 avatarTheme: $0.avatarTheme ?? 1
             )
         }
     }
 
     nonisolated private static func createdAtText(_ publishTime: RemoteFlexibleString?, timer: Int) -> String {
-        let base = RemoteMapperSupport.dateText(publishTime, fallback: "刚刚")
-        return timer == 1 ? "\(base) · 24 小时后自动删除" : base
+        let base = RemoteMapperSupport.dateText(publishTime, fallback: localizedString("common.justNow"))
+        return timer == 1 ? "\(base) · \(localizedString("secret.autoDelete"))" : base
     }
 }
