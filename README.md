@@ -155,7 +155,7 @@ GdeiAssistant-iOS/
 
 ## 运行环境
 
-- Xcode 15 及以上
+- Xcode 26.3 及以上
 - iOS 17 SDK（建议）
 - macOS 环境已安装完整 Xcode，而非仅 Command Line Tools
 
@@ -179,6 +179,35 @@ open GdeiAssistant-iOS.xcodeproj
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcodebuild -project GdeiAssistant-iOS.xcodeproj \
 -scheme GdeiAssistant-iOS \
+-destination 'generic/platform=iOS' \
+CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
+
+### 2.1 环境配置
+
+仓库现在通过 `Configs/*.xcconfig` 管理三套接口环境：
+
+- `Configs/Debug.xcconfig`：本地开发，默认 `dev`
+- `Configs/Staging.xcconfig`：测试环境，默认 `staging`
+- `Configs/Release.xcconfig`：生产环境，默认 `prod`
+
+对应接口地址：
+
+- `dev`：`http://localhost:8080/api`
+- `staging`：`https://gdeiassistant.azurewebsites.net/api`
+- `prod`：`https://gdeiassistant.cn/api`
+
+Debug 构建允许在应用设置页切换 `dev / staging / prod` 和 `mock / remote`；  
+Release / Staging 构建固定走远程接口，不读取历史 debug 覆盖值。
+
+如需命令行打测试环境包，可以直接覆盖 xcconfig：
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+xcodebuild -project GdeiAssistant-iOS.xcodeproj \
+-scheme GdeiAssistant-iOS \
+-configuration Release \
+-xcconfig Configs/Staging.xcconfig \
 -destination 'generic/platform=iOS' \
 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 ```
