@@ -48,20 +48,26 @@ final class UserPreferences: ObservableObject {
     private let defaults: UserDefaults
     private var hasInitialized = false
 
+    private static var buildDefaultNetworkEnvironment: NetworkEnvironment {
+        NetworkEnvironment(rawValue: AppConstants.API.defaultNetworkEnvironment) ?? .prod
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        if let storedUseMockData = defaults.object(forKey: AppConstants.UserDefaultsKeys.useMockData) as? Bool {
+        if AppConstants.API.allowsRuntimeDebugOptions,
+           let storedUseMockData = defaults.object(forKey: AppConstants.UserDefaultsKeys.useMockData) as? Bool {
             self.useMockData = storedUseMockData
         } else {
             self.useMockData = false
         }
         if
+            AppConstants.API.allowsRuntimeDebugOptions,
             let storedEnvironment = defaults.string(forKey: AppConstants.UserDefaultsKeys.networkEnvironment),
             let resolvedEnvironment = NetworkEnvironment(rawValue: storedEnvironment)
         {
             self.networkEnvironment = resolvedEnvironment
         } else {
-            self.networkEnvironment = .prod
+            self.networkEnvironment = Self.buildDefaultNetworkEnvironment
         }
         if let storedLocale = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale) {
             self.selectedLocale = AppLanguage.normalizedIdentifier(from: storedLocale)
@@ -86,28 +92,36 @@ final class UserPreferences: ObservableObject {
     }
 
     var currentDataSourceMode: DataSourceMode {
-        useMockData ? .mock : .remote
+        AppConstants.API.allowsRuntimeDebugOptions && useMockData ? .mock : .remote
     }
 
     var currentNetworkEnvironment: NetworkEnvironment {
-        networkEnvironment
+        AppConstants.API.allowsRuntimeDebugOptions ? networkEnvironment : Self.buildDefaultNetworkEnvironment
     }
 
     func setUseMockData(_ isEnabled: Bool) {
-        useMockData = isEnabled
+        useMockData = AppConstants.API.allowsRuntimeDebugOptions ? isEnabled : false
     }
 
     func setNetworkEnvironment(_ environment: NetworkEnvironment) {
-        networkEnvironment = environment
+        networkEnvironment = AppConstants.API.allowsRuntimeDebugOptions ? environment : Self.buildDefaultNetworkEnvironment
     }
 
     private func persistUseMockDataIfNeeded() {
         guard hasInitialized else { return }
+        guard AppConstants.API.allowsRuntimeDebugOptions else {
+            defaults.removeObject(forKey: AppConstants.UserDefaultsKeys.useMockData)
+            return
+        }
         defaults.set(useMockData, forKey: AppConstants.UserDefaultsKeys.useMockData)
     }
 
     private func persistNetworkEnvironmentIfNeeded() {
         guard hasInitialized else { return }
+        guard AppConstants.API.allowsRuntimeDebugOptions else {
+            defaults.removeObject(forKey: AppConstants.UserDefaultsKeys.networkEnvironment)
+            return
+        }
         defaults.set(networkEnvironment.rawValue, forKey: AppConstants.UserDefaultsKeys.networkEnvironment)
     }
 
