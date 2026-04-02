@@ -67,7 +67,8 @@ struct MessagesView: View {
         overviewSectionCard(
             title: localizedString("messages.newsSection"),
             systemImage: "newspaper.fill",
-            tint: DSColor.primary
+            tint: DSColor.primary,
+            titleAccessibilityIdentifier: "messages.section.news"
         ) {
             NavigationLink {
                 NewsView(viewModel: container.makeNewsViewModel())
@@ -113,7 +114,8 @@ struct MessagesView: View {
         overviewSectionCard(
             title: localizedString("messages.systemNoticeSection"),
             systemImage: "megaphone.fill",
-            tint: DSColor.warning
+            tint: DSColor.warning,
+            titleAccessibilityIdentifier: "messages.section.system"
         ) {
             NavigationLink {
                 SystemNoticeListView(viewModel: container.makeSystemNoticeListViewModel())
@@ -180,7 +182,8 @@ struct MessagesView: View {
         sectionCard(
             title: localizedString("messages.interactionSection"),
             systemImage: "bubble.left.and.bubble.right.fill",
-            tint: DSColor.primary
+            tint: DSColor.primary,
+            titleAccessibilityIdentifier: "messages.section.interaction"
         ) {
             HStack(spacing: 8) {
                 if viewModel.interactionUnreadCount > 0 {
@@ -223,6 +226,7 @@ struct MessagesView: View {
         title: String,
         systemImage: String,
         tint: Color,
+        titleAccessibilityIdentifier: String? = nil,
         @ViewBuilder accessory: () -> Accessory,
         @ViewBuilder content: () -> Content
     ) -> some View {
@@ -242,6 +246,7 @@ struct MessagesView: View {
                         Text(title)
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
+                            .applyAccessibilityIdentifier(titleAccessibilityIdentifier)
                     }
 
                     Spacer(minLength: 12)
@@ -261,6 +266,7 @@ struct MessagesView: View {
         title: String,
         systemImage: String,
         tint: Color,
+        titleAccessibilityIdentifier: String? = nil,
         @ViewBuilder accessory: () -> Accessory,
         @ViewBuilder content: () -> Content
     ) -> some View {
@@ -279,6 +285,7 @@ struct MessagesView: View {
                     Text(title)
                         .font(.headline)
                         .foregroundStyle(DSColor.title)
+                        .applyAccessibilityIdentifier(titleAccessibilityIdentifier)
                         .padding(.leading, Layout.interactionHeaderIconTitleSpacing)
 
                     Spacer(minLength: 12)
@@ -302,12 +309,14 @@ struct MessagesView: View {
             } label: {
                 notificationRow(item)
             }
+            .accessibilityIdentifier("messages.interaction.\(item.id)")
             .buttonStyle(.plain)
             .simultaneousGesture(TapGesture().onEnded {
                 Task { await viewModel.markNotificationRead(notificationID: item.id) }
             })
         } else {
             notificationRow(item)
+                .accessibilityIdentifier("messages.interaction.\(item.id)")
         }
     }
 
@@ -533,6 +542,17 @@ struct MessagesView: View {
             case .all:
                 return NotificationIconSpec(systemImage: "bell.fill", tint: DSColor.subtitle)
             }
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyAccessibilityIdentifier(_ identifier: String?) -> some View {
+        if let identifier {
+            accessibilityIdentifier(identifier)
+        } else {
+            self
         }
     }
 }

@@ -94,6 +94,7 @@ struct HomeView: View {
                             }
                             .accessibilityElement(children: .combine)
                         }
+                        .accessibilityIdentifier("home.entry.\(entry.destination.featureID)")
                         .buttonStyle(.plain)
                     }
                 }

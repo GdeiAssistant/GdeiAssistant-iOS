@@ -12,6 +12,7 @@ struct DSButton: View {
     var variant: DSButtonVariant = .primary
     var isLoading: Bool = false
     var isDisabled: Bool = false
+    var accessibilityIdentifier: String? = nil
     let action: () -> Void
 
     var body: some View {
@@ -38,6 +39,7 @@ struct DSButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(.isButton)
+        .applyAccessibilityIdentifier(accessibilityIdentifier)
         .disabled(isLoading || isDisabled)
         .opacity(isLoading || isDisabled ? 0.75 : 1.0)
     }
@@ -61,6 +63,17 @@ struct DSButton: View {
             return DSColor.onPrimary
         case .secondary:
             return DSColor.title
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyAccessibilityIdentifier(_ identifier: String?) -> some View {
+        if let identifier {
+            accessibilityIdentifier(identifier)
+        } else {
+            self
         }
     }
 }

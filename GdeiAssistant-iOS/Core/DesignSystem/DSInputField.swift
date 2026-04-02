@@ -5,6 +5,7 @@ struct DSInputField: View {
     let title: String
     let placeholder: String
     @Binding var text: String
+    private let accessibilityIdentifier: String?
 
     private let secureToggle: Binding<Bool>?
     private let textContentType: UITextContentType?
@@ -14,12 +15,14 @@ struct DSInputField: View {
         title: String,
         placeholder: String,
         text: Binding<String>,
+        accessibilityIdentifier: String? = nil,
         textContentType: UITextContentType? = nil,
         keyboardType: UIKeyboardType = .default
     ) {
         self.title = title
         self.placeholder = placeholder
         _text = text
+        self.accessibilityIdentifier = accessibilityIdentifier
         self.secureToggle = nil
         self.textContentType = textContentType
         self.keyboardType = keyboardType
@@ -30,11 +33,13 @@ struct DSInputField: View {
         placeholder: String,
         text: Binding<String>,
         isSecureEntry: Binding<Bool>,
+        accessibilityIdentifier: String? = nil,
         textContentType: UITextContentType? = nil
     ) {
         self.title = title
         self.placeholder = placeholder
         _text = text
+        self.accessibilityIdentifier = accessibilityIdentifier
         self.secureToggle = isSecureEntry
         self.textContentType = textContentType
         self.keyboardType = .default
@@ -80,6 +85,7 @@ struct DSInputField: View {
                 .font(.body)
                 .foregroundStyle(DSColor.title)
                 .autocapitalization(.none)
+                .applyAccessibilityIdentifier(accessibilityIdentifier)
         } else {
             TextField(placeholder, text: $text)
                 .textContentType(textContentType)
@@ -87,6 +93,18 @@ struct DSInputField: View {
                 .font(.body)
                 .foregroundStyle(DSColor.title)
                 .autocapitalization(.none)
+                .applyAccessibilityIdentifier(accessibilityIdentifier)
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyAccessibilityIdentifier(_ identifier: String?) -> some View {
+        if let identifier {
+            accessibilityIdentifier(identifier)
+        } else {
+            self
         }
     }
 }

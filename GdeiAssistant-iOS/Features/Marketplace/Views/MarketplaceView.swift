@@ -87,6 +87,7 @@ struct MarketplaceView: View {
                             }
                             .padding(.vertical, 4)
                         }
+                        .accessibilityIdentifier("marketplace.item.\(item.id)")
                     }
                 }
             }
@@ -108,6 +109,7 @@ struct MarketplaceView: View {
                         publishViewModel: container.makePublishMarketplaceViewModel()
                     )
                 }
+                .accessibilityIdentifier("marketplace.publishEntry")
             }
         }
         .task {
@@ -610,6 +612,7 @@ struct MarketplaceDetailView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(DSColor.title)
                                 .lineSpacing(4)
+                                .accessibilityIdentifier("marketplace.detail.description")
 
                             Divider()
 
@@ -814,6 +817,7 @@ struct PublishMarketplaceView: View {
                     .foregroundStyle(DSColor.subtitle)
             } header: {
                 Text(localizedString("marketplace.itemImages"))
+                    .accessibilityIdentifier("marketplace.publish.images")
             }
 
             Section {
@@ -865,6 +869,7 @@ struct PublishMarketplaceView: View {
                         Text(localizedString("marketplace.submit"))
                     }
                 }
+                .accessibilityIdentifier("marketplace.publish.submit")
                 .disabled(publishViewModel.submitState.isSubmitting || !publishViewModel.isFormValid)
             }
         }

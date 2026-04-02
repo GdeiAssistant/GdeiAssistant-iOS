@@ -720,7 +720,7 @@ func mockLocalizedText(
 }
 
 extension MockSeedData {
-    static let cetCaptchaBase64 = ""
+    static let cetCaptchaBase64 = "iVBORw0KGgoAAAANSUhEUgAAAMAAAAA8CAIAAACVO0mNAAAA/0lEQVR4nO3TsQ3DMBQFQdP9d7aBkYzWxExA0RduCMsZ/HXXIQK5vCk1vZ1tc665fb3e8DqgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJoCaAmoCqAmgJqBv+B8C9ZV8o8AAAAASUVORK5CYII="
 
     static func cetDashboard(ticketNumber: String, candidateName: String) -> CETDashboard {
         CETDashboard(
