@@ -1,6 +1,36 @@
 import Foundation
 import Combine
 
+private enum UITestRuntimeOverrides {
+    private static let environment = ProcessInfo.processInfo.environment
+
+    static var useMockData: Bool {
+        boolValue(for: "GDEI_UI_USE_MOCK")
+    }
+
+    static var localeIdentifier: String? {
+        stringValue(for: "GDEI_UI_LOCALE")
+    }
+
+    static var networkEnvironment: NetworkEnvironment? {
+        guard let rawValue = stringValue(for: "GDEI_UI_NETWORK_ENV") else { return nil }
+        return NetworkEnvironment(rawValue: rawValue)
+    }
+
+    private static func stringValue(for key: String) -> String? {
+        guard let value = environment[key]?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value
+    }
+
+    private static func boolValue(for key: String) -> Bool {
+        guard let value = stringValue(for: key) else { return false }
+        return NSString(string: value).boolValue
+    }
+}
+
 enum AppTab: Hashable {
     case home
     case messages
@@ -143,11 +173,22 @@ final class AppContainer: ObservableObject {
         let testDefaults = UserDefaults(suiteName: suiteName) ?? .standard
         testDefaults.removePersistentDomain(forName: suiteName)
         let preferences = UserPreferences(defaults: testDefaults)
+        if let localeIdentifier = UITestRuntimeOverrides.localeIdentifier {
+            preferences.selectedLocale = localeIdentifier
+        }
+        if let networkEnvironment = UITestRuntimeOverrides.networkEnvironment {
+            preferences.setNetworkEnvironment(networkEnvironment)
+        }
+        if UITestRuntimeOverrides.useMockData {
+            preferences.setUseMockData(true)
+        }
         let container = AppContainer(
             userPreferences: preferences,
             tokenStorage: InMemoryTokenStorage(),
             shouldSkipBootstrap: true
         )
+        container.environment.updateNetworkEnvironment(preferences.currentNetworkEnvironment)
+        container.environment.updateDataSourceMode(preferences.currentDataSourceMode)
         container.sessionState.markLoggedOut()
         return container
     }

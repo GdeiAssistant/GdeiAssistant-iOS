@@ -87,6 +87,7 @@ struct LoginView: View {
                     title: localizedString("login.account"),
                     placeholder: localizedString("login.accountPlaceholder"),
                     text: $viewModel.username,
+                    accessibilityIdentifier: "login.username",
                     textContentType: .username
                 )
 
@@ -95,6 +96,7 @@ struct LoginView: View {
                     placeholder: localizedString("login.passwordPlaceholder"),
                     text: $viewModel.password,
                     isSecureEntry: $viewModel.isPasswordSecure,
+                    accessibilityIdentifier: "login.password",
                     textContentType: .password
                 )
 
@@ -110,7 +112,8 @@ struct LoginView: View {
                     icon: "arrow.right.circle.fill",
                     variant: .primary,
                     isLoading: viewModel.isLoading,
-                    isDisabled: !viewModel.canSubmit
+                    isDisabled: !viewModel.canSubmit,
+                    accessibilityIdentifier: "login.submit"
                 ) {
                     Task {
                         await viewModel.login()
@@ -153,12 +156,14 @@ struct LoginView: View {
                             .font(.subheadline)
                             .foregroundStyle(DSColor.title)
                     }
+                    .accessibilityIdentifier("login.mock.toggle")
 
                     if preferences.useMockData {
                         Text(localizedString("login.mockCredentialsHint"))
                             .font(.caption)
                             .foregroundStyle(DSColor.subtitle)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityIdentifier("login.mock.hint")
                     }
                 }
             }

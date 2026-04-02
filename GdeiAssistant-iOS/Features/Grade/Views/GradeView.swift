@@ -41,6 +41,7 @@ struct GradeView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("grade.yearPicker")
                 }
 
                 DSCard {
@@ -54,6 +55,7 @@ struct GradeView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("grade.termPicker")
                 }
 
                 if let term = viewModel.selectedTermReport {
@@ -61,6 +63,7 @@ struct GradeView: View {
                         Text(term.title)
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
+                            .accessibilityIdentifier("grade.term.title")
 
                         HStack {
                             summaryItem(title: localizedString("grade.gpa"), value: String(format: "%.2f", term.gpa))
@@ -78,6 +81,7 @@ struct GradeView: View {
                                         Text(item.courseName)
                                             .font(.subheadline.weight(.semibold))
                                             .foregroundStyle(DSColor.title)
+                                            .accessibilityIdentifier("grade.course.\(item.id)")
                                         Spacer()
                                         Text(String(format: "%.1f", item.score))
                                             .font(.subheadline.weight(.bold))
