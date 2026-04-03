@@ -5,17 +5,29 @@ final class TrackingTokenStorage: TokenStorage {
     private(set) var token: String?
     private(set) var savedTokens: [String] = []
     private(set) var deleteCallCount = 0
+    var saveError: Error?
+    var loadError: Error?
+    var deleteError: Error?
 
     func saveToken(_ token: String) throws {
+        if let saveError {
+            throw saveError
+        }
         self.token = token
         savedTokens.append(token)
     }
 
     func loadToken() throws -> String? {
-        token
+        if let loadError {
+            throw loadError
+        }
+        return token
     }
 
     func deleteToken() throws {
+        if let deleteError {
+            throw deleteError
+        }
         deleteCallCount += 1
         token = nil
     }

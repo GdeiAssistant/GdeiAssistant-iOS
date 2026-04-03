@@ -13,19 +13,73 @@ on:
       - 'release/**'
 
 jobs:
-  unit-test:
-    name: Unit Tests
-    runs-on: macos-15
+  style-check:
+    name: Style Check
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Select Xcode and list simulators
+      - name: Run Swift style checks
         run: |
-          XCODE_PATH=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
-          echo "Using $XCODE_PATH"
-          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          chmod +x Tools/check_style.sh
+          ./Tools/check_style.sh
+
+  build-smoke:
+    name: Build Smoke
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      CI_XCCONFIG: .github/ci-overrides.xcconfig
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Select pinned Xcode
+        run: |
+          if [[ ! -d "$DEVELOPER_DIR" ]]; then
+            echo "Expected Xcode not found: $DEVELOPER_DIR"
+            ls -d /Applications/Xcode*.app || true
+            exit 1
+          fi
+          xcodebuild -version
+
+      - name: Build simulator app
+        run: |
+          chmod +x Tools/build_simulator.sh
+          ./Tools/build_simulator.sh
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-build-log
+          path: build-simulator.log
+          retention-days: 7
+
+  unit-test:
+    name: Unit Tests
+    runs-on: macos-15
+    needs:
+      - style-check
+      - build-smoke
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      CI_XCCONFIG: .github/ci-overrides.xcconfig
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Select pinned Xcode and list simulators
+        run: |
+          if [[ ! -d "$DEVELOPER_DIR" ]]; then
+            echo "Expected Xcode not found: $DEVELOPER_DIR"
+            ls -d /Applications/Xcode*.app || true
+            exit 1
+          fi
           xcodebuild -version
           xcrun simctl list devices available iPhone | head -20
 
@@ -43,18 +97,22 @@ jobs:
           sys.exit(1)
           ")
           echo "Destination: $DEST"
+          set -o pipefail
           xcodebuild test \
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
-            -xcconfig .github/ci-overrides.xcconfig \
+            -xcconfig "$CI_XCCONFIG" \
             CODE_SIGNING_ALLOWED=NO \
-            -resultBundlePath TestResults.xcresult
+            -resultBundlePath TestResults.xcresult \
+            | tee xcodebuild-test.log
 
       - name: Upload test results on failure
         if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: ios-test-results
-          path: TestResults.xcresult
+          path: |
+            TestResults.xcresult
+            xcodebuild-test.log
           retention-days: 7

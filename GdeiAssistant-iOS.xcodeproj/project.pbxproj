@@ -15,6 +15,9 @@
 		45CD090CF159FFACA7D91AD4 /* ProfileFormSupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */; };
 		5081118454BD4B94AC5EBB51 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C5CC023B26463B8EAE2B9A /* APIClientTests.swift */; };
 		5C8E7A3D1B2F4C6D8E9A0B1C /* MockFeatureSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8E7A3D1B2F4C6D8E9A0B1B /* MockFeatureSmokeTests.swift */; };
+		6F8A9B0C1D2E3F4051627384 /* CertificatePinningDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D1E2F30415263748596 /* CertificatePinningDelegateTests.swift */; };
+		7A8B9C0D1E2F304152637485 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0D1E2F30415263748596A7 /* SettingsViewModelTests.swift */; };
+		A2B3C4D5E6F708192A3B4C5D /* TestLifetimeRetainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */; };
 		A7F100000000000000000001 /* MockUISmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F100000000000000000003 /* MockUISmokeTests.swift */; };
 		8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */; };
 		A1B2C3D4E5F60718A9B0D1E1 /* SecretDetailNoDuplicateFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */; };
@@ -53,6 +56,7 @@
 		346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteMapperSupportTests.swift; path = "GdeiAssistant-iOSTests/Utils/RemoteMapperSupportTests.swift"; sourceTree = "<group>"; };
 		359A61E15F1A4C11A7429225 /* RequestIDTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequestIDTests.swift; path = "GdeiAssistant-iOSTests/Networking/RequestIDTests.swift"; sourceTree = "<group>"; };
 		373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthTestDoubles.swift; path = "GdeiAssistant-iOSTests/Support/AuthTestDoubles.swift"; sourceTree = "<group>"; };
+		B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TestLifetimeRetainer.swift; path = "GdeiAssistant-iOSTests/Support/TestLifetimeRetainer.swift"; sourceTree = "<group>"; };
 		452569A4EA1E4E426F6F3E6D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		5F0A1B2C3D4E5F6071829301 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		5F0A1B2C3D4E5F6071829302 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
@@ -60,7 +64,9 @@
 		5C8E7A3D1B2F4C6D8E9A0B1B /* MockFeatureSmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockFeatureSmokeTests.swift; path = "GdeiAssistant-iOSTests/Contract/MockFeatureSmokeTests.swift"; sourceTree = "<group>"; };
 		69DC5B58D2579C0F23D05428 /* GdeiAssistant-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GdeiAssistant-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FD844E948974FF8A18A0A3D /* RemoteLostFoundRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteLostFoundRepositoryTests.swift; path = "GdeiAssistant-iOSTests/LostFound/RemoteLostFoundRepositoryTests.swift"; sourceTree = "<group>"; };
+		8B9C0D1E2F30415263748596 /* CertificatePinningDelegateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CertificatePinningDelegateTests.swift; path = "GdeiAssistant-iOSTests/Networking/CertificatePinningDelegateTests.swift"; sourceTree = "<group>"; };
 		98C5CC023B26463B8EAE2B9A /* APIClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIClientTests.swift; path = "GdeiAssistant-iOSTests/Networking/APIClientTests.swift"; sourceTree = "<group>"; };
+		9C0D1E2F30415263748596A7 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsViewModelTests.swift; path = "GdeiAssistant-iOSTests/Profile/SettingsViewModelTests.swift"; sourceTree = "<group>"; };
 		A7F100000000000000000003 /* MockUISmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockUISmokeTests.swift; path = "GdeiAssistant-iOSUITests/MockUISmokeTests.swift"; sourceTree = "<group>"; };
 		A7F100000000000000000004 /* GdeiAssistant-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GdeiAssistant-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LibraryRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Library/LibraryRemoteMapperTests.swift"; sourceTree = "<group>"; };
@@ -170,15 +176,18 @@
 				2B8C4D9E5F6A7B8091C27364 /* AppLanguageTests.swift */,
 				EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */,
 				373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */,
+				B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */,
 				D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */,
 				A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */,
 				2D03C8887D96BBA87D07972B /* MessagesRemoteMapperTests.swift */,
 				5C8E7A3D1B2F4C6D8E9A0B1B /* MockFeatureSmokeTests.swift */,
 				3112842602259B0422B1CBD1 /* MultipartFormDataBuilderTests.swift */,
 				A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */,
+				9C0D1E2F30415263748596A7 /* SettingsViewModelTests.swift */,
 				346C4708A3C31E844BBF2625 /* RemoteMapperSupportTests.swift */,
 				CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */,
 				359A61E15F1A4C11A7429225 /* RequestIDTests.swift */,
+				8B9C0D1E2F30415263748596 /* CertificatePinningDelegateTests.swift */,
 				98C5CC023B26463B8EAE2B9A /* APIClientTests.swift */,
 				082E49E4E09F453AB6EF6772 /* RemoteMarketplaceRepositoryTests.swift */,
 				7FD844E948974FF8A18A0A3D /* RemoteLostFoundRepositoryTests.swift */,
@@ -336,6 +345,7 @@
 				1C7A3D8E4F5B6A7091827364 /* AppLanguageTests.swift in Sources */,
 				E21B05F43CAE6846A9EC26D1 /* AuthManagerTests.swift in Sources */,
 				0A177ECCDC40F719D4D9F46F /* AuthTestDoubles.swift in Sources */,
+				A2B3C4D5E6F708192A3B4C5D /* TestLifetimeRetainer.swift in Sources */,
 				C64B15DF5C6F7CCC0E32B37B /* DatingRemoteMapperTests.swift in Sources */,
 				F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */,
 				FFDDE89AE80431D0303BCEB4 /* MessagesRemoteMapperTests.swift in Sources */,
@@ -346,9 +356,11 @@
 				B15D1954479F46BEB294065B /* RequestIDTests.swift in Sources */,
 				5081118454BD4B94AC5EBB51 /* APIClientTests.swift in Sources */,
 				5C8E7A3D1B2F4C6D8E9A0B1C /* MockFeatureSmokeTests.swift in Sources */,
+				6F8A9B0C1D2E3F4051627384 /* CertificatePinningDelegateTests.swift in Sources */,
 				EC5349E40F96411FB2E8629A /* RemoteMarketplaceRepositoryTests.swift in Sources */,
 				44DC59BFABA1496DA3AE9B6D /* RemoteLostFoundRepositoryTests.swift in Sources */,
 				A1B2C3D4E5F60718A9B0D1E1 /* SecretDetailNoDuplicateFetchTests.swift in Sources */,
+				7A8B9C0D1E2F304152637485 /* SettingsViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
