@@ -1,6 +1,6 @@
 import SwiftUI
 
-private enum AppRuntime {
+enum AppRuntime {
     static var isRunningTests: Bool {
         let environment = ProcessInfo.processInfo.environment
         return environment["GDEIASSISTANT_RUNNING_TESTS"] == "1"

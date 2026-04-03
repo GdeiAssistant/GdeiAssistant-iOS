@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-private enum UITestRuntimeOverrides {
+enum UITestRuntimeOverrides {
     private static let environment = ProcessInfo.processInfo.environment
 
     static var useMockData: Bool {
@@ -17,6 +17,15 @@ private enum UITestRuntimeOverrides {
         return NetworkEnvironment(rawValue: rawValue)
     }
 
+    static var useAuthenticatedSession: Bool {
+        boolValue(for: "GDEI_UI_AUTHENTICATED")
+    }
+
+    static var initialScreen: UITestInitialScreen? {
+        guard let rawValue = stringValue(for: "GDEI_UI_INITIAL_SCREEN") else { return nil }
+        return UITestInitialScreen(rawValue: rawValue)
+    }
+
     private static func stringValue(for key: String) -> String? {
         guard let value = environment[key]?.trimmingCharacters(in: .whitespacesAndNewlines),
               !value.isEmpty else {
@@ -29,6 +38,13 @@ private enum UITestRuntimeOverrides {
         guard let value = stringValue(for: key) else { return false }
         return NSString(string: value).boolValue
     }
+}
+
+enum UITestInitialScreen: String {
+    case home
+    case messages
+    case marketplace
+    case grade
 }
 
 enum AppTab: Hashable {
@@ -189,7 +205,12 @@ final class AppContainer: ObservableObject {
         )
         container.environment.updateNetworkEnvironment(preferences.currentNetworkEnvironment)
         container.environment.updateDataSourceMode(preferences.currentDataSourceMode)
-        container.sessionState.markLoggedOut()
+        if UITestRuntimeOverrides.useAuthenticatedSession {
+            container.sessionState.markLoggedIn(user: MockFactory.makeUserProfile())
+        } else {
+            container.sessionState.markLoggedOut()
+        }
+        container.sessionState.isRestoringSession = false
         return container
     }
 
@@ -197,7 +218,7 @@ final class AppContainer: ObservableObject {
         guard force || !hasBootstrapped else { return }
         hasBootstrapped = true
         guard !shouldSkipBootstrap else {
-            sessionState.markLoggedOut()
+            sessionState.isRestoringSession = false
             return
         }
         await authManager.restoreSession()

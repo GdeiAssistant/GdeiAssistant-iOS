@@ -18,7 +18,9 @@ struct AppRootView: View {
                 .ignoresSafeArea()
 
             Group {
-                if hasBootstrapTimedOut && sessionState.isRestoringSession {
+                if hasTestRuntimeOverride {
+                    testRuntimeOverrideView
+                } else if hasBootstrapTimedOut && sessionState.isRestoringSession {
                     startupFallbackView
                 } else if sessionState.isRestoringSession {
                     DSLoadingView(text: localizedString("startup.restoringSession"))
@@ -50,6 +52,32 @@ struct AppRootView: View {
             }
         } message: {
             Text(authAlertMessage)
+        }
+    }
+
+    private var hasTestRuntimeOverride: Bool {
+        AppRuntime.isRunningTests
+            && sessionState.isLoggedIn
+            && UITestRuntimeOverrides.initialScreen != nil
+    }
+
+    @ViewBuilder
+    private var testRuntimeOverrideView: some View {
+        if AppRuntime.isRunningTests,
+           sessionState.isLoggedIn,
+           let initialScreen = UITestRuntimeOverrides.initialScreen {
+            switch initialScreen {
+            case .home:
+                MainTabView()
+            case .messages:
+                MessagesView(viewModel: container.makeMessagesViewModel())
+            case .marketplace:
+                NavigationStack {
+                    MarketplaceView(viewModel: container.makeMarketplaceViewModel())
+                }
+            case .grade:
+                GradeView(viewModel: container.makeGradeViewModel())
+            }
         }
     }
 

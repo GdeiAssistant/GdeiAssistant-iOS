@@ -1,6 +1,13 @@
 import XCTest
 
 final class MockUISmokeTests: XCTestCase {
+    private enum InitialScreen: String {
+        case home
+        case messages
+        case marketplace
+        case grade
+    }
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -15,10 +22,7 @@ final class MockUISmokeTests: XCTestCase {
     }
 
     func testMockMessagesTabShowsAnnouncementsAndInteractions() throws {
-        let app = launchApp()
-
-        loginAsMockUser(app)
-        app.tabBars.buttons["资讯"].tap()
+        let app = launchApp(authenticated: true, initialScreen: .messages)
 
         XCTAssertTrue(app.staticTexts["messages.section.news"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["messages.section.system"].waitForExistence(timeout: 5))
@@ -27,10 +31,7 @@ final class MockUISmokeTests: XCTestCase {
     }
 
     func testMockMarketplaceFlowShowsDetailAndPublishEntry() throws {
-        let app = launchApp()
-
-        loginAsMockUser(app)
-        app.buttons["home.entry.marketplace"].tap()
+        let app = launchApp(authenticated: true, initialScreen: .marketplace)
 
         XCTAssertTrue(app.buttons["marketplace.item.market_001"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["marketplace.publishEntry"].waitForExistence(timeout: 5))
@@ -49,21 +50,27 @@ final class MockUISmokeTests: XCTestCase {
     }
 
     func testMockGradeEntryLoadsAcademicContent() throws {
-        let app = launchApp()
-
-        loginAsMockUser(app)
-        app.buttons["home.entry.grade"].tap()
+        let app = launchApp(authenticated: true, initialScreen: .grade)
 
         XCTAssertTrue(app.segmentedControls["grade.yearPicker"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["grade.course.grade_2526_01"].waitForExistence(timeout: 5))
     }
 
     @discardableResult
-    private func launchApp() -> XCUIApplication {
+    private func launchApp(
+        authenticated: Bool = false,
+        initialScreen: InitialScreen? = nil
+    ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["GDEIASSISTANT_RUNNING_TESTS"] = "1"
         app.launchEnvironment["GDEI_UI_USE_MOCK"] = "1"
         app.launchEnvironment["GDEI_UI_LOCALE"] = "zh-Hans"
+        if authenticated {
+            app.launchEnvironment["GDEI_UI_AUTHENTICATED"] = "1"
+        }
+        if let initialScreen {
+            app.launchEnvironment["GDEI_UI_INITIAL_SCREEN"] = initialScreen.rawValue
+        }
         app.launchArguments += [
             "-AppleLanguages", "(zh-Hans)",
             "-AppleLocale", "zh-Hans"
