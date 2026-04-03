@@ -15,4 +15,5 @@ DerivedData/
 Docs/
 Tools/*
 !Tools/build_simulator.sh
+!Tools/check_style.sh
 AGENTS.md
