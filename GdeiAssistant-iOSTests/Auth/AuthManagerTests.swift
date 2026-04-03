@@ -3,6 +3,22 @@ import XCTest
 
 @MainActor
 final class AuthManagerTests: XCTestCase {
+    func testLoginThrowsWhenRepositoryIsNotConfigured() async {
+        let tokenStorage = TrackingTokenStorage()
+        let sessionState = SessionState()
+        let manager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
+
+        do {
+            _ = try await manager.login(username: "student", password: "secret")
+            XCTFail("Expected missing repository to throw")
+        } catch {
+            XCTAssertEqual(
+                (error as? AuthManagerError)?.errorDescription,
+                AuthManagerError.repositoryNotConfigured.errorDescription
+            )
+        }
+    }
+
     func testLoginPersistsTokenAndMarksSessionLoggedIn() async throws {
         let tokenStorage = TrackingTokenStorage()
         let sessionState = SessionState()
@@ -57,5 +73,33 @@ final class AuthManagerTests: XCTestCase {
         XCTAssertFalse(sessionState.isLoggedIn)
         XCTAssertEqual(sessionState.authErrorMessage, localizedString("auth.sessionExpired"))
         XCTAssertFalse(sessionState.isRestoringSession)
+    }
+
+    func testCurrentTokenReturnsNilWhenTokenStorageLoadFails() {
+        let tokenStorage = TrackingTokenStorage()
+        tokenStorage.loadError = NSError(domain: "AuthManagerTests", code: 1)
+        let sessionState = SessionState()
+        let manager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
+        TestLifetimeRetainer.retain(manager)
+
+        XCTAssertNil(manager.currentToken())
+    }
+
+    func testLogoutClearsLocalSessionEvenWhenRemoteLogoutFails() async throws {
+        let tokenStorage = TrackingTokenStorage()
+        try tokenStorage.saveToken("live-token")
+        let sessionState = SessionState()
+        let repository = AuthRepositorySpy()
+        repository.logoutError = NetworkError.transport(URLError(.cannotConnectToHost))
+        let manager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
+        manager.configure(repository: repository, dataSourceModeProvider: { .remote })
+
+        await manager.logout()
+
+        XCTAssertEqual(repository.logoutCallCount, 1)
+        XCTAssertNil(tokenStorage.token)
+        XCTAssertEqual(tokenStorage.deleteCallCount, 1)
+        XCTAssertFalse(sessionState.isLoggedIn)
+        XCTAssertNil(sessionState.currentUser)
     }
 }

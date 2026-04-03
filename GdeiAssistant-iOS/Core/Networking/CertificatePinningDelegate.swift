@@ -44,7 +44,7 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
         }
     }
 
-    private func certificateMatchesPins(serverTrust: SecTrust) -> Bool {
+    func certificateMatchesPins(serverTrust: SecTrust) -> Bool {
         // Use modern API (iOS 15+) with fallback
         let certificates: [SecCertificate]
         if #available(iOS 15.0, *) {
@@ -65,14 +65,14 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
         return false
     }
 
-    private func publicKeyData(for certificate: SecCertificate) -> Data? {
+    func publicKeyData(for certificate: SecCertificate) -> Data? {
         guard let publicKey = SecCertificateCopyKey(certificate) else { return nil }
         var error: Unmanaged<CFError>?
         guard let data = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else { return nil }
         return data
     }
 
-    private func sha256Base64(_ data: Data) -> String {
+    func sha256Base64(_ data: Data) -> String {
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         data.withUnsafeBytes { buffer in
             _ = CC_SHA256(buffer.baseAddress, UInt32(data.count), &hash)
