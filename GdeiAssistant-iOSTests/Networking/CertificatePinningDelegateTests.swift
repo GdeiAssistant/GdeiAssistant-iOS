@@ -52,6 +52,17 @@ final class CertificatePinningDelegateTests: XCTestCase {
         XCTAssertFalse(delegate.certificateMatchesPins(serverTrust: trust))
     }
 
+    func testHostSpecificPinsOnlyApplyToMatchingHost() {
+        let delegate = CertificatePinningDelegate(pinnedHashesByHost: [
+            "example.com": ["pin-a"],
+            "api.example.com": ["pin-b"]
+        ])
+
+        XCTAssertEqual(delegate.hashes(for: "EXAMPLE.com"), ["pin-a"])
+        XCTAssertEqual(delegate.hashes(for: "api.example.com"), ["pin-b"])
+        XCTAssertTrue(delegate.hashes(for: "other.example.com").isEmpty)
+    }
+
     private func sampleCertificate() throws -> SecCertificate {
         let data = try XCTUnwrap(Data(base64Encoded: sampleCertificateDERBase64))
         return try XCTUnwrap(

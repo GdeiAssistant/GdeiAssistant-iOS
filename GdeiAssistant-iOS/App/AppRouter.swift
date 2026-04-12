@@ -128,12 +128,9 @@ final class AppContainer: ObservableObject {
         let authManager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
         self.authManager = authManager
 
-        // Certificate pinning — replace placeholder hashes with real server public-key SHA-256 pins
-        let pinningDelegate = CertificatePinningDelegate(pinnedHashes: [
-            // TODO: 替换为服务端证书实际的 SHA-256 公钥指纹
-            "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=",
-            "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC="
-        ])
+        let pinningDelegate = CertificatePinningDelegate(
+            pinnedHashesByHost: AppConstants.API.certificatePinsByHost
+        )
         let pinnedSession = URLSession(
             configuration: .default,
             delegate: pinningDelegate,
