@@ -1426,7 +1426,7 @@
 "photograph.maxImages" = "最多上传 4 张图片";
 "photograph.titleEmpty" = "请输入标题";
 "photograph.titleTooLong" = "标题不能超过 25 个字";
-"photograph.contentTooLong" = "内容不能超过 150 个字";
+"photograph.contentTooLong" = "内容不能超过 50 个字";
 "photograph.noImage" = "请至少选择一张图片";
 "photograph.publishSuccess" = "作品已发布";
 "photograph.publishFailed" = "发布失败";

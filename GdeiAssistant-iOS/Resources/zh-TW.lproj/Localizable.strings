@@ -1421,7 +1421,7 @@
 "photograph.maxImages" = "最多上傳 4 張圖片";
 "photograph.titleEmpty" = "請輸入標題";
 "photograph.titleTooLong" = "標題不能超過 25 個字";
-"photograph.contentTooLong" = "內容不能超過 150 個字";
+"photograph.contentTooLong" = "內容不能超過 50 個字";
 "photograph.noImage" = "請至少選擇一張圖片";
 "photograph.publishSuccess" = "作品已發佈";
 "photograph.publishFailed" = "發佈失敗";

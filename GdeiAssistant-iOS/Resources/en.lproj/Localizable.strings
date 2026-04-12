@@ -1426,7 +1426,7 @@
 "photograph.maxImages" = "Maximum 4 images allowed";
 "photograph.titleEmpty" = "Please enter a title";
 "photograph.titleTooLong" = "Title cannot exceed 25 characters";
-"photograph.contentTooLong" = "Content cannot exceed 150 characters";
+"photograph.contentTooLong" = "Content cannot exceed 50 characters";
 "photograph.noImage" = "Please select at least one image";
 "photograph.publishSuccess" = "Post published";
 "photograph.publishFailed" = "Publish failed";
