@@ -14,10 +14,21 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
     /// openssl s_client -connect <host>:443 | openssl x509 -pubkey -noout |
     ///   openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
     /// ```
-    private let pinnedHashes: Set<String>
+    private let fallbackPinnedHashes: Set<String>
+    private let pinnedHashesByHost: [String: Set<String>]
 
     init(pinnedHashes: Set<String>) {
-        self.pinnedHashes = pinnedHashes
+        self.fallbackPinnedHashes = pinnedHashes
+        self.pinnedHashesByHost = [:]
+    }
+
+    init(pinnedHashesByHost: [String: Set<String>]) {
+        self.fallbackPinnedHashes = []
+        self.pinnedHashesByHost = Dictionary(
+            uniqueKeysWithValues: pinnedHashesByHost.map { key, value in
+                (key.lowercased(), value)
+            }
+        )
     }
 
     func urlSession(
@@ -31,20 +42,30 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
             return
         }
 
-        // If no pins configured (dev), fall through to default
+        let pinnedHashes = hashes(for: challenge.protectionSpace.host)
+
+        // If no pins configured (dev/mock), fall through to default
         guard !pinnedHashes.isEmpty else {
             completionHandler(.performDefaultHandling, nil)
             return
         }
 
-        if certificateMatchesPins(serverTrust: serverTrust) {
+        if certificateMatchesPins(serverTrust: serverTrust, pinnedHashes: pinnedHashes) {
             completionHandler(.useCredential, URLCredential(trust: serverTrust))
         } else {
             completionHandler(.cancelAuthenticationChallenge, nil)
         }
     }
 
+    func hashes(for host: String) -> Set<String> {
+        pinnedHashesByHost[host.lowercased()] ?? fallbackPinnedHashes
+    }
+
     func certificateMatchesPins(serverTrust: SecTrust) -> Bool {
+        certificateMatchesPins(serverTrust: serverTrust, pinnedHashes: fallbackPinnedHashes)
+    }
+
+    func certificateMatchesPins(serverTrust: SecTrust, pinnedHashes: Set<String>) -> Bool {
         // Use modern API (iOS 15+) with fallback
         let certificates: [SecCertificate]
         if #available(iOS 15.0, *) {

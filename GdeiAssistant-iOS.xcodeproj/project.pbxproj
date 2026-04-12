@@ -618,6 +618,9 @@
 				INFOPLIST_KEY_GDEIAPIBaseURLProduction = "$(GDEI_API_BASE_URL_PRODUCTION)";
 				INFOPLIST_KEY_GDEIAPIBaseURLStaging = "$(GDEI_API_BASE_URL_STAGING)";
 				INFOPLIST_KEY_GDEIAllowRuntimeDebugOptions = "$(GDEI_ALLOW_RUNTIME_DEBUG_OPTIONS)";
+				INFOPLIST_KEY_GDEICertificatePinsDevelopment = "$(GDEI_CERTIFICATE_PINS_DEV)";
+				INFOPLIST_KEY_GDEICertificatePinsProduction = "$(GDEI_CERTIFICATE_PINS_PRODUCTION)";
+				INFOPLIST_KEY_GDEICertificatePinsStaging = "$(GDEI_CERTIFICATE_PINS_STAGING)";
 				INFOPLIST_KEY_GDEIDefaultNetworkEnvironment = "$(GDEI_DEFAULT_NETWORK_ENVIRONMENT)";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "校园树洞语音发布需要使用麦克风录音。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -657,6 +660,9 @@
 				INFOPLIST_KEY_GDEIAPIBaseURLProduction = "$(GDEI_API_BASE_URL_PRODUCTION)";
 				INFOPLIST_KEY_GDEIAPIBaseURLStaging = "$(GDEI_API_BASE_URL_STAGING)";
 				INFOPLIST_KEY_GDEIAllowRuntimeDebugOptions = "$(GDEI_ALLOW_RUNTIME_DEBUG_OPTIONS)";
+				INFOPLIST_KEY_GDEICertificatePinsDevelopment = "$(GDEI_CERTIFICATE_PINS_DEV)";
+				INFOPLIST_KEY_GDEICertificatePinsProduction = "$(GDEI_CERTIFICATE_PINS_PRODUCTION)";
+				INFOPLIST_KEY_GDEICertificatePinsStaging = "$(GDEI_CERTIFICATE_PINS_STAGING)";
 				INFOPLIST_KEY_GDEIDefaultNetworkEnvironment = "$(GDEI_DEFAULT_NETWORK_ENVIRONMENT)";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "校园树洞语音发布需要使用麦克风录音。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

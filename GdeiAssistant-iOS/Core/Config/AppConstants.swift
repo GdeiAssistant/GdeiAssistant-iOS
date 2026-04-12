@@ -9,6 +9,9 @@ private enum AppBuildSettings {
         static let apiBaseURLProduction = "GDEIAPIBaseURLProduction"
         static let defaultNetworkEnvironment = "GDEIDefaultNetworkEnvironment"
         static let allowRuntimeDebugOptions = "GDEIAllowRuntimeDebugOptions"
+        static let certificatePinsDevelopment = "GDEICertificatePinsDevelopment"
+        static let certificatePinsStaging = "GDEICertificatePinsStaging"
+        static let certificatePinsProduction = "GDEICertificatePinsProduction"
     }
 
     private static let configurationBundle: Bundle = {
@@ -37,6 +40,18 @@ private enum AppBuildSettings {
 
     static func allowRuntimeDebugOptions(default defaultValue: Bool) -> Bool {
         bool(for: Keys.allowRuntimeDebugOptions, default: defaultValue)
+    }
+
+    static func certificatePinsDevelopment(default defaultValue: String) -> String {
+        string(for: Keys.certificatePinsDevelopment, default: defaultValue)
+    }
+
+    static func certificatePinsStaging(default defaultValue: String) -> String {
+        string(for: Keys.certificatePinsStaging, default: defaultValue)
+    }
+
+    static func certificatePinsProduction(default defaultValue: String) -> String {
+        string(for: Keys.certificatePinsProduction, default: defaultValue)
     }
 
     private static func string(for key: String, default defaultValue: String) -> String {
@@ -96,6 +111,9 @@ enum AppConstants {
         static let allowsRuntimeDebugOptions = AppBuildSettings.allowRuntimeDebugOptions(
             default: _isDebugAssertConfiguration()
         )
+        static let devCertificatePins = AppBuildSettings.certificatePinsDevelopment(default: "")
+        static let stagingCertificatePins = AppBuildSettings.certificatePinsStaging(default: "")
+        static let prodCertificatePins = AppBuildSettings.certificatePinsProduction(default: "")
 
         static let authorizationHeader = "Authorization"
         static let clientTypeHeader = "X-Client-Type"
@@ -107,6 +125,40 @@ enum AppConstants {
 
         static let successCodes: Set<Int> = [0, 200]
         static let unauthorizedBusinessCodes: Set<Int> = [401, 40101, 100401, 1001]
+
+        static var certificatePinsByHost: [String: Set<String>] {
+            var pinsByHost: [String: Set<String>] = [:]
+            addPins(from: devCertificatePins, baseURLString: devBaseURLString, to: &pinsByHost)
+            addPins(from: stagingCertificatePins, baseURLString: stagingBaseURLString, to: &pinsByHost)
+            addPins(from: prodCertificatePins, baseURLString: prodBaseURLString, to: &pinsByHost)
+            return pinsByHost
+        }
+
+        private static func addPins(
+            from rawPins: String,
+            baseURLString: String,
+            to pinsByHost: inout [String: Set<String>]
+        ) {
+            guard let host = URL(string: baseURLString)?.host?.lowercased() else { return }
+            let pins = parseCertificatePins(rawPins)
+            guard !pins.isEmpty else { return }
+            pinsByHost[host, default: []].formUnion(pins)
+        }
+
+        private static func parseCertificatePins(_ rawPins: String) -> Set<String> {
+            let placeholders: Set<String> = [
+                "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=",
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC="
+            ]
+            let separators = CharacterSet(charactersIn: ",; \n\t")
+            return Set(
+                rawPins.components(separatedBy: separators)
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .map { $0.hasPrefix("sha256/") ? String($0.dropFirst("sha256/".count)) : $0 }
+                    .filter { !$0.isEmpty }
+                    .filter { !placeholders.contains($0) }
+            )
+        }
     }
 
     enum UserDefaultsKeys {
