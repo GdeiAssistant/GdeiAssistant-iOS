@@ -78,7 +78,6 @@ final class RemotePhotographRepository: PhotographRepository {
         let fields = [
             FormFieldValue(name: "title", value: draft.title),
             FormFieldValue(name: "content", value: draft.content),
-            FormFieldValue(name: "count", value: String(draft.images.count)),
             FormFieldValue(name: "type", value: String(draft.category.publishType))
         ]
         let _: EmptyPayload = try await apiClient.postMultipart(
