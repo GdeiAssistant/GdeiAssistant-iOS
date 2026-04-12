@@ -1421,7 +1421,7 @@
 "photograph.maxImages" = "최대 4장까지 선택 가능";
 "photograph.titleEmpty" = "제목을 입력해주세요";
 "photograph.titleTooLong" = "제목은 25자를 초과할 수 없습니다";
-"photograph.contentTooLong" = "내용은 150자를 초과할 수 없습니다";
+"photograph.contentTooLong" = "내용은 50자를 초과할 수 없습니다";
 "photograph.noImage" = "이미지를 최소 1장 선택해주세요";
 "photograph.publishSuccess" = "게시물 발행 완료";
 "photograph.publishFailed" = "발행 실패";

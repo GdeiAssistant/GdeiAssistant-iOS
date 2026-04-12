@@ -1,6 +1,10 @@
 import Foundation
 import Combine
 
+private enum PhotographPublishLimits {
+    static let contentMaxLength = 50
+}
+
 @MainActor
 final class PhotographViewModel: ObservableObject {
     @Published var selectedCategory: PhotographCategory = .campus
@@ -135,7 +139,7 @@ final class PublishPhotographViewModel: ObservableObject {
             submitState = .failure(localizedString("photograph.titleTooLong"))
             return false
         }
-        if trimmedContent.count > 150 {
+        if trimmedContent.count > PhotographPublishLimits.contentMaxLength {
             submitState = .failure(localizedString("photograph.contentTooLong"))
             return false
         }
