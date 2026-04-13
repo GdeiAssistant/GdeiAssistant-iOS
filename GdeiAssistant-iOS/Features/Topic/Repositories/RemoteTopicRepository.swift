@@ -65,8 +65,7 @@ final class RemoteTopicRepository: TopicRepository {
     func publish(draft: TopicDraft) async throws {
         let fields = [
             FormFieldValue(name: "topic", value: draft.topic),
-            FormFieldValue(name: "content", value: draft.content),
-            FormFieldValue(name: "count", value: String(draft.images.count))
+            FormFieldValue(name: "content", value: draft.content)
         ]
         let files = TopicRemoteMapper.multipartFiles(from: draft.images)
         let _: EmptyPayload = try await apiClient.postMultipart(

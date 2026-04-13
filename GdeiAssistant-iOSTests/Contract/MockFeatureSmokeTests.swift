@@ -3,6 +3,17 @@ import XCTest
 
 @MainActor
 final class MockFeatureSmokeTests: XCTestCase {
+    func testTopicMultipartFilesUseBackendArrayFieldName() {
+        let files = TopicRemoteMapper.multipartFiles(from: [
+            UploadImageAsset(
+                fileName: "topic.jpg",
+                mimeType: "image/jpeg",
+                data: Data("topic".utf8)
+            )
+        ])
+
+        XCTAssertEqual(files.map(\.name), ["images"])
+    }
 
     func testAccountAndInformationMockFlows() async throws {
         let authRepository = MockAuthRepository()
