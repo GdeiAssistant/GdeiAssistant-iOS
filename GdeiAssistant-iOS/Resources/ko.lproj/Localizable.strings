@@ -1497,7 +1497,7 @@
 "common.hidePassword" = "비밀번호 숨기기";
 "common.retryAfterSeconds" = "%d초 후 다시 시도";
 "passwordSheet.verificationTitle" = "보안 확인";
-"login.mockCredentialsHint" = "현재 로컬 샘플 데이터 모드가 활성화되어 있어 실제 캠퍼스 계정이 필요하지 않습니다.";
+"login.mockCredentialsHint" = "로컬 샘플 계정: gdeiassistant  비밀번호: gdeiassistant";
 "photograph.emptyCategoryMessage" = "현재 카테고리에 아직 게시물이 없습니다. 첫 번째 캠퍼스 사진을 올려보세요.";
 "photograph.myEmptyFilteredMessage" = "현재 카테고리에 아직 게시물이 없습니다.";
 "auth.repositoryNotConfigured" = "인증 저장소가 구성되지 않았습니다";

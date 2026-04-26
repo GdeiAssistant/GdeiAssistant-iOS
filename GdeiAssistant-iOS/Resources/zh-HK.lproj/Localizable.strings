@@ -1497,7 +1497,7 @@
 "common.hidePassword" = "隱藏密碼";
 "common.retryAfterSeconds" = "%d 秒後重試";
 "passwordSheet.verificationTitle" = "安全驗證";
-"login.mockCredentialsHint" = "當前正在使用本地示例數據模式，無需連接真實校園帳號。";
+"login.mockCredentialsHint" = "本地示例數據模式帳號：gdeiassistant  密碼：gdeiassistant";
 "photograph.emptyCategoryMessage" = "目前分類下還沒有內容，去發布第一張校園照片";
 "photograph.myEmptyFilteredMessage" = "目前分類下還沒有發布作品";
 "auth.repositoryNotConfigured" = "認證倉儲未配置";

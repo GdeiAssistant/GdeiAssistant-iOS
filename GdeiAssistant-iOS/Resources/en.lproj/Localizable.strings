@@ -1502,7 +1502,7 @@
 "common.hidePassword" = "Hide password";
 "common.retryAfterSeconds" = "Retry in %d s";
 "passwordSheet.verificationTitle" = "Security Verification";
-"login.mockCredentialsHint" = "Local sample data mode is enabled. A real campus account is not required in this mode.";
+"login.mockCredentialsHint" = "Local sample account: gdeiassistant  Password: gdeiassistant";
 "photograph.emptyCategoryMessage" = "There is no content in this category yet. Publish the first campus photo.";
 "photograph.myEmptyFilteredMessage" = "No posts yet in the current category.";
 "auth.repositoryNotConfigured" = "Authentication repository is not configured";
