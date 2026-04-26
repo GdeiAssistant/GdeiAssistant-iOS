@@ -44,11 +44,7 @@ final class CampusCredentialViewModel: ObservableObject {
         await performAction(
             action: {
                 try await repository.recordCampusCredentialConsent(
-                    metadata: CampusCredentialConsentMetadata(
-                        scene: CampusCredentialDefaults.settingsScene,
-                        policyDate: status.policyDate,
-                        effectiveDate: status.effectiveDate
-                    )
+                    metadata: CampusCredentialConsentMetadata(scene: CampusCredentialDefaults.settingsScene)
                 )
             },
             successMessage: localizedString("campusCredential.reauthorizeSuccess")
