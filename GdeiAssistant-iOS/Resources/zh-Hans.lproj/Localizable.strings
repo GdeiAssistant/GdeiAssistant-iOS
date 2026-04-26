@@ -1502,7 +1502,7 @@
 "common.hidePassword" = "隐藏密码";
 "common.retryAfterSeconds" = "%d秒后重试";
 "passwordSheet.verificationTitle" = "安全验证";
-"login.mockCredentialsHint" = "当前正在使用本地示例数据模式，无需连接真实校园账号。";
+"login.mockCredentialsHint" = "本地示例数据模式账号：gdeiassistant  密码：gdeiassistant";
 "photograph.emptyCategoryMessage" = "当前分类下还没有内容，去发布第一张校园照片";
 "photograph.myEmptyFilteredMessage" = "当前分类下还没有发布作品";
 "auth.repositoryNotConfigured" = "认证仓储未配置";

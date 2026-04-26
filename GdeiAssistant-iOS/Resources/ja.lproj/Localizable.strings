@@ -1497,7 +1497,7 @@
 "common.hidePassword" = "パスワードを非表示";
 "common.retryAfterSeconds" = "%d秒後に再試行";
 "passwordSheet.verificationTitle" = "セキュリティ確認";
-"login.mockCredentialsHint" = "現在はローカルサンプルデータモードです。このモードでは実際の学内アカウントは不要です。";
+"login.mockCredentialsHint" = "ローカルサンプルアカウント: gdeiassistant  パスワード: gdeiassistant";
 "photograph.emptyCategoryMessage" = "このカテゴリにはまだ投稿がありません。最初のキャンパス写真を投稿しましょう。";
 "photograph.myEmptyFilteredMessage" = "現在のカテゴリにはまだ投稿がありません。";
 "auth.repositoryNotConfigured" = "認証リポジトリが設定されていません";
