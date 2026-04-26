@@ -154,4 +154,48 @@ final class RemoteAccountCenterRepository: AccountCenterRepository {
             requiresAuth: true
         )
     }
+
+    func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus {
+        let dto: CampusCredentialStatusDTO = try await apiClient.get(
+            "/campus-credential/status",
+            requiresAuth: true
+        )
+        return AccountCenterRemoteMapper.mapCampusCredentialStatus(dto)
+    }
+
+    func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus {
+        let dto = AccountCenterRemoteMapper.mapCampusCredentialConsentDTO(metadata)
+        let statusDTO: CampusCredentialStatusDTO = try await apiClient.post(
+            "/campus-credential/consent",
+            body: dto,
+            requiresAuth: true
+        )
+        return AccountCenterRemoteMapper.mapCampusCredentialStatus(statusDTO)
+    }
+
+    func revokeCampusCredentialConsent() async throws -> CampusCredentialStatus {
+        let dto: CampusCredentialStatusDTO = try await apiClient.post(
+            "/campus-credential/revoke",
+            requiresAuth: true
+        )
+        return AccountCenterRemoteMapper.mapCampusCredentialStatus(dto)
+    }
+
+    func deleteCampusCredential() async throws -> CampusCredentialStatus {
+        let dto: CampusCredentialStatusDTO = try await apiClient.delete(
+            "/campus-credential",
+            requiresAuth: true
+        )
+        return AccountCenterRemoteMapper.mapCampusCredentialStatus(dto)
+    }
+
+    func setQuickAuthEnabled(_ enabled: Bool) async throws -> CampusCredentialStatus {
+        let dto = AccountCenterRemoteMapper.mapCampusCredentialQuickAuthDTO(enabled)
+        let statusDTO: CampusCredentialStatusDTO = try await apiClient.post(
+            "/campus-credential/quick-auth",
+            body: dto,
+            requiresAuth: true
+        )
+        return AccountCenterRemoteMapper.mapCampusCredentialStatus(statusDTO)
+    }
 }

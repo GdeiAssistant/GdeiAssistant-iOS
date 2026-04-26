@@ -6,6 +6,7 @@ final class LoginViewModel: ObservableObject {
     @Published var username = ""
     @Published var password = ""
     @Published var isPasswordSecure = true
+    @Published var campusCredentialConsentChecked = false
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -23,6 +24,10 @@ final class LoginViewModel: ObservableObject {
         currentDataSourceMode == .mock
     }
 
+    var requiresCampusCredentialConsent: Bool {
+        currentDataSourceMode == .remote
+    }
+
     var canSubmit: Bool {
         !username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
@@ -35,13 +40,23 @@ final class LoginViewModel: ObservableObject {
             return
         }
 
+        guard !requiresCampusCredentialConsent || campusCredentialConsentChecked else {
+            errorMessage = localizedString("login.campusCredentialConsentRequired")
+            return
+        }
+
         isLoading = true
         errorMessage = nil
 
         defer { isLoading = false }
 
         do {
-            _ = try await authManager.login(username: username, password: password)
+            let consentMetadata = requiresCampusCredentialConsent ? CampusCredentialConsentMetadata() : nil
+            _ = try await authManager.login(
+                username: username.trimmingCharacters(in: .whitespacesAndNewlines),
+                password: password,
+                consentMetadata: consentMetadata
+            )
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("login.failed")
         }

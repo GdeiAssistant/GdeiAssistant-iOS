@@ -150,4 +150,9 @@ private final class RecordingAccountCenterRepository: AccountCenterRepository {
     func uploadAvatar(_ avatar: UploadImageAsset) async throws -> AvatarState { AvatarState(url: nil) }
     func deleteAvatar() async throws -> AvatarState { AvatarState(url: nil) }
     func deleteAccount(password: String) async throws {}
+    func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus { .empty }
+    func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus { .empty }
+    func revokeCampusCredentialConsent() async throws -> CampusCredentialStatus { .empty }
+    func deleteCampusCredential() async throws -> CampusCredentialStatus { .empty }
+    func setQuickAuthEnabled(_ enabled: Bool) async throws -> CampusCredentialStatus { .empty }
 }

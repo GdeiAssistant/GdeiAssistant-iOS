@@ -276,6 +276,7 @@ final class AppContainer: ObservableObject {
     func makeDownloadDataViewModel() -> DownloadDataViewModel { profileAssembly.makeDownloadDataViewModel() }
     func makeAvatarEditViewModel() -> AvatarEditViewModel { profileAssembly.makeAvatarEditViewModel(sessionState: sessionState) }
     func makeDeleteAccountViewModel() -> DeleteAccountViewModel { profileAssembly.makeDeleteAccountViewModel() }
+    func makeCampusCredentialViewModel() -> CampusCredentialViewModel { profileAssembly.makeCampusCredentialViewModel() }
     func makeMessagesViewModel() -> MessagesViewModel { profileAssembly.makeMessagesViewModel(newsRepository: campusServicesAssembly.newsRepository) }
     func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel { profileAssembly.makeSystemNoticeListViewModel() }
     func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel { profileAssembly.makeInteractionMessageListViewModel() }

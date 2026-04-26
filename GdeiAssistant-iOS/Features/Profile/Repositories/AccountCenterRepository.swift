@@ -22,6 +22,11 @@ protocol AccountCenterRepository {
     func uploadAvatar(_ avatar: UploadImageAsset) async throws -> AvatarState
     func deleteAvatar() async throws -> AvatarState
     func deleteAccount(password: String) async throws
+    func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus
+    func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus
+    func revokeCampusCredentialConsent() async throws -> CampusCredentialStatus
+    func deleteCampusCredential() async throws -> CampusCredentialStatus
+    func setQuickAuthEnabled(_ enabled: Bool) async throws -> CampusCredentialStatus
 }
 
 @MainActor
@@ -118,6 +123,26 @@ final class SwitchingAccountCenterRepository: AccountCenterRepository {
 
     func deleteAccount(password: String) async throws {
         try await currentRepository.deleteAccount(password: password)
+    }
+
+    func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus {
+        try await currentRepository.fetchCampusCredentialStatus()
+    }
+
+    func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus {
+        try await currentRepository.recordCampusCredentialConsent(metadata: metadata)
+    }
+
+    func revokeCampusCredentialConsent() async throws -> CampusCredentialStatus {
+        try await currentRepository.revokeCampusCredentialConsent()
+    }
+
+    func deleteCampusCredential() async throws -> CampusCredentialStatus {
+        try await currentRepository.deleteCampusCredential()
+    }
+
+    func setQuickAuthEnabled(_ enabled: Bool) async throws -> CampusCredentialStatus {
+        try await currentRepository.setQuickAuthEnabled(enabled)
     }
 
     private var currentRepository: any AccountCenterRepository {

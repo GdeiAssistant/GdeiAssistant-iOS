@@ -80,12 +80,16 @@ final class AuthManager: ObservableObject {
     }
 
     @discardableResult
-    func login(username: String, password: String) async throws -> UserProfile {
+    func login(
+        username: String,
+        password: String,
+        consentMetadata: CampusCredentialConsentMetadata? = nil
+    ) async throws -> UserProfile {
         guard let repository = authRepository else {
             throw AuthManagerError.repositoryNotConfigured
         }
 
-        let request = LoginRequest(username: username, password: password)
+        let request = LoginRequest(username: username, password: password, consentMetadata: consentMetadata)
         let response = try await repository.login(request: request)
         try tokenStorage.saveToken(response.token)
         cachedToken = response.token
