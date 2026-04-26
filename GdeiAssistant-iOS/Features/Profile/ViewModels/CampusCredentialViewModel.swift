@@ -20,7 +20,7 @@ final class CampusCredentialViewModel: ObservableObject {
     }
 
     func load() async {
-        guard !isLoading else { return }
+        guard !isLoading && !isActionRunning else { return }
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
