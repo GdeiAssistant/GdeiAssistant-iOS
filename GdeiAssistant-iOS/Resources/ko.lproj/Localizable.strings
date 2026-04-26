@@ -1732,6 +1732,7 @@
 "campusCredential.effectiveDate" = "시행 날짜";
 "campusCredential.account" = "캠퍼스 계정";
 "campusCredential.quickAuthHint" = "빠른 인증은 유효한 동의와 저장된 캠퍼스 자격정보가 모두 있을 때만 사용할 수 있습니다.";
+"campusCredential.reauthorize" = "캠퍼스 자격정보 다시 동의";
 "campusCredential.revoke" = "캠퍼스 자격정보 동의 철회";
 "campusCredential.delete" = "저장된 캠퍼스 자격정보 삭제";
 "campusCredential.revokeTitle" = "캠퍼스 자격정보 동의 철회";
@@ -1739,6 +1740,7 @@
 "campusCredential.deleteTitle" = "저장된 캠퍼스 자격정보 삭제";
 "campusCredential.deleteMessage" = "삭제 후 시간표, 성적, 캠퍼스 카드, 도서관 조회는 다시 로그인하거나 다시 동의해야 할 수 있습니다.";
 "campusCredential.revokeSuccess" = "캠퍼스 자격정보 동의를 철회했습니다. 저장된 자격정보 기반 빠른 인증 또는 세션 동기화가 중단됩니다.";
+"campusCredential.reauthorizeSuccess" = "캠퍼스 자격정보 동의를 기록했습니다. 저장된 자격정보가 있으면 빠른 인증을 켤 수 있습니다.";
 "campusCredential.deleteSuccess" = "저장된 캠퍼스 자격정보를 삭제했습니다. 이후 시간표, 성적, 캠퍼스 카드, 도서관 조회는 다시 로그인하거나 다시 동의해야 할 수 있습니다.";
 "campusCredential.quickAuthEnabled" = "빠른 인증을 켰습니다";
 "campusCredential.quickAuthDisabled" = "빠른 인증을 껐습니다";

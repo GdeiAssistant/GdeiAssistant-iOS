@@ -30,8 +30,8 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         quickAuthEnabled: true,
         consentedAt: "2026-04-25 10:00",
         revokedAt: nil,
-        policyDate: CampusCredentialDefaults.policyDate,
-        effectiveDate: CampusCredentialDefaults.effectiveDate,
+        policyDate: nil,
+        effectiveDate: nil,
         maskedCampusAccount: SensitiveValueMasker.maskCampusAccount(MockSeedData.demoProfile.username)
     )
     private var records: [LoginRecordItem] = [
@@ -208,8 +208,8 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         try await Task.sleep(nanoseconds: 120_000_000)
         campusCredentialStatus.hasActiveConsent = true
         campusCredentialStatus.revokedAt = nil
-        campusCredentialStatus.policyDate = metadata.policyDate
-        campusCredentialStatus.effectiveDate = metadata.effectiveDate
+        campusCredentialStatus.policyDate = metadata.policyDate ?? campusCredentialStatus.policyDate
+        campusCredentialStatus.effectiveDate = metadata.effectiveDate ?? campusCredentialStatus.effectiveDate
         campusCredentialStatus.consentedAt = localizedString("common.justNow")
         return campusCredentialStatus
     }

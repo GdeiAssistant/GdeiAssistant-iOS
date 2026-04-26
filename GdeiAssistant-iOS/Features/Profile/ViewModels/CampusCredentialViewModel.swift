@@ -40,6 +40,21 @@ final class CampusCredentialViewModel: ObservableObject {
         )
     }
 
+    func recordConsent() async {
+        await performAction(
+            action: {
+                try await repository.recordCampusCredentialConsent(
+                    metadata: CampusCredentialConsentMetadata(
+                        scene: CampusCredentialDefaults.settingsScene,
+                        policyDate: status.policyDate,
+                        effectiveDate: status.effectiveDate
+                    )
+                )
+            },
+            successMessage: localizedString("campusCredential.reauthorizeSuccess")
+        )
+    }
+
     func deleteCredential() async {
         await performAction(
             action: { try await repository.deleteCampusCredential() },

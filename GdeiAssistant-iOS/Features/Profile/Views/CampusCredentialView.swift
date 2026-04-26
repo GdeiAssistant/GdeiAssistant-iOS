@@ -144,6 +144,19 @@ struct CampusCredentialView: View {
             .disabled(!viewModel.canRunAction)
             .accessibilityIdentifier("campusCredential.quickAuth")
 
+            if !viewModel.status.hasActiveConsent {
+                DSButton(
+                    title: localizedString("campusCredential.reauthorize"),
+                    icon: "checkmark.shield",
+                    variant: .primary,
+                    isLoading: viewModel.isActionRunning,
+                    isDisabled: !viewModel.canRunAction,
+                    accessibilityIdentifier: "campusCredential.reauthorize"
+                ) {
+                    Task { await viewModel.recordConsent() }
+                }
+            }
+
             DSButton(
                 title: localizedString("campusCredential.revoke"),
                 icon: "xmark.shield",

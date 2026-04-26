@@ -1732,6 +1732,7 @@
 "campusCredential.effectiveDate" = "生效日期";
 "campusCredential.account" = "校園賬號";
 "campusCredential.quickAuthHint" = "快速認證僅在存在有效授權且已保存校園憑證時可用。";
+"campusCredential.reauthorize" = "重新授權校園憑證";
 "campusCredential.revoke" = "撤回校園賬號憑證授權";
 "campusCredential.delete" = "刪除已保存的校園憑證";
 "campusCredential.revokeTitle" = "撤回校園賬號憑證授權";
@@ -1739,6 +1740,7 @@
 "campusCredential.deleteTitle" = "刪除已保存的校園憑證";
 "campusCredential.deleteMessage" = "刪除後，課表、成績、校園卡、圖書館等查詢可能需要重新登入或重新授權。";
 "campusCredential.revokeSuccess" = "已撤回校園憑證授權。平台將停止基於已保存憑證進行快速認證或會話同步。";
+"campusCredential.reauthorizeSuccess" = "已記錄校園憑證授權。存在已保存憑證時可開啟快速認證。";
 "campusCredential.deleteSuccess" = "已刪除保存的校園憑證。後續課表、成績、校園卡、圖書館等查詢可能需要重新登入或重新授權。";
 "campusCredential.quickAuthEnabled" = "已開啟快速認證";
 "campusCredential.quickAuthDisabled" = "已關閉快速認證";

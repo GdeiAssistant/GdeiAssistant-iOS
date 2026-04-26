@@ -1737,6 +1737,7 @@
 "campusCredential.effectiveDate" = "生效日期";
 "campusCredential.account" = "校园账号";
 "campusCredential.quickAuthHint" = "快速认证仅在存在有效授权且已保存校园凭证时可用。";
+"campusCredential.reauthorize" = "重新授权校园凭证";
 "campusCredential.revoke" = "撤回校园账号凭证授权";
 "campusCredential.delete" = "删除已保存的校园凭证";
 "campusCredential.revokeTitle" = "撤回校园账号凭证授权";
@@ -1744,6 +1745,7 @@
 "campusCredential.deleteTitle" = "删除已保存的校园凭证";
 "campusCredential.deleteMessage" = "删除后，课表、成绩、校园卡、图书馆等查询可能需要重新登录或重新授权。";
 "campusCredential.revokeSuccess" = "已撤回校园凭证授权。平台将停止基于已保存凭证进行快速认证或会话同步。";
+"campusCredential.reauthorizeSuccess" = "已记录校园凭证授权。存在已保存凭证时可开启快速认证。";
 "campusCredential.deleteSuccess" = "已删除保存的校园凭证。后续课表、成绩、校园卡、图书馆等查询可能需要重新登录或重新授权。";
 "campusCredential.quickAuthEnabled" = "已开启快速认证";
 "campusCredential.quickAuthDisabled" = "已关闭快速认证";
