@@ -103,3 +103,61 @@ final class AuthManagerTests: XCTestCase {
         XCTAssertNil(sessionState.currentUser)
     }
 }
+
+@MainActor
+final class LoginViewModelTests: XCTestCase {
+    func testCampusPasswordLoginRequiresCredentialConsentInRemoteMode() async {
+        let repository = AuthRepositorySpy()
+        let viewModel = makeViewModel(repository: repository, dataSourceMode: .remote)
+        viewModel.username = "student"
+        viewModel.password = "secret"
+
+        await viewModel.login()
+
+        XCTAssertTrue(repository.loginRequests.isEmpty)
+        XCTAssertEqual(viewModel.errorMessage, localizedString("login.campusCredentialConsentRequired"))
+    }
+
+    func testCampusPasswordLoginSendsConsentMetadataWhenChecked() async {
+        let repository = AuthRepositorySpy()
+        let viewModel = makeViewModel(repository: repository, dataSourceMode: .remote)
+        viewModel.username = " student "
+        viewModel.password = "secret"
+        viewModel.campusCredentialConsentChecked = true
+
+        await viewModel.login()
+
+        XCTAssertEqual(repository.loginRequests.count, 1)
+        XCTAssertEqual(repository.loginRequests[0].username, "student")
+        XCTAssertEqual(repository.loginRequests[0].password, "secret")
+        XCTAssertEqual(repository.loginRequests[0].campusCredentialConsent, true)
+        XCTAssertEqual(repository.loginRequests[0].consentScene, CampusCredentialDefaults.loginScene)
+        XCTAssertEqual(repository.loginRequests[0].policyDate, CampusCredentialDefaults.policyDate)
+        XCTAssertEqual(repository.loginRequests[0].effectiveDate, CampusCredentialDefaults.effectiveDate)
+    }
+
+    func testMockModeBypassesCampusCredentialConsentGate() async {
+        let repository = AuthRepositorySpy()
+        let viewModel = makeViewModel(repository: repository, dataSourceMode: .mock)
+        viewModel.username = "gdeiassistant"
+        viewModel.password = "gdeiassistant"
+
+        await viewModel.login()
+
+        XCTAssertEqual(repository.loginRequests.count, 1)
+        XCTAssertNil(repository.loginRequests[0].campusCredentialConsent)
+        XCTAssertNil(repository.loginRequests[0].consentScene)
+    }
+
+    private func makeViewModel(
+        repository: AuthRepositorySpy,
+        dataSourceMode: DataSourceMode
+    ) -> LoginViewModel {
+        let manager = AuthManager(tokenStorage: TrackingTokenStorage(), sessionState: SessionState())
+        manager.configure(repository: repository, dataSourceModeProvider: { dataSourceMode })
+        let viewModel = LoginViewModel(authManager: manager)
+        TestLifetimeRetainer.retain(viewModel)
+        TestLifetimeRetainer.retain(manager)
+        return viewModel
+    }
+}

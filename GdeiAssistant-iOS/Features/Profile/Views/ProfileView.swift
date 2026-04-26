@@ -129,6 +129,11 @@ struct ProfileView: View {
                             PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
                         }
                         Divider()
+                        profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
+                            CampusCredentialView(viewModel: container.makeCampusCredentialViewModel())
+                                .environmentObject(container.environment)
+                        }
+                        Divider()
                         profileMenuLink(title: localizedString("profile.loginRecord"), systemImage: "clock.arrow.circlepath") {
                             LoginRecordView(viewModel: container.makeLoginRecordViewModel())
                         }

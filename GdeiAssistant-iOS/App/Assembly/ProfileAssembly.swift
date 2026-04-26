@@ -77,6 +77,10 @@ struct ProfileAssembly {
         DeleteAccountViewModel(repository: accountCenterRepository)
     }
 
+    func makeCampusCredentialViewModel() -> CampusCredentialViewModel {
+        CampusCredentialViewModel(repository: accountCenterRepository)
+    }
+
     func makeMessagesViewModel(newsRepository: any NewsRepository) -> MessagesViewModel {
         MessagesViewModel(
             newsRepository: newsRepository,

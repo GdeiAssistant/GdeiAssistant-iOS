@@ -111,6 +111,36 @@ enum AccountCenterRemoteMapper {
         AvatarState(url: FormValidationSupport.hasText(url ?? "") ? url : nil)
     }
 
+    nonisolated static func mapCampusCredentialStatus(_ dto: CampusCredentialStatusDTO?) -> CampusCredentialStatus {
+        let maskedAccount = SensitiveValueMasker.maskCampusAccount(
+            RemoteMapperSupport.text(dto?.maskedCampusAccount)
+        )
+        return CampusCredentialStatus(
+            hasActiveConsent: dto?.hasActiveConsent ?? false,
+            hasSavedCredential: dto?.hasSavedCredential ?? false,
+            quickAuthEnabled: dto?.quickAuthEnabled ?? false,
+            consentedAt: sanitizedDateText(dto?.consentedAt),
+            revokedAt: sanitizedDateText(dto?.revokedAt),
+            policyDate: sanitizedDateText(dto?.policyDate),
+            effectiveDate: sanitizedDateText(dto?.effectiveDate),
+            maskedCampusAccount: maskedAccount.isEmpty ? nil : maskedAccount
+        )
+    }
+
+    nonisolated static func mapCampusCredentialConsentDTO(
+        _ metadata: CampusCredentialConsentMetadata
+    ) -> CampusCredentialConsentRequestDTO {
+        CampusCredentialConsentRequestDTO(
+            scene: metadata.scene,
+            policyDate: metadata.policyDate,
+            effectiveDate: metadata.effectiveDate
+        )
+    }
+
+    nonisolated static func mapCampusCredentialQuickAuthDTO(_ enabled: Bool) -> CampusCredentialQuickAuthRequestDTO {
+        CampusCredentialQuickAuthRequestDTO(enabled: enabled)
+    }
+
     nonisolated static func makeAvatarUploadFiles(_ avatar: UploadImageAsset) -> [MultipartFormFile] {
         [
             MultipartFormFile(name: "avatar", fileName: avatar.fileName, mimeType: avatar.mimeType, data: avatar.data),
@@ -119,28 +149,18 @@ enum AccountCenterRemoteMapper {
     }
 
     nonisolated private static func maskPhone(_ phone: String?) -> String {
-        guard let phone, !phone.isEmpty else { return localizedString("bindPhone.notBound") }
-        if phone.count >= 11 {
-            let prefix = phone.prefix(3)
-            let suffix = phone.suffix(4)
-            return "\(prefix)****\(suffix)"
-        }
-        if phone.count > 4 {
-            let prefix = phone.prefix(2)
-            let suffix = phone.suffix(2)
-            return "\(prefix)***\(suffix)"
-        }
-        return phone
+        let masked = SensitiveValueMasker.maskPhone(phone)
+        return masked.isEmpty ? localizedString("bindPhone.notBound") : masked
     }
 
     nonisolated private static func maskEmail(_ email: String?) -> String {
-        guard let email, !email.isEmpty else { return localizedString("bindEmail.notBound") }
-        let parts = email.split(separator: "@")
-        guard parts.count == 2 else { return email }
-        let local = String(parts[0])
-        let domain = String(parts[1])
-        let visible = String(local.prefix(3))
-        return "\(visible)***@\(domain)"
+        let masked = SensitiveValueMasker.maskEmail(email)
+        return masked.isEmpty ? localizedString("bindEmail.notBound") : masked
+    }
+
+    nonisolated private static func sanitizedDateText(_ value: RemoteFlexibleString?) -> String? {
+        let text = RemoteMapperSupport.dateText(value)
+        return RemoteMapperSupport.sanitizedText(text)
     }
 
     nonisolated private static func displayDevice(_ rawValue: String?) -> String {

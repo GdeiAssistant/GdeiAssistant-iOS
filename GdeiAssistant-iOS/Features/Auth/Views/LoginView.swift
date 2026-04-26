@@ -100,6 +100,10 @@ struct LoginView: View {
                     textContentType: .password
                 )
 
+                if viewModel.requiresCampusCredentialConsent {
+                    campusCredentialConsentToggle
+                }
+
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .font(.footnote)
@@ -129,6 +133,30 @@ struct LoginView: View {
                 }
             }
         }
+    }
+
+    private var campusCredentialConsentToggle: some View {
+        Button {
+            guard !viewModel.isLoading else { return }
+            viewModel.campusCredentialConsentChecked.toggle()
+        } label: {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: viewModel.campusCredentialConsentChecked ? "checkmark.square.fill" : "square")
+                    .font(.title3)
+                    .foregroundStyle(viewModel.campusCredentialConsentChecked ? DSColor.primary : DSColor.subtitle)
+
+                Text(localizedString("login.campusCredentialConsentText"))
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.title)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(viewModel.isLoading)
+        .accessibilityIdentifier("login.campusCredentialConsent")
     }
 
     private var privacyNote: some View {

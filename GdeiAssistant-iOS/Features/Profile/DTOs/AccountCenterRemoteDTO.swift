@@ -40,3 +40,24 @@ struct LoginRecordDTO: Decodable {
     let network: String?
     let time: RemoteFlexibleString?
 }
+
+struct CampusCredentialStatusDTO: Decodable {
+    let hasActiveConsent: Bool?
+    let hasSavedCredential: Bool?
+    let quickAuthEnabled: Bool?
+    let consentedAt: RemoteFlexibleString?
+    let revokedAt: RemoteFlexibleString?
+    let policyDate: RemoteFlexibleString?
+    let effectiveDate: RemoteFlexibleString?
+    let maskedCampusAccount: RemoteFlexibleString?
+}
+
+struct CampusCredentialConsentRequestDTO: Encodable {
+    let scene: String
+    let policyDate: String
+    let effectiveDate: String
+}
+
+struct CampusCredentialQuickAuthRequestDTO: Encodable {
+    let enabled: Bool
+}

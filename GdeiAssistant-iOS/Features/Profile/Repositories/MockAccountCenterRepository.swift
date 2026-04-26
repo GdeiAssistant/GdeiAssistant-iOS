@@ -24,6 +24,16 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         downloadURL: nil
     )
     private var avatarState = AvatarState(url: MockFactory.makeUserProfile().avatarURL)
+    private var campusCredentialStatus = CampusCredentialStatus(
+        hasActiveConsent: true,
+        hasSavedCredential: true,
+        quickAuthEnabled: true,
+        consentedAt: "2026-04-25 10:00",
+        revokedAt: nil,
+        policyDate: CampusCredentialDefaults.policyDate,
+        effectiveDate: CampusCredentialDefaults.effectiveDate,
+        maskedCampusAccount: SensitiveValueMasker.maskCampusAccount(MockSeedData.demoProfile.username)
+    )
     private var records: [LoginRecordItem] = [
         LoginRecordItem(id: "1", timeText: "2026-03-08 09:24", ip: "113.108.18.12", area: "广东 广州", device: "iPhone 15 Pro", statusText: localizedString("loginRecord.success")),
         LoginRecordItem(id: "2", timeText: "2026-03-07 21:16", ip: "113.108.18.15", area: "广东 广州", device: "Web", statusText: localizedString("loginRecord.success")),
@@ -187,5 +197,50 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         guard password == "123456" else {
             throw NetworkError.server(code: 400, message: localizedString("deleteAccount.passwordInvalid"))
         }
+    }
+
+    func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus {
+        try await Task.sleep(nanoseconds: 120_000_000)
+        return campusCredentialStatus
+    }
+
+    func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus {
+        try await Task.sleep(nanoseconds: 120_000_000)
+        campusCredentialStatus.hasActiveConsent = true
+        campusCredentialStatus.revokedAt = nil
+        campusCredentialStatus.policyDate = metadata.policyDate
+        campusCredentialStatus.effectiveDate = metadata.effectiveDate
+        campusCredentialStatus.consentedAt = localizedString("common.justNow")
+        return campusCredentialStatus
+    }
+
+    func revokeCampusCredentialConsent() async throws -> CampusCredentialStatus {
+        try await Task.sleep(nanoseconds: 150_000_000)
+        campusCredentialStatus.hasActiveConsent = false
+        campusCredentialStatus.quickAuthEnabled = false
+        campusCredentialStatus.revokedAt = localizedString("common.justNow")
+        return campusCredentialStatus
+    }
+
+    func deleteCampusCredential() async throws -> CampusCredentialStatus {
+        try await Task.sleep(nanoseconds: 150_000_000)
+        campusCredentialStatus.hasActiveConsent = false
+        campusCredentialStatus.hasSavedCredential = false
+        campusCredentialStatus.quickAuthEnabled = false
+        campusCredentialStatus.revokedAt = localizedString("common.justNow")
+        campusCredentialStatus.maskedCampusAccount = nil
+        return campusCredentialStatus
+    }
+
+    func setQuickAuthEnabled(_ enabled: Bool) async throws -> CampusCredentialStatus {
+        try await Task.sleep(nanoseconds: 150_000_000)
+        if enabled && !campusCredentialStatus.hasActiveConsent {
+            throw NetworkError.server(code: 400, message: localizedString("campusCredential.enableNeedConsent"))
+        }
+        if enabled && !campusCredentialStatus.hasSavedCredential {
+            throw NetworkError.server(code: 400, message: localizedString("campusCredential.enableNeedCredential"))
+        }
+        campusCredentialStatus.quickAuthEnabled = enabled
+        return campusCredentialStatus
     }
 }
