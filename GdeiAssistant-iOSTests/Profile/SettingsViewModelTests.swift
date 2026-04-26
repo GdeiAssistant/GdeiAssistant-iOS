@@ -178,6 +178,19 @@ final class CampusCredentialViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
     }
 
+    func testLoadSkipsWhileCredentialActionIsRunning() async {
+        let repository = CampusCredentialAccountRepositorySpy()
+        repository.status.hasActiveConsent = true
+        let viewModel = CampusCredentialViewModel(repository: repository)
+        viewModel.isActionRunning = true
+        TestLifetimeRetainer.retain(viewModel)
+
+        await viewModel.load()
+
+        XCTAssertEqual(repository.fetchCampusCredentialStatusCallCount, 0)
+        XCTAssertEqual(viewModel.status, .empty)
+    }
+
     func testRevokeConsentSuccessUpdatesStatusAndMessage() async {
         let repository = CampusCredentialAccountRepositorySpy()
         repository.status.hasActiveConsent = true
@@ -319,6 +332,7 @@ private final class CampusCredentialAccountRepositorySpy: AccountCenterRepositor
     var status = CampusCredentialStatus.empty
     var quickAuthError: Error?
     var recordedConsentMetadata: CampusCredentialConsentMetadata?
+    var fetchCampusCredentialStatusCallCount = 0
 
     func fetchPrivacySettings() async throws -> PrivacySettings { .default }
     func updatePrivacySettings(_ settings: PrivacySettings) async throws -> PrivacySettings { settings }
@@ -354,6 +368,7 @@ private final class CampusCredentialAccountRepositorySpy: AccountCenterRepositor
     func deleteAccount(password: String) async throws {}
 
     func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus {
+        fetchCampusCredentialStatusCallCount += 1
         status
     }
 
