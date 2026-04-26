@@ -205,7 +205,7 @@ final class CampusCredentialViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.noticeMessage, localizedString("campusCredential.revokeSuccess"))
     }
 
-    func testRecordConsentUsesCurrentServerPolicyDatesWhenAvailable() async {
+    func testRecordConsentUsesServerManagedPolicyDates() async {
         let repository = CampusCredentialAccountRepositorySpy()
         repository.status.hasActiveConsent = false
         repository.status.policyDate = "2026-06-01"
@@ -217,8 +217,8 @@ final class CampusCredentialViewModelTests: XCTestCase {
         await viewModel.recordConsent()
 
         XCTAssertEqual(repository.recordedConsentMetadata?.scene, CampusCredentialDefaults.settingsScene)
-        XCTAssertEqual(repository.recordedConsentMetadata?.policyDate, "2026-06-01")
-        XCTAssertEqual(repository.recordedConsentMetadata?.effectiveDate, "2026-06-15")
+        XCTAssertNil(repository.recordedConsentMetadata?.policyDate)
+        XCTAssertNil(repository.recordedConsentMetadata?.effectiveDate)
         XCTAssertTrue(viewModel.status.hasActiveConsent)
         XCTAssertEqual(viewModel.noticeMessage, localizedString("campusCredential.reauthorizeSuccess"))
     }
