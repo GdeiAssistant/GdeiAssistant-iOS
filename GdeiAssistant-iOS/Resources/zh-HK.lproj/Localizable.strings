@@ -71,23 +71,23 @@
 "startup.restoringSession" = "正在恢復登入狀態...";
 "startup.alert.title" = "提示";
 "startup.alert.dismiss" = "知道了";
-"startup.dataSource.mock" = "當前使用 mock 數據源";
-"startup.dataSource.remote" = "當前使用 remote 數據源";
+"startup.dataSource.mock" = "當前使用本地示例數據";
+"startup.dataSource.remote" = "當前連接線上服務";
 "startup.timeout" = "啟動超時，請重試或重新登入";
 "startup.goToLogin" = "進入登入頁";
 "startup.restoreFailed" = "啟動恢復失敗，請重新登入";
 
 "settings.title" = "設定";
-"settings.debugDataSource" = "調試數據源";
-"settings.useMockData" = "使用模擬測試數據";
-"settings.mockDataEnabled" = "開啟後將讀取本地 Mock 數據，便於離線測試。";
-"settings.mockDataDisabled" = "當前為 Release 環境，不允許切換數據源。";
+"settings.debugDataSource" = "數據源設置";
+"settings.useMockData" = "使用本地示例數據";
+"settings.mockDataEnabled" = "開啟後將使用本地示例數據，便於離線預覽界面和流程。";
+"settings.mockDataDisabled" = "當前環境不允許切換數據源。";
 "settings.reloadHint" = "切換已生效，部分頁面可能需要重新載入。";
-"settings.apiEnvironment" = "接口環境";
-"settings.apiEnvironmentLabel" = "接口環境";
-"settings.apiDebugHint" = "真實接口支持 dev / staging / prod 三檔切換，方便本地聯調和灰度驗證。";
-"settings.apiReleaseHint" = "當前為 Release 環境，不允許切換接口環境。";
-"settings.debugInfo" = "調試信息";
+"settings.apiEnvironment" = "服務環境";
+"settings.apiEnvironmentLabel" = "服務環境";
+"settings.apiDebugHint" = "當前構建支持切換可用服務環境，用於查看連接狀態和界面表現。";
+"settings.apiReleaseHint" = "當前環境不允許切換服務環境。";
+"settings.debugInfo" = "當前服務信息";
 "settings.appInfo" = "應用信息";
 "settings.iOSClient" = "iOS 客戶端";
 
@@ -1497,7 +1497,7 @@
 "common.hidePassword" = "隱藏密碼";
 "common.retryAfterSeconds" = "%d 秒後重試";
 "passwordSheet.verificationTitle" = "安全驗證";
-"login.mockCredentialsHint" = "Mock 帳號：gdeiassistant  密碼：gdeiassistant";
+"login.mockCredentialsHint" = "當前正在使用本地示例數據模式，無需連接真實校園帳號。";
 "photograph.emptyCategoryMessage" = "目前分類下還沒有內容，去發布第一張校園照片";
 "photograph.myEmptyFilteredMessage" = "目前分類下還沒有發布作品";
 "auth.repositoryNotConfigured" = "認證倉儲未配置";

@@ -71,23 +71,23 @@
 "startup.restoringSession" = "ログイン状態を復元中...";
 "startup.alert.title" = "お知らせ";
 "startup.alert.dismiss" = "了解";
-"startup.dataSource.mock" = "mockデータソースを使用中";
-"startup.dataSource.remote" = "remoteデータソースを使用中";
+"startup.dataSource.mock" = "ローカルサンプルデータを使用中";
+"startup.dataSource.remote" = "オンラインサービスに接続中";
 "startup.timeout" = "起動がタイムアウトしました。再試行またはログインし直してください。";
 "startup.goToLogin" = "ログインページへ";
 "startup.restoreFailed" = "セッション復元に失敗しました。ログインし直してください。";
 
 "settings.title" = "設定";
-"settings.debugDataSource" = "デバッグデータソース";
-"settings.useMockData" = "モックテストデータを使用";
-"settings.mockDataEnabled" = "有効にするとローカルのMockデータを読み込み、オフラインテストに便利です。";
-"settings.mockDataDisabled" = "現在はRelease環境のため、データソースの切り替えはできません。";
+"settings.debugDataSource" = "データソース設定";
+"settings.useMockData" = "ローカルサンプルデータを使用";
+"settings.mockDataEnabled" = "有効にするとローカルサンプルデータを使って、オフラインで画面や流れを確認できます。";
+"settings.mockDataDisabled" = "現在のビルドではデータソースを切り替えできません。";
 "settings.reloadHint" = "切り替えが適用されました。一部のページは再読み込みが必要です。";
-"settings.apiEnvironment" = "API環境";
-"settings.apiEnvironmentLabel" = "API環境";
-"settings.apiDebugHint" = "実APIはdev / staging / prodの3段階切り替えに対応し、ローカルデバッグやカナリアテストに便利です。";
-"settings.apiReleaseHint" = "現在はRelease環境のため、API環境の切り替えはできません。";
-"settings.debugInfo" = "デバッグ情報";
+"settings.apiEnvironment" = "サービス環境";
+"settings.apiEnvironmentLabel" = "サービス環境";
+"settings.apiDebugHint" = "現在のビルドでは利用可能なサービス環境を切り替え、接続状態や画面表示を確認できます。";
+"settings.apiReleaseHint" = "現在のビルドではサービス環境を切り替えできません。";
+"settings.debugInfo" = "現在のサービス情報";
 "settings.appInfo" = "アプリ情報";
 "settings.iOSClient" = "iOSクライアント";
 
@@ -1497,7 +1497,7 @@
 "common.hidePassword" = "パスワードを非表示";
 "common.retryAfterSeconds" = "%d秒後に再試行";
 "passwordSheet.verificationTitle" = "セキュリティ確認";
-"login.mockCredentialsHint" = "Mock アカウント: gdeiassistant  パスワード: gdeiassistant";
+"login.mockCredentialsHint" = "現在はローカルサンプルデータモードです。このモードでは実際の学内アカウントは不要です。";
 "photograph.emptyCategoryMessage" = "このカテゴリにはまだ投稿がありません。最初のキャンパス写真を投稿しましょう。";
 "photograph.myEmptyFilteredMessage" = "現在のカテゴリにはまだ投稿がありません。";
 "auth.repositoryNotConfigured" = "認証リポジトリが設定されていません";
