@@ -369,7 +369,7 @@ private final class CampusCredentialAccountRepositorySpy: AccountCenterRepositor
 
     func fetchCampusCredentialStatus() async throws -> CampusCredentialStatus {
         fetchCampusCredentialStatusCallCount += 1
-        status
+        return status
     }
 
     func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus {
