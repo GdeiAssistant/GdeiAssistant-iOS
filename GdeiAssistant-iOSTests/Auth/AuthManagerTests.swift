@@ -132,8 +132,8 @@ final class LoginViewModelTests: XCTestCase {
         XCTAssertEqual(repository.loginRequests[0].password, "secret")
         XCTAssertEqual(repository.loginRequests[0].campusCredentialConsent, true)
         XCTAssertEqual(repository.loginRequests[0].consentScene, CampusCredentialDefaults.loginScene)
-        XCTAssertEqual(repository.loginRequests[0].policyDate, CampusCredentialDefaults.policyDate)
-        XCTAssertEqual(repository.loginRequests[0].effectiveDate, CampusCredentialDefaults.effectiveDate)
+        XCTAssertNil(repository.loginRequests[0].policyDate)
+        XCTAssertNil(repository.loginRequests[0].effectiveDate)
     }
 
     func testMockModeBypassesCampusCredentialConsentGate() async {

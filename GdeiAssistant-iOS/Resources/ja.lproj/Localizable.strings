@@ -1732,6 +1732,7 @@
 "campusCredential.effectiveDate" = "発効日";
 "campusCredential.account" = "学内アカウント";
 "campusCredential.quickAuthHint" = "クイック認証は、有効な同意と保存済み学内資格情報がある場合のみ利用できます。";
+"campusCredential.reauthorize" = "学内資格情報に再同意";
 "campusCredential.revoke" = "学内資格情報への同意を撤回";
 "campusCredential.delete" = "保存済み学内資格情報を削除";
 "campusCredential.revokeTitle" = "学内資格情報への同意を撤回";
@@ -1739,6 +1740,7 @@
 "campusCredential.deleteTitle" = "保存済み学内資格情報を削除";
 "campusCredential.deleteMessage" = "削除後は、時間割、成績、学生証、図書館などの照会で再ログインまたは再同意が必要になる場合があります。";
 "campusCredential.revokeSuccess" = "学内資格情報への同意を撤回しました。保存済み資格情報に基づくクイック認証やセッション同期は停止します。";
+"campusCredential.reauthorizeSuccess" = "学内資格情報への同意を記録しました。保存済み資格情報がある場合はクイック認証を有効にできます。";
 "campusCredential.deleteSuccess" = "保存済み学内資格情報を削除しました。今後、時間割、成績、学生証、図書館などの照会で再ログインまたは再同意が必要になる場合があります。";
 "campusCredential.quickAuthEnabled" = "クイック認証を有効にしました";
 "campusCredential.quickAuthDisabled" = "クイック認証を無効にしました";

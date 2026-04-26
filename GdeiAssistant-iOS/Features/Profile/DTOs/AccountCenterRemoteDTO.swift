@@ -54,8 +54,8 @@ struct CampusCredentialStatusDTO: Decodable {
 
 struct CampusCredentialConsentRequestDTO: Encodable {
     let scene: String
-    let policyDate: String
-    let effectiveDate: String
+    let policyDate: String?
+    let effectiveDate: String?
 }
 
 struct CampusCredentialQuickAuthRequestDTO: Encodable {

@@ -145,8 +145,8 @@ final class RemoteCampusCredentialRepositoryTests: XCTestCase {
 
         let consentBody = requests[0].body
         XCTAssertTrue(consentBody.contains(#""scene":"SETTINGS""#))
-        XCTAssertTrue(consentBody.contains(#""policyDate":"2026-04-25""#))
-        XCTAssertTrue(consentBody.contains(#""effectiveDate":"2026-05-11""#))
+        XCTAssertFalse(consentBody.contains("policyDate"))
+        XCTAssertFalse(consentBody.contains("effectiveDate"))
         XCTAssertFalse(consentBody.contains("password"))
 
         let quickAuthBody = requests[3].body
@@ -190,6 +190,24 @@ final class CampusCredentialViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.status.hasActiveConsent)
         XCTAssertFalse(viewModel.status.quickAuthEnabled)
         XCTAssertEqual(viewModel.noticeMessage, localizedString("campusCredential.revokeSuccess"))
+    }
+
+    func testRecordConsentUsesCurrentServerPolicyDatesWhenAvailable() async {
+        let repository = CampusCredentialAccountRepositorySpy()
+        repository.status.hasActiveConsent = false
+        repository.status.policyDate = "2026-06-01"
+        repository.status.effectiveDate = "2026-06-15"
+        let viewModel = CampusCredentialViewModel(repository: repository)
+        viewModel.status = repository.status
+        TestLifetimeRetainer.retain(viewModel)
+
+        await viewModel.recordConsent()
+
+        XCTAssertEqual(repository.recordedConsentMetadata?.scene, CampusCredentialDefaults.settingsScene)
+        XCTAssertEqual(repository.recordedConsentMetadata?.policyDate, "2026-06-01")
+        XCTAssertEqual(repository.recordedConsentMetadata?.effectiveDate, "2026-06-15")
+        XCTAssertTrue(viewModel.status.hasActiveConsent)
+        XCTAssertEqual(viewModel.noticeMessage, localizedString("campusCredential.reauthorizeSuccess"))
     }
 
     func testDeleteCredentialSuccessUpdatesStatusAndMessage() async {
@@ -300,6 +318,7 @@ private final class CampusCredentialURLProtocol: URLProtocol {
 private final class CampusCredentialAccountRepositorySpy: AccountCenterRepository {
     var status = CampusCredentialStatus.empty
     var quickAuthError: Error?
+    var recordedConsentMetadata: CampusCredentialConsentMetadata?
 
     func fetchPrivacySettings() async throws -> PrivacySettings { .default }
     func updatePrivacySettings(_ settings: PrivacySettings) async throws -> PrivacySettings { settings }
@@ -339,9 +358,10 @@ private final class CampusCredentialAccountRepositorySpy: AccountCenterRepositor
     }
 
     func recordCampusCredentialConsent(metadata: CampusCredentialConsentMetadata) async throws -> CampusCredentialStatus {
+        recordedConsentMetadata = metadata
         status.hasActiveConsent = true
-        status.policyDate = metadata.policyDate
-        status.effectiveDate = metadata.effectiveDate
+        status.policyDate = metadata.policyDate ?? status.policyDate
+        status.effectiveDate = metadata.effectiveDate ?? status.effectiveDate
         return status
     }
 

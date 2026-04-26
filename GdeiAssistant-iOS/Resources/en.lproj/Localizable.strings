@@ -1737,6 +1737,7 @@
 "campusCredential.effectiveDate" = "Effective Date";
 "campusCredential.account" = "Campus Account";
 "campusCredential.quickAuthHint" = "Quick authentication is available only when active consent and a saved campus credential both exist.";
+"campusCredential.reauthorize" = "Re-authorize campus credential";
 "campusCredential.revoke" = "Revoke campus credential consent";
 "campusCredential.delete" = "Delete saved campus credential";
 "campusCredential.revokeTitle" = "Revoke Campus Credential Consent";
@@ -1744,6 +1745,7 @@
 "campusCredential.deleteTitle" = "Delete Saved Campus Credential";
 "campusCredential.deleteMessage" = "After deletion, schedule, grades, campus card, library, and similar queries may require logging in again or reauthorizing.";
 "campusCredential.revokeSuccess" = "Campus credential consent has been revoked. The platform will stop quick authentication or session synchronization based on saved credentials.";
+"campusCredential.reauthorizeSuccess" = "Campus credential consent has been recorded. Quick authentication can be enabled when a saved credential is available.";
 "campusCredential.deleteSuccess" = "Saved campus credential has been deleted. Later schedule, grades, campus card, library, and similar queries may require logging in again or reauthorizing.";
 "campusCredential.quickAuthEnabled" = "Quick authentication has been enabled.";
 "campusCredential.quickAuthDisabled" = "Quick authentication has been disabled.";
