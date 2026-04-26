@@ -71,23 +71,23 @@
 "startup.restoringSession" = "Restoring session...";
 "startup.alert.title" = "Notice";
 "startup.alert.dismiss" = "OK";
-"startup.dataSource.mock" = "Using mock data source";
-"startup.dataSource.remote" = "Using remote data source";
+"startup.dataSource.mock" = "Using local sample data";
+"startup.dataSource.remote" = "Connected to live service";
 "startup.timeout" = "Startup timed out. Please retry or log in again.";
 "startup.goToLogin" = "Go to Login";
 "startup.restoreFailed" = "Session restore failed. Please log in again.";
 
 "settings.title" = "Settings";
-"settings.debugDataSource" = "Debug Data Source";
-"settings.useMockData" = "Use Mock Test Data";
-"settings.mockDataEnabled" = "When enabled, local mock data will be used for offline testing.";
-"settings.mockDataDisabled" = "Current environment is Release. Data source switching is not allowed.";
+"settings.debugDataSource" = "Data Source Settings";
+"settings.useMockData" = "Use Local Sample Data";
+"settings.mockDataEnabled" = "When enabled, the app uses local sample data for offline preview and flow checks.";
+"settings.mockDataDisabled" = "The current build does not allow data source switching.";
 "settings.reloadHint" = "Switch applied. Some pages may need to be reloaded.";
-"settings.apiEnvironment" = "API Environment";
-"settings.apiEnvironmentLabel" = "API Environment";
-"settings.apiDebugHint" = "Real APIs support dev / staging / prod switching for local debugging and canary testing.";
-"settings.apiReleaseHint" = "Current environment is Release. API environment switching is not allowed.";
-"settings.debugInfo" = "Debug Info";
+"settings.apiEnvironment" = "Service Environment";
+"settings.apiEnvironmentLabel" = "Service Environment";
+"settings.apiDebugHint" = "This build lets you switch between available service environments to check connectivity and UI behavior.";
+"settings.apiReleaseHint" = "The current build does not allow service environment switching.";
+"settings.debugInfo" = "Current Service Info";
 "settings.appInfo" = "App Info";
 "settings.iOSClient" = "iOS Client";
 
@@ -1502,7 +1502,7 @@
 "common.hidePassword" = "Hide password";
 "common.retryAfterSeconds" = "Retry in %d s";
 "passwordSheet.verificationTitle" = "Security Verification";
-"login.mockCredentialsHint" = "Mock account: gdeiassistant  Password: gdeiassistant";
+"login.mockCredentialsHint" = "Local sample data mode is enabled. A real campus account is not required in this mode.";
 "photograph.emptyCategoryMessage" = "There is no content in this category yet. Publish the first campus photo.";
 "photograph.myEmptyFilteredMessage" = "No posts yet in the current category.";
 "auth.repositoryNotConfigured" = "Authentication repository is not configured";
