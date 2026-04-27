@@ -17,6 +17,7 @@
 		5C8E7A3D1B2F4C6D8E9A0B1C /* MockFeatureSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8E7A3D1B2F4C6D8E9A0B1B /* MockFeatureSmokeTests.swift */; };
 		6F8A9B0C1D2E3F4051627384 /* CertificatePinningDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C0D1E2F30415263748596 /* CertificatePinningDelegateTests.swift */; };
 		7A8B9C0D1E2F304152637485 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0D1E2F30415263748596A7 /* SettingsViewModelTests.swift */; };
+		C8F4A2B6D9E14035A7C2F912 /* ChargeRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F4A2B6D9E14035A7C2F911 /* ChargeRemoteMapperTests.swift */; };
 		A2B3C4D5E6F708192A3B4C5D /* TestLifetimeRetainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */; };
 		A7F100000000000000000001 /* MockUISmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F100000000000000000003 /* MockUISmokeTests.swift */; };
 		8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */; };
@@ -74,6 +75,7 @@
 		A6DA9CD705BD14A1B1E9BD1C /* ProfileFormSupportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileFormSupportTests.swift; path = "GdeiAssistant-iOSTests/Profile/ProfileFormSupportTests.swift"; sourceTree = "<group>"; };
 		B1A2C3D4E5F60718A9B0C1D3 /* AppContainerBootstrapTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppContainerBootstrapTests.swift; path = "GdeiAssistant-iOSTests/Container/AppContainerBootstrapTests.swift"; sourceTree = "<group>"; };
 		CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RequestBuilderTests.swift; path = "GdeiAssistant-iOSTests/Networking/RequestBuilderTests.swift"; sourceTree = "<group>"; };
+		C8F4A2B6D9E14035A7C2F911 /* ChargeRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChargeRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Charge/ChargeRemoteMapperTests.swift"; sourceTree = "<group>"; };
 		D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DatingRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Dating/DatingRemoteMapperTests.swift"; sourceTree = "<group>"; };
 		D72127102F5D506E00AE6A6F /* GdeiAssistant-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GdeiAssistant-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthManagerTests.swift; path = "GdeiAssistant-iOSTests/Auth/AuthManagerTests.swift"; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				2B8C4D9E5F6A7B8091C27364 /* AppLanguageTests.swift */,
 				EB26C35E7E8F8EDFD881C69F /* AuthManagerTests.swift */,
 				373B47CAADB5B3CE84F0601F /* AuthTestDoubles.swift */,
+				C8F4A2B6D9E14035A7C2F911 /* ChargeRemoteMapperTests.swift */,
 				B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */,
 				D0AF4619A3864805033BE080 /* DatingRemoteMapperTests.swift */,
 				A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */,
@@ -345,6 +348,7 @@
 				1C7A3D8E4F5B6A7091827364 /* AppLanguageTests.swift in Sources */,
 				E21B05F43CAE6846A9EC26D1 /* AuthManagerTests.swift in Sources */,
 				0A177ECCDC40F719D4D9F46F /* AuthTestDoubles.swift in Sources */,
+				C8F4A2B6D9E14035A7C2F912 /* ChargeRemoteMapperTests.swift in Sources */,
 				A2B3C4D5E6F708192A3B4C5D /* TestLifetimeRetainer.swift in Sources */,
 				C64B15DF5C6F7CCC0E32B37B /* DatingRemoteMapperTests.swift in Sources */,
 				F90E561DD371D29335422B59 /* LibraryRemoteMapperTests.swift in Sources */,
