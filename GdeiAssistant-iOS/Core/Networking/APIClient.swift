@@ -53,13 +53,15 @@ final class APIClient {
         _ path: String,
         fields: [FormFieldValue],
         queryItems: [URLQueryItem] = [],
-        requiresAuth: Bool = true
+        requiresAuth: Bool = true,
+        headers: [String: String] = [:]
     ) async throws -> T {
         let request = APIRequest.postForm(
             path: path,
             fields: fields,
             queryItems: queryItems,
-            requiresAuth: requiresAuth
+            requiresAuth: requiresAuth,
+            headers: headers
         )
         return try await execute(request, responseType: T.self)
     }
