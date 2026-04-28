@@ -247,7 +247,3 @@ CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 - 生产发布前应确认隐私处理、校园凭证管理、iOS 权限说明、第三方服务、日志脱敏、密钥管理、Keychain 使用、签名配置以及商标/名称使用边界。
 - 本地示例数据仅用于开发和界面联调，不代表真实校园业务数据。
 - 本 README 只保留维护和部署层面的合规提示，不替代用户协议或隐私政策正文。
-
-## 维护说明
-
-- 维护者可参考 [公开文案维护指南](guidelines/public-content-guidelines.md) 持续检查 README 和应用内公开文案。
