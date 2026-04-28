@@ -243,10 +243,11 @@ CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 ## 法律、隐私与安全提示
 
 - 本项目是校园助手类 iOS 客户端，不代表学校官方服务。
-- 生产发布前应确认隐私、校园凭证、第三方服务、日志脱敏、密钥管理、Keychain 使用、签名配置以及商标/名称使用边界。
-- 用户侧风险提示、授权说明和功能限制应以 App 内对应页面为准。
+- 面向用户的正式协议、隐私政策、授权说明和功能限制，以 App 内对应页面展示内容为准。
+- 生产发布前应确认隐私处理、校园凭证管理、iOS 权限说明、第三方服务、日志脱敏、密钥管理、Keychain 使用、签名配置以及商标/名称使用边界。
 - 本地示例数据仅用于开发和界面联调，不代表真实校园业务数据。
+- 本 README 只保留维护和部署层面的合规提示，不替代用户协议或隐私政策正文。
 
 ## 维护说明
 
-- 维护者可参考 [Public Content Guidelines](guidelines/public-content-guidelines.md) 持续检查 README 和应用内公开文案。
+- 维护者可参考 [公开文案维护指南](guidelines/public-content-guidelines.md) 持续检查 README 和应用内公开文案。
