@@ -8,6 +8,7 @@ struct ChargeView: View {
             if let session = viewModel.paymentSession {
                 PaymentWebView(
                     session: session,
+                    order: viewModel.latestOrder,
                     onDismiss: { viewModel.clearPaymentSession() }
                 )
             } else {
@@ -22,6 +23,9 @@ struct ChargeView: View {
         ScrollView {
             VStack(spacing: 20) {
                 overviewCard
+                if let order = viewModel.latestOrder {
+                    chargeOrderStatusCard(order)
+                }
                 amountSection
                 passwordSection
                 if let error = viewModel.errorMessage {
@@ -32,6 +36,7 @@ struct ChargeView: View {
                         .padding(.horizontal)
                 }
                 submitButton
+                recentOrdersSection
             }
             .padding()
         }
@@ -131,5 +136,154 @@ struct ChargeView: View {
         }
         .buttonStyle(.borderedProminent)
         .disabled(!viewModel.canSubmit)
+    }
+
+    private func chargeOrderStatusCard(_ order: ChargeOrder) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(localizedString("charge.order.statusTitle"))
+                    .font(.headline)
+                Spacer()
+                statusBadge(order)
+            }
+
+            Text(order.localizedStatusMessage)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            orderMetaRows(order)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private var recentOrdersSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(localizedString("charge.order.recentTitle"))
+                        .font(.headline)
+                    Text(localizedString("charge.order.recentHint"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Button {
+                    viewModel.refreshChargeOrders()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .buttonStyle(.bordered)
+                .disabled(viewModel.isLoadingOrders)
+                .accessibilityLabel(localizedString("charge.order.refresh"))
+            }
+
+            if viewModel.isLoadingOrders && viewModel.recentOrders.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
+            } else if let error = viewModel.orderErrorMessage {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            } else if viewModel.recentOrders.isEmpty {
+                Text(localizedString("charge.order.empty"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                VStack(spacing: 10) {
+                    ForEach(viewModel.recentOrders) { order in
+                        chargeOrderRow(order)
+                    }
+                }
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func chargeOrderRow(_ order: ChargeOrder) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(orderTitle(order))
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
+                Spacer()
+                statusBadge(order)
+            }
+
+            Text(order.localizedStatusMessage)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            orderMetaRows(order)
+        }
+        .padding(12)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func orderMetaRows(_ order: ChargeOrder) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Label(orderAmountText(order), systemImage: "yensign.circle")
+                Spacer()
+                Label(orderUpdatedText(order), systemImage: "clock")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+
+            if let retryAfter = order.retryAfter, retryAfter > 0 {
+                Text(String(format: localizedString("charge.order.retryAfter"), retryAfter))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func statusBadge(_ order: ChargeOrder) -> some View {
+        Text(order.localizedStatusLabel)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .foregroundStyle(statusTint(order))
+            .background(statusTint(order).opacity(0.12), in: Capsule())
+    }
+
+    private func orderTitle(_ order: ChargeOrder) -> String {
+        if let orderId = order.orderId?.trimmingCharacters(in: .whitespacesAndNewlines), !orderId.isEmpty {
+            return String(format: localizedString("charge.order.id"), orderId)
+        }
+        return localizedString("charge.order.statusTitle")
+    }
+
+    private func orderAmountText(_ order: ChargeOrder) -> String {
+        guard let amount = order.amount else {
+            return "\(localizedString("charge.order.amount")) —"
+        }
+        return "\(localizedString("charge.order.amount")) \(amount) \(localizedString("charge.currencyUnit"))"
+    }
+
+    private func orderUpdatedText(_ order: ChargeOrder) -> String {
+        let updatedAt = order.updatedAt ?? order.submittedAt ?? order.createdAt ?? "—"
+        return "\(localizedString("charge.order.updated")) \(updatedAt)"
+    }
+
+    private func statusTint(_ order: ChargeOrder) -> Color {
+        switch order.normalizedStatus {
+        case "PAYMENT_SESSION_CREATED":
+            return .blue
+        case "PROCESSING", "CREATED":
+            return .orange
+        case "FAILED":
+            return .red
+        case "MANUAL_REVIEW", "UNKNOWN":
+            return .purple
+        default:
+            return .secondary
+        }
     }
 }

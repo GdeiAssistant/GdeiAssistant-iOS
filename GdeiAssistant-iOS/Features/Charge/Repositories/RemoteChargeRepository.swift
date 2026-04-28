@@ -27,10 +27,40 @@ final class RemoteChargeRepository: ChargeRepository {
             requiresAuth: true,
             headers: ["Idempotency-Key": idempotencyKey]
         )
-        guard let payment = ChargeRemoteMapper.mapPayment(dto) else {
+        guard let payment = ChargeRemoteMapper.mapPayment(dto, amount: amount) else {
             throw NetworkError.noData
         }
         return payment
+    }
+
+    func fetchChargeOrder(orderId: String) async throws -> ChargeOrder {
+        var allowedOrderIdCharacters = CharacterSet.urlPathAllowed
+        allowedOrderIdCharacters.remove(charactersIn: "/")
+        let encodedOrderId = orderId.addingPercentEncoding(withAllowedCharacters: allowedOrderIdCharacters) ?? orderId
+        let dto: ChargeOrderDTO = try await apiClient.get(
+            "/card/charge/orders/\(encodedOrderId)",
+            requiresAuth: true
+        )
+        guard let order = ChargeRemoteMapper.mapOrder(dto) else {
+            throw NetworkError.noData
+        }
+        return order
+    }
+
+    func fetchRecentChargeOrders(page: Int, size: Int, status: String?) async throws -> [ChargeOrder] {
+        var queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "size", value: String(size))
+        ]
+        if let normalizedStatus = status?.trimmingCharacters(in: .whitespacesAndNewlines), !normalizedStatus.isEmpty {
+            queryItems.append(URLQueryItem(name: "status", value: normalizedStatus))
+        }
+        let dtos: [ChargeOrderDTO] = try await apiClient.get(
+            "/card/charge/orders",
+            queryItems: queryItems,
+            requiresAuth: true
+        )
+        return dtos.compactMap(ChargeRemoteMapper.mapOrder)
     }
 }
 

@@ -10,9 +10,14 @@ final class ChargeViewModel: ObservableObject {
     @Published var isSubmitting = false
     @Published var errorMessage: String?
     @Published var paymentSession: ChargePayment?
+    @Published var latestOrder: ChargeOrder?
+    @Published var recentOrders: [ChargeOrder] = []
+    @Published var isLoadingOrders = false
+    @Published var orderErrorMessage: String?
 
     private let repository: any ChargeRepository
     private var hasLoaded = false
+    private let recentOrderLimit = 5
 
     var balanceText: String {
         cardInfo.map { String(format: "%.2f", $0.balance) } ?? "—"
@@ -34,37 +39,53 @@ final class ChargeViewModel: ObservableObject {
     func loadIfNeeded() {
         guard !hasLoaded else { return }
         hasLoaded = true
-        Task { await loadCardInfo() }
+        Task { await refreshContent() }
     }
 
     func refresh() {
-        Task { await loadCardInfo() }
+        Task { await refreshContent() }
     }
 
     func submitCharge() {
-        guard let value = Int(amount), (1...500).contains(value) else {
-            errorMessage = NSLocalizedString("charge.amountRange", comment: "")
-            return
-        }
-        guard !password.isEmpty else {
-            errorMessage = NSLocalizedString("charge.passwordEmpty", comment: "")
-            return
-        }
-        Task {
-            isSubmitting = true
-            errorMessage = nil
-            do {
-                let payment = try await repository.submitCharge(amount: value, password: password)
-                paymentSession = payment
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-            isSubmitting = false
-        }
+        Task { await submitChargeRequest() }
+    }
+
+    func refreshChargeOrders() {
+        Task { await loadRecentOrders() }
     }
 
     func clearPaymentSession() {
         paymentSession = nil
+    }
+
+    func refreshContent() async {
+        await loadCardInfo()
+        await loadRecentOrders()
+    }
+
+    func submitChargeRequest() async {
+        guard let value = Int(amount), (1...500).contains(value) else {
+            errorMessage = localizedString("charge.amountRange")
+            return
+        }
+        guard !password.isEmpty else {
+            errorMessage = localizedString("charge.passwordEmpty")
+            return
+        }
+        isSubmitting = true
+        errorMessage = nil
+        do {
+            let payment = try await repository.submitCharge(amount: value, password: password)
+            paymentSession = payment
+            if let order = payment.order {
+                latestOrder = order
+                recentOrders = upsertRecentOrder(order, in: recentOrders)
+                orderErrorMessage = nil
+            }
+        } catch {
+            errorMessage = localizedString("charge.submitFailed")
+        }
+        isSubmitting = false
     }
 
     private func loadCardInfo() async {
@@ -77,5 +98,37 @@ final class ChargeViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
         isLoading = false
+    }
+
+    private func loadRecentOrders() async {
+        isLoadingOrders = true
+        orderErrorMessage = nil
+        do {
+            let orders = try await repository.fetchRecentChargeOrders(
+                page: 0,
+                size: recentOrderLimit,
+                status: nil
+            )
+            recentOrders = orders
+            latestOrder = resolveLatestOrder(current: latestOrder, orders: orders)
+        } catch {
+            orderErrorMessage = localizedString("charge.order.loadFailed")
+        }
+        isLoadingOrders = false
+    }
+
+    private func upsertRecentOrder(_ order: ChargeOrder, in current: [ChargeOrder]) -> [ChargeOrder] {
+        guard let orderId = order.orderId?.trimmingCharacters(in: .whitespacesAndNewlines), !orderId.isEmpty else {
+            return Array(([order] + current).prefix(recentOrderLimit))
+        }
+        let filtered = current.filter { $0.orderId != orderId }
+        return Array(([order] + filtered).prefix(recentOrderLimit))
+    }
+
+    private func resolveLatestOrder(current: ChargeOrder?, orders: [ChargeOrder]) -> ChargeOrder? {
+        guard let orderId = current?.orderId?.trimmingCharacters(in: .whitespacesAndNewlines), !orderId.isEmpty else {
+            return orders.first ?? current
+        }
+        return orders.first { $0.orderId == orderId } ?? current
     }
 }
