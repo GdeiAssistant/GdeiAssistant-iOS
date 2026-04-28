@@ -337,7 +337,7 @@ private final class FakeChargeRepository: ChargeRepository {
         if let submitError {
             throw submitError
         }
-        submittedPayment
+        return submittedPayment
     }
 
     func fetchChargeOrder(orderId: String) async throws -> ChargeOrder {
