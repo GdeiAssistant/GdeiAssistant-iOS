@@ -8,7 +8,7 @@ struct ChargeView: View {
             if let session = viewModel.paymentSession {
                 PaymentWebView(
                     session: session,
-                    order: viewModel.latestOrder,
+                    order: session.order,
                     onDismiss: { viewModel.clearPaymentSession() }
                 )
             } else {
