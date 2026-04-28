@@ -3,6 +3,7 @@ import WebKit
 
 struct PaymentWebView: View {
     let session: ChargePayment
+    let order: ChargeOrder?
     let onDismiss: () -> Void
 
     var body: some View {
@@ -19,9 +20,53 @@ struct PaymentWebView: View {
             }
             .padding()
 
+            if let order {
+                paymentOrderStatus(order)
+                    .padding(.horizontal)
+                    .padding(.bottom, 10)
+            }
+
             AlipayWebViewRepresentable(session: session)
         }
         .navigationBarBackButtonHidden(true)
+    }
+
+    private func paymentOrderStatus(_ order: ChargeOrder) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(localizedString("charge.order.statusTitle"))
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Text(order.localizedStatusLabel)
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .foregroundStyle(statusTint(order))
+                    .background(statusTint(order).opacity(0.12), in: Capsule())
+            }
+            Text(order.localizedStatusMessage)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func statusTint(_ order: ChargeOrder) -> Color {
+        switch order.normalizedStatus {
+        case "PAYMENT_SESSION_CREATED":
+            return .blue
+        case "PROCESSING", "CREATED":
+            return .orange
+        case "FAILED":
+            return .red
+        case "MANUAL_REVIEW", "UNKNOWN":
+            return .purple
+        default:
+            return .secondary
+        }
     }
 }
 
