@@ -552,7 +552,7 @@ private struct MarketplaceStateChangeContext: Identifiable {
         case .offShelf:
             return localizedString("marketplace.stateOffShelf")
         case .sold:
-            return localizedString("marketplace.stateSold")
+            return localizedString("marketplace.stateMarkedSold")
         case .selling:
             return localizedString("marketplace.stateRelist")
         case .systemDeleted:

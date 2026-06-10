@@ -973,11 +973,6 @@
 "messages.systemNoticeLoadFailed" = "Failed to load announcements";
 "messages.interactionLoadFailed" = "Failed to load interactions";
 "messages.updateStatusFailed" = "Failed to update status";
-"messages.loadFailed" = "Failed to load messages";
-"messages.newsLoadFailed" = "Failed to load news";
-"messages.systemNoticeLoadFailed" = "Failed to load announcements";
-"messages.interactionLoadFailed" = "Failed to load interactions";
-"messages.updateStatusFailed" = "Failed to update status";
 
 // MARK: - Marketplace
 "marketplace.search" = "Search marketplace";
@@ -1008,7 +1003,7 @@
 "marketplace.confirmSelling" = "Confirm relist";
 "marketplace.confirm" = "Confirm";
 "marketplace.stateOffShelf" = "Item removed";
-"marketplace.stateSold" = "Item marked as sold";
+"marketplace.stateMarkedSold" = "Item marked as sold";
 "marketplace.stateRelist" = "Item relisted";
 "marketplace.stateUpdated" = "Status updated";
 "marketplace.actionFailed" = "Operation failed";

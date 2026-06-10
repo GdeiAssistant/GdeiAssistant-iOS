@@ -1003,7 +1003,7 @@
 "marketplace.confirmSelling" = "再出品を確認";
 "marketplace.confirm" = "確認";
 "marketplace.stateOffShelf" = "商品を出品停止にしました";
-"marketplace.stateSold" = "商品を売却済みにしました";
+"marketplace.stateMarkedSold" = "商品を売却済みにしました";
 "marketplace.stateRelist" = "商品を再出品しました";
 "marketplace.stateUpdated" = "ステータスを更新しました";
 "marketplace.actionFailed" = "操作に失敗しました";

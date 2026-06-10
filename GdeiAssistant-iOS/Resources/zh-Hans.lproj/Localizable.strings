@@ -973,11 +973,6 @@
 "messages.systemNoticeLoadFailed" = "系统公告加载失败";
 "messages.interactionLoadFailed" = "互动消息加载失败";
 "messages.updateStatusFailed" = "更新消息状态失败";
-"messages.loadFailed" = "加载资讯信息失败";
-"messages.newsLoadFailed" = "新闻加载失败";
-"messages.systemNoticeLoadFailed" = "系统公告加载失败";
-"messages.interactionLoadFailed" = "互动消息加载失败";
-"messages.updateStatusFailed" = "更新消息状态失败";
 
 // MARK: - Marketplace
 "marketplace.search" = "搜索二手交易";
@@ -1008,7 +1003,7 @@
 "marketplace.confirmSelling" = "确认上架";
 "marketplace.confirm" = "确认";
 "marketplace.stateOffShelf" = "商品已下架";
-"marketplace.stateSold" = "商品已标记为售出";
+"marketplace.stateMarkedSold" = "商品已标记为售出";
 "marketplace.stateRelist" = "商品已重新上架";
 "marketplace.stateUpdated" = "状态已更新";
 "marketplace.actionFailed" = "操作失败";

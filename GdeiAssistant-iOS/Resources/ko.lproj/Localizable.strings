@@ -1003,7 +1003,7 @@
 "marketplace.confirmSelling" = "다시 올리기 확인";
 "marketplace.confirm" = "확인";
 "marketplace.stateOffShelf" = "상품이 내려갔습니다";
-"marketplace.stateSold" = "상품이 판매완료로 표시되었습니다";
+"marketplace.stateMarkedSold" = "상품이 판매완료로 표시되었습니다";
 "marketplace.stateRelist" = "상품이 다시 올라갔습니다";
 "marketplace.stateUpdated" = "상태가 업데이트되었습니다";
 "marketplace.actionFailed" = "작업 실패";

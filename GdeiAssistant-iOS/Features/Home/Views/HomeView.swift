@@ -4,6 +4,9 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var container: AppContainer
     @Environment(\.colorScheme) private var colorScheme
+    private let entryColumns = [
+        GridItem(.adaptive(minimum: 72, maximum: 96), spacing: 8)
+    ]
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -67,7 +70,7 @@ struct HomeView: View {
                 }
 
                 LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4),
+                    columns: entryColumns,
                     spacing: 16
                 ) {
                     ForEach(entries) { entry in
@@ -88,9 +91,11 @@ struct HomeView: View {
 
                                 Text(entry.title)
                                     .font(.caption2)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.8)
+                                    .lineLimit(2)
+                                    .minimumScaleFactor(0.85)
+                                    .multilineTextAlignment(.center)
                                     .foregroundStyle(DSColor.title)
+                                    .frame(maxWidth: .infinity)
                             }
                             .accessibilityElement(children: .combine)
                         }
