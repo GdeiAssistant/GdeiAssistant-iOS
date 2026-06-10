@@ -28,12 +28,10 @@ jobs:
       contents: read
     env:
       DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
-      IOS_APP_BUNDLE_ID: ${{ vars.IOS_APP_BUNDLE_ID || 'cn.gdeiassistant.GdeiAssistant-iOS' }}
+      IOS_APP_BUNDLE_ID: ${{ vars.IOS_APP_BUNDLE_ID }}
       IOS_VERSION_NAME: ${{ inputs.version }}
       IOS_BUILD_NUMBER: ${{ inputs.build_number }}
       IOS_UPLOAD_TO_TESTFLIGHT: ${{ inputs.upload_to_testflight }}
-      IOS_ARCHIVE_PATH: ${{ runner.temp }}/GdeiAssistant-iOS.xcarchive
-      IOS_EXPORT_PATH: ${{ runner.temp }}/ios-export
 
     steps:
       - name: Checkout repository
