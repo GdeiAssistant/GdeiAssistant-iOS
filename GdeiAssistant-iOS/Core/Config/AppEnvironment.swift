@@ -54,13 +54,14 @@ final class AppEnvironment: ObservableObject {
         clientType: String? = nil
     ) {
         let resolvedIsDebug = isDebug ?? _isDebugAssertConfiguration()
-        self.isDebug = resolvedIsDebug
-        self.clientType = clientType ?? AppConstants.API.clientType
-        self.networkEnvironment = Self.sanitizedNetworkEnvironment(
+        let resolvedNetworkEnvironment = Self.sanitizedNetworkEnvironment(
             networkEnvironment,
             isDebug: resolvedIsDebug
         )
-        self.baseURL = self.networkEnvironment.baseURL
+        self.isDebug = resolvedIsDebug
+        self.clientType = clientType ?? AppConstants.API.clientType
+        self.networkEnvironment = resolvedNetworkEnvironment
+        self.baseURL = resolvedNetworkEnvironment.baseURL
         self.dataSourceMode = Self.sanitizedDataSourceMode(
             dataSourceMode,
             isDebug: resolvedIsDebug
