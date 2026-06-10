@@ -212,7 +212,29 @@ xcodebuild -project GdeiAssistant-iOS.xcodeproj \
 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 ```
 
-### 3. 运行方式
+### 3. 发布 TestFlight
+
+仓库提供 `iOS TestFlight Release` GitHub Actions 手动工作流，用于签名归档、
+导出 IPA，并按需上传到 TestFlight。发布前需要在仓库或 `ios-production`
+环境中配置：
+
+- `IOS_CERTIFICATE_P12_BASE64`：Apple Distribution 证书 p12 的 base64 内容
+- `IOS_CERTIFICATE_PASSWORD`：p12 密码
+- `IOS_PROVISIONING_PROFILE_BASE64`：App Store provisioning profile 的 base64 内容
+- `IOS_DEVELOPMENT_TEAM`：Apple Developer Team ID
+- `APP_STORE_CONNECT_API_KEY_ID`：App Store Connect API Key ID
+- `APP_STORE_CONNECT_ISSUER_ID`：App Store Connect Issuer ID
+- `APP_STORE_CONNECT_API_KEY_BASE64`：App Store Connect `.p8` 私钥的 base64 内容
+
+可选变量：
+
+- `IOS_APP_BUNDLE_ID`：覆盖默认 Bundle ID，默认 `cn.gdeiassistant.GdeiAssistant-iOS`
+
+工作流输入包括 `version`、`build_number` 和是否上传到 TestFlight。工作流会先运行
+Swift 样式检查，再执行 Release archive/export；即使跳过 TestFlight 上传，也会保留
+导出的 IPA artifact 便于排查签名问题。
+
+### 4. 运行方式
 
 - `mock` 模式：适合本地联调 UI 和主链路验证
 - `remote` 模式：适合接入真实后端接口
