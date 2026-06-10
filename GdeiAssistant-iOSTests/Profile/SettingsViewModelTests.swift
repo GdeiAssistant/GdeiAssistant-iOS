@@ -43,6 +43,51 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.showReloadHint)
     }
 
+    func testReleaseEnvironmentSanitizesDebugDataSourceInputs() {
+        let defaults = makeDefaults(testName: #function)
+        let preferences = UserPreferences(defaults: defaults)
+        let environment = AppEnvironment(
+            networkEnvironment: .dev,
+            dataSourceMode: .mock,
+            isDebug: false,
+            clientType: "IOS"
+        )
+        let viewModel = SettingsViewModel(environment: environment, preferences: preferences)
+        TestLifetimeRetainer.retain(viewModel)
+
+        XCTAssertFalse(viewModel.allowsRuntimeDebugOptions)
+        XCTAssertEqual(environment.networkEnvironment, .prod)
+        XCTAssertEqual(environment.baseURL, NetworkEnvironment.prod.baseURL)
+        XCTAssertEqual(environment.dataSourceMode, .remote)
+        XCTAssertFalse(viewModel.useMockData)
+
+        environment.updateNetworkEnvironment(.staging)
+        environment.updateDataSourceMode(.mock)
+
+        XCTAssertEqual(environment.networkEnvironment, .prod)
+        XCTAssertEqual(environment.baseURL, NetworkEnvironment.prod.baseURL)
+        XCTAssertEqual(environment.dataSourceMode, .remote)
+    }
+
+    func testUpdateMockEnabledIsIgnoredOutsideDebugBuilds() {
+        let defaults = makeDefaults(testName: #function)
+        let preferences = UserPreferences(defaults: defaults)
+        let environment = AppEnvironment(
+            networkEnvironment: .prod,
+            dataSourceMode: .remote,
+            isDebug: false,
+            clientType: "IOS"
+        )
+        let viewModel = SettingsViewModel(environment: environment, preferences: preferences)
+        TestLifetimeRetainer.retain(viewModel)
+
+        viewModel.updateMockEnabled(true)
+
+        XCTAssertEqual(environment.dataSourceMode, .remote)
+        XCTAssertEqual(preferences.currentDataSourceMode, .remote)
+        XCTAssertFalse(viewModel.showReloadHint)
+    }
+
     func testUpdateMockEnabledSwitchesEnvironmentModeInDebug() {
         let defaults = makeDefaults(testName: #function)
         let preferences = UserPreferences(defaults: defaults)

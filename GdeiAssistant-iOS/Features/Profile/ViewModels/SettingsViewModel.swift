@@ -17,6 +17,10 @@ final class SettingsViewModel: ObservableObject {
         environment.isDebug
     }
 
+    var allowsRuntimeDebugOptions: Bool {
+        environment.allowsRuntimeDebugOptions
+    }
+
     var modeDisplayText: String {
         environment.dataSourceMode.displayName
     }
@@ -42,7 +46,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func updateMockEnabled(_ isEnabled: Bool) {
-        guard environment.isDebug else { return }
+        guard environment.allowsRuntimeDebugOptions else { return }
 
         preferences.setUseMockData(isEnabled)
         environment.updateDataSourceMode(isEnabled ? .mock : .remote)
@@ -50,7 +54,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func updateNetworkEnvironment(_ environment: NetworkEnvironment) {
-        guard self.environment.isDebug else { return }
+        guard self.environment.allowsRuntimeDebugOptions else { return }
 
         preferences.setNetworkEnvironment(environment)
         self.environment.updateNetworkEnvironment(environment)

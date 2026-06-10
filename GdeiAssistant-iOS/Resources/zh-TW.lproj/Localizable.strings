@@ -1003,7 +1003,7 @@
 "marketplace.confirmSelling" = "確認上架";
 "marketplace.confirm" = "確認";
 "marketplace.stateOffShelf" = "商品已下架";
-"marketplace.stateSold" = "商品已標記為售出";
+"marketplace.stateMarkedSold" = "商品已標記為售出";
 "marketplace.stateRelist" = "商品已重新上架";
 "marketplace.stateUpdated" = "狀態已更新";
 "marketplace.actionFailed" = "操作失敗";

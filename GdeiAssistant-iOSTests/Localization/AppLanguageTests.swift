@@ -11,6 +11,12 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.normalizedIdentifier(from: "ko"), "ko")
     }
 
+    func testNativeNamesSeparateHongKongMacauAndTaiwanTraditionalChinese() {
+        XCTAssertEqual(AppLanguage.traditionalChineseHongKong.nativeName, "繁體中文（港澳）")
+        XCTAssertEqual(AppLanguage.traditionalChineseTaiwan.nativeName, "繁體中文（台灣）")
+        XCTAssertFalse(AppLanguage.allCases.map(\.nativeName).contains("繁體中文（香港）"))
+    }
+
     func testNormalizeMapsLocaleVariantsToSupportedIdentifiers() {
         XCTAssertEqual(AppLanguage.normalizedIdentifier(from: "zh-Hans"), "zh-CN")
         XCTAssertEqual(AppLanguage.normalizedIdentifier(from: "zh-Hans-CN"), "zh-CN")

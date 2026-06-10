@@ -9,40 +9,38 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section {
-                Toggle(LocalizedStringKey("settings.useMockData"), isOn: mockBinding)
-                    .disabled(!viewModel.isDebug)
+            if viewModel.allowsRuntimeDebugOptions {
+                Section {
+                    Toggle(LocalizedStringKey("settings.useMockData"), isOn: mockBinding)
 
-                Text(LocalizedStringKey(viewModel.isDebug ? "settings.mockDataEnabled" : "settings.mockDataDisabled"))
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.subtitle)
-
-                if viewModel.showReloadHint {
-                    Text(LocalizedStringKey("settings.reloadHint"))
+                    Text(LocalizedStringKey("settings.mockDataEnabled"))
                         .font(.footnote)
-                        .foregroundStyle(DSColor.warning)
-                }
-            } header: {
-                Text(LocalizedStringKey("settings.debugDataSource"))
-            }
+                        .foregroundStyle(DSColor.subtitle)
 
-            Section {
-                Picker(LocalizedStringKey("settings.apiEnvironmentLabel"), selection: networkEnvironmentBinding) {
-                    ForEach(NetworkEnvironment.allCases, id: \.self) { environment in
-                        Text(environment.displayName).tag(environment)
+                    if viewModel.showReloadHint {
+                        Text(LocalizedStringKey("settings.reloadHint"))
+                            .font(.footnote)
+                            .foregroundStyle(DSColor.warning)
                     }
+                } header: {
+                    Text(LocalizedStringKey("settings.debugDataSource"))
                 }
-                .pickerStyle(.segmented)
-                .disabled(!viewModel.isDebug)
 
-                Text(LocalizedStringKey(viewModel.isDebug ? "settings.apiDebugHint" : "settings.apiReleaseHint"))
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.subtitle)
-            } header: {
-                Text(LocalizedStringKey("settings.apiEnvironment"))
-            }
+                Section {
+                    Picker(LocalizedStringKey("settings.apiEnvironmentLabel"), selection: networkEnvironmentBinding) {
+                        ForEach(NetworkEnvironment.allCases, id: \.self) { environment in
+                            Text(environment.displayName).tag(environment)
+                        }
+                    }
+                    .pickerStyle(.segmented)
 
-            if viewModel.isDebug {
+                    Text(LocalizedStringKey("settings.apiDebugHint"))
+                        .font(.footnote)
+                        .foregroundStyle(DSColor.subtitle)
+                } header: {
+                    Text(LocalizedStringKey("settings.apiEnvironment"))
+                }
+
                 Section {
                     infoRow(title: "networkEnvironment", value: viewModel.networkEnvironmentText)
                     infoRow(title: "baseURL", value: viewModel.baseURLText)
