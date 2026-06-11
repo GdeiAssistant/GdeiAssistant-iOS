@@ -37,6 +37,8 @@
 "common.delete" = "Delete";
 "common.submit" = "Submit";
 "common.done" = "Done";
+"common.image" = "Image";
+"common.more" = "More";
 
 "profile.privacy" = "Privacy";
 "profile.loginRecords" = "Login Records";
@@ -191,6 +193,8 @@
 "schedule.todayCourses" = "Today's Courses";
 "schedule.noCourses" = "No courses today";
 "schedule.weeklyGrid" = "Weekly Schedule";
+"schedule.fullList" = "Full Course List";
+"schedule.fullListHint" = "Grouped by day, with long names, locations and teachers shown in full.";
 "schedule.selectBackground" = "Select Background";
 "schedule.changeBackground" = "Change Background";
 "schedule.clearBackground" = "Clear Background";

@@ -4,6 +4,7 @@ struct DSRemoteImageView: View {
     let urlString: String?
     var cornerRadius: CGFloat = 16
     var fallbackSystemImage: String = "photo"
+    var accessibilityLabel: String? = nil
 
     var body: some View {
         Group {
@@ -13,7 +14,7 @@ struct DSRemoteImageView: View {
                     case .success(let image):
                         image
                             .resizable()
-                            .scaledToFill()
+                            .scaledToFit()
                     case .empty:
                         placeholderView
                     case .failure:
@@ -28,6 +29,7 @@ struct DSRemoteImageView: View {
         }
         .background(DSColor.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        .accessibilityLabel(accessibilityLabel ?? localizedString("common.image"))
     }
 
     private var placeholderView: some View {

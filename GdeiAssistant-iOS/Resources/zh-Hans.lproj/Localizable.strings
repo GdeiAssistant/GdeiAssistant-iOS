@@ -37,6 +37,8 @@
 "common.delete" = "删除";
 "common.submit" = "提交";
 "common.done" = "完成";
+"common.image" = "图片";
+"common.more" = "更多";
 
 "profile.privacy" = "隐私设置";
 "profile.loginRecords" = "登录记录";
@@ -191,6 +193,8 @@
 "schedule.todayCourses" = "今日课程";
 "schedule.noCourses" = "今天没有课程安排";
 "schedule.weeklyGrid" = "周课表";
+"schedule.fullList" = "完整课程列表";
+"schedule.fullListHint" = "按星期展开，长课程名、地点和教师会完整显示。";
 "schedule.selectBackground" = "选择背景图";
 "schedule.changeBackground" = "更换背景图";
 "schedule.clearBackground" = "清除背景图";

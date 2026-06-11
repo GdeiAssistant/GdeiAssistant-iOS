@@ -46,17 +46,22 @@ struct SecretView: View {
         }
         .navigationTitle(localizedString("secret.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("secret.mine")) {
-                    MySecretPostsView(viewModel: viewModel)
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("secret.mine")) {
+                        MySecretPostsView(viewModel: viewModel)
+                    }
 
-                NavigationLink(localizedString("secret.publish")) {
-                    PublishSecretView(
-                        listViewModel: viewModel,
-                        publishViewModel: container.makePublishSecretViewModel()
-                    )
+                    NavigationLink(localizedString("secret.publish")) {
+                        PublishSecretView(
+                            listViewModel: viewModel,
+                            publishViewModel: container.makePublishSecretViewModel()
+                        )
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {

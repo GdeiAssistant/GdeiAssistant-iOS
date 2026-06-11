@@ -61,13 +61,18 @@ struct PhotographView: View {
         }
         .navigationTitle(localizedString("photograph.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("photograph.mine")) {
-                    MyPhotographPostsView(viewModel: viewModel)
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("photograph.mine")) {
+                        MyPhotographPostsView(viewModel: viewModel)
+                    }
+                    NavigationLink(localizedString("photograph.publish")) {
+                        PublishPhotographView(viewModel: container.makePublishPhotographViewModel(), listViewModel: viewModel)
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
-                NavigationLink(localizedString("photograph.publish")) {
-                    PublishPhotographView(viewModel: container.makePublishPhotographViewModel(), listViewModel: viewModel)
-                }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
@@ -577,7 +582,7 @@ private struct PublishPhotographView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -585,6 +590,7 @@ private struct PublishPhotographView: View {
             }
         }
         .frame(width: 92, height: 92)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }

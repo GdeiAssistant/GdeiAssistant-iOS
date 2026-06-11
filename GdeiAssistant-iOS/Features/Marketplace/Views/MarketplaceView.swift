@@ -98,18 +98,23 @@ struct MarketplaceView: View {
         }
         .navigationTitle(AppDestination.marketplace.title)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("marketplace.mine")) {
-                    MarketplaceProfileView(viewModel: viewModel)
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("marketplace.mine")) {
+                        MarketplaceProfileView(viewModel: viewModel)
+                    }
 
-                NavigationLink(localizedString("marketplace.publish")) {
-                    PublishMarketplaceView(
-                        listViewModel: viewModel,
-                        publishViewModel: container.makePublishMarketplaceViewModel()
-                    )
+                    NavigationLink(localizedString("marketplace.publish")) {
+                        PublishMarketplaceView(
+                            listViewModel: viewModel,
+                            publishViewModel: container.makePublishMarketplaceViewModel()
+                        )
+                    }
+                    .accessibilityIdentifier("marketplace.publishEntry")
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
-                .accessibilityIdentifier("marketplace.publishEntry")
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
@@ -937,7 +942,7 @@ struct PublishMarketplaceView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -948,6 +953,7 @@ struct PublishMarketplaceView: View {
             }
         }
         .frame(width: 92, height: 92)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }

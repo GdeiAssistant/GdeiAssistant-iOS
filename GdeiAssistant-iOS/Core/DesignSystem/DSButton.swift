@@ -30,9 +30,13 @@ struct DSButton: View {
 
                 Text(title)
                     .font(.headline)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity)
-            .frame(height: 50)
+            .frame(minHeight: 50)
             .foregroundStyle(foregroundColor)
             .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))

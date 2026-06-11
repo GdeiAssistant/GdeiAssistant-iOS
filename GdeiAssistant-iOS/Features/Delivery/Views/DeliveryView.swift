@@ -53,13 +53,18 @@ struct DeliveryView: View {
         }
         .navigationTitle(localizedString("delivery.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("delivery.mine")) {
-                    MyDeliveryView(viewModel: viewModel)
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("delivery.mine")) {
+                        MyDeliveryView(viewModel: viewModel)
+                    }
+                    NavigationLink(localizedString("delivery.publish")) {
+                        PublishDeliveryView(viewModel: container.makePublishDeliveryViewModel(), listViewModel: viewModel)
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
-                NavigationLink(localizedString("delivery.publish")) {
-                    PublishDeliveryView(viewModel: container.makePublishDeliveryViewModel(), listViewModel: viewModel)
-                }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {

@@ -35,14 +35,19 @@ struct ExpressView: View {
         }
         .navigationTitle(LocalizedStringKey("express.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(LocalizedStringKey("express.mine")) {
-                    MyExpressPostsView(viewModel: viewModel)
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(LocalizedStringKey("express.mine")) {
+                        MyExpressPostsView(viewModel: viewModel)
+                    }
 
-                NavigationLink(LocalizedStringKey("express.publish")) {
-                    PublishExpressView(viewModel: container.makePublishExpressViewModel(), listViewModel: viewModel)
+                    NavigationLink(LocalizedStringKey("express.publish")) {
+                        PublishExpressView(viewModel: container.makePublishExpressViewModel(), listViewModel: viewModel)
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
