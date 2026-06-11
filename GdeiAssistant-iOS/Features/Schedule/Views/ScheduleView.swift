@@ -57,7 +57,9 @@ struct ScheduleView: View {
     }
 
     private func content(_ schedule: WeeklySchedule) -> some View {
-        ScrollView {
+        let nonEmptyDays = schedule.days.filter { !$0.courses.isEmpty }
+
+        return ScrollView {
             VStack(spacing: 14) {
                 DSCard {
                     HStack {
@@ -102,6 +104,7 @@ struct ScheduleView: View {
                     } else {
                         ForEach(viewModel.todayCourses) { course in
                             courseSummaryRow(course)
+                                .onTapGesture { selectedCourse = course }
                         }
                     }
                 }
@@ -117,6 +120,28 @@ struct ScheduleView: View {
                             backgroundImage: backgroundImage,
                             onSelectCourse: { selectedCourse = $0 }
                         )
+                    }
+                }
+
+                DSCard {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(LocalizedStringKey("schedule.fullList"))
+                            .font(.headline)
+                            .foregroundStyle(DSColor.title)
+
+                        Text(LocalizedStringKey("schedule.fullListHint"))
+                            .font(.subheadline)
+                            .foregroundStyle(DSColor.subtitle)
+
+                        if nonEmptyDays.isEmpty {
+                            Text(LocalizedStringKey("schedule.noCourses"))
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.subtitle)
+                        } else {
+                            ForEach(nonEmptyDays) { day in
+                                dayCourseList(day)
+                            }
+                        }
                     }
                 }
             }
@@ -146,6 +171,28 @@ struct ScheduleView: View {
         .padding(10)
         .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    private func dayCourseList(_ day: CourseDaySection) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Text(day.dayTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(DSColor.primary)
+
+                if !day.dateText.isEmpty {
+                    Text(day.dateText)
+                        .font(.caption)
+                        .foregroundStyle(DSColor.subtitle)
+                }
+            }
+
+            ForEach(day.courses) { course in
+                courseSummaryRow(course)
+                    .onTapGesture { selectedCourse = course }
+            }
+        }
     }
 
     private func importBackground(from item: PhotosPickerItem?) async {

@@ -54,14 +54,19 @@ struct TopicView: View {
         }
         .navigationTitle(localizedString("topic.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("topic.mine")) {
-                    MyTopicPostsView(viewModel: viewModel)
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("topic.mine")) {
+                        MyTopicPostsView(viewModel: viewModel)
+                    }
 
-                NavigationLink(localizedString("topic.publish")) {
-                    PublishTopicView(viewModel: container.makePublishTopicViewModel(), listViewModel: viewModel)
+                    NavigationLink(localizedString("topic.publish")) {
+                        PublishTopicView(viewModel: container.makePublishTopicViewModel(), listViewModel: viewModel)
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
@@ -439,7 +444,7 @@ private struct PublishTopicView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -447,6 +452,7 @@ private struct PublishTopicView: View {
             }
         }
         .frame(width: 92, height: 92)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }

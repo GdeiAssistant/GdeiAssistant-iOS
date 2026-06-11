@@ -37,6 +37,8 @@
 "common.delete" = "삭제";
 "common.submit" = "제출";
 "common.done" = "완료";
+"common.image" = "이미지";
+"common.more" = "더보기";
 
 "profile.privacy" = "개인정보";
 "profile.loginRecords" = "로그인 기록";
@@ -191,6 +193,8 @@
 "schedule.todayCourses" = "오늘 수업";
 "schedule.noCourses" = "오늘 수업이 없습니다";
 "schedule.weeklyGrid" = "주간 시간표";
+"schedule.fullList" = "전체 수업 목록";
+"schedule.fullListHint" = "요일별로 펼쳐 긴 수업명, 장소와 교수 정보를 확인할 수 있습니다.";
 "schedule.selectBackground" = "배경 이미지 선택";
 "schedule.changeBackground" = "배경 이미지 변경";
 "schedule.clearBackground" = "배경 이미지 삭제";

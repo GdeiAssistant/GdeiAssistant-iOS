@@ -37,6 +37,8 @@
 "common.delete" = "削除";
 "common.submit" = "送信";
 "common.done" = "完了";
+"common.image" = "画像";
+"common.more" = "その他";
 
 "profile.privacy" = "プライバシー";
 "profile.loginRecords" = "ログイン履歴";
@@ -191,6 +193,8 @@
 "schedule.todayCourses" = "今日の授業";
 "schedule.noCourses" = "今日の授業はありません";
 "schedule.weeklyGrid" = "週間時間割";
+"schedule.fullList" = "全授業リスト";
+"schedule.fullListHint" = "曜日ごとに表示し、長い科目名・場所・教員名も確認できます。";
 "schedule.selectBackground" = "背景画像を選択";
 "schedule.changeBackground" = "背景画像を変更";
 "schedule.clearBackground" = "背景画像を削除";

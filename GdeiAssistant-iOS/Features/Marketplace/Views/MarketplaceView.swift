@@ -99,16 +99,22 @@ struct MarketplaceView: View {
         .navigationTitle(AppDestination.marketplace.title)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("marketplace.mine")) {
+                NavigationLink {
                     MarketplaceProfileView(viewModel: viewModel)
+                } label: {
+                    Image(systemName: "person.crop.circle")
                 }
+                .accessibilityLabel(localizedString("marketplace.mine"))
 
-                NavigationLink(localizedString("marketplace.publish")) {
+                NavigationLink {
                     PublishMarketplaceView(
                         listViewModel: viewModel,
                         publishViewModel: container.makePublishMarketplaceViewModel()
                     )
+                } label: {
+                    Image(systemName: "square.and.pencil")
                 }
+                .accessibilityLabel(localizedString("marketplace.publish"))
                 .accessibilityIdentifier("marketplace.publishEntry")
             }
         }
@@ -937,7 +943,7 @@ struct PublishMarketplaceView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -948,6 +954,7 @@ struct PublishMarketplaceView: View {
             }
         }
         .frame(width: 92, height: 92)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }

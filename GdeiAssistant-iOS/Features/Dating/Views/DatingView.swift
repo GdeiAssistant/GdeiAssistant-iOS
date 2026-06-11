@@ -76,17 +76,22 @@ struct DatingView: View {
         }
         .navigationTitle(localizedString("dating.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("dating.interactionCenter")) {
-                    DatingCenterView(viewModel: container.makeDatingCenterViewModel())
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("dating.interactionCenter")) {
+                        DatingCenterView(viewModel: container.makeDatingCenterViewModel())
+                    }
 
-                NavigationLink(localizedString("dating.publish")) {
-                    PublishDatingView(
-                        listViewModel: viewModel,
-                        viewModel: container.makePublishDatingViewModel()
-                    )
+                    NavigationLink(localizedString("dating.publish")) {
+                        PublishDatingView(
+                            listViewModel: viewModel,
+                            viewModel: container.makePublishDatingViewModel()
+                        )
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
@@ -597,7 +602,7 @@ private struct PublishDatingView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -608,6 +613,7 @@ private struct PublishDatingView: View {
             }
         }
         .frame(width: 120, height: 120)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 

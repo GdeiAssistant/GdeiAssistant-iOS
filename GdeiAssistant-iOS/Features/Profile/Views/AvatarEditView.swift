@@ -26,8 +26,10 @@ struct AvatarEditView: View {
 
                 PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
                     Label(localizedString("avatar.selectNew"), systemImage: "photo.badge.plus")
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 48)
+                        .frame(minHeight: 48)
                         .background(DSColor.cardBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }

@@ -71,7 +71,8 @@ struct DSInputField: View {
                 }
             }
             .padding(.horizontal, 14)
-            .frame(height: 48)
+            .padding(.vertical, 12)
+            .frame(minHeight: 48)
             .background(Color(.tertiarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }

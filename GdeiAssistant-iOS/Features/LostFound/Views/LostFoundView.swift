@@ -67,17 +67,22 @@ struct LostFoundView: View {
         }
         .navigationTitle(localizedString("lostFound.title"))
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(localizedString("lostFound.mine")) {
-                    LostFoundProfileView(viewModel: viewModel)
-                }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    NavigationLink(localizedString("lostFound.mine")) {
+                        LostFoundProfileView(viewModel: viewModel)
+                    }
 
-                NavigationLink(localizedString("lostFound.publish")) {
-                    PublishLostFoundView(
-                        listViewModel: viewModel,
-                        publishViewModel: container.makePublishLostFoundViewModel()
-                    )
+                    NavigationLink(localizedString("lostFound.publish")) {
+                        PublishLostFoundView(
+                            listViewModel: viewModel,
+                            publishViewModel: container.makePublishLostFoundViewModel()
+                        )
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .accessibilityLabel(localizedString("common.more"))
             }
         }
         .task {
@@ -692,7 +697,7 @@ struct PublishLostFoundView: View {
             if let uiImage = UIImage(data: image.data) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(Color(.tertiarySystemGroupedBackground))
@@ -703,6 +708,7 @@ struct PublishLostFoundView: View {
             }
         }
         .frame(width: 92, height: 92)
+        .background(Color(.tertiarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
