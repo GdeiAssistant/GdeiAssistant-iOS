@@ -88,7 +88,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch lowercaseIdentifier {
         case "zh-cn", "zh-hans", "zh-hans-cn", "zh":
             return .simplifiedChinese
-        case "zh-hk", "zh-hant-hk":
+        case "zh-hk", "zh-mo", "zh-hant-hk", "zh-hant-mo":
             return .traditionalChineseHongKong
         case "zh-tw", "zh-hant", "zh-hant-tw":
             return .traditionalChineseTaiwan
@@ -97,7 +97,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
 
         if segments.first == "zh" {
-            if segments.contains("hk") {
+            if segments.contains("hk") || segments.contains("mo") {
                 return .traditionalChineseHongKong
             }
 
