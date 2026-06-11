@@ -98,23 +98,24 @@ struct MarketplaceView: View {
         }
         .navigationTitle(AppDestination.marketplace.title)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    NavigationLink(localizedString("marketplace.mine")) {
-                        MarketplaceProfileView(viewModel: viewModel)
-                    }
-
-                    NavigationLink(localizedString("marketplace.publish")) {
-                        PublishMarketplaceView(
-                            listViewModel: viewModel,
-                            publishViewModel: container.makePublishMarketplaceViewModel()
-                        )
-                    }
-                    .accessibilityIdentifier("marketplace.publishEntry")
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                NavigationLink {
+                    MarketplaceProfileView(viewModel: viewModel)
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "person.crop.circle")
                 }
-                .accessibilityLabel(localizedString("common.more"))
+                .accessibilityLabel(localizedString("marketplace.mine"))
+
+                NavigationLink {
+                    PublishMarketplaceView(
+                        listViewModel: viewModel,
+                        publishViewModel: container.makePublishMarketplaceViewModel()
+                    )
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                }
+                .accessibilityLabel(localizedString("marketplace.publish"))
+                .accessibilityIdentifier("marketplace.publishEntry")
             }
         }
         .task {
