@@ -21,7 +21,7 @@ enum DSColor {
     static let background = Color(.systemGroupedBackground)
     static let cardBackground = Color(.secondarySystemGroupedBackground)
 
-    static let primary = Color.accentColor
+    static let primary = Color(dsLight: 0x006D44, dark: 0x75DAA3)
     static let onPrimary = Color.white
 
     static let secondary = Color(dsLight: 0x5AC8FA, dark: 0x64D2FF)
