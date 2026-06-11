@@ -6,7 +6,11 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
 status=0
-swift_files="$(git ls-files | grep -E '\.swift$' || true)"
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  swift_files="$(git ls-files | grep -E '\.swift$' || true)"
+else
+  swift_files="$(find . -type f -name '*.swift' | sed 's#^\./##' | sort)"
+fi
 
 if [[ -z "$swift_files" ]]; then
   echo "No Swift files found."
