@@ -2,6 +2,10 @@
 
 广东二师助手 iOS 客户端，基于 SwiftUI 构建，面向广东第二师范学院校园场景，覆盖教务查询、校园生活与信息通知等核心能力。
 
+## 维护状态
+
+**活跃开发中** — 最近更新：2026 年 6 月。与后端 [GdeiAssistant](https://github.com/GdeiAssistant/GdeiAssistant) 主仓同步迭代。
+
 ## 功能概览
 
 ### 校园服务
