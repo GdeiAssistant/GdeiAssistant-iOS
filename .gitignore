@@ -11,6 +11,16 @@ build/
 DerivedData/
 .swiftpm/
 
+# Provisioning & Signing
+*.mobileprovision
+*.cer
+*.p12
+*.pem
+*.provisionprofile
+
+# Local xcconfig overrides (may contain API keys/secrets)
+Configs/local.xcconfig
+
 # Local working notes / one-off tools
 Docs/
 Tools/*
