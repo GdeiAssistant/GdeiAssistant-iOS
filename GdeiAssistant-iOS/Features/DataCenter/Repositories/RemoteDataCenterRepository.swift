@@ -13,13 +13,13 @@ final class RemoteDataCenterRepository: DataCenterRepository {
         let response: ElectricityBillRemoteDTO = try await apiClient.postForm(
             "/data/electricfees",
             fields: fields,
-            requiresAuth: false
+            requiresAuth: true
         )
         return DataCenterRemoteMapper.mapElectricityBill(response)
     }
 
     func fetchYellowPages() async throws -> [YellowPageCategory] {
-        let dto: YellowPageResultRemoteDTO = try await apiClient.get("/data/yellowpage", requiresAuth: false)
+        let dto: YellowPageResultRemoteDTO = try await apiClient.get("/data/yellowpage", requiresAuth: true)
         return DataCenterRemoteMapper.mapYellowPages(dto)
     }
 }
