@@ -27,3 +27,10 @@ Tools/*
 !Tools/build_simulator.sh
 !Tools/check_style.sh
 AGENTS.md
+
+# AI assistant / agent configs (local only)
+CLAUDE.md
+.claude/
+.codex/
+.cursor/
+.cursorrules
