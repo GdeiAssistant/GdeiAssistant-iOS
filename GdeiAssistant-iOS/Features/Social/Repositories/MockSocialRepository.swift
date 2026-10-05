@@ -671,7 +671,7 @@ enum MockSocialSeed {
         ]
     }
 
-    static var conversations: [String: MutableConversation] {
+    fileprivate static var conversations: [String: MutableConversation] {
         [
             "1": MutableConversation(
                 id: "1",
