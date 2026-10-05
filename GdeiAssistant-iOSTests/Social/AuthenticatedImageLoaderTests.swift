@@ -3,6 +3,33 @@ import XCTest
 
 @MainActor
 final class AuthenticatedImageLoaderTests: XCTestCase {
+    func testLoaderAndEnvironmentReleaseSynchronously() {
+        for _ in 0 ..< 20 {
+            weak var releasedEnvironment: AppEnvironment?
+            weak var releasedLoader: AuthenticatedImageLoader?
+            do {
+                let environment = AppEnvironment(
+                    networkEnvironment: .prod,
+                    dataSourceMode: .remote,
+                    isDebug: false,
+                    clientType: "IOS"
+                )
+                let loader = AuthenticatedImageLoader(
+                    environment: environment,
+                    session: .shared,
+                    tokenProvider: { "test-token" },
+                    onUnauthorized: {}
+                )
+                releasedEnvironment = environment
+                releasedLoader = loader
+                XCTAssertNotNil(releasedEnvironment)
+                XCTAssertNotNil(releasedLoader)
+            }
+            XCTAssertNil(releasedLoader)
+            XCTAssertNil(releasedEnvironment)
+        }
+    }
+
     func testResolveRelativeAPIPathStripsAPIPrefixAndRequiresAuthPath() {
         let loader = makeLoader(baseURL: URL(string: "https://gdeiassistant.cn/api")!)
         guard case .authenticatedPath(let path) = loader.resolve("/api/social/users/user-1/avatar") else {

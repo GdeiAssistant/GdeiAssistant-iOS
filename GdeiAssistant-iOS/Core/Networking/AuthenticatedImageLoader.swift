@@ -27,6 +27,10 @@ final class AuthenticatedImageLoader {
         self.onUnauthorized = onUnauthorized
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 isolated-deinit runtime crash
+    // when released synchronously (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func image(for urlString: String?) async -> UIImage? {
         await load(urlString: urlString, chatImageOnly: false)
     }
