@@ -21,7 +21,7 @@ final class RemoteNewsRepository: NewsRepository {
         for type in categoryTypes {
             let dtos: [NewsRemoteDTO] = try await apiClient.get(
                 "/information/news/type/\(type)/start/0/size/\(perCategorySize)",
-                requiresAuth: false
+                requiresAuth: true
             )
             for item in NewsRemoteMapper.mapItems(dtos) {
                 if seenIDs.insert(item.id).inserted {
@@ -40,7 +40,7 @@ final class RemoteNewsRepository: NewsRepository {
     func fetchNewsDetail(id: String) async throws -> NewsItem {
         let dto: NewsRemoteDTO = try await apiClient.get(
             "/information/news/id/\(id)",
-            requiresAuth: false
+            requiresAuth: true
         )
         let items = NewsRemoteMapper.mapItems([dto])
         guard let item = items.first else {
