@@ -122,6 +122,21 @@ final class APIClientTests: XCTestCase {
         }
     }
 
+    func testContractErrorCodeIsSurfacedForNon2xx() async throws {
+        stub(
+            statusCode: 403,
+            body: #"{"code":403,"success":false,"message":"privacy","errorCode":"PRIVACY_RESTRICTED"}"#
+        )
+
+        do {
+            let _: EmptyPayload = try await client.get("/social/conversations")
+            XCTFail("Expected NetworkError.contract")
+        } catch NetworkError.contract(_, let message, let errorCode) {
+            XCTAssertEqual(message, "privacy")
+            XCTAssertEqual(errorCode, SocialErrorCode.privacyRestricted)
+        }
+    }
+
     func testMalformedJSONThrowsDecoding() async throws {
         stub(statusCode: 200, body: "not-json")
 

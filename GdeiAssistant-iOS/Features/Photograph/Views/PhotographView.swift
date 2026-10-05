@@ -107,7 +107,17 @@ private struct PhotographPostRow: View {
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
                 HStack {
-                    Text(post.authorName)
+                    if let authorId = post.authorId {
+                        NavigationLink {
+                            SocialPublicProfileRoute(userID: authorId)
+                        } label: {
+                            Text(post.authorName)
+                                .foregroundStyle(DSColor.primary)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        Text(post.authorName)
+                    }
                     Spacer()
                     Text(post.category.title)
                     Label("\(post.photoCount)", systemImage: "photo.on.rectangle")
@@ -186,9 +196,20 @@ struct PhotographDetailView: View {
                         Text(detail.content)
                             .font(.body)
                             .foregroundStyle(DSColor.title)
-                        Text("\(localizedString("photograph.publisher"))\(detail.post.authorName)")
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
+                        if let authorId = detail.post.authorId {
+                            NavigationLink {
+                                SocialPublicProfileRoute(userID: authorId)
+                            } label: {
+                                Text("\(localizedString("photograph.publisher"))\(detail.post.authorName)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(DSColor.primary)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            Text("\(localizedString("photograph.publisher"))\(detail.post.authorName)")
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.subtitle)
+                        }
                         Text("\(localizedString("photograph.categoryLabel"))\(detail.post.category.title)")
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)

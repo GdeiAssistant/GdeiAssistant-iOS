@@ -46,6 +46,7 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
                 summary: detail.item.summary,
                 sellerName: detail.item.sellerName,
                 sellerAvatarURL: detail.item.sellerAvatarURL,
+                authorId: detail.item.authorId,
                 postedAt: detail.item.postedAt,
                 location: detail.item.location,
                 state: detail.item.state,

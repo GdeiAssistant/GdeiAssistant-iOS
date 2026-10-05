@@ -76,7 +76,17 @@ struct MarketplaceView: View {
                                         .lineLimit(2)
 
                                     HStack {
-                                        Text(item.sellerName)
+                                        if let authorId = item.authorId {
+                                            NavigationLink {
+                                                SocialPublicProfileRoute(userID: authorId)
+                                            } label: {
+                                                Text(item.sellerName)
+                                                    .foregroundStyle(DSColor.primary)
+                                            }
+                                            .buttonStyle(.plain)
+                                        } else {
+                                            Text(item.sellerName)
+                                        }
                                         Spacer()
                                         Text(item.location)
                                         Text(item.postedAt)
@@ -623,12 +633,23 @@ struct MarketplaceDetailView: View {
                             Divider()
 
                             HStack(spacing: 12) {
-                                DSAvatarView(urlString: detail.item.sellerAvatarURL, size: 52)
+                                SocialAvatarView(urlString: detail.item.sellerAvatarURL, size: 52)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(detail.sellerNickname ?? detail.item.sellerName)
-                                        .font(.headline)
-                                        .foregroundStyle(DSColor.title)
+                                    if let authorId = detail.item.authorId {
+                                        NavigationLink {
+                                            SocialPublicProfileRoute(userID: authorId)
+                                        } label: {
+                                            Text(detail.sellerNickname ?? detail.item.sellerName)
+                                                .font(.headline)
+                                                .foregroundStyle(DSColor.primary)
+                                        }
+                                        .buttonStyle(.plain)
+                                    } else {
+                                        Text(detail.sellerNickname ?? detail.item.sellerName)
+                                            .font(.headline)
+                                            .foregroundStyle(DSColor.title)
+                                    }
                                     Text(sellerMetaText(detail))
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)

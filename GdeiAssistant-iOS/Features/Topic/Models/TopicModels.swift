@@ -5,6 +5,7 @@ struct TopicPost: Codable, Identifiable, Hashable {
     let topic: String
     let contentPreview: String
     let authorName: String
+    let authorId: String?
     let publishedAt: String
     let likeCount: Int
     let imageCount: Int

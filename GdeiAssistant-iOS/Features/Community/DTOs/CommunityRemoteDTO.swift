@@ -2,6 +2,7 @@ import Foundation
 
 struct ExpressPostDTO: Decodable {
     let id: Int?
+    let authorId: String?
     let username: String?
     let nickname: String?
     let realname: String?
@@ -20,6 +21,7 @@ struct ExpressPostDTO: Decodable {
 
 struct ExpressCommentDTO: Decodable {
     let id: Int?
+    let authorId: String?
     let username: String?
     let nickname: String?
     let expressId: Int?
@@ -29,6 +31,7 @@ struct ExpressCommentDTO: Decodable {
 
 struct TopicPostDTO: Decodable {
     let id: Int?
+    let authorId: String?
     let username: String?
     let topic: String?
     let content: String?

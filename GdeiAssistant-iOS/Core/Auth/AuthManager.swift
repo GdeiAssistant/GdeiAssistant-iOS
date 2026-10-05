@@ -19,6 +19,7 @@ final class AuthManager: ObservableObject {
 
     private var authRepository: (any AuthRepository)?
     private var dataSourceModeProvider: (() -> DataSourceMode)?
+    private var onSessionEnded: (() -> Void)?
     private var cachedToken: String?
 
     init(tokenStorage: TokenStorage, sessionState: SessionState) {
@@ -28,10 +29,12 @@ final class AuthManager: ObservableObject {
 
     func configure(
         repository: any AuthRepository,
-        dataSourceModeProvider: @escaping () -> DataSourceMode
+        dataSourceModeProvider: @escaping () -> DataSourceMode,
+        onSessionEnded: (() -> Void)? = nil
     ) {
         authRepository = repository
         self.dataSourceModeProvider = dataSourceModeProvider
+        self.onSessionEnded = onSessionEnded
     }
 
     var currentDataSourceMode: DataSourceMode {
@@ -115,6 +118,7 @@ final class AuthManager: ObservableObject {
     func clearToken() {
         try? tokenStorage.deleteToken()
         cachedToken = nil
+        onSessionEnded?()
     }
 
     func handleUnauthorized() {

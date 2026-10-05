@@ -28,10 +28,10 @@ jobs:
 
   build-smoke:
     name: Build Smoke
-    runs-on: macos-15
+    runs-on: macos-26
+    timeout-minutes: 30
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
-      CI_XCCONFIG: .github/ci-overrides.xcconfig
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
 
     steps:
       - name: Checkout repository
@@ -51,23 +51,23 @@ jobs:
           chmod +x Tools/build_simulator.sh
           ./Tools/build_simulator.sh
 
-      - name: Upload build log on failure
-        if: failure()
+      - name: Upload build log
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ios-build-log
           path: build-simulator.log
-          retention-days: 7
+          retention-days: 3
 
   unit-test:
     name: Unit Tests
-    runs-on: macos-15
+    runs-on: macos-26
+    timeout-minutes: 40
     needs:
       - style-check
       - build-smoke
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
-      CI_XCCONFIG: .github/ci-overrides.xcconfig
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
 
     steps:
       - name: Checkout repository
@@ -81,7 +81,7 @@ jobs:
             exit 1
           fi
           xcodebuild -version
-          xcrun simctl list devices available iPhone | head -20
+          xcrun simctl list devices available iPhone
 
       - name: Run unit tests
         run: |
@@ -89,12 +89,12 @@ jobs:
             | python3 -c "
           import json, sys
           data = json.load(sys.stdin)
-          for runtime, devs in data.get('devices', {}).items():
-              for d in devs:
-                  if d.get('isAvailable') and 'iPhone' in d.get('name',''):
-                      print(f\"platform=iOS Simulator,id={d['udid']}\")
-                      sys.exit(0)
-          sys.exit(1)
+          runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
+          for d in data.get('devices', {}).get(runtime, []):
+              if d.get('isAvailable') and 'iPhone' in d.get('name',''):
+                  print(f\"platform=iOS Simulator,id={d['udid']}\")
+                  sys.exit(0)
+          sys.exit('No available iPhone simulator with iOS 26.2 for Xcode 26.3')
           ")
           echo "Destination: $DEST"
           set -o pipefail
@@ -102,17 +102,16 @@ jobs:
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
-            -xcconfig "$CI_XCCONFIG" \
             CODE_SIGNING_ALLOWED=NO \
             -resultBundlePath TestResults.xcresult \
-            | tee xcodebuild-test.log
+            2>&1 | tee xcodebuild-test.log
 
-      - name: Upload test results on failure
-        if: failure()
+      - name: Upload test results
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: ios-test-results
           path: |
             TestResults.xcresult
             xcodebuild-test.log
-          retention-days: 7
+          retention-days: 3

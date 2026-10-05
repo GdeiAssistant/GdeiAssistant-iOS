@@ -396,12 +396,23 @@ struct LostFoundDetailView: View {
                             Divider()
 
                             HStack(spacing: 12) {
-                                DSAvatarView(urlString: detail.ownerAvatarURL, size: 52)
+                                SocialAvatarView(urlString: detail.ownerAvatarURL, size: 52)
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(detail.ownerNickname ?? localizedString("lostFound.publisher"))
-                                        .font(.headline)
-                                        .foregroundStyle(DSColor.title)
+                                    if let authorId = detail.authorId {
+                                        NavigationLink {
+                                            SocialPublicProfileRoute(userID: authorId)
+                                        } label: {
+                                            Text(detail.ownerNickname ?? localizedString("lostFound.publisher"))
+                                                .font(.headline)
+                                                .foregroundStyle(DSColor.primary)
+                                        }
+                                        .buttonStyle(.plain)
+                                    } else {
+                                        Text(detail.ownerNickname ?? localizedString("lostFound.publisher"))
+                                            .font(.headline)
+                                            .foregroundStyle(DSColor.title)
+                                    }
                                     Text(detail.ownerUsername ?? localizedString("lostFound.publisher"))
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)

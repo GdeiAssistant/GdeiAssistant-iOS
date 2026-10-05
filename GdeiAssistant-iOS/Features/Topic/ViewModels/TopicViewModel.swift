@@ -63,6 +63,7 @@ final class TopicViewModel: ObservableObject {
                 topic: post.topic,
                 contentPreview: post.contentPreview,
                 authorName: post.authorName,
+                authorId: post.authorId,
                 publishedAt: post.publishedAt,
                 likeCount: post.likeCount + (post.isLiked ? 0 : 1),
                 imageCount: post.imageCount,

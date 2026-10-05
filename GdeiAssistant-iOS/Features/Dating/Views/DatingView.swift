@@ -339,6 +339,16 @@ private struct DatingDetailView: View {
                                 Text(detail.profile.bio)
                                     .font(.body)
                                     .foregroundStyle(DSColor.title)
+                                if let authorId = detail.profile.authorId {
+                                    NavigationLink {
+                                        SocialPublicProfileRoute(userID: authorId)
+                                    } label: {
+                                        Label(localizedString("dating.publisherProfile"), systemImage: "person.crop.circle")
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundStyle(DSColor.primary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
                             }
                         }
                         .padding(.vertical, 4)

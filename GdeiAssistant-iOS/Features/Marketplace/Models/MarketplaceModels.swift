@@ -27,6 +27,8 @@ struct MarketplaceItem: Codable, Identifiable, Hashable {
     let summary: String
     let sellerName: String
     let sellerAvatarURL: String?
+    /// Public social UUID when backend provides it; never invented client-side.
+    let authorId: String?
     let postedAt: String
     let location: String
     let state: MarketplaceItemState

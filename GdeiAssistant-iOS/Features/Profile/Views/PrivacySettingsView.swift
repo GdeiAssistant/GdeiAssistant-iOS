@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PrivacySettingsView: View {
     @StateObject private var viewModel: PrivacySettingsViewModel
+    @EnvironmentObject private var container: AppContainer
 
     init(viewModel: PrivacySettingsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -36,6 +37,14 @@ struct PrivacySettingsView: View {
                 }
                 toggleRow(localizedString("privacy.robotsIndex"), value: viewModel.settings.robotsIndexAllow) { value in
                     await viewModel.update { $0.robotsIndexAllow = value }
+                }
+            }
+
+            Section {
+                NavigationLink {
+                    DirectMessagePrivacyView(viewModel: container.makeDirectMessagePrivacyViewModel())
+                } label: {
+                    Text(localizedString("social.dmPolicy.title"))
                 }
             }
 
@@ -83,5 +92,6 @@ struct PrivacySettingsView: View {
 #Preview {
     NavigationStack {
         PrivacySettingsView(viewModel: PrivacySettingsViewModel(repository: MockAccountCenterRepository()))
+            .environmentObject(AppContainer.preview)
     }
 }

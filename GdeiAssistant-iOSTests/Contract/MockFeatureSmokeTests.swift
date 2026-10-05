@@ -234,5 +234,17 @@ final class MockFeatureSmokeTests: XCTestCase {
 
         let messages = try await MockMessagesRepository().fetchInteractionNotifications(start: 0, size: 10)
         XCTAssertFalse(messages.isEmpty)
+
+        let socialRepository = MockSocialRepository()
+        let me = try await socialRepository.fetchMe()
+        XCTAssertEqual(me.relationship, .selfRelation)
+        let searched = try await socialRepository.searchUsers(query: "", cursor: nil, limit: 10)
+        XCTAssertFalse(searched.items.isEmpty)
+        let conversations = try await socialRepository.fetchConversations(cursor: nil, limit: 10)
+        XCTAssertFalse(conversations.items.isEmpty)
+        let privacy = try await socialRepository.fetchPrivacy()
+        XCTAssertEqual(privacy.dmPolicy, .mutual)
+        let unread = try await socialRepository.fetchUnreadCount()
+        XCTAssertGreaterThanOrEqual(unread.total, 0)
     }
 }

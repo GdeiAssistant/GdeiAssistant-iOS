@@ -6,6 +6,7 @@ struct AppRootView: View {
     @EnvironmentObject private var preferences: UserPreferences
     @EnvironmentObject private var sessionState: SessionState
     @EnvironmentObject private var router: AppRouter
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var showAuthAlert = false
     @State private var authAlertMessage = ""
@@ -42,6 +43,14 @@ struct AppRootView: View {
         .onChange(of: sessionState.isLoggedIn) { _, isLoggedIn in
             if !isLoggedIn {
                 router.resetAfterLogout()
+                container.socialRealtimeManager.stop(clearState: true)
+            } else {
+                container.socialRealtimeManager.start()
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active, sessionState.isLoggedIn {
+                container.socialRealtimeManager.handleForegroundResume()
             }
         }
         .environment(\.locale, Locale(identifier: preferences.selectedLocale))

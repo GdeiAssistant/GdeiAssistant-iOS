@@ -72,6 +72,8 @@ struct DatingProfile: Codable, Identifiable, Hashable {
     let wechat: String?
     let isContactVisible: Bool
     let area: DatingArea
+    /// Publisher's public social UUID; never the introduced roommate identity.
+    let authorId: String?
 
     nonisolated init(
         id: String,
@@ -87,7 +89,8 @@ struct DatingProfile: Codable, Identifiable, Hashable {
         qq: String? = nil,
         wechat: String? = nil,
         isContactVisible: Bool = false,
-        area: DatingArea = .girl
+        area: DatingArea = .girl,
+        authorId: String? = nil
     ) {
         self.id = id
         self.nickname = nickname
@@ -103,6 +106,7 @@ struct DatingProfile: Codable, Identifiable, Hashable {
         self.wechat = wechat
         self.isContactVisible = isContactVisible
         self.area = area
+        self.authorId = authorId
     }
 }
 

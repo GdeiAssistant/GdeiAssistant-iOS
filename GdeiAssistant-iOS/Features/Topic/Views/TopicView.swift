@@ -91,9 +91,20 @@ private struct TopicPostRow: View {
                         Text("#\(post.topic)")
                             .font(.headline)
                             .foregroundStyle(DSColor.primary)
-                        Text(post.authorName)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.title)
+                        if let authorId = post.authorId {
+                            NavigationLink {
+                                SocialPublicProfileRoute(userID: authorId)
+                            } label: {
+                                Text(post.authorName)
+                                    .font(.subheadline)
+                                    .foregroundStyle(DSColor.primary)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            Text(post.authorName)
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.title)
+                        }
                     }
                     Spacer()
                     Text(post.publishedAt)
@@ -170,9 +181,20 @@ struct TopicDetailView: View {
                                     Text("#\(detail.post.topic)")
                                         .font(.title3.weight(.bold))
                                         .foregroundStyle(DSColor.primary)
-                                    Text(detail.post.authorName)
-                                        .font(.subheadline)
-                                        .foregroundStyle(DSColor.subtitle)
+                                    if let authorId = detail.post.authorId {
+                                        NavigationLink {
+                                            SocialPublicProfileRoute(userID: authorId)
+                                        } label: {
+                                            Text(detail.post.authorName)
+                                                .font(.subheadline)
+                                                .foregroundStyle(DSColor.primary)
+                                        }
+                                        .buttonStyle(.plain)
+                                    } else {
+                                        Text(detail.post.authorName)
+                                            .font(.subheadline)
+                                            .foregroundStyle(DSColor.subtitle)
+                                    }
                                 }
                                 Spacer()
                                 Text(detail.post.publishedAt)

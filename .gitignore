@@ -23,6 +23,8 @@ Configs/local.xcconfig
 
 # Local working notes / one-off tools
 Docs/
+!docs/
+!docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md
 Tools/*
 !Tools/build_simulator.sh
 !Tools/check_style.sh

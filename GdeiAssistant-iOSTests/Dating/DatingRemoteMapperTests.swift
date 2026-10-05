@@ -7,6 +7,7 @@ final class DatingRemoteMapperTests: XCTestCase {
             profile: DatingProfileDTO(
                 profileId: 8,
                 username: "alice",
+                authorId: "user-publisher-8",
                 nickname: "阿离",
                 grade: 2,
                 faculty: "计算机科学系",
@@ -31,8 +32,35 @@ final class DatingRemoteMapperTests: XCTestCase {
         XCTAssertEqual(mapped.profile.hometown, "广州")
         XCTAssertEqual(mapped.profile.area, .boy)
         XCTAssertEqual(mapped.profile.imageURL, "https://example.com/detail.jpg")
+        XCTAssertEqual(mapped.profile.authorId, "user-publisher-8")
         XCTAssertTrue(mapped.profile.isContactVisible)
         XCTAssertFalse(mapped.isPickNotAvailable)
+    }
+
+    func testMapProfileDetailOmitsAuthorIdWhenAbsent() {
+        let detail = DatingProfileDetailDTO(
+            profile: DatingProfileDTO(
+                profileId: 3,
+                username: nil,
+                authorId: "  ",
+                nickname: "室友卡",
+                grade: 1,
+                faculty: "外语系",
+                hometown: "深圳",
+                content: "介绍室友",
+                qq: nil,
+                wechat: nil,
+                area: 0,
+                state: 1,
+                pictureURL: nil
+            ),
+            pictureURL: nil,
+            isContactVisible: false,
+            isPickNotAvailable: false
+        )
+
+        let mapped = DatingRemoteMapper.mapProfileDetail(detail)
+        XCTAssertNil(mapped.profile.authorId)
     }
 
     func testMapSentPickKeepsAcceptedContactChannels() {
@@ -41,6 +69,7 @@ final class DatingRemoteMapperTests: XCTestCase {
             roommateProfile: DatingProfileDTO(
                 profileId: 9,
                 username: nil,
+                authorId: "user-should-not-become-target-link",
                 nickname: "学长",
                 grade: 4,
                 faculty: "外语系",

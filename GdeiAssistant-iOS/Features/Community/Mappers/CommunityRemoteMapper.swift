@@ -41,6 +41,7 @@ enum CommunityRemoteMapper {
         let posts = dtos.map { item in
             CommunityPost(
                 id: String(item.id ?? Int.random(in: 1...999_999)),
+                authorId: RemoteMapperSupport.sanitizedText(item.authorId),
                 authorName: RemoteMapperSupport.firstNonEmpty(item.username, localizedString("community.mapper.campusStudent")),
                 authorAvatarURL: item.firstImageUrl ?? "",
                 isAnonymous: false,
@@ -66,6 +67,7 @@ enum CommunityRemoteMapper {
 
         return CommunityPost(
             id: String(dto.id ?? Int.random(in: 1...999_999)),
+            authorId: RemoteMapperSupport.sanitizedText(dto.authorId),
             authorName: RemoteMapperSupport.firstNonEmpty(dto.nickname, dto.username, dto.realname, localizedString("community.mapper.campusStudent")),
             authorAvatarURL: "",
             isAnonymous: false,

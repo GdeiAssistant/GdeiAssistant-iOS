@@ -126,6 +126,7 @@ enum MarketplaceRemoteMapper {
             summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, localizedString("marketplace.mapper.noSummary")), limit: 60),
             sellerName: RemoteMapperSupport.firstNonEmpty(sellerName, dto.username, localizedString("marketplace.mapper.defaultSeller")),
             sellerAvatarURL: RemoteMapperSupport.sanitizedText(sellerAvatarURL),
+            authorId: RemoteMapperSupport.sanitizedText(dto.authorId),
             postedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("common.justNow")),
             location: RemoteMapperSupport.firstNonEmpty(dto.location, localizedString("marketplace.mapper.onCampusPickup")),
             state: state,

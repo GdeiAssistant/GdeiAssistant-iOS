@@ -23,7 +23,8 @@ enum DatingRemoteMapper {
             qq: RemoteMapperSupport.sanitizedText(dto.qq),
             wechat: RemoteMapperSupport.sanitizedText(dto.wechat),
             isContactVisible: false,
-            area: area
+            area: area,
+            authorId: RemoteMapperSupport.sanitizedText(dto.authorId)
         )
     }
 
@@ -31,6 +32,7 @@ enum DatingRemoteMapper {
         let profileDTO = dto.profile ?? DatingProfileDTO(
             profileId: nil,
             username: nil,
+            authorId: nil,
             nickname: nil,
             grade: nil,
             faculty: nil,
@@ -57,7 +59,8 @@ enum DatingRemoteMapper {
             qq: profile.qq,
             wechat: profile.wechat,
             isContactVisible: dto.isContactVisible == true,
-            area: profile.area
+            area: profile.area,
+            authorId: profile.authorId
         )
         return DatingProfileDetail(
             profile: profile,

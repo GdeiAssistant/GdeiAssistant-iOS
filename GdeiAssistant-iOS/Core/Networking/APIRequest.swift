@@ -3,6 +3,7 @@ import Foundation
 enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
+    case put = "PUT"
     case delete = "DELETE"
 }
 
@@ -41,6 +42,44 @@ struct APIRequest {
         APIRequest(
             path: path,
             method: .delete,
+            queryItems: queryItems,
+            headers: headers,
+            body: nil,
+            contentType: nil,
+            requiresAuth: requiresAuth
+        )
+    }
+
+    static func put<Body: Encodable>(
+        path: String,
+        body: Body,
+        queryItems: [URLQueryItem] = [],
+        requiresAuth: Bool = true,
+        headers: [String: String] = [:],
+        encoder: JSONEncoder = JSONEncoder()
+    ) throws -> APIRequest {
+        let bodyData = try encoder.encode(body)
+
+        return APIRequest(
+            path: path,
+            method: .put,
+            queryItems: queryItems,
+            headers: headers,
+            body: bodyData,
+            contentType: AppConstants.API.jsonMimeType,
+            requiresAuth: requiresAuth
+        )
+    }
+
+    static func put(
+        path: String,
+        queryItems: [URLQueryItem] = [],
+        requiresAuth: Bool = true,
+        headers: [String: String] = [:]
+    ) -> APIRequest {
+        APIRequest(
+            path: path,
+            method: .put,
             queryItems: queryItems,
             headers: headers,
             body: nil,

@@ -118,6 +118,10 @@ struct ProfileView: View {
 
                 Color.clear.frame(height: 36)
 
+                SocialProfileStatsCard(viewModel: container.makeSocialMeSummaryViewModel())
+
+                Color.clear.frame(height: 24)
+
                 DSCard {
                     VStack(alignment: .leading, spacing: 0) {
                         Text(localizedString("profile.accountFunctions"))
@@ -125,8 +129,24 @@ struct ProfileView: View {
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
+                        profileMenuLink(title: localizedString("social.search.title"), systemImage: "magnifyingglass") {
+                            SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
+                        }
+                        Divider()
+                        profileMenuLink(title: localizedString("social.conversations.title"), systemImage: "bubble.left.and.bubble.right") {
+                            ConversationListView(viewModel: container.makeConversationListViewModel())
+                        }
+                        Divider()
+                        profileMenuLink(title: localizedString("social.blockList.title"), systemImage: "nosign") {
+                            SocialBlockListView(viewModel: container.makeSocialBlockListViewModel())
+                        }
+                        Divider()
                         profileMenuLink(title: localizedString("profile.privacySettings"), systemImage: "lock.shield") {
                             PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
+                        }
+                        Divider()
+                        profileMenuLink(title: localizedString("social.dmPolicy.title"), systemImage: "envelope.badge.shield.half.filled") {
+                            DirectMessagePrivacyView(viewModel: container.makeDirectMessagePrivacyViewModel())
                         }
                         Divider()
                         profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
@@ -696,6 +716,81 @@ private extension ProfileViewModel {
 
     func displaySelectionOption(_ value: String) -> String {
         value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected") : value
+    }
+}
+
+private struct SocialProfileStatsCard: View {
+    @EnvironmentObject private var container: AppContainer
+    @StateObject private var viewModel: SocialMeSummaryViewModel
+
+    init(viewModel: SocialMeSummaryViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
+    var body: some View {
+        DSCard {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(localizedString("social.stats.title"))
+                    .font(.headline)
+                    .foregroundStyle(DSColor.title)
+
+                if viewModel.isLoading && viewModel.me == nil {
+                    ProgressView()
+                } else if let me = viewModel.me {
+                    HStack(spacing: 12) {
+                        statItem(
+                            title: localizedString("social.relationship.following"),
+                            value: me.followingCount,
+                            kind: .following,
+                            userID: me.id
+                        )
+                        statItem(
+                            title: localizedString("social.relationship.followers"),
+                            value: me.followerCount,
+                            kind: .followers,
+                            userID: me.id
+                        )
+                        statItem(
+                            title: localizedString("social.relationship.friends"),
+                            value: me.friendCount,
+                            kind: .friends,
+                            userID: me.id
+                        )
+                    }
+                } else if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.footnote)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
+        }
+        .task {
+            await viewModel.load()
+        }
+    }
+
+    private func statItem(
+        title: String,
+        value: Int,
+        kind: SocialRelationshipKind,
+        userID: String
+    ) -> some View {
+        NavigationLink {
+            SocialRelationshipListView(
+                viewModel: container.makeSocialRelationshipListViewModel(userID: userID, kind: kind)
+            )
+        } label: {
+            VStack(spacing: 4) {
+                Text("\(value)")
+                    .font(.headline)
+                    .foregroundStyle(DSColor.title)
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(DSColor.subtitle)
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
     }
 }
 

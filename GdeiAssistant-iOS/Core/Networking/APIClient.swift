@@ -83,6 +83,25 @@ final class APIClient {
         return try await execute(request, responseType: T.self)
     }
 
+    func put<Body: Encodable, T: Decodable>(
+        _ path: String,
+        body: Body,
+        queryItems: [URLQueryItem] = [],
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        let request = try APIRequest.put(path: path, body: body, queryItems: queryItems, requiresAuth: requiresAuth)
+        return try await execute(request, responseType: T.self)
+    }
+
+    func put<T: Decodable>(
+        _ path: String,
+        queryItems: [URLQueryItem] = [],
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        let request = APIRequest.put(path: path, queryItems: queryItems, requiresAuth: requiresAuth)
+        return try await execute(request, responseType: T.self)
+    }
+
     func delete<T: Decodable>(
         _ path: String,
         queryItems: [URLQueryItem] = [],
@@ -131,8 +150,15 @@ final class APIClient {
         }
 
         if !(200 ... 299).contains(httpResponse.statusCode) {
-            let message = parseErrorMessage(from: data)
-            throw NetworkError.httpStatus(httpResponse.statusCode, message)
+            let failure = parseFailure(from: data)
+            if let errorCode = failure.errorCode {
+                throw NetworkError.contract(
+                    statusCode: httpResponse.statusCode,
+                    message: failure.message,
+                    errorCode: errorCode
+                )
+            }
+            throw NetworkError.httpStatus(httpResponse.statusCode, failure.message)
         }
 
         let apiResponse: APIResponse<T>
@@ -143,9 +169,17 @@ final class APIClient {
         }
 
         if !apiResponse.isSuccess {
-            if AppConstants.API.unauthorizedBusinessCodes.contains(apiResponse.code) {
+            if AppConstants.API.unauthorizedBusinessCodes.contains(apiResponse.code)
+                || apiResponse.errorCode == SocialErrorCode.authRequired {
                 onUnauthorized()
                 throw NetworkError.unauthorized
+            }
+            if let errorCode = apiResponse.errorCode {
+                throw NetworkError.contract(
+                    statusCode: apiResponse.code,
+                    message: apiResponse.message,
+                    errorCode: errorCode
+                )
             }
             throw NetworkError.server(code: apiResponse.code, message: apiResponse.message)
         }
@@ -161,11 +195,11 @@ final class APIClient {
         throw NetworkError.noData
     }
 
-    private func parseErrorMessage(from data: Data) -> String {
-        if let response = try? decoder.decode(APIResponse<EmptyPayload>.self, from: data), !response.message.isEmpty {
-            return response.message
+    private func parseFailure(from data: Data) -> (message: String, errorCode: String?) {
+        if let response = try? decoder.decode(APIResponse<EmptyPayload>.self, from: data) {
+            return (response.message, response.errorCode)
         }
 
-        return ""
+        return ("", nil)
     }
 }

@@ -35,6 +35,7 @@ final class MockPhotographRepository: PhotographRepository {
                     korean: "캠퍼스 사진 동아리",
                     localeIdentifier: localeIdentifier
                 ),
+                authorId: "user-photo-club",
                 createdAt: mockLocalizedText(
                     simplifiedChinese: "2小时前",
                     traditionalChinese: "2小時前",
@@ -76,6 +77,7 @@ final class MockPhotographRepository: PhotographRepository {
                     korean: "저우",
                     localeIdentifier: localeIdentifier
                 ),
+                authorId: nil,
                 createdAt: mockLocalizedText(
                     simplifiedChinese: "昨天",
                     traditionalChinese: "昨天",
@@ -176,6 +178,7 @@ final class MockPhotographRepository: PhotographRepository {
                     japanese: "私",
                     korean: "나"
                 ),
+                authorId: "user-demo-0001",
                 createdAt: localizedString("common.justNow"),
                 likeCount: 0,
                 commentCount: 0,
@@ -196,6 +199,7 @@ final class MockPhotographRepository: PhotographRepository {
             title: post.title,
             contentPreview: post.contentPreview,
             authorName: post.authorName,
+            authorId: post.authorId,
             createdAt: post.createdAt,
             likeCount: post.likeCount + (post.isLiked ? 0 : 1),
             commentCount: post.commentCount,
