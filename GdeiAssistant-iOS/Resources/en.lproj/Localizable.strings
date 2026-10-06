@@ -1778,6 +1778,7 @@
 "social.search.title" = "Search users";
 "social.search.placeholder" = "Search by nickname or public ID";
 "social.search.empty" = "No matching users";
+"social.search.emptyHint" = "Try a different keyword";
 "social.search.failed" = "Failed to search users";
 "social.profile.title" = "Profile";
 "social.profile.loading" = "Loading profile...";
@@ -1790,6 +1791,7 @@
 "social.relationship.none" = "Not following";
 "social.relationship.followedBy" = "Follows you";
 "social.list.empty" = "No items yet";
+"social.list.emptyHint" = "No users here yet";
 "social.list.loadFailed" = "Failed to load list";
 "social.blockList.title" = "Blocked users";
 "social.blockList.empty" = "No blocked users";

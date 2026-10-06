@@ -21,13 +21,12 @@ struct SocialUserSearchView: View {
             }
 
             if viewModel.isLoading && viewModel.users.isEmpty {
-                ProgressView(localizedString("common.loading"))
+                DSLoadingView(text: localizedString("common.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.users.isEmpty {
                 Text(errorMessage)
                     .foregroundStyle(DSColor.danger)
             } else if viewModel.users.isEmpty {
-                Text(localizedString("social.search.empty"))
-                    .foregroundStyle(DSColor.subtitle)
+                DSEmptyStateView(icon: "magnifyingglass", title: localizedString("social.search.empty"), message: localizedString("social.search.emptyHint"))
             } else {
                 ForEach(viewModel.users) { user in
                     NavigationLink {
@@ -148,6 +147,8 @@ struct SocialPublicProfileView: View {
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(DSColor.danger)
                             }
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                             .disabled(viewModel.isMutating)
                         }
                     }
@@ -219,11 +220,11 @@ struct SocialRelationshipListView: View {
     var body: some View {
         List {
             if viewModel.isLoading && viewModel.users.isEmpty {
-                ProgressView(localizedString("common.loading"))
+                DSLoadingView(text: localizedString("common.loading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.users.isEmpty {
                 Text(errorMessage).foregroundStyle(DSColor.danger)
             } else if viewModel.users.isEmpty {
-                Text(localizedString("social.list.empty")).foregroundStyle(DSColor.subtitle)
+                DSEmptyStateView(icon: "person.2", title: localizedString("social.list.empty"), message: localizedString("social.list.emptyHint"))
             } else {
                 ForEach(viewModel.users) { user in
                     NavigationLink {
@@ -392,7 +393,8 @@ struct ConversationListView: View {
                 NavigationLink {
                     SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
                 } label: {
-                    Image(systemName: "person.crop.circle.badge.plus")
+                    Image(systemName: "magnifyingglass")
+                        .accessibilityLabel(localizedString("social.search.title"))
                 }
             }
         }

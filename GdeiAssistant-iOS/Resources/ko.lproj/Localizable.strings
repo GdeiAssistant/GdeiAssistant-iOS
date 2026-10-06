@@ -1778,6 +1778,7 @@
 "social.search.title" = "사용자 검색";
 "social.search.placeholder" = "닉네임 또는 공개 ID로 검색";
 "social.search.empty" = "일치하는 사용자가 없습니다";
+"social.search.emptyHint" = "다른 키워드로 검색해 보세요";
 "social.search.failed" = "사용자 검색에 실패했습니다";
 "social.profile.title" = "사용자 프로필";
 "social.profile.loading" = "프로필을 불러오는 중...";
@@ -1790,6 +1791,7 @@
 "social.relationship.none" = "팔로우하지 않음";
 "social.relationship.followedBy" = "나를 팔로우함";
 "social.list.empty" = "목록이 비어 있습니다";
+"social.list.emptyHint" = "아직 사용자가 없습니다";
 "social.list.loadFailed" = "목록을 불러오지 못했습니다";
 "social.blockList.title" = "차단 목록";
 "social.blockList.empty" = "차단한 사용자가 없습니다";

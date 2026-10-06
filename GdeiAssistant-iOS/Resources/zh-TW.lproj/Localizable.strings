@@ -1778,6 +1778,7 @@
 "social.search.title" = "搜尋使用者";
 "social.search.placeholder" = "輸入暱稱或公開 ID 搜尋";
 "social.search.empty" = "找不到符合的使用者";
+"social.search.emptyHint" = "換個關鍵字試試";
 "social.search.failed" = "搜尋使用者失敗";
 "social.profile.title" = "使用者頁面";
 "social.profile.loading" = "正在載入主頁...";
@@ -1790,6 +1791,7 @@
 "social.relationship.none" = "未追蹤";
 "social.relationship.followedBy" = "追蹤我";
 "social.list.empty" = "暫無列表內容";
+"social.list.emptyHint" = "這裡還沒有任何使用者";
 "social.list.loadFailed" = "載入關係列表失敗";
 "social.blockList.title" = "黑名單";
 "social.blockList.empty" = "暫無封鎖使用者";
