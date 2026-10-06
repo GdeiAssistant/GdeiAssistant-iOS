@@ -86,6 +86,10 @@ struct AppRootView: View {
                 }
             case .grade:
                 GradeView(viewModel: container.makeGradeViewModel())
+            case .conversations:
+                NavigationStack {
+                    ConversationListView(viewModel: container.makeConversationListViewModel())
+                }
             }
         }
     }

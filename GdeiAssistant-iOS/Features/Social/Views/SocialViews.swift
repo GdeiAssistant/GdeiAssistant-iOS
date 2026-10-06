@@ -372,6 +372,7 @@ struct ConversationListView: View {
                     } label: {
                         conversationRow(conversation)
                     }
+                    .accessibilityIdentifier("social.conversation.\(conversation.id)")
                     .onAppear {
                         if conversation.id == viewModel.conversations.last?.id {
                             Task { await viewModel.loadMore() }
@@ -521,6 +522,14 @@ struct ChatThreadView: View {
                 }
                 .accessibilityElement(children: .combine)
             }
+            if AppRuntime.isRunningTests && UITestRuntimeOverrides.useMockData {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(localizedString("profile.logout")) {
+                        Task { await container.authManager.logout() }
+                    }
+                    .accessibilityIdentifier("social.chat.testLogout")
+                }
+            }
         }
         .task {
             await viewModel.start()
@@ -577,6 +586,9 @@ struct ChatThreadView: View {
                 .scaledToFill()
                 .frame(width: 56, height: 56)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .accessibilityLabel(localizedString("social.chat.imageReady"))
+                .accessibilityValue("\(Int(preview.size.width)) × \(Int(preview.size.height))")
+                .accessibilityIdentifier("social.chat.draftImage")
             Text(localizedString("social.chat.imageReady"))
                 .font(.subheadline)
                 .foregroundStyle(DSColor.subtitle)
@@ -585,6 +597,7 @@ struct ChatThreadView: View {
                 viewModel.clearDraftImage()
             }
             .frame(minWidth: 44, minHeight: 44)
+            .accessibilityIdentifier("social.chat.removeImage")
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
@@ -601,12 +614,14 @@ struct ChatThreadView: View {
                 }
                 .disabled(viewModel.isSending || viewModel.conversation?.canSend == false)
                 .accessibilityLabel(localizedString("social.chat.pickImage"))
+                .accessibilityIdentifier("social.chat.pickImage")
             }
 
             TextField(localizedString("social.chat.placeholder"), text: $viewModel.draft, axis: .vertical)
                 .lineLimit(1...4)
                 .textFieldStyle(.roundedBorder)
                 .disabled(viewModel.conversation?.canSend == false || viewModel.draftImagePreview != nil)
+                .accessibilityIdentifier("social.chat.composer")
 
             Button {
                 Task { await viewModel.send() }
@@ -618,6 +633,7 @@ struct ChatThreadView: View {
             }
             .disabled(viewModel.isSending || !canTapSend)
             .accessibilityLabel(localizedString("social.chat.send"))
+            .accessibilityIdentifier("social.chat.send")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
@@ -659,6 +675,13 @@ struct ChatThreadView: View {
                         }
                         .buttonStyle(.plain)
                         .frame(minHeight: 44)
+                        .accessibilityLabel(localizedString("social.chat.imagePreview"))
+                        .accessibilityValue(
+                            message.image.map { "\($0.width) × \($0.height)" } ?? ""
+                        )
+                        .accessibilityIdentifier(
+                            "social.chat.image.\(isMine ? "mine" : "peer").\(message.clientMessageId)"
+                        )
                     case .text:
                         Text(message.content)
                             .font(.body)
@@ -679,6 +702,7 @@ struct ChatThreadView: View {
                         Text(deliveryText(message.deliveryState))
                             .font(.caption2)
                             .foregroundStyle(message.deliveryState == .failed ? DSColor.danger : DSColor.subtitle)
+                            .accessibilityIdentifier("social.chat.delivery.\(message.clientMessageId)")
                         if message.deliveryState == .failed {
                             Button(localizedString("common.retry")) {
                                 Task { await viewModel.retry(message) }
@@ -686,6 +710,7 @@ struct ChatThreadView: View {
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(DSColor.primary)
                             .frame(minHeight: 44)
+                            .accessibilityIdentifier("social.chat.retry.\(message.clientMessageId)")
                         }
                     }
                 }

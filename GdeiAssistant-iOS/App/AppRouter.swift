@@ -26,6 +26,10 @@ enum UITestRuntimeOverrides {
         return UITestInitialScreen(rawValue: rawValue)
     }
 
+    static var failFirstChatImageSend: Bool {
+        AppRuntime.isRunningTests && useMockData && boolValue(for: "GDEI_UI_FAIL_FIRST_CHAT_IMAGE")
+    }
+
     private static func stringValue(for key: String) -> String? {
         guard let value = environment[key]?.trimmingCharacters(in: .whitespacesAndNewlines),
               !value.isEmpty else {
@@ -45,6 +49,7 @@ enum UITestInitialScreen: String {
     case messages
     case marketplace
     case grade
+    case conversations
 }
 
 enum AppTab: Hashable {

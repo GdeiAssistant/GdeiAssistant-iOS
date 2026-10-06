@@ -16,7 +16,9 @@ struct SocialAssembly {
     ) {
         self.tokenProvider = tokenProvider
         let remoteSocialRepository = RemoteSocialRepository(apiClient: apiClient)
-        let mockSocialRepository = MockSocialRepository()
+        let mockSocialRepository = MockSocialRepository(
+            failFirstImageSend: UITestRuntimeOverrides.failFirstChatImageSend
+        )
         self.socialRepository = SwitchingSocialRepository(
             environment: environment,
             remoteRepository: remoteSocialRepository,

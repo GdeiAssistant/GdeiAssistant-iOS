@@ -83,28 +83,46 @@ jobs:
           xcodebuild -version
           xcrun simctl list devices available iPhone
 
-      - name: Run unit tests
+      - name: Seed system Photos and run unit and UI tests
         run: |
-          DEST=$(xcrun simctl list devices available iPhone -j \
+          SIMULATOR_UDID=$(xcrun simctl list devices available iPhone -j \
             | python3 -c "
           import json, sys
           data = json.load(sys.stdin)
           runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
           for d in data.get('devices', {}).get(runtime, []):
               if d.get('isAvailable') and 'iPhone' in d.get('name',''):
-                  print(f\"platform=iOS Simulator,id={d['udid']}\")
+                  print(d['udid'])
                   sys.exit(0)
           sys.exit('No available iPhone simulator with iOS 26.2 for Xcode 26.3')
           ")
+          DEST="platform=iOS Simulator,id=$SIMULATOR_UDID"
           echo "Destination: $DEST"
+          bash Tools/seed_chat_picker_photo.sh "$SIMULATOR_UDID" ChatPickerFixture
           set -o pipefail
           xcodebuild test \
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
+            -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO \
             -resultBundlePath TestResults.xcresult \
             2>&1 | tee xcodebuild-test.log
+
+      - name: Export UI screenshots and diagnostics
+        if: always()
+        run: |
+          if [[ -d TestResults.xcresult ]]; then
+            xcrun xcresulttool export attachments \
+              --path TestResults.xcresult \
+              --output-path TestAttachments \
+              || echo "Attachment export failed; the complete xcresult is retained."
+          fi
+          if [[ -f ChatPickerFixture/simulator-udid.txt ]]; then
+            SIMULATOR_UDID=$(cat ChatPickerFixture/simulator-udid.txt)
+            xcrun simctl io "$SIMULATOR_UDID" screenshot ChatPickerFixture/final-simulator-screen.png \
+              || echo "Final simulator screenshot unavailable; consult XCTest attachments."
+          fi
 
       - name: Upload test results
         if: always()
@@ -114,4 +132,6 @@ jobs:
           path: |
             TestResults.xcresult
             xcodebuild-test.log
+            TestAttachments
+            ChatPickerFixture
           retention-days: 3

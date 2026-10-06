@@ -16,8 +16,10 @@ final class MockSocialRepository: SocialRepository {
     private var messagesByConversation: [String: [ChatMessage]]
     private var imageBytesByMessageID: [String: Data] = [:]
     private var imageSHAByClientID: [String: String] = [:]
+    private var shouldFailFirstImageSend: Bool
 
-    init() {
+    init(failFirstImageSend: Bool = false) {
+        shouldFailFirstImageSend = failFirstImageSend
         let seedUsers = MockSocialSeed.users
         users = Dictionary(uniqueKeysWithValues: seedUsers.map { ($0.id, $0) })
         conversations = MockSocialSeed.conversations
@@ -350,6 +352,12 @@ final class MockSocialRepository: SocialRepository {
                 message: localizedString("social.error.privacyRestricted"),
                 errorCode: SocialErrorCode.privacyRestricted
             )
+        }
+
+        // A bounded mock-only failure before commit exercises the real retry UI and payload path.
+        if shouldFailFirstImageSend {
+            shouldFailFirstImageSend = false
+            throw NetworkError.transport(URLError(.networkConnectionLost))
         }
 
         conversation.lastSeq += 1

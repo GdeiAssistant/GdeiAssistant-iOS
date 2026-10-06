@@ -159,6 +159,76 @@ final class MockSocialRepositoryTests: XCTestCase {
         }
     }
 
+    func testChatImageRetryRetainsActualJPEGBytesAndOriginalClientMessageID() async throws {
+        let repository = MockSocialRepository(failFirstImageSend: true)
+        let environment = AppEnvironment(networkEnvironment: .dev, dataSourceMode: .mock, isDebug: true)
+        let realtime = SocialRealtimeManager(
+            environment: environment, tokenProvider: { nil }, isLoggedInProvider: { true },
+            onUnauthorized: { XCTFail("Mock image retry must not request remote authentication") }
+        )
+        let viewModel = ChatThreadViewModel(
+            conversationID: "1", repository: repository, realtimeManager: realtime
+        )
+        defer {
+            viewModel.stop()
+            realtime.stop(clearState: true)
+        }
+        await viewModel.start()
+        viewModel.setDraftImage(try XCTUnwrap(UIImage(data: MockSocialSeed.seedJPEGData)))
+        await viewModel.send()
+        let failed = try XCTUnwrap(viewModel.messages.first { $0.deliveryState == .failed })
+        let retainedBytes = try XCTUnwrap(viewModel.localImageData(for: failed.clientMessageId))
+        XCTAssertNotNil(UIImage(data: retainedBytes), "Retry data must be a real, encoded image")
+        XCTAssertNil(viewModel.draftImagePreview)
+        let beforeRetry = try await repository.fetchMessages(
+            conversationID: "1", beforeSeq: nil, afterSeq: nil, limit: 20
+        )
+        XCTAssertFalse(beforeRetry.items.contains { $0.clientMessageId == failed.clientMessageId })
+
+        await viewModel.retry(failed)
+        let sent = try XCTUnwrap(viewModel.messages.first { $0.clientMessageId == failed.clientMessageId })
+        XCTAssertEqual(sent.deliveryState, .sent)
+        XCTAssertEqual(repository.imageData(for: try XCTUnwrap(sent.image).url), retainedBytes)
+        XCTAssertNil(viewModel.localImageData(for: failed.clientMessageId))
+        let committed = try await repository.fetchMessages(
+            conversationID: "1", beforeSeq: nil, afterSeq: nil, limit: 20
+        )
+        XCTAssertEqual(committed.items.filter { $0.clientMessageId == failed.clientMessageId }.count, 1)
+        XCTAssertEqual(viewModel.messages.filter { $0.clientMessageId == failed.clientMessageId }.count, 1)
+    }
+
+    func testChatStopClearsFailedJPEGAndNewDraft() async throws {
+        let repository = MockSocialRepository(failFirstImageSend: true)
+        let environment = AppEnvironment(networkEnvironment: .dev, dataSourceMode: .mock, isDebug: true)
+        let realtime = SocialRealtimeManager(
+            environment: environment, tokenProvider: { nil }, isLoggedInProvider: { true },
+            onUnauthorized: {}
+        )
+        let viewModel = ChatThreadViewModel(
+            conversationID: "1", repository: repository, realtimeManager: realtime
+        )
+        defer {
+            viewModel.stop()
+            realtime.stop(clearState: true)
+        }
+        await viewModel.start()
+        let image = try XCTUnwrap(UIImage(data: MockSocialSeed.seedJPEGData))
+        viewModel.setDraftImage(image)
+        await viewModel.send()
+        let failed = try XCTUnwrap(viewModel.messages.first { $0.deliveryState == .failed })
+        XCTAssertNotNil(viewModel.localImageData(for: failed.clientMessageId))
+        viewModel.setDraftImage(image)
+        XCTAssertNotNil(viewModel.draftImagePreview)
+
+        viewModel.stop()
+        XCTAssertNil(viewModel.localImageData(for: failed.clientMessageId))
+        XCTAssertNil(viewModel.draftImagePreview)
+        XCTAssertTrue(viewModel.messages.isEmpty)
+        XCTAssertNil(viewModel.currentUserID)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertFalse(viewModel.isSending)
+    }
+
     func testSendImageMessageRejectsEmptyOrOversizedPayload() async throws {
         let repository = MockSocialRepository()
         let conversation = try await repository.createConversation(peerID: "user-alice-0002")

@@ -93,3 +93,28 @@ xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer dire
 - 全部 351 个 App/单测/UITest Swift 文件最终语法检查通过（`swiftc -frontend -parse`）；`project.pbxproj` 和六语言 strings 的 `plutil -lint` 通过。
 - 按项目 `-swift-version 5 -default-isolation MainActor` 编译原始模型、DTO、Mapper、URL、merge、滚动、hash、配置源码，最终无编译诊断；实际执行 31 项新增图片 URL/旧载荷解码/元数据限制/merge/hash 断言以及原发送方去重、已提交状态和 5 项滚动断言，全部通过。离线入口仅使用本地化 key/偏好标记，未替换所测业务逻辑。
 - 命令和结果保存在本轮 `/tmp/gdei-chat-images-20261005/ios-verification`。仅 CLT 可用；UIKit 图形编码、PhotosPicker、SwiftUI App、完整 XCTest、模拟器/真机、真实 API/R2 尚未运行。仓库新增回归 XCTest 只通过语法检查，不计作 XCTest 已执行。
+
+## 系统 PhotosPicker 图片私信 UI 验证入口（2026-10-06）
+
+新增测试入口供完整 Xcode/CI 执行；本节不把代码落地或语法检查算作模拟器通过：
+
+- `MockUISmokeTests` 新增 3 个图片流程：系统选图 → 草稿预览/移除 → 再次选图发送/查看 → 原生返回后草稿清理；首次发送失败 → 查看本地原图 → 原 ID 重试只保留一条消息；失败图片与新草稿共存 → 正常 `AuthManager.logout()` → 登录后均已清理。
+- UITest 仅通过真实 `PhotosPicker` 的系统相册网格选择图片、`PhotosPickerItem.loadTransferable` 读取，不以直接注入 Data 替代系统选图。`Tools/make_chat_picker_photo.py` 使用 Python 标准库生成 480×320 三色带/向上箭头 PNG，`Tools/seed_chat_picker_photo.sh` 向指定模拟器相册写入该合成图片，不重置相册。
+- 测试会话入口为 `GDEI_UI_INITIAL_SCREEN=conversations`。`GDEI_UI_FAIL_FIRST_CHAT_IMAGE=1` 仅在测试运行且启用 mock 时触发一次提交前网络失败；remote 路径不受影响。聊天测试退出按钮调用现有认证与页面清理，不替换清理实现。
+- `MockSocialRepositoryTests` 追加真实 UIKit 编码/真实 ViewModel 与 mock repository 的回归：失败后保留 JPEG，重试沿用原 `clientMessageId` 与完全相同 bytes，只提交一次；`stop()` 清除失败 JPEG 和新草稿。它们用于逻辑验证，不代替系统选图 UI 用例。
+- `ios-ci.yml` 固定 Xcode 26.3/iOS 26.2，先启动选定模拟器并 `simctl addmedia`，再以 `-parallel-testing-enabled NO` 运行全部单测与 UITest，避免克隆模拟器缺少种入图片。`ios-test-results` artifact 保留完整 `.xcresult`、测试日志、导出的阶段截图/控件树、合成图片及 hash/尺寸清单、最终模拟器截图。
+- 选图/预览/发送/失败/重试/登录后的检查点截图始终保留；失败时追加当前截图与 `XCUIApplication.debugDescription`，便于确认系统 picker 与 SwiftUI 的真实控件。
+- 草稿、已发送图片和查看器检查实际解码尺寸 480×320，避免把空白占位或既有 8×8 mock 图片当作系统选图成功。
+- Release workflow 仅将 runner/Xcode 固定值更新为与 CI 相同的 macos-26/Xcode 26.3；签名/上传参数保持原状。CodeQL 使用显式 Swift 源码构建，工具链同步更新，但保持既有禁用状态，不擅自恢复扫描。
+
+在完整 Xcode 环境中可仅跑这组 UI 用例：
+
+```bash
+bash Tools/seed_chat_picker_photo.sh "$SIMULATOR_UDID"
+xcodebuild test -project GdeiAssistant-iOS.xcodeproj -scheme GdeiAssistant-iOS \
+  -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+  -parallel-testing-enabled NO -only-testing:GdeiAssistant-iOSUITests/MockUISmokeTests \
+  CODE_SIGNING_ALLOWED=NO -resultBundlePath ChatPickerResults.xcresult
+```
+
+本机仅 CLT，新增流程待 CI 真实执行。模拟器 mock 测试不验证真机相册权限/iCloud 照片下载、真实 API/R2 鉴权与上传、真实 WebSocket 网络、后台系统行为或发布签名。

@@ -13,7 +13,9 @@ jobs:
     name: Analyze (Swift)
     # 当前 Swift/CodeQL 组合会长期卡在构建阶段，先跳过这条检查，待上游和工作流适配后再恢复。
     if: ${{ false }}
-    runs-on: macos-15
+    runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     permissions:
       security-events: write
       contents: read
@@ -23,10 +25,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Select Xcode
+      - name: Select pinned Xcode
         run: |
-          XCODE_PATH=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
-          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          if [[ ! -d "$DEVELOPER_DIR" ]]; then
+            echo "Expected Xcode not found: $DEVELOPER_DIR"
+            ls -d /Applications/Xcode*.app || true
+            exit 1
+          fi
+          xcodebuild -version
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4

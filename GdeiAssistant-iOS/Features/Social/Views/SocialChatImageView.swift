@@ -21,6 +21,11 @@ struct SocialChatImageView: View {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: fitEntireImage ? .fit : .fill)
+                    .accessibilityLabel(localizedString("social.chat.imagePreview"))
+                    .accessibilityValue("\(Int(image.size.width)) × \(Int(image.size.height))")
+                    .accessibilityIdentifier(
+                        fitEntireImage ? "social.chat.viewer.image" : "social.chat.image.loaded"
+                    )
             } else {
                 ZStack {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -102,6 +107,7 @@ struct SocialChatImagePreviewSheet: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(localizedString("common.cancel")) { dismiss() }
                         .frame(minWidth: 44, minHeight: 44)
+                        .accessibilityIdentifier("social.chat.viewer.close")
                 }
             }
         }
