@@ -105,10 +105,29 @@ jobs:
             -project GdeiAssistant-iOS.xcodeproj \
             -scheme GdeiAssistant-iOS \
             -destination "$DEST" \
+            -derivedDataPath "$RUNNER_TEMP/gdei-simulator-derived-data" \
             -parallel-testing-enabled NO \
             CODE_SIGNING_ALLOWED=NO \
             -resultBundlePath TestResults.xcresult \
             2>&1 | tee xcodebuild-test.log
+
+      - name: Package tested Simulator app
+        if: success()
+        run: |
+          APP_PATH="$RUNNER_TEMP/gdei-simulator-derived-data/Build/Products/Debug-iphonesimulator/GdeiAssistant-iOS.app"
+          test -d "$APP_PATH"
+          test -f "$APP_PATH/Info.plist"
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$APP_PATH" "$RUNNER_TEMP/GdeiAssistant-iOS-Simulator.app.zip"
+
+      - name: Upload Simulator demo
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-simulator-demo-${{ github.sha }}
+          path: ${{ runner.temp }}/GdeiAssistant-iOS-Simulator.app.zip
+          if-no-files-found: error
+          retention-days: 3
 
       - name: Export UI screenshots and diagnostics
         if: always()
