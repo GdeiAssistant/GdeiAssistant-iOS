@@ -59,6 +59,7 @@ struct GraduateExamView: View {
                 Text(localizedString("graduateExam.altEntry"))
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("graduateExam.title"))
     }
 

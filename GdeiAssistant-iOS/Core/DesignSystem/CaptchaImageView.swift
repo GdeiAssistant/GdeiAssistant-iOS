@@ -9,8 +9,8 @@ struct CaptchaImageView: View {
     var body: some View {
         Button(action: refreshAction) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                RoundedRectangle(cornerRadius: DSRadius.control, style: .continuous)
+                    .fill(DSColor.fieldBackground)
 
                 if isLoading {
                     ProgressView()
@@ -21,16 +21,13 @@ struct CaptchaImageView: View {
                         .scaledToFit()
                         .padding(8)
                 } else {
-                    VStack(spacing: 6) {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.headline)
-                        Text(localizedString("captcha.tapToRefresh"))
-                            .font(.caption)
-                    }
-                    .foregroundStyle(DSColor.subtitle)
+                    Label(localizedString("captcha.tapToRefresh"), systemImage: "arrow.clockwise")
+                        .font(.caption)
+                        .foregroundStyle(DSColor.subtitle)
+                        .labelStyle(.iconOnly)
                 }
             }
-            .frame(width: 110, height: 52)
+            .frame(width: 110, height: 44)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(localizedString("captcha.refreshAccessibility"))

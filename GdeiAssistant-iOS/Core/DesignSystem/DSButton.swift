@@ -16,58 +16,55 @@ struct DSButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
+        Group {
+            switch variant {
+            case .primary:
+                rawButton
+                    .buttonStyle(.borderedProminent)
+                    .tint(DSColor.primary)
+            case .secondary:
+                rawButton
+                    .buttonStyle(.bordered)
+                    .tint(DSColor.primary)
+            case .destructive:
+                rawButton
+                    .buttonStyle(.borderedProminent)
+                    .tint(DSColor.danger)
+            }
+        }
+        .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+        .controlSize(.large)
+        .applyAccessibilityIdentifier(accessibilityIdentifier)
+        .disabled(isLoading || isDisabled)
+    }
+
+    private var rawButton: some View {
+        Button(role: variant == .destructive ? .destructive : nil, action: action) {
+            HStack(spacing: DSSpacing.xs) {
                 if isLoading {
                     ProgressView()
-                        .progressViewStyle(.circular)
-                        .tint(foregroundColor)
-                        .scaleEffect(0.85)
+                        .controlSize(.small)
                 } else if let icon {
                     Image(systemName: icon)
-                        .font(.subheadline.weight(.semibold))
+                        .accessibilityHidden(true)
                 }
-
                 Text(title)
-                    .font(.headline)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .frame(maxWidth: .infinity)
-            .frame(minHeight: 50)
-            .foregroundStyle(foregroundColor)
-            .background(backgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(.isButton)
-        .applyAccessibilityIdentifier(accessibilityIdentifier)
-        .disabled(isLoading || isDisabled)
-        .opacity(isLoading || isDisabled ? 0.75 : 1.0)
-    }
-
-    private var backgroundColor: Color {
-        switch variant {
-        case .primary:
-            return DSColor.primary
-        case .secondary:
-            return DSColor.cardBackground
-        case .destructive:
-            return DSColor.danger
+            .frame(maxWidth: .infinity, minHeight: 22)
         }
     }
+}
 
-    private var foregroundColor: Color {
-        switch variant {
-        case .primary:
-            return DSColor.onPrimary
-        case .destructive:
-            return DSColor.onPrimary
-        case .secondary:
-            return DSColor.title
-        }
+/// Opacity-only press feedback; layout bounds never shift. Honors Reduce Motion.
+struct DSPressableButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? (reduceMotion ? 1 : 0.72) : 1)
+            .animation(reduceMotion ? nil : DSMotion.press, value: configuration.isPressed)
     }
 }
 

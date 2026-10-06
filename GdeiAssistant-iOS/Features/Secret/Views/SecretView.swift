@@ -38,7 +38,7 @@ struct SecretView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
-                .background(DSColor.background)
+                .dsScreenBackground()
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -120,7 +120,7 @@ private struct SecretPostCard: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.background)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .clipShape(DSRadius.cardShape)
     }
 
     private var theme: SecretThemeStyle.Palette {
@@ -185,8 +185,8 @@ struct SecretDetailView: View {
                                     .lineLimit(2...4)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 10)
-                                    .background(Color(.tertiarySystemGroupedBackground))
-                                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                    .background(DSColor.fieldBackground)
+                                    .clipShape(DSRadius.controlShape)
 
                                 DSButton(
                                     title: localizedString("secret.send"),
@@ -225,7 +225,7 @@ struct SecretDetailView: View {
                         }
                         .padding(16)
                     }
-                    .background(DSColor.background)
+                    .dsScreenBackground()
                 }
             }
         }
@@ -288,12 +288,12 @@ struct SecretDetailView: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 8)
             .background(actionHighlightBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(DSRadius.controlShape)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.background)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .clipShape(DSRadius.cardShape)
     }
 
     private func loadDetail() async {
@@ -360,7 +360,7 @@ struct SecretDetailView: View {
 
     private var actionHighlightBackground: Color {
         normalizedNotificationTargetType == "like" && notificationID != nil
-            ? DSColor.primary.opacity(0.12)
+            ? DSColor.primarySoft
             : .clear
     }
 }
@@ -425,7 +425,7 @@ private struct MySecretPostsView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("secret.myTitle"))
@@ -461,7 +461,7 @@ private struct SecretVoicePlayer: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
             .background(foregroundColor.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .clipShape(DSRadius.controlShape)
         }
         .buttonStyle(.plain)
         .onDisappear {
@@ -552,7 +552,7 @@ struct PublishSecretView: View {
                             .foregroundStyle(DSColor.primary)
                     } else if voiceFileURL != nil {
                         Label("\(localizedString("secret.recorded")) · \(formatDuration(recordingDuration))", systemImage: "checkmark.circle")
-                            .foregroundStyle(DSColor.secondary)
+                            .foregroundStyle(DSColor.primary)
                     } else {
                         Text(localizedString("secret.recordingHint"))
                             .font(.subheadline)
@@ -575,6 +575,7 @@ struct PublishSecretView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("secret.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -805,7 +806,7 @@ private enum SecretThemeStyle {
         case 12:
             return Palette(background: Color(red: 0.58, green: 0.43, blue: 0.32), textColor: .white)
         default:
-            return Palette(background: DSColor.cardBackground, textColor: DSColor.title)
+            return Palette(background: DSColor.surface, textColor: DSColor.title)
         }
     }
 }

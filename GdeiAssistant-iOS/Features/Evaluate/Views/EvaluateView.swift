@@ -35,6 +35,7 @@ struct EvaluateView: View {
                 .disabled(viewModel.submitState.isSubmitting)
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("evaluate.title"))
         .confirmationDialog(localizedString("evaluate.confirmTitle"), isPresented: $viewModel.showConfirm, titleVisibility: .visible) {
             Button(localizedString("evaluate.confirmSubmit"), role: .destructive) {

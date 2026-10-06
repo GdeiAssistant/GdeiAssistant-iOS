@@ -65,13 +65,14 @@ struct PrivacySettingsView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("privacy.title", locale: locale.identifier))
         .overlay(alignment: .center) {
             if viewModel.isLoading {
                 ProgressView(localizedString("privacy.loading"))
                     .padding()
                     .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .clipShape(DSRadius.controlShape)
             }
         }
         .task {

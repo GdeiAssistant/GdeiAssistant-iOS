@@ -53,7 +53,7 @@ struct BindEmailView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(localizedString("bindEmail.title"))
         .task {
             await viewModel.load()

@@ -55,7 +55,7 @@ struct MessagesView: View {
             .padding(16)
             .padding(.bottom, 24)
         }
-        .background(DSColor.background.ignoresSafeArea())
+        .dsScreenBackground()
         .safeAreaInset(edge: .bottom) {
             Color.clear.frame(height: 8)
         }
@@ -68,7 +68,7 @@ struct MessagesView: View {
         overviewSectionCard(
             title: localizedString("social.conversations.title"),
             systemImage: "bubble.left.and.bubble.right.fill",
-            tint: DSColor.secondary,
+            tint: DSColor.primary,
             titleAccessibilityIdentifier: "messages.section.directMessage"
         ) {
             NavigationLink {
@@ -278,7 +278,7 @@ struct MessagesView: View {
             VStack(spacing: 0) {
                 HStack(alignment: .center, spacing: 0) {
                     HStack(alignment: .center, spacing: Layout.overviewHeaderIconTitleSpacing) {
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        DSRadius.controlShape
                             .fill(tint.opacity(0.14))
                             .frame(width: Layout.overviewHeaderIconSize, height: Layout.overviewHeaderIconSize)
                             .overlay {
@@ -317,7 +317,7 @@ struct MessagesView: View {
         DSCard(padding: 0) {
             VStack(spacing: 0) {
                 HStack(alignment: .center, spacing: 0) {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    DSRadius.controlShape
                         .fill(tint.opacity(0.14))
                         .frame(width: Layout.interactionHeaderIconSize, height: Layout.interactionHeaderIconSize)
                         .overlay {
@@ -415,7 +415,7 @@ struct MessagesView: View {
         let iconSpec = notificationIconSpec(for: item)
 
         return HStack(alignment: .top, spacing: 12) {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            DSRadius.controlShape
                 .fill(iconSpec.tint.opacity(0.14))
                 .frame(width: 40, height: 40)
                 .overlay {
@@ -566,21 +566,21 @@ struct MessagesView: View {
         case .delivery:
             return NotificationIconSpec(systemImage: "shippingbox.fill", tint: DSColor.primary)
         case .secret:
-            return NotificationIconSpec(systemImage: "bubble.left.fill", tint: DSColor.secondary)
+            return NotificationIconSpec(systemImage: "bubble.left.fill", tint: DSColor.primary)
         case .express:
             return NotificationIconSpec(systemImage: "heart.text.square.fill", tint: DSColor.warning)
         case .topic:
             return NotificationIconSpec(systemImage: "text.bubble.fill", tint: DSColor.primary)
         case .photograph:
-            return NotificationIconSpec(systemImage: "camera.fill", tint: DSColor.secondary)
+            return NotificationIconSpec(systemImage: "camera.fill", tint: DSColor.primary)
         case .datingCenter:
-            return NotificationIconSpec(systemImage: "person.2.fill", tint: DSColor.secondary)
+            return NotificationIconSpec(systemImage: "person.2.fill", tint: DSColor.primary)
         case nil:
             switch item.category {
             case .system:
                 return NotificationIconSpec(systemImage: "bell.badge.fill", tint: DSColor.warning)
             case .service:
-                return NotificationIconSpec(systemImage: "book.closed.fill", tint: DSColor.secondary)
+                return NotificationIconSpec(systemImage: "book.closed.fill", tint: DSColor.primary)
             case .comment, .like, .interaction:
                 return NotificationIconSpec(systemImage: "bubble.left.and.bubble.right.fill", tint: DSColor.primary)
             case .all:

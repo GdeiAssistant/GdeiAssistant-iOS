@@ -71,6 +71,7 @@ struct SpareView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("spare.title"))
     }
 }

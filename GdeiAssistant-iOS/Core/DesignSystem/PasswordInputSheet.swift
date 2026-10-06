@@ -15,13 +15,15 @@ struct PasswordInputSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                DSCard {
+            Form {
+                Section {
                     Text(message)
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
-                        .lineSpacing(4)
+                        .listRowBackground(DSColor.surface)
+                }
 
+                Section {
                     SecureFormField(
                         title: localizedString("passwordSheet.verificationTitle"),
                         placeholder: placeholder,
@@ -29,29 +31,33 @@ struct PasswordInputSheet: View {
                         textContentType: .password,
                         keyboardType: keyboardType
                     )
+                    .listRowBackground(DSColor.surface)
 
                     if let errorMessage, !errorMessage.isEmpty {
                         Text(errorMessage)
                             .font(.footnote)
                             .foregroundStyle(DSColor.danger)
+                            .listRowBackground(DSColor.surface)
                     }
                 }
 
-                DSButton(
-                    title: confirmTitle,
-                    icon: "checkmark",
-                    isLoading: isSubmitting,
-                    isDisabled: FormValidationSupport.trimmed(password).isEmpty,
-                    action: onConfirm
-                )
-
-                Spacer()
+                Section {
+                    DSButton(
+                        title: confirmTitle,
+                        icon: "checkmark",
+                        isLoading: isSubmitting,
+                        isDisabled: FormValidationSupport.trimmed(password).isEmpty,
+                        action: onConfirm
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                }
             }
-            .padding(16)
-            .background(DSColor.background.ignoresSafeArea())
+            .dsListBackground()
             .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button(localizedString("common.cancel"), action: onCancel)
                 }
             }

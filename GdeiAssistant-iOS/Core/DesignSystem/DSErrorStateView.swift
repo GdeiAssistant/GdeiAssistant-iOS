@@ -5,27 +5,19 @@ struct DSErrorStateView: View {
     var retryAction: (() -> Void)?
 
     var body: some View {
-        VStack(spacing: 14) {
-            Image(systemName: "exclamationmark.circle")
-                .font(.title.weight(.semibold))
-                .foregroundStyle(DSColor.danger)
-                .accessibilityHidden(true)
-
-            Text(LocalizedStringKey("common.error"))
-                .font(.headline)
-                .foregroundStyle(DSColor.title)
-
+        ContentUnavailableView {
+            Label(localizedString("common.error"), systemImage: "exclamationmark.triangle")
+        } description: {
             Text(message)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
-                .multilineTextAlignment(.center)
-
+        } actions: {
             if let retryAction {
-                DSButton(title: localizedString("common.retry"), icon: "arrow.clockwise", variant: .secondary, action: retryAction)
-                    .frame(maxWidth: 180)
+                Button(localizedString("common.retry"), systemImage: "arrow.clockwise", action: retryAction)
+                    .buttonStyle(.bordered)
+                    .tint(DSColor.primary)
             }
         }
+        .symbolRenderingMode(.hierarchical)
+        .foregroundStyle(DSColor.title, DSColor.danger)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(24)
     }
 }

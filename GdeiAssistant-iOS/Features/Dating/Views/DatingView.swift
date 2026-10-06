@@ -151,6 +151,7 @@ private struct DatingCenterContent: View {
 
             contentSection
         }
+        .dsListBackground()
         .navigationTitle(navigationTitle)
         .task {
             await viewModel.loadData()
@@ -495,8 +496,8 @@ private struct PublishDatingView: View {
                                 .font(.caption)
                         }
                         .frame(width: 120, height: 120)
-                        .background(Color(.tertiarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .background(DSColor.fieldBackground)
+                        .clipShape(DSRadius.controlShape)
                     }
                 }
 
@@ -541,6 +542,7 @@ private struct PublishDatingView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("dating.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -615,7 +617,7 @@ private struct PublishDatingView: View {
                     .scaledToFit()
             } else {
                 Rectangle()
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                    .fill(DSColor.fieldBackground)
                     .overlay {
                         Image(systemName: "photo")
                             .foregroundStyle(DSColor.subtitle)
@@ -623,8 +625,8 @@ private struct PublishDatingView: View {
             }
         }
         .frame(width: 120, height: 120)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(DSColor.fieldBackground)
+        .clipShape(DSRadius.controlShape)
     }
 
     private func gradeText(_ grade: Int) -> String {

@@ -46,54 +46,41 @@ struct DSInputField: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(DSColor.subtitle)
-
-            HStack(spacing: 8) {
-                inputView
-
-                if let secureToggle {
-                    Button {
-                        secureToggle.wrappedValue.toggle()
-                    } label: {
-                        Image(systemName: secureToggle.wrappedValue ? "eye.slash" : "eye")
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(
-                        localizedString(
-                            secureToggle.wrappedValue ? "common.showPassword" : "common.hidePassword"
-                        )
-                    )
+        HStack(spacing: DSSpacing.xs) {
+            inputView
+            if let secureToggle {
+                Button {
+                    secureToggle.wrappedValue.toggle()
+                } label: {
+                    Image(systemName: secureToggle.wrappedValue ? "eye.slash" : "eye")
+                        .foregroundStyle(DSColor.subtitle)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(
+                    localizedString(
+                        secureToggle.wrappedValue ? "common.showPassword" : "common.hidePassword"
+                    )
+                )
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .frame(minHeight: 48)
-            .background(Color(.tertiarySystemGroupedBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
     }
 
     @ViewBuilder
     private var inputView: some View {
         if let secureToggle, secureToggle.wrappedValue {
-            SecureField(placeholder, text: $text)
+            SecureField(title, text: $text, prompt: Text(placeholder))
                 .textContentType(textContentType)
-                .font(.body)
-                .foregroundStyle(DSColor.title)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
                 .applyAccessibilityIdentifier(accessibilityIdentifier)
         } else {
-            TextField(placeholder, text: $text)
+            TextField(title, text: $text, prompt: Text(placeholder))
                 .textContentType(textContentType)
                 .keyboardType(keyboardType)
-                .font(.body)
-                .foregroundStyle(DSColor.title)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
                 .applyAccessibilityIdentifier(accessibilityIdentifier)
         }
     }
