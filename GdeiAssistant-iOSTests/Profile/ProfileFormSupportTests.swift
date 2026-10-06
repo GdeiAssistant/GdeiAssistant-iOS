@@ -163,6 +163,105 @@ final class ProfileFormSupportTests: XCTestCase {
     }
 
     @MainActor
+    func testJapanesePrefecturePickerUsesAll47StandardNames() throws {
+        let japaneseNames = [
+            "1": "北海道", "2": "青森県", "3": "岩手県", "4": "宮城県", "5": "秋田県",
+            "6": "山形県", "7": "福島県", "8": "茨城県", "9": "栃木県", "10": "群馬県",
+            "11": "埼玉県", "12": "千葉県", "13": "東京都", "14": "神奈川県", "15": "新潟県",
+            "16": "富山県", "17": "石川県", "18": "福井県", "19": "山梨県", "20": "長野県",
+            "21": "岐阜県", "22": "静岡県", "23": "愛知県", "24": "三重県", "25": "滋賀県",
+            "26": "京都府", "27": "大阪府", "28": "兵庫県", "29": "奈良県", "30": "和歌山県",
+            "31": "鳥取県", "32": "島根県", "33": "岡山県", "34": "広島県", "35": "山口県",
+            "36": "徳島県", "37": "香川県", "38": "愛媛県", "39": "高知県", "40": "福岡県",
+            "41": "佐賀県", "42": "長崎県", "43": "熊本県", "44": "大分県", "45": "宮崎県",
+            "46": "鹿児島県", "47": "沖縄県"
+        ]
+        let original = try XCTUnwrap(ProfileLocationCatalog.regions(for: "zh-CN").first { $0.code == "JPN" })
+        let originalState = try XCTUnwrap(original.states.first { $0.code == "JPN" })
+        XCTAssertEqual(Set(originalState.cities.map(\.code)), Set(japaneseNames.keys))
+        for locale in ["en", "ja", "ko"] {
+            let region = try XCTUnwrap(ProfileLocationCatalog.localizing([original], localeIdentifier: locale).first)
+            let state = try XCTUnwrap(region.states.first)
+            XCTAssertEqual(region.code, "JPN")
+            XCTAssertEqual(state.code, "JPN")
+            XCTAssertEqual(state.cities.map(\.code), originalState.cities.map(\.code))
+            for city in state.cities {
+                if locale == "ja" {
+                    XCTAssertEqual(city.name, japaneseNames[city.code], "Prefecture \(city.code)")
+                }
+                let selection = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: "JPN", stateCode: "JPN", cityCode: city.code, localeIdentifier: locale))
+                XCTAssertEqual(selection.cityCode, city.code)
+                XCTAssertEqual(selection.displayName, "\(city.name), \(region.name)")
+            }
+        }
+        XCTAssertEqual(ProfileLocationCatalog.displayName(regionCode: "JPN", stateCode: "JPN", cityCode: "9", localeIdentifier: "en"), "Tochigi, Japan")
+        XCTAssertEqual(ProfileLocationCatalog.displayName(regionCode: "JPN", stateCode: "JPN", cityCode: "9", localeIdentifier: "ko"), "도치기 현, 일본")
+    }
+
+    @MainActor
+    func testInternationalCitySelectionsRelabelProfileAndPickerWithoutChangingCodes() throws {
+        let examples: [(String, String, String, [String: String])] = [
+            ("USA", "NY", "QEE", ["en": "New York City, New York, United States", "ja": "ニューヨーク, ニューヨーク州, アメリカ合衆国", "ko": "뉴욕, 뉴욕주, 미국"]),
+            ("GBR", "ENG", "LND", ["en": "London, England, United Kingdom", "ja": "ロンドン, イングランド, イギリス", "ko": "런던, 잉글랜드, 영국"]),
+            ("FRA", "FRA", "PAR", ["en": "Paris, France", "ja": "パリ, フランス", "ko": "파리, 프랑스"]),
+            ("USA", "CA", "LAX", ["en": "Los Angeles, California, United States", "ja": "ロサンゼルス, カリフォルニア, アメリカ合衆国", "ko": "로스앤젤레스, 캘리포니아주, 미국"])
+        ]
+        for (regionCode, stateCode, cityCode, expected) in examples {
+            let original = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: regionCode, stateCode: stateCode, cityCode: cityCode, localeIdentifier: "zh-CN"))
+            let profile = UserProfile(id: "international-regions", username: "demo", nickname: "自由填写", avatarURL: "", college: "", major: "", grade: "", bio: "My own text", location: original.displayName, locationSelection: original)
+            let picker = [ProfileLocationRegion(code: regionCode, name: "raw country", states: [ProfileLocationState(code: stateCode, name: "raw state", cities: [ProfileLocationCity(code: cityCode, name: "raw city"), ProfileLocationCity(code: "custom", name: "My custom place")])])]
+            for locale in ["en", "ja", "ko"] {
+                XCTAssertEqual(profile.locationDisplayName(localeIdentifier: locale), expected[locale])
+                let region = try XCTUnwrap(ProfileLocationCatalog.localizing(picker, localeIdentifier: locale).first)
+                let state = try XCTUnwrap(region.states.first)
+                XCTAssertEqual(region.code, regionCode)
+                XCTAssertEqual(state.code, stateCode)
+                XCTAssertEqual(state.cities.map(\.code), [cityCode, "custom"])
+                XCTAssertEqual(state.cities.last?.name, "My custom place")
+                XCTAssertEqual(ProfileFormSupport.makeLocationDisplay(region: region.name, state: state.name, city: state.cities[0].name, localeIdentifier: locale), expected[locale])
+            }
+            XCTAssertEqual(profile.locationSelection, original)
+            XCTAssertEqual(profile.location, original.displayName)
+            XCTAssertEqual(profile.nickname, "自由填写")
+            XCTAssertEqual(profile.bio, "My own text")
+        }
+        XCTAssertEqual(ProfileLocationCatalog.displayName(regionCode: "USA", stateCode: "NY", cityCode: "", localeIdentifier: "en"), "New York, United States")
+        XCTAssertEqual(ProfileLocationCatalog.displayName(regionCode: "USA", stateCode: "NY", cityCode: "", localeIdentifier: "ja"), "ニューヨーク州, アメリカ合衆国")
+        XCTAssertEqual(ProfileLocationCatalog.displayName(regionCode: "USA", stateCode: "NY", cityCode: "", localeIdentifier: "ko"), "뉴욕주, 미국")
+        for locale in ["en", "ja", "ko"] {
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("My custom place / 纽约", localeIdentifier: locale), "My custom place / 纽约")
+            XCTAssertNil(ProfileLocationCatalog.selection(regionCode: "USA", stateCode: "NY", cityCode: "LAX", localeIdentifier: locale), "City codes must remain scoped to their parent")
+        }
+    }
+
+    @MainActor
+    func testFrenchGuianaAndGuyanaRemainDistinctAndAmbiguousRawNamesStayUntouched() throws {
+        let frenchGuiana = ["zh-CN": "法属圭亚那", "zh-HK": "法屬圭亞那", "zh-TW": "法屬圭亞那", "en": "French Guiana", "ja": "仏領ギアナ", "ko": "프랑스령 기아나"]
+        let guyana = ["zh-CN": "圭亚那", "zh-HK": "圭亞那", "zh-TW": "圭亞那", "en": "Guyana", "ja": "ガイアナ", "ko": "가이아나"]
+        let picker = [ProfileLocationRegion(code: "GUF", name: "圭亚那", states: []), ProfileLocationRegion(code: "GUY", name: "圭亚那", states: [])]
+        for language in AppLanguage.allCases {
+            let locale = language.localeIdentifier
+            let frenchSelection = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: "GUF", stateCode: "", cityCode: "", localeIdentifier: locale))
+            let guyanaSelection = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: "GUY", stateCode: "", cityCode: "", localeIdentifier: locale))
+            XCTAssertEqual(frenchSelection.regionCode, "GUF")
+            XCTAssertEqual(guyanaSelection.regionCode, "GUY")
+            XCTAssertEqual(frenchSelection.displayName, frenchGuiana[locale])
+            XCTAssertEqual(guyanaSelection.displayName, guyana[locale])
+            let localizedPicker = ProfileLocationCatalog.localizing(picker, localeIdentifier: locale)
+            let expectedNames = [try XCTUnwrap(frenchGuiana[locale]), try XCTUnwrap(guyana[locale])]
+            XCTAssertEqual(localizedPicker.map(\.code), ["GUF", "GUY"])
+            XCTAssertEqual(localizedPicker.map(\.name), expectedNames)
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("French Guiana", localeIdentifier: locale), frenchGuiana[locale])
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("法属圭亚那", localeIdentifier: locale), frenchGuiana[locale])
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("Guyana", localeIdentifier: locale), guyana[locale])
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("圭亚那", localeIdentifier: locale), "圭亚那", "The legacy source name belongs to two distinct countries")
+            XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("Guiyana", localeIdentifier: locale), "Guiyana", "The legacy Latin name is ambiguous too")
+        }
+        XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("仏領ギアナ", localeIdentifier: "en"), "French Guiana")
+        XCTAssertEqual(ProfileLocationCatalog.areaDisplayName("프랑스령 기아나", localeIdentifier: "zh-HK"), "法屬圭亞那")
+    }
+
+    @MainActor
     func testBindPhoneLoadExpandsSparseRepositoryAttributionsWithBundledCatalog() async {
         let repository = RecordingAccountCenterRepository()
         repository.phoneAttributions = [
