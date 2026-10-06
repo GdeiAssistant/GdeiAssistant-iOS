@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
     @State private var activeEditor: ProfileEditorField?
     @State private var activeLocationPicker: ProfileLocationPickerField?
 
@@ -29,7 +30,7 @@ struct ProfileView: View {
                     )
                 }
             }
-            .navigationTitle(localizedString("profile.center"))
+            .navigationTitle(localizedString("profile.center", locale: locale.identifier))
             .navigationBarTitleDisplayMode(.large)
             .task {
                 await viewModel.loadIfNeeded()
@@ -83,42 +84,43 @@ struct ProfileView: View {
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 
-                        HStack(alignment: .top, spacing: 14) {
-                            NavigationLink {
-                                AvatarEditView(viewModel: container.makeAvatarEditViewModel())
-                            } label: {
-                                DSAvatarView(urlString: profile.avatarURL, size: 68)
-                            }
-                            .buttonStyle(.plain)
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(alignment: .top, spacing: 14) {
+                                NavigationLink {
+                                    AvatarEditView(viewModel: container.makeAvatarEditViewModel())
+                                } label: {
+                                    DSAvatarView(urlString: profile.avatarURL, size: 68)
+                                }
+                                .buttonStyle(.plain)
 
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
-                                    .font(.title3.weight(.bold))
-                                    .foregroundStyle(DSColor.title)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
+                                        .font(.title3.weight(.bold))
+                                        .foregroundStyle(DSColor.title)
 
-                                Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.subtitle)
-
-                                if !profile.ipArea.isEmpty {
-                                    Text("\(localizedString("profile.ipAreaLabel"))\(profile.ipArea)")
+                                    Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
+
+                                    if !profile.ipArea.isEmpty {
+                                        Text("\(localizedString("profile.ipAreaLabel"))\(profile.ipArea)")
+                                            .font(.caption)
+                                            .foregroundStyle(DSColor.subtitle)
+                                    }
                                 }
+
+                                Spacer()
                             }
 
-                            Spacer()
+                            SocialProfileStatsRow(viewModel: container.makeSocialMeSummaryViewModel())
                         }
+                        .accessibilityIdentifier("profile.header")
 
                         Divider()
 
                         profileFields(profile)
                     }
                 }
-
-                Color.clear.frame(height: 36)
-
-                SocialProfileStatsCard(viewModel: container.makeSocialMeSummaryViewModel())
 
                 Color.clear.frame(height: 24)
 
@@ -137,16 +139,12 @@ struct ProfileView: View {
                             ConversationListView(viewModel: container.makeConversationListViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: localizedString("social.blockList.title"), systemImage: "nosign") {
-                            SocialBlockListView(viewModel: container.makeSocialBlockListViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.privacySettings"), systemImage: "lock.shield") {
+                        profileMenuLink(
+                            title: localizedString("profile.privacySettings"),
+                            systemImage: "lock.shield",
+                            accessibilityIdentifier: "profile.entry.privacy"
+                        ) {
                             PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("social.dmPolicy.title"), systemImage: "envelope.badge.shield.half.filled") {
-                            DirectMessagePrivacyView(viewModel: container.makeDirectMessagePrivacyViewModel())
                         }
                         Divider()
                         profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
@@ -181,7 +179,11 @@ struct ProfileView: View {
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
-                        profileMenuLink(title: localizedString("appearance.title"), systemImage: "paintbrush") {
+                        profileMenuLink(
+                            title: localizedString("appearance.title"),
+                            systemImage: "paintbrush",
+                            accessibilityIdentifier: "profile.entry.appearance"
+                        ) {
                             AppearanceView()
                         }
                         Divider()
@@ -277,8 +279,14 @@ struct ProfileView: View {
         .buttonStyle(.plain)
     }
 
-    private func profileMenuLink<Destination: View>(title: String, systemImage: String, @ViewBuilder destination: () -> Destination) -> some View {
-        NavigationLink {
+    @ViewBuilder
+    private func profileMenuLink<Destination: View>(
+        title: String,
+        systemImage: String,
+        accessibilityIdentifier: String? = nil,
+        @ViewBuilder destination: () -> Destination
+    ) -> some View {
+        let link = NavigationLink {
             destination()
         } label: {
             HStack(spacing: 12) {
@@ -298,6 +306,12 @@ struct ProfileView: View {
             .padding(.vertical, 10)
         }
         .buttonStyle(.plain)
+
+        if let accessibilityIdentifier {
+            link.accessibilityIdentifier(accessibilityIdentifier)
+        } else {
+            link
+        }
     }
 }
 
@@ -719,8 +733,9 @@ private extension ProfileViewModel {
     }
 }
 
-private struct SocialProfileStatsCard: View {
+private struct SocialProfileStatsRow: View {
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
     @StateObject private var viewModel: SocialMeSummaryViewModel
 
     init(viewModel: SocialMeSummaryViewModel) {
@@ -728,40 +743,41 @@ private struct SocialProfileStatsCard: View {
     }
 
     var body: some View {
-        DSCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(localizedString("social.stats.title"))
-                    .font(.headline)
-                    .foregroundStyle(DSColor.title)
-
-                if viewModel.isLoading && viewModel.me == nil {
-                    ProgressView()
-                } else if let me = viewModel.me {
-                    HStack(spacing: 12) {
-                        statItem(
-                            title: localizedString("social.relationship.following"),
-                            value: me.followingCount,
-                            kind: .following,
-                            userID: me.id
-                        )
-                        statItem(
-                            title: localizedString("social.relationship.followers"),
-                            value: me.followerCount,
-                            kind: .followers,
-                            userID: me.id
-                        )
-                        statItem(
-                            title: localizedString("social.relationship.friends"),
-                            value: me.friendCount,
-                            kind: .friends,
-                            userID: me.id
-                        )
-                    }
-                } else if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.danger)
+        Group {
+            if viewModel.isLoading && viewModel.me == nil {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 44)
+            } else if let me = viewModel.me {
+                HStack(spacing: 12) {
+                    statItem(
+                        title: localizedString("social.relationship.following", locale: locale.identifier),
+                        value: me.followingCount,
+                        kind: .following,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.following"
+                    )
+                    statItem(
+                        title: localizedString("social.relationship.followers", locale: locale.identifier),
+                        value: me.followerCount,
+                        kind: .followers,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.followers"
+                    )
+                    statItem(
+                        title: localizedString("social.relationship.friends", locale: locale.identifier),
+                        value: me.friendCount,
+                        kind: .friends,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.friends"
+                    )
                 }
+            } else if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.danger)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(minHeight: 44)
             }
         }
         .task {
@@ -773,7 +789,8 @@ private struct SocialProfileStatsCard: View {
         title: String,
         value: Int,
         kind: SocialRelationshipKind,
-        userID: String
+        userID: String,
+        accessibilityIdentifier: String
     ) -> some View {
         NavigationLink {
             SocialRelationshipListView(
@@ -784,13 +801,21 @@ private struct SocialProfileStatsCard: View {
                 Text("\(value)")
                     .font(.headline)
                     .foregroundStyle(DSColor.title)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                 Text(title)
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
 

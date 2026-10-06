@@ -164,7 +164,7 @@ enum MarketplaceRemoteMapper {
         guard let enrollment else { return nil }
         return String(
             format: localizedString("marketplace.mapper.enrollment"),
-            locale: Locale.current,
+            locale: AppLanguage.locale(for: UserPreferences.currentLocale),
             enrollment
         )
     }

@@ -38,7 +38,7 @@ enum SocialDisplayTime {
 
         let calendar = Calendar.current
         let display = DateFormatter()
-        display.locale = Locale.current
+        display.locale = AppLanguage.locale(for: UserPreferences.currentLocale)
         if calendar.isDateInToday(date) {
             display.dateStyle = .none
             display.timeStyle = .short

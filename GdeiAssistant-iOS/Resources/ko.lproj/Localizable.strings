@@ -235,7 +235,7 @@
 "cet.namePlaceholder" = "3자 이상일 경우 처음 3자만 입력";
 "cet.captcha" = "보안 문자";
 "cet.captchaPlaceholder" = "보안 문자 입력";
-"cet.captchaHint" = "보안 문자 이미지는 `/cet/checkcode`에서 제공됩니다. 이미지를 탭하여 새로고침하세요.";
+"cet.captchaHint" = "보안 문자 이미지를 탭하여 새로고침하세요.";
 "cet.queryScore" = "성적 조회";
 "cet.scoreRecords" = "성적 기록";
 "cet.scoreEmptyHint" = "수험표 번호, 이름, 보안 문자를 입력하여 조회하세요.";
@@ -623,7 +623,7 @@
 "library.renew.instructionsDetail" = "연장에는 도서관 비밀번호로 2차 인증이 필요합니다. 비밀번호는 이번 요청에만 사용되며 로컬에 저장되지 않습니다.";
 "library.renew.button" = "도서 연장";
 "library.renew.sheetTitle" = "도서 연장";
-"library.renew.sheetMessage" = "도서관 비밀번호를 입력하여 연장을 완료하세요. 대출 토큰과 비밀번호 모두 서버에서 검증됩니다.";
+"library.renew.sheetMessage" = "대출 연장을 확인하려면 도서관 비밀번호를 입력하세요.";
 "library.renew.confirmButton" = "연장 확인";
 "library.notice" = "알림";
 "library.understood" = "확인";

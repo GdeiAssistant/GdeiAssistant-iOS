@@ -86,6 +86,7 @@ struct AppearanceView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("appearance.language.\(option.localeIdentifier)")
                 }
             } header: {
                 Text(LocalizedStringKey("appearance.language.label"))

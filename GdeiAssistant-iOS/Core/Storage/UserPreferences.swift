@@ -82,6 +82,9 @@ final class UserPreferences: ObservableObject {
             self.fontScaleStep = defaults.integer(forKey: AppConstants.UserDefaultsKeys.fontScaleStep).clamped(to: 0...3)
         }
         hasInitialized = true
+        // Persist system detection once, so helpers and HTTP headers use the
+        // same language as SwiftUI even before the user changes a preference.
+        persistLocaleIfNeeded()
     }
 
     /// Reads the persisted locale directly from UserDefaults so that

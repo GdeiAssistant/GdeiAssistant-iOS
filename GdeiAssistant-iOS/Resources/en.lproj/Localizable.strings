@@ -235,7 +235,7 @@
 "cet.namePlaceholder" = "Enter first 3 characters if name is longer";
 "cet.captcha" = "Captcha";
 "cet.captchaPlaceholder" = "Enter captcha";
-"cet.captchaHint" = "Captcha image is from `/cet/checkcode`. Tap the image to refresh.";
+"cet.captchaHint" = "Tap the captcha image to refresh.";
 "cet.queryScore" = "Query Score";
 "cet.scoreRecords" = "Score Records";
 "cet.scoreEmptyHint" = "Enter admission ticket number, name and captcha to query.";
@@ -623,7 +623,7 @@
 "library.renew.instructionsDetail" = "Renewal requires your library password for verification. Password is used for this request only and will not be stored locally.";
 "library.renew.button" = "Renew Book";
 "library.renew.sheetTitle" = "Book Renewal";
-"library.renew.sheetMessage" = "Enter your library password to complete renewal verification. Both loan token and password are verified on the server.";
+"library.renew.sheetMessage" = "Enter your library password to verify the renewal.";
 "library.renew.confirmButton" = "Confirm Renewal";
 "library.notice" = "Notice";
 "library.understood" = "OK";

@@ -235,7 +235,7 @@
 "cet.namePlaceholder" = "3文字以上の場合は最初の3文字を入力";
 "cet.captcha" = "キャプチャ";
 "cet.captchaPlaceholder" = "キャプチャを入力";
-"cet.captchaHint" = "キャプチャ画像は `/cet/checkcode` から取得。画像をタップで更新。";
+"cet.captchaHint" = "認証画像をタップすると更新できます。";
 "cet.queryScore" = "成績照会";
 "cet.scoreRecords" = "成績記録";
 "cet.scoreEmptyHint" = "受験票番号、氏名、キャプチャを入力して照会してください。";
@@ -623,7 +623,7 @@
 "library.renew.instructionsDetail" = "延長には図書館パスワードによる二次認証が必要です。パスワードは今回のリクエストのみに使用され、ローカルには保存されません。";
 "library.renew.button" = "図書を延長";
 "library.renew.sheetTitle" = "図書延長";
-"library.renew.sheetMessage" = "図書館パスワードを入力して延長を完了してください。貸出トークンとパスワードの両方がサーバーで検証されます。";
+"library.renew.sheetMessage" = "図書館のパスワードを入力して貸出延長を認証してください。";
 "library.renew.confirmButton" = "延長を確認";
 "library.notice" = "お知らせ";
 "library.understood" = "了解";

@@ -3,6 +3,7 @@ import SwiftUI
 struct PrivacySettingsView: View {
     @StateObject private var viewModel: PrivacySettingsViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
 
     init(viewModel: PrivacySettingsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -44,8 +45,16 @@ struct PrivacySettingsView: View {
                 NavigationLink {
                     DirectMessagePrivacyView(viewModel: container.makeDirectMessagePrivacyViewModel())
                 } label: {
-                    Text(localizedString("social.dmPolicy.title"))
+                    Label(localizedString("social.dmPolicy.title"), systemImage: "envelope.badge.shield.half.filled")
                 }
+                .accessibilityIdentifier("privacy.dmPolicy")
+
+                NavigationLink {
+                    SocialBlockListView(viewModel: container.makeSocialBlockListViewModel())
+                } label: {
+                    Label(localizedString("social.blockList.title"), systemImage: "nosign")
+                }
+                .accessibilityIdentifier("privacy.blockList")
             }
 
             if let errorMessage = viewModel.errorMessage {
@@ -56,7 +65,7 @@ struct PrivacySettingsView: View {
                 }
             }
         }
-        .navigationTitle(localizedString("privacy.title"))
+        .navigationTitle(localizedString("privacy.title", locale: locale.identifier))
         .overlay(alignment: .center) {
             if viewModel.isLoading {
                 ProgressView(localizedString("privacy.loading"))

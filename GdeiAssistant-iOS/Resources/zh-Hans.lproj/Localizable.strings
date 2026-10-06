@@ -235,7 +235,7 @@
 "cet.namePlaceholder" = "姓名超过3个字可只输入前3个";
 "cet.captcha" = "验证码";
 "cet.captchaPlaceholder" = "请输入验证码";
-"cet.captchaHint" = "验证码图片来自后端 `/cet/checkcode`，点击图片可刷新。";
+"cet.captchaHint" = "点击验证码图片可以刷新。";
 "cet.queryScore" = "查询成绩";
 "cet.scoreRecords" = "成绩记录";
 "cet.scoreEmptyHint" = "请输入准考证号、姓名和验证码后查询。";
@@ -623,7 +623,7 @@
 "library.renew.instructionsDetail" = "续借前需要输入图书馆密码进行二次校验。密码仅用于本次请求，不会写入本地。";
 "library.renew.button" = "续借图书";
 "library.renew.sheetTitle" = "图书续借";
-"library.renew.sheetMessage" = "请输入图书馆密码完成续借校验。续借需要后端同时校验借阅凭据和账号密码。";
+"library.renew.sheetMessage" = "请输入图书馆密码完成续借验证。系统会同时验证借阅凭据和账号密码。";
 "library.renew.confirmButton" = "确认续借";
 "library.notice" = "提示";
 "library.understood" = "知道了";
@@ -1791,7 +1791,7 @@
 "social.relationship.friends" = "好友";
 "social.relationship.self" = "我";
 "social.relationship.none" = "未关注";
-"social.relationship.followedBy" = "回关了我";
+"social.relationship.followedBy" = "关注了我";
 "social.list.empty" = "暂无列表内容";
 "social.list.loadFailed" = "加载关系列表失败";
 "social.blockList.title" = "黑名单";

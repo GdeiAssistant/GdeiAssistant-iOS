@@ -50,6 +50,7 @@ enum UITestInitialScreen: String {
     case marketplace
     case grade
     case conversations
+    case profile
 }
 
 enum AppTab: Hashable {
@@ -221,8 +222,13 @@ final class AppContainer: ObservableObject {
     @MainActor
     static var testing: AppContainer {
         let suiteName = "gdeiassistant.tests.defaults"
-        let testDefaults = UserDefaults(suiteName: suiteName) ?? .standard
-        testDefaults.removePersistentDomain(forName: suiteName)
+        // UI tests run in their own app process. Use the same store as the
+        // localization helper and request language; unit tests keep an isolated suite.
+        let isUITestApp = ProcessInfo.processInfo.environment["GDEIASSISTANT_RUNNING_TESTS"] == "1"
+        let testDefaults = isUITestApp ? UserDefaults.standard : (UserDefaults(suiteName: suiteName) ?? .standard)
+        if !isUITestApp {
+            testDefaults.removePersistentDomain(forName: suiteName)
+        }
         let preferences = UserPreferences(defaults: testDefaults)
         if let localeIdentifier = UITestRuntimeOverrides.localeIdentifier {
             preferences.selectedLocale = localeIdentifier

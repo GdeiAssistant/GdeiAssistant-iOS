@@ -7,6 +7,7 @@ final class MockUISmokeTests: XCTestCase {
         case marketplace
         case grade
         case conversations
+        case profile
     }
 
     private var appUnderTest: XCUIApplication?
@@ -65,6 +66,61 @@ final class MockUISmokeTests: XCTestCase {
 
         XCTAssertTrue(app.segmentedControls["grade.yearPicker"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["grade.course.grade_2526_01"].waitForExistence(timeout: 5))
+    }
+
+    func testProfileHeaderStatsAndPrivacyEntriesInHongKongLocale() throws {
+        let app = launchApp(authenticated: true, initialScreen: .profile, locale: "zh-HK")
+        let following = app.buttons["profile.stats.following"]
+        XCTAssertTrue(following.waitForExistence(timeout: 5))
+        XCTAssertTrue(following.isHittable)
+        XCTAssertTrue(app.buttons["profile.stats.followers"].isHittable)
+        XCTAssertTrue(app.buttons["profile.stats.friends"].isHittable)
+        XCTAssertFalse(app.buttons["privacy.dmPolicy"].exists)
+        XCTAssertFalse(app.buttons["privacy.blockList"].exists)
+        attachScreenshot(app, name: "profile-header-social-stats-hk")
+        scrollToVisible(app.buttons["profile.entry.privacy"], in: app)
+        XCTAssertTrue(app.buttons["profile.entry.privacy"].label.contains("私隱設定"))
+        app.buttons["profile.entry.privacy"].tap()
+        XCTAssertTrue(app.navigationBars["私隱設定"].waitForExistence(timeout: 5))
+        scrollToVisible(app.buttons["privacy.dmPolicy"], in: app)
+        XCTAssertTrue(app.buttons["privacy.blockList"].exists)
+        attachScreenshot(app, name: "privacy-grouped-social-entries-hk")
+        app.buttons["privacy.dmPolicy"].tap()
+        XCTAssertTrue(app.navigationBars["邊啲人可以私訊我"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        scrollToVisible(app.buttons["privacy.blockList"], in: app)
+        app.buttons["privacy.blockList"].tap()
+        XCTAssertTrue(app.navigationBars["黑名單"].waitForExistence(timeout: 5))
+    }
+
+    func testAllLanguageSwitchesUpdateAppearanceWithoutLeavingTheScreen() throws {
+        let app = launchApp(authenticated: true, initialScreen: .profile, locale: "en")
+        scrollToVisible(app.buttons["profile.entry.appearance"], in: app)
+        app.buttons["profile.entry.appearance"].tap()
+        XCTAssertTrue(app.navigationBars["Interface & Appearance"].waitForExistence(timeout: 5))
+        let languages = [
+            ("zh-CN", "界面和外观"), ("zh-HK", "介面同外觀"), ("zh-TW", "介面和外觀"),
+            ("en", "Interface & Appearance"), ("ja", "インターフェースと外観"), ("ko", "인터페이스 및 외관")
+        ]
+        for (locale, title) in languages {
+            let option = app.buttons["appearance.language.\(locale)"]
+            scrollToVisible(option, in: app)
+            option.tap()
+            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), locale)
+            XCTAssertTrue(app.buttons["appearance.language.\(locale)"].exists, "Language switch must keep this screen open")
+            attachScreenshot(app, name: "appearance-language-\(locale)")
+        }
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.navigationBars["프로필"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["profile.entry.appearance"].waitForExistence(timeout: 5))
+    }
+
+    private func scrollToVisible(_ element: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<8 {
+            if element.exists && element.isHittable { return }
+            app.swipeUp()
+        }
+        XCTAssertTrue(element.exists && element.isHittable, "Expected visible element: \(element.identifier)")
     }
 
     func testChatSystemPhotoPickerPreviewRemoveSendViewAndLeaveCleanup() throws {
@@ -257,12 +313,13 @@ final class MockUISmokeTests: XCTestCase {
     private func launchApp(
         authenticated: Bool = false,
         initialScreen: InitialScreen? = nil,
-        failFirstImageSend: Bool = false
+        failFirstImageSend: Bool = false,
+        locale: String = "zh-Hans"
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["GDEIASSISTANT_RUNNING_TESTS"] = "1"
         app.launchEnvironment["GDEI_UI_USE_MOCK"] = "1"
-        app.launchEnvironment["GDEI_UI_LOCALE"] = "zh-Hans"
+        app.launchEnvironment["GDEI_UI_LOCALE"] = locale
         if failFirstImageSend {
             app.launchEnvironment["GDEI_UI_FAIL_FIRST_CHAT_IMAGE"] = "1"
         }
@@ -273,8 +330,8 @@ final class MockUISmokeTests: XCTestCase {
             app.launchEnvironment["GDEI_UI_INITIAL_SCREEN"] = initialScreen.rawValue
         }
         app.launchArguments += [
-            "-AppleLanguages", "(zh-Hans)",
-            "-AppleLocale", "zh-Hans"
+            "-AppleLanguages", "(\(locale))",
+            "-AppleLocale", locale
         ]
         appUnderTest = app
         app.launch()
