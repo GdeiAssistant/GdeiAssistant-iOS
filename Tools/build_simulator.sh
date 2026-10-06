@@ -38,4 +38,4 @@ xcodebuild \
   "${XCODEBUILD_ARGS[@]}" \
   build \
   CODE_SIGNING_ALLOWED=NO \
-  | tee "$LOG_FILE"
+  2>&1 | tee "$LOG_FILE"

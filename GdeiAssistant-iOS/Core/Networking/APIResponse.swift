@@ -9,6 +9,7 @@ struct APIResponse<T: Decodable>: Decodable {
     let success: Bool?
     let message: String
     let data: T?
+    let errorCode: String?
 
     var isSuccess: Bool {
         if let success {
@@ -22,13 +23,15 @@ struct APIResponse<T: Decodable>: Decodable {
         case success
         case message
         case data
+        case errorCode
     }
 
-    init(code: Int, success: Bool? = nil, message: String, data: T?) {
+    init(code: Int, success: Bool? = nil, message: String, data: T?, errorCode: String? = nil) {
         self.code = code
         self.success = success
         self.message = message
         self.data = data
+        self.errorCode = errorCode
     }
 
     init(from decoder: Decoder) throws {
@@ -48,5 +51,11 @@ struct APIResponse<T: Decodable>: Decodable {
 
         message = try container.decodeIfPresent(String.self, forKey: .message) ?? ""
         data = try container.decodeIfPresent(T.self, forKey: .data)
+        if let rawErrorCode = try container.decodeIfPresent(String.self, forKey: .errorCode) {
+            let trimmed = rawErrorCode.trimmingCharacters(in: .whitespacesAndNewlines)
+            errorCode = trimmed.isEmpty ? nil : trimmed
+        } else {
+            errorCode = nil
+        }
     }
 }

@@ -49,6 +49,7 @@ extension MockSeedData {
                 ownerUsername: MockSeedData.demoProfile.username,
                 ownerNickname: MockSeedData.demoProfile.nickname,
                 ownerAvatarURL: MockSeedData.demoProfile.avatarURL,
+                authorId: "user-demo-0001",
                 imageURLs: ["https://example.com/lostfound/umbrella-1.png"]
             ),
             "lf_002": LostFoundDetail(
@@ -59,6 +60,7 @@ extension MockSeedData {
                 ownerUsername: "li.picker",
                 ownerNickname: localizedString("mock.lostFound.seed.detail2.ownerNickname"),
                 ownerAvatarURL: "https://example.com/avatar/lostfound-li.png",
+                authorId: "user-li-picker",
                 imageURLs: ["https://example.com/lostfound/card-1.png"]
             ),
             "lf_003": LostFoundDetail(
@@ -69,6 +71,7 @@ extension MockSeedData {
                 ownerUsername: "zy.finder",
                 ownerNickname: "ZY",
                 ownerAvatarURL: "https://example.com/avatar/lostfound-zy.png",
+                authorId: nil,
                 imageURLs: ["https://example.com/lostfound/airpods-1.png"]
             )
         ]

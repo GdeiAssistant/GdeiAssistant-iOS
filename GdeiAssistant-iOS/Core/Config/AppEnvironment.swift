@@ -68,6 +68,10 @@ final class AppEnvironment: ObservableObject {
         )
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 isolated-deinit runtime crash
+    // when released synchronously (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func updateDataSourceMode(_ mode: DataSourceMode) {
         dataSourceMode = sanitizedDataSourceMode(mode)
     }

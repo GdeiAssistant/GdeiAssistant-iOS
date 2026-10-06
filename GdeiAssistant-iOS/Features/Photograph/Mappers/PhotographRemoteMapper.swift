@@ -10,6 +10,7 @@ enum PhotographRemoteMapper {
             title: RemoteMapperSupport.firstNonEmpty(dto.title, localizedString("photograph.mapper.defaultTitle")),
             contentPreview: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.content), limit: 60),
             authorName: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("photograph.mapper.defaultAuthor")),
+            authorId: RemoteMapperSupport.sanitizedText(dto.authorId),
             createdAt: RemoteMapperSupport.dateText(dto.createTime, fallback: localizedString("common.justNow")),
             likeCount: RemoteMapperSupport.int(dto.likeCount),
             commentCount: RemoteMapperSupport.int(dto.commentCount),

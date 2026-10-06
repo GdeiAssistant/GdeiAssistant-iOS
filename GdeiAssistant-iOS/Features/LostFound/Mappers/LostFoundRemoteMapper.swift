@@ -121,6 +121,7 @@ enum LostFoundRemoteMapper {
             ownerUsername: dto.profile?.username ?? itemDTO.username,
             ownerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
             ownerAvatarURL: RemoteMapperSupport.sanitizedText(dto.profile?.avatarURL),
+            authorId: RemoteMapperSupport.sanitizedText(itemDTO.authorId),
             imageURLs: RemoteMapperSupport.sanitizedTextList(itemDTO.pictureURL)
         )
     }

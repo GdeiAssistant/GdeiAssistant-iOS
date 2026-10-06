@@ -11,6 +11,7 @@ enum TopicRemoteMapper {
             topic: topic,
             contentPreview: RemoteMapperSupport.truncated(content, limit: 64),
             authorName: RemoteMapperSupport.firstNonEmpty(dto.username, localizedString("topic.mapper.anonymous")),
+            authorId: RemoteMapperSupport.sanitizedText(dto.authorId),
             publishedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("topic.mapper.justNow")),
             likeCount: RemoteMapperSupport.int(dto.likeCount),
             imageCount: max(RemoteMapperSupport.int(dto.count), imageURLs.count, firstImageURL == nil ? 0 : 1),

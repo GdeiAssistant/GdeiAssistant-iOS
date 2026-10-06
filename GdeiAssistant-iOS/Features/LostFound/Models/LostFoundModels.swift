@@ -62,6 +62,8 @@ struct LostFoundDetail: Codable, Identifiable, Hashable {
     let ownerUsername: String?
     let ownerNickname: String?
     let ownerAvatarURL: String?
+    /// Public social UUID of the publisher when backend provides it.
+    let authorId: String?
     let imageURLs: [String]
 }
 

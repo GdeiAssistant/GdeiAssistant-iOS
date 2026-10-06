@@ -46,6 +46,7 @@ final class RemoteLostFoundRepository: LostFoundRepository {
             ownerUsername: detail.ownerUsername,
             ownerNickname: detail.ownerNickname,
             ownerAvatarURL: detail.ownerAvatarURL,
+            authorId: detail.authorId,
             imageURLs: [previewURL]
         )
     }

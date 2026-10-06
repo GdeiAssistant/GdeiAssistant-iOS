@@ -7,6 +7,7 @@ struct PhotographRemoteDTO: Decodable {
     let count: RemoteFlexibleString?
     let type: RemoteFlexibleString?
     let username: String?
+    let authorId: String?
     let createTime: RemoteFlexibleString?
     let likeCount: RemoteFlexibleString?
     let commentCount: RemoteFlexibleString?

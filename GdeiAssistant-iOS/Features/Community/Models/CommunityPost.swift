@@ -2,6 +2,7 @@ import Foundation
 
 struct CommunityPost: Codable, Identifiable, Hashable {
     let id: String
+    let authorId: String?
     let authorName: String
     let authorAvatarURL: String
     let isAnonymous: Bool
@@ -18,6 +19,7 @@ struct CommunityPost: Codable, Identifiable, Hashable {
     ) -> CommunityPost {
         CommunityPost(
             id: id,
+            authorId: authorId,
             authorName: authorName,
             authorAvatarURL: authorAvatarURL,
             isAnonymous: isAnonymous,

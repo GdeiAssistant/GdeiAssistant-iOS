@@ -26,6 +26,10 @@ enum UITestRuntimeOverrides {
         return UITestInitialScreen(rawValue: rawValue)
     }
 
+    static var failFirstChatImageSend: Bool {
+        AppRuntime.isRunningTests && useMockData && boolValue(for: "GDEI_UI_FAIL_FIRST_CHAT_IMAGE")
+    }
+
     private static func stringValue(for key: String) -> String? {
         guard let value = environment[key]?.trimmingCharacters(in: .whitespacesAndNewlines),
               !value.isEmpty else {
@@ -45,6 +49,7 @@ enum UITestInitialScreen: String {
     case messages
     case marketplace
     case grade
+    case conversations
 }
 
 enum AppTab: Hashable {
@@ -76,6 +81,8 @@ final class AppContainer: ObservableObject {
     let campusServicesAssembly: CampusServicesAssembly
     let communityAssembly: CommunityAssembly
     let profileAssembly: ProfileAssembly
+    let socialAssembly: SocialAssembly
+    let authenticatedImageLoader: AuthenticatedImageLoader
 
     // MARK: - Repository accessors (forwarded from assemblies)
 
@@ -107,6 +114,8 @@ final class AppContainer: ObservableObject {
     var profileRepository: any ProfileRepository { profileAssembly.profileRepository }
     var accountCenterRepository: any AccountCenterRepository { profileAssembly.accountCenterRepository }
     var messagesRepository: any MessagesRepository { profileAssembly.messagesRepository }
+    var socialRepository: any SocialRepository { socialAssembly.socialRepository }
+    var socialRealtimeManager: SocialRealtimeManager { socialAssembly.realtimeManager }
 
     private var hasBootstrapped = false
     private let shouldSkipBootstrap: Bool
@@ -147,17 +156,46 @@ final class AppContainer: ObservableObject {
                 authManager?.handleUnauthorized()
             }
         )
+        self.authenticatedImageLoader = AuthenticatedImageLoader(
+            environment: environment,
+            session: pinnedSession,
+            tokenProvider: { [weak authManager] in
+                authManager?.currentToken()
+            },
+            onUnauthorized: { [weak authManager] in
+                authManager?.handleUnauthorized()
+            }
+        )
 
         // Construct assemblies
         self.coreAssembly = CoreAssembly(apiClient: apiClient, environment: environment)
         self.campusServicesAssembly = CampusServicesAssembly(apiClient: apiClient, environment: environment)
         self.communityAssembly = CommunityAssembly(apiClient: apiClient, environment: environment)
         self.profileAssembly = ProfileAssembly(apiClient: apiClient, environment: environment)
+        self.socialAssembly = SocialAssembly(
+            apiClient: apiClient,
+            environment: environment,
+            tokenProvider: { [weak authManager] in
+                authManager?.currentToken()
+            },
+            isLoggedInProvider: { [weak sessionState] in
+                sessionState?.isLoggedIn ?? false
+            },
+            onUnauthorized: { [weak authManager] in
+                authManager?.handleUnauthorized()
+            }
+        )
 
+        let realtimeManager = socialAssembly.realtimeManager
+        let imageLoader = authenticatedImageLoader
         authManager.configure(
             repository: coreAssembly.authRepository,
             dataSourceModeProvider: { [weak environment] in
                 environment?.dataSourceMode ?? .remote
+            },
+            onSessionEnded: { [weak realtimeManager, weak imageLoader] in
+                realtimeManager?.stop(clearState: true)
+                imageLoader?.clearCache()
             }
         )
     }
@@ -219,6 +257,9 @@ final class AppContainer: ObservableObject {
             return
         }
         await authManager.restoreSession()
+        if sessionState.isLoggedIn {
+            socialRealtimeManager.start()
+        }
     }
 
     // MARK: - ViewModel Factories (thin forwarding to assemblies)
@@ -280,4 +321,16 @@ final class AppContainer: ObservableObject {
     func makeMessagesViewModel() -> MessagesViewModel { profileAssembly.makeMessagesViewModel(newsRepository: campusServicesAssembly.newsRepository) }
     func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel { profileAssembly.makeSystemNoticeListViewModel() }
     func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel { profileAssembly.makeInteractionMessageListViewModel() }
+
+    // Social
+    func makeSocialUserSearchViewModel() -> SocialUserSearchViewModel { socialAssembly.makeSocialUserSearchViewModel() }
+    func makeSocialPublicProfileViewModel(userID: String) -> SocialPublicProfileViewModel { socialAssembly.makeSocialPublicProfileViewModel(userID: userID) }
+    func makeSocialRelationshipListViewModel(userID: String, kind: SocialRelationshipKind) -> SocialRelationshipListViewModel {
+        socialAssembly.makeSocialRelationshipListViewModel(userID: userID, kind: kind)
+    }
+    func makeSocialBlockListViewModel() -> SocialBlockListViewModel { socialAssembly.makeSocialBlockListViewModel() }
+    func makeDirectMessagePrivacyViewModel() -> DirectMessagePrivacyViewModel { socialAssembly.makeDirectMessagePrivacyViewModel() }
+    func makeConversationListViewModel() -> ConversationListViewModel { socialAssembly.makeConversationListViewModel() }
+    func makeChatThreadViewModel(conversationID: String) -> ChatThreadViewModel { socialAssembly.makeChatThreadViewModel(conversationID: conversationID) }
+    func makeSocialMeSummaryViewModel() -> SocialMeSummaryViewModel { socialAssembly.makeSocialMeSummaryViewModel() }
 }

@@ -132,13 +132,15 @@ GdeiAssistant-iOS/
 
 网络层基于 `URLSession`，统一负责：
 
-- 请求构建
+- 请求构建（GET/POST/PUT/DELETE）
 - Header 注入
 - Bearer Token 注入
 - `X-Client-Type: IOS` 注入
 - JSON 解码
-- 错误归一化
+- 错误归一化（含契约 `errorCode` → `NetworkError.contract`）
 - 401 与登录失效处理
+
+社交实时通道使用全局单连接 `URLSessionWebSocket`（`/api/social/realtime`），由 `SocialRealtimeManager` 管理认证、重连与登出清理。
 
 ### 4. DTO / Domain 分层
 
@@ -148,6 +150,7 @@ GdeiAssistant-iOS/
 - `Mapper`：完成 DTO -> Domain Model 映射
 - `Repository`：对 ViewModel 暴露稳定的数据访问接口
 
+社交模块位于 `Features/Social`，并通过 `SocialAssembly` 注入。实现细节见 `docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md`。
 ### 5. 主题系统
 
 应用支持亮色/暗色主题切换，默认跟随系统：

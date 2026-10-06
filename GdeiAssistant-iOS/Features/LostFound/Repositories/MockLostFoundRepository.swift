@@ -75,6 +75,7 @@ final class MockLostFoundRepository: LostFoundRepository {
             ownerUsername: MockSeedData.demoProfile.username,
             ownerNickname: MockSeedData.demoProfile.nickname,
             ownerAvatarURL: MockSeedData.demoProfile.avatarURL,
+            authorId: "user-demo-0001",
             imageURLs: []
         )
 
@@ -110,6 +111,7 @@ final class MockLostFoundRepository: LostFoundRepository {
             ownerUsername: detail.ownerUsername,
             ownerNickname: detail.ownerNickname,
             ownerAvatarURL: detail.ownerAvatarURL,
+            authorId: detail.authorId,
             imageURLs: detail.imageURLs
         )
         syncItem(updatedItem)
@@ -138,6 +140,7 @@ final class MockLostFoundRepository: LostFoundRepository {
             ownerUsername: detail.ownerUsername,
             ownerNickname: detail.ownerNickname,
             ownerAvatarURL: detail.ownerAvatarURL,
+            authorId: detail.authorId,
             imageURLs: detail.imageURLs
         )
         syncItem(updatedItem)
@@ -184,6 +187,7 @@ final class MockLostFoundRepository: LostFoundRepository {
             ownerUsername: MockSeedData.demoProfile.username,
             ownerNickname: MockSeedData.demoProfile.nickname,
             ownerAvatarURL: MockSeedData.demoProfile.avatarURL,
+            authorId: "user-demo-0001",
             imageURLs: ["https://example.com/lostfound/u-disk-1.png"]
         )
         detailsByID[resolvedItem.id] = LostFoundDetail(
@@ -194,6 +198,7 @@ final class MockLostFoundRepository: LostFoundRepository {
             ownerUsername: MockSeedData.demoProfile.username,
             ownerNickname: MockSeedData.demoProfile.nickname,
             ownerAvatarURL: MockSeedData.demoProfile.avatarURL,
+            authorId: "user-demo-0001",
             imageURLs: ["https://example.com/lostfound/pass-1.png"]
         )
     }

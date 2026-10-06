@@ -13,6 +13,7 @@ final class AppContainerBootstrapTests: XCTestCase {
         XCTAssertNotNil(container.campusServicesAssembly)
         XCTAssertNotNil(container.communityAssembly)
         XCTAssertNotNil(container.profileAssembly)
+        XCTAssertNotNil(container.socialAssembly)
     }
 
     func testMockContainerCanCreateSampleViewModels() async {
@@ -33,6 +34,12 @@ final class AppContainerBootstrapTests: XCTestCase {
         // Profile — delegates to ProfileAssembly
         let settingsVM = container.makeSettingsViewModel()
         XCTAssertNotNil(settingsVM)
+
+        // Social — delegates to SocialAssembly
+        let searchVM = container.makeSocialUserSearchViewModel()
+        XCTAssertNotNil(searchVM)
+        let conversationVM = container.makeConversationListViewModel()
+        XCTAssertNotNil(conversationVM)
     }
 
     func testProdEnvironmentUsesCanonicalAPIHost() {

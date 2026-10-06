@@ -101,6 +101,7 @@ enum MockSeedData {
     static var communityHotPosts: [CommunityPost] { [
         CommunityPost(
             id: "post_hot_001",
+            authorId: "user-alice-0002",
             authorName: localizedString("mock.community.hot1.authorName"),
             authorAvatarURL: "https://example.com/avatar/club_cs.png",
             isAnonymous: false,
@@ -113,6 +114,7 @@ enum MockSeedData {
         ),
         CommunityPost(
             id: "post_hot_002",
+            authorId: nil,
             authorName: localizedString("mock.community.hot2.authorName"),
             authorAvatarURL: "",
             isAnonymous: true,
@@ -125,6 +127,7 @@ enum MockSeedData {
         ),
         CommunityPost(
             id: "post_hot_003",
+            authorId: "user-carol-0004",
             authorName: localizedString("mock.community.hot3.authorName"),
             authorAvatarURL: "https://example.com/avatar/student_union.png",
             isAnonymous: false,
@@ -140,6 +143,7 @@ enum MockSeedData {
     static var communityLatestPosts: [CommunityPost] { [
         CommunityPost(
             id: "post_latest_001",
+            authorId: "user-bob-0003",
             authorName: localizedString("mock.community.latest1.authorName"),
             authorAvatarURL: "https://example.com/avatar/english_club.png",
             isAnonymous: false,
@@ -152,6 +156,7 @@ enum MockSeedData {
         ),
         CommunityPost(
             id: "post_latest_002",
+            authorId: nil,
             authorName: localizedString("mock.community.latest2.authorName"),
             authorAvatarURL: "",
             isAnonymous: true,
@@ -164,6 +169,7 @@ enum MockSeedData {
         ),
         CommunityPost(
             id: "post_latest_003",
+            authorId: "user-alice-0002",
             authorName: localizedString("mock.community.latest3.authorName"),
             authorAvatarURL: "https://example.com/avatar/library.png",
             isAnonymous: false,

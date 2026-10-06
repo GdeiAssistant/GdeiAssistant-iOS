@@ -9,6 +9,7 @@ struct LostFoundProfileDTO: Decodable {
 struct LostFoundItemDTO: Decodable {
     let id: Int?
     let username: String?
+    let authorId: String?
     let name: String?
     let description: String?
     let location: String?

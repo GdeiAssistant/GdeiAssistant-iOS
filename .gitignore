@@ -10,6 +10,8 @@ xcuserdata/
 build/
 DerivedData/
 .swiftpm/
+ChatPickerFixture/
+TestAttachments/
 
 # Provisioning & Signing
 *.mobileprovision
@@ -23,9 +25,13 @@ Configs/local.xcconfig
 
 # Local working notes / one-off tools
 Docs/
+!docs/
+!docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md
 Tools/*
 !Tools/build_simulator.sh
 !Tools/check_style.sh
+!Tools/make_chat_picker_photo.py
+!Tools/seed_chat_picker_photo.sh
 AGENTS.md
 
 # AI assistant / agent configs (local only)

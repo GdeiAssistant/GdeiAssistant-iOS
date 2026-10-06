@@ -52,6 +52,7 @@ final class RemotePhotographRepository: PhotographRepository {
                 title: detail.post.title,
                 contentPreview: detail.post.contentPreview,
                 authorName: detail.post.authorName,
+                authorId: detail.post.authorId,
                 createdAt: detail.post.createdAt,
                 likeCount: detail.post.likeCount,
                 commentCount: detail.post.commentCount,

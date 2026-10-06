@@ -12,6 +12,7 @@ struct MarketplaceProfileDTO: Decodable {
 struct MarketplaceItemDTO: Decodable {
     let id: Int?
     let username: String?
+    let authorId: String?
     let name: String?
     let description: String?
     let price: RemoteFlexibleString?

@@ -39,9 +39,20 @@ struct PostDetailView: View {
                             .foregroundStyle(DSColor.primary)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(detail.post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(detail.post.authorName))
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(DSColor.title)
+                            if !detail.post.isAnonymous, let authorId = detail.post.authorId {
+                                NavigationLink {
+                                    SocialPublicProfileRoute(userID: authorId)
+                                } label: {
+                                    Text(detail.post.authorName)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(DSColor.primary)
+                                }
+                                .buttonStyle(.plain)
+                            } else {
+                                Text(detail.post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(detail.post.authorName))
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(DSColor.title)
+                            }
 
                             Text(detail.post.createdAt)
                                 .font(.caption)

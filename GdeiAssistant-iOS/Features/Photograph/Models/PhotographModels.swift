@@ -36,6 +36,7 @@ struct PhotographPost: Codable, Identifiable, Hashable {
     let title: String
     let contentPreview: String
     let authorName: String
+    let authorId: String?
     let createdAt: String
     let likeCount: Int
     let commentCount: Int

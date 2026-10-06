@@ -3,6 +3,8 @@ import Foundation
 struct DatingProfileDTO: Decodable {
     let profileId: Int?
     let username: String?
+    /// Public social UUID of the publisher (not the roommate being introduced).
+    let authorId: String?
     let nickname: String?
     let grade: Int?
     let faculty: String?

@@ -46,6 +46,7 @@ struct MessagesView: View {
     private var content: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
+                directMessagePanel
                 newsPanel
                 systemNoticePanel
                 festivalPanel
@@ -60,6 +61,49 @@ struct MessagesView: View {
         }
         .refreshable {
             await viewModel.refresh()
+        }
+    }
+
+    private var directMessagePanel: some View {
+        overviewSectionCard(
+            title: localizedString("social.conversations.title"),
+            systemImage: "bubble.left.and.bubble.right.fill",
+            tint: DSColor.secondary,
+            titleAccessibilityIdentifier: "messages.section.directMessage"
+        ) {
+            NavigationLink {
+                ConversationListView(viewModel: container.makeConversationListViewModel())
+            } label: {
+                moreChip
+            }
+            .buttonStyle(.plain)
+        } content: {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(localizedString("social.conversations.entryHint"))
+                    .font(.subheadline)
+                    .foregroundStyle(DSColor.subtitle)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, Layout.overviewHeaderHorizontalInset)
+                    .padding(.vertical, Layout.sectionRowVerticalPadding)
+
+                NavigationLink {
+                    SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
+                } label: {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        Text(localizedString("social.search.title"))
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(DSColor.subtitle)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(DSColor.primary)
+                    .padding(.horizontal, Layout.overviewHeaderHorizontalInset)
+                    .padding(.bottom, Layout.sectionRowVerticalPadding)
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 

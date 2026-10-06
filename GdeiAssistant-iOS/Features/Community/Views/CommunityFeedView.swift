@@ -107,9 +107,20 @@ struct CommunityFeedView: View {
                             .foregroundStyle(DSColor.primary)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(post.authorName))
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(DSColor.title)
+                            if !post.isAnonymous, let authorId = post.authorId {
+                                NavigationLink {
+                                    SocialPublicProfileRoute(userID: authorId)
+                                } label: {
+                                    Text(post.authorName)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(DSColor.primary)
+                                }
+                                .buttonStyle(.plain)
+                            } else {
+                                Text(post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(post.authorName))
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(DSColor.title)
+                            }
 
                             Text(post.createdAt)
                                 .font(.caption)

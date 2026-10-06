@@ -3,6 +3,7 @@ import Foundation
 struct TopicRemoteDTO: Decodable {
     let id: RemoteFlexibleString?
     let username: String?
+    let authorId: String?
     let topic: String?
     let content: String?
     let count: RemoteFlexibleString?
