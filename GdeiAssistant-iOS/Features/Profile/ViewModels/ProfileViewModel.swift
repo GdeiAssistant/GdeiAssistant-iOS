@@ -33,6 +33,10 @@ final class ProfileViewModel: ObservableObject {
         bindSessionState()
     }
 
+    // ARC still releases the repository and cancels the Combine subscriptions.
+    // No custom actor-bound cleanup requires an isolated deinitializer.
+    nonisolated deinit {}
+
     var displayProfile: UserProfile? {
         sessionState.currentUser ?? profile
     }
@@ -43,6 +47,21 @@ final class ProfileViewModel: ObservableObject {
 
     var majorOptions: [String] {
         profileOptions.majorOptions(for: college)
+    }
+
+    func selectionOptionDisplayName(_ value: String, localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        let localizedOptions = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
+        if let faculty = profileOptions.faculties.first(where: { $0.label == value }),
+           let localizedFaculty = localizedOptions.faculties.first(where: { $0.code == faculty.code }) {
+            return faculty.code == 0 ? localizedString("profile.notSelected", locale: localeIdentifier) : localizedFaculty.label
+        }
+        if let faculty = profileOptions.faculties.first(where: { $0.label == college }),
+           let option = faculty.majors.first(where: { $0.label == value }),
+           let localizedFaculty = localizedOptions.faculties.first(where: { $0.code == faculty.code }),
+           let localizedMajor = localizedFaculty.majors.first(where: { $0.code == option.code }) {
+            return option.code == "unselected" ? localizedString("profile.notSelected", locale: localeIdentifier) : localizedMajor.label
+        }
+        return value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected", locale: localeIdentifier) : value
     }
 
     var enrollmentOptions: [String] {
@@ -189,10 +208,17 @@ final class ProfileViewModel: ObservableObject {
         saveErrorMessage = nil
         defer { isSaving = false }
 
+        // The repository fetches current-language options when saving. Preserve
+        // the cached selection codes while resolving their submission labels.
+        let selectedFaculty = profileOptions.faculties.first(where: { $0.label == college })
+        let selectedMajor = selectedFaculty?.majors.first(where: { $0.label == major })
+        let currentFaculty = LocalizedProfileCatalog.current.defaultOptions.faculties.first(where: { $0.code == selectedFaculty?.code })
+        let submissionCollege = currentFaculty?.label ?? college
+        let submissionMajor = currentFaculty?.majors.first(where: { $0.code == selectedMajor?.code })?.label ?? major
         let request = ProfileUpdateRequest(
             nickname: FormValidationSupport.trimmed(nickname),
-            college: FormValidationSupport.trimmed(college).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(college),
-            major: FormValidationSupport.trimmed(major).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(major),
+            college: FormValidationSupport.trimmed(submissionCollege).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(submissionCollege),
+            major: FormValidationSupport.trimmed(submissionMajor).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(submissionMajor),
             grade: FormValidationSupport.trimmed(grade),
             bio: FormValidationSupport.trimmed(bio),
             birthday: FormValidationSupport.trimmed(birthday),
@@ -217,7 +243,8 @@ final class ProfileViewModel: ObservableObject {
 
     private func syncDraft(with profile: UserProfile) {
         nickname = profile.nickname
-        let normalizedCollege = profile.college.isEmpty ? ProfileFormSupport.unselectedOption : profile.college
+        let codedCollege = profileOptions.faculties.first(where: { $0.code == profile.collegeCode })?.label
+        let normalizedCollege = codedCollege ?? (profile.college.isEmpty ? ProfileFormSupport.unselectedOption : profile.college)
         let validMajors = profileOptions.majorOptions(for: normalizedCollege)
         college = facultyOptions.contains(normalizedCollege) ? normalizedCollege : ProfileFormSupport.unselectedOption
         if let majorCode = profile.majorCode,

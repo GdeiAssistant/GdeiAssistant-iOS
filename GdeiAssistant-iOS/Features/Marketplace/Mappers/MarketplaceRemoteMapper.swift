@@ -131,7 +131,8 @@ enum MarketplaceRemoteMapper {
             location: RemoteMapperSupport.firstNonEmpty(dto.location, localizedString("marketplace.mapper.onCampusPickup")),
             state: state,
             tags: [typeName],
-            previewImageURL: imageURLs.first
+            previewImageURL: imageURLs.first,
+            typeID: dto.type
         )
     }
 
@@ -164,7 +165,7 @@ enum MarketplaceRemoteMapper {
         guard let enrollment else { return nil }
         return String(
             format: localizedString("marketplace.mapper.enrollment"),
-            locale: Locale.current,
+            locale: AppLanguage.locale(for: UserPreferences.currentLocale),
             enrollment
         )
     }

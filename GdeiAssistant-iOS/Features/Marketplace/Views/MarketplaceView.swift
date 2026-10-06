@@ -5,6 +5,7 @@ import UIKit
 struct MarketplaceView: View {
     @StateObject private var viewModel: MarketplaceViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
 
     init(viewModel: MarketplaceViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -70,6 +71,11 @@ struct MarketplaceView: View {
                                             .foregroundStyle(DSColor.primary)
                                     }
 
+                                    if let category = item.typeDisplayName(localeIdentifier: locale.identifier) {
+                                        Text(category)
+                                            .font(.caption)
+                                            .foregroundStyle(DSColor.subtitle)
+                                    }
                                     Text(item.summary)
                                         .font(.subheadline)
                                         .foregroundStyle(DSColor.subtitle)
@@ -461,6 +467,8 @@ private struct MarketplaceProfileItemCard: View {
     let onOpen: () -> Void
     let onAction: (MarketplaceProfileAction) -> Void
 
+    @Environment(\.locale) private var locale
+
     var body: some View {
         DSCard {
             VStack(alignment: .leading, spacing: 12) {
@@ -478,6 +486,11 @@ private struct MarketplaceProfileItemCard: View {
                             Text("¥\(item.price, specifier: "%.2f")")
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(DSColor.primary)
+                            if let category = item.typeDisplayName(localeIdentifier: locale.identifier) {
+                                Text(category)
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.subtitle)
+                            }
                             Text(item.postedAt)
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
@@ -581,6 +594,7 @@ struct MarketplaceDetailView: View {
     @ObservedObject var viewModel: MarketplaceViewModel
     let itemID: String
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
     @Environment(\.dismiss) private var dismiss
 
     @State private var detail: MarketplaceDetail?
@@ -658,7 +672,7 @@ struct MarketplaceDetailView: View {
 
                             infoRow(title: localizedString("marketplace.seller"), value: detail.item.sellerName)
                             infoRow(title: localizedString("marketplace.status"), value: detail.item.state.title)
-                            infoRow(title: localizedString("marketplace.category"), value: detail.condition)
+                            infoRow(title: localizedString("marketplace.category"), value: detail.categoryDisplayName(localeIdentifier: locale.identifier))
                             infoRow(title: localizedString("marketplace.location"), value: detail.item.location)
                             infoRow(title: localizedString("marketplace.contactHint"), value: detail.contactHint)
                         }

@@ -34,6 +34,16 @@ struct MarketplaceItem: Codable, Identifiable, Hashable {
     let state: MarketplaceItemState
     let tags: [String]
     let previewImageURL: String?
+    var typeID: Int? = nil
+
+    func typeDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String? {
+        guard let typeID else { return nil }
+        return LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions.marketplaceItemTypes.first(where: { $0.code == typeID })?.label
+    }
+
+    func displayTags(localeIdentifier: String = AppLanguage.currentIdentifier()) -> [String] {
+        typeDisplayName(localeIdentifier: localeIdentifier).map { [$0] } ?? tags
+    }
 }
 
 struct MarketplaceDetail: Codable, Identifiable, Hashable {
@@ -49,6 +59,10 @@ struct MarketplaceDetail: Codable, Identifiable, Hashable {
     let sellerMajor: String?
     let sellerGrade: String?
     let imageURLs: [String]
+
+    func categoryDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        item.typeDisplayName(localeIdentifier: localeIdentifier) ?? condition
+    }
 }
 
 struct MarketplacePersonalSummary: Codable, Hashable {

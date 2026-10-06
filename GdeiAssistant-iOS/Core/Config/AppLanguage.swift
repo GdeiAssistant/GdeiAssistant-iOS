@@ -74,15 +74,24 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 
     nonisolated private static func language(from identifier: String?) -> AppLanguage? {
-        let normalized = (identifier ?? "")
+        // Accept-Language: first comma item, then drop `;q=` params, then normalize.
+        let firstItem = (identifier ?? "")
+            .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
+            .first
+            .map(String.init) ?? ""
+        let withoutQuality = firstItem
+            .split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)
+            .first
+            .map(String.init) ?? ""
+        let lowercaseIdentifier = withoutQuality
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "_", with: "-")
+            .lowercased()
 
-        guard !normalized.isEmpty else {
+        guard !lowercaseIdentifier.isEmpty else {
             return nil
         }
 
-        let lowercaseIdentifier = normalized.lowercased()
         let segments = lowercaseIdentifier.split(separator: "-")
 
         switch lowercaseIdentifier {

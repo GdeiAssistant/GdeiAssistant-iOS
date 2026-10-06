@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
     @State private var activeEditor: ProfileEditorField?
     @State private var activeLocationPicker: ProfileLocationPickerField?
 
@@ -29,7 +30,7 @@ struct ProfileView: View {
                     )
                 }
             }
-            .navigationTitle(localizedString("profile.center"))
+            .navigationTitle(localizedString("profile.center", locale: locale.identifier))
             .navigationBarTitleDisplayMode(.large)
             .task {
                 await viewModel.loadIfNeeded()
@@ -83,42 +84,44 @@ struct ProfileView: View {
                             .font(.headline)
                             .foregroundStyle(DSColor.title)
 
-                        HStack(alignment: .top, spacing: 14) {
-                            NavigationLink {
-                                AvatarEditView(viewModel: container.makeAvatarEditViewModel())
-                            } label: {
-                                DSAvatarView(urlString: profile.avatarURL, size: 68)
-                            }
-                            .buttonStyle(.plain)
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(alignment: .top, spacing: 14) {
+                                NavigationLink {
+                                    AvatarEditView(viewModel: container.makeAvatarEditViewModel())
+                                } label: {
+                                    DSAvatarView(urlString: profile.avatarURL, size: 68)
+                                }
+                                .buttonStyle(.plain)
 
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
-                                    .font(.title3.weight(.bold))
-                                    .foregroundStyle(DSColor.title)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
+                                        .font(.title3.weight(.bold))
+                                        .foregroundStyle(DSColor.title)
 
-                                Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.subtitle)
-
-                                if !profile.ipArea.isEmpty {
-                                    Text("\(localizedString("profile.ipAreaLabel"))\(profile.ipArea)")
+                                    Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
+
+                                    if !profile.ipArea.isEmpty {
+                                        Text("\(localizedString("profile.ipAreaLabel"))\(ProfileLocationCatalog.areaDisplayName(profile.ipArea, localeIdentifier: locale.identifier))")
+                                            .font(.caption)
+                                            .foregroundStyle(DSColor.subtitle)
+                                    }
                                 }
+
+                                Spacer()
                             }
 
-                            Spacer()
+                            SocialProfileStatsRow(viewModel: container.makeSocialMeSummaryViewModel())
                         }
+                        .accessibilityElement(children: .contain)
+                        .accessibilityIdentifier("profile.header")
 
                         Divider()
 
                         profileFields(profile)
                     }
                 }
-
-                Color.clear.frame(height: 36)
-
-                SocialProfileStatsCard(viewModel: container.makeSocialMeSummaryViewModel())
 
                 Color.clear.frame(height: 24)
 
@@ -137,16 +140,12 @@ struct ProfileView: View {
                             ConversationListView(viewModel: container.makeConversationListViewModel())
                         }
                         Divider()
-                        profileMenuLink(title: localizedString("social.blockList.title"), systemImage: "nosign") {
-                            SocialBlockListView(viewModel: container.makeSocialBlockListViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.privacySettings"), systemImage: "lock.shield") {
+                        profileMenuLink(
+                            title: localizedString("profile.privacySettings"),
+                            systemImage: "lock.shield",
+                            accessibilityIdentifier: "profile.entry.privacy"
+                        ) {
                             PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("social.dmPolicy.title"), systemImage: "envelope.badge.shield.half.filled") {
-                            DirectMessagePrivacyView(viewModel: container.makeDirectMessagePrivacyViewModel())
                         }
                         Divider()
                         profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
@@ -181,7 +180,11 @@ struct ProfileView: View {
                             .foregroundStyle(DSColor.title)
                             .padding(.bottom, 10)
 
-                        profileMenuLink(title: localizedString("appearance.title"), systemImage: "paintbrush") {
+                        profileMenuLink(
+                            title: localizedString("appearance.title"),
+                            systemImage: "paintbrush",
+                            accessibilityIdentifier: "profile.entry.appearance"
+                        ) {
                             AppearanceView()
                         }
                         Divider()
@@ -225,11 +228,11 @@ struct ProfileView: View {
                 activeEditor = .birthday
             }
             Divider()
-            editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.college, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.collegeDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .college
             }
             Divider()
-            editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.major, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.majorDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .major
             }
             Divider()
@@ -237,11 +240,11 @@ struct ProfileView: View {
                 activeEditor = .grade
             }
             Divider()
-            editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.location, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.locationDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .location
             }
             Divider()
-            editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometown, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometownDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .hometown
             }
             Divider()
@@ -277,8 +280,14 @@ struct ProfileView: View {
         .buttonStyle(.plain)
     }
 
-    private func profileMenuLink<Destination: View>(title: String, systemImage: String, @ViewBuilder destination: () -> Destination) -> some View {
-        NavigationLink {
+    @ViewBuilder
+    private func profileMenuLink<Destination: View>(
+        title: String,
+        systemImage: String,
+        accessibilityIdentifier: String? = nil,
+        @ViewBuilder destination: () -> Destination
+    ) -> some View {
+        let link = NavigationLink {
             destination()
         } label: {
             HStack(spacing: 12) {
@@ -296,8 +305,15 @@ struct ProfileView: View {
                     .foregroundStyle(DSColor.subtitle)
             }
             .padding(.vertical, 10)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+
+        if let accessibilityIdentifier {
+            link.accessibilityIdentifier(accessibilityIdentifier)
+        } else {
+            link
+        }
     }
 }
 
@@ -313,6 +329,7 @@ private enum ProfileEditorField: String, Identifiable {
 private struct ProfileFieldEditorSheet: View {
     let field: ProfileEditorField
     @ObservedObject var viewModel: ProfileViewModel
+    @Environment(\.locale) private var locale
     @Environment(\.dismiss) private var dismiss
 
     @State private var text = ""
@@ -359,7 +376,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.college == option {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -384,7 +401,7 @@ private struct ProfileFieldEditorSheet: View {
                                     Task { await save() }
                                 } label: {
                                     HStack {
-                                        Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                        Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                         Spacer()
                                         if viewModel.major == option {
                                             Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -406,7 +423,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.isEnrollmentOptionSelected(option) {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -546,6 +563,7 @@ private struct ProfileLocationPickerSheet: View {
     let onConfirm: (ProfileLocationSelection) async -> ProfileSaveResult
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
     @State private var selectedRegionCode = ""
     @State private var selectedStateCode = ""
     @State private var selectedCityCode = ""
@@ -555,12 +573,12 @@ private struct ProfileLocationPickerSheet: View {
     var body: some View {
         NavigationStack {
             Group {
-                if regions.isEmpty {
+                if localizedRegions.isEmpty {
                     DSEmptyStateView(icon: "globe.asia.australia", title: localizedString("profile.noLocationData"), message: localizedString("profile.emptyMsg"))
                 } else {
                     Form {
                         Picker(localizedString("profile.regionPicker"), selection: $selectedRegionCode) {
-                            ForEach(regions) { region in
+                            ForEach(localizedRegions) { region in
                                 Text(region.name).tag(region.code)
                             }
                         }
@@ -613,8 +631,12 @@ private struct ProfileLocationPickerSheet: View {
         }
     }
 
+    private var localizedRegions: [ProfileLocationRegion] {
+        ProfileLocationCatalog.localizing(regions, localeIdentifier: locale.identifier)
+    }
+
     private var currentRegion: ProfileLocationRegion? {
-        regions.first(where: { $0.code == selectedRegionCode }) ?? regions.first
+        localizedRegions.first(where: { $0.code == selectedRegionCode }) ?? localizedRegions.first
     }
 
     private var currentStates: [ProfileLocationState] {
@@ -639,7 +661,8 @@ private struct ProfileLocationPickerSheet: View {
             displayName: ProfileFormSupport.makeLocationDisplay(
                 region: currentRegion.name,
                 state: currentState?.name ?? "",
-                city: currentCity?.name ?? ""
+                city: currentCity?.name ?? "",
+                localeIdentifier: locale.identifier
             ),
             regionCode: currentRegion.code,
             stateCode: currentState?.code ?? "",
@@ -689,7 +712,7 @@ private struct ProfileLocationPickerSheet: View {
 
     private var resolvedSelection: ProfileLocationSelection? {
         guard let currentSelection else { return nil }
-        guard let region = regions.first(where: { $0.code == currentSelection.regionCode }) else {
+        guard let region = localizedRegions.first(where: { $0.code == currentSelection.regionCode }) else {
             return nil
         }
         if currentSelection.stateCode.isEmpty {
@@ -714,13 +737,14 @@ private extension ProfileViewModel {
         return trimmed.isEmpty || trimmed == ProfileFormSupport.unselectedOption ? fallback : trimmed
     }
 
-    func displaySelectionOption(_ value: String) -> String {
-        value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected") : value
+    func displaySelectionOption(_ value: String, localeIdentifier: String) -> String {
+        selectionOptionDisplayName(value, localeIdentifier: localeIdentifier)
     }
 }
 
-private struct SocialProfileStatsCard: View {
+private struct SocialProfileStatsRow: View {
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.locale) private var locale
     @StateObject private var viewModel: SocialMeSummaryViewModel
 
     init(viewModel: SocialMeSummaryViewModel) {
@@ -728,40 +752,41 @@ private struct SocialProfileStatsCard: View {
     }
 
     var body: some View {
-        DSCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(localizedString("social.stats.title"))
-                    .font(.headline)
-                    .foregroundStyle(DSColor.title)
-
-                if viewModel.isLoading && viewModel.me == nil {
-                    ProgressView()
-                } else if let me = viewModel.me {
-                    HStack(spacing: 12) {
-                        statItem(
-                            title: localizedString("social.relationship.following"),
-                            value: me.followingCount,
-                            kind: .following,
-                            userID: me.id
-                        )
-                        statItem(
-                            title: localizedString("social.relationship.followers"),
-                            value: me.followerCount,
-                            kind: .followers,
-                            userID: me.id
-                        )
-                        statItem(
-                            title: localizedString("social.relationship.friends"),
-                            value: me.friendCount,
-                            kind: .friends,
-                            userID: me.id
-                        )
-                    }
-                } else if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.danger)
+        VStack(spacing: 0) {
+            if viewModel.isLoading && viewModel.me == nil {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 44)
+            } else if let me = viewModel.me {
+                HStack(spacing: 12) {
+                    statItem(
+                        title: localizedString("social.relationship.following", locale: locale.identifier),
+                        value: me.followingCount,
+                        kind: .following,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.following"
+                    )
+                    statItem(
+                        title: localizedString("social.relationship.followers", locale: locale.identifier),
+                        value: me.followerCount,
+                        kind: .followers,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.followers"
+                    )
+                    statItem(
+                        title: localizedString("social.relationship.friends", locale: locale.identifier),
+                        value: me.friendCount,
+                        kind: .friends,
+                        userID: me.id,
+                        accessibilityIdentifier: "profile.stats.friends"
+                    )
                 }
+            } else if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.danger)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(minHeight: 44)
             }
         }
         .task {
@@ -773,7 +798,8 @@ private struct SocialProfileStatsCard: View {
         title: String,
         value: Int,
         kind: SocialRelationshipKind,
-        userID: String
+        userID: String,
+        accessibilityIdentifier: String
     ) -> some View {
         NavigationLink {
             SocialRelationshipListView(
@@ -784,13 +810,21 @@ private struct SocialProfileStatsCard: View {
                 Text("\(value)")
                     .font(.headline)
                     .foregroundStyle(DSColor.title)
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                 Text(title)
                     .font(.caption)
                     .foregroundStyle(DSColor.subtitle)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoginRecordView: View {
     @StateObject private var viewModel: LoginRecordViewModel
+    @Environment(\.locale) private var locale
 
     init(viewModel: LoginRecordViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -28,7 +29,7 @@ struct LoginRecordView: View {
                                 .font(.caption)
                                 .foregroundStyle(DSColor.primary)
                         }
-                        Text("\(record.area) · \(record.ip)")
+                        Text("\(ProfileLocationCatalog.areaDisplayName(record.area, localeIdentifier: locale.identifier)) · \(record.ip)")
                             .font(.subheadline)
                             .foregroundStyle(DSColor.subtitle)
                         Text(record.device)

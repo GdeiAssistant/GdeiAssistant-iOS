@@ -97,7 +97,7 @@ enum AppConstants {
     }
 
     enum Delivery {
-        nonisolated static let defaultTaskName = "代收"
+        nonisolated static var defaultTaskName: String { localizedString("delivery.fallback.taskName") }
         nonisolated static let defaultPickupCode = "00000000000"
     }
 

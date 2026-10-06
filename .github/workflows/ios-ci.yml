@@ -25,6 +25,7 @@ jobs:
         run: |
           chmod +x Tools/check_style.sh
           ./Tools/check_style.sh
+          python3 Tools/check_localization.py
 
   build-smoke:
     name: Build Smoke

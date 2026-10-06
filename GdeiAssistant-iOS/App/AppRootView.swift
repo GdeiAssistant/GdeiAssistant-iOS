@@ -90,6 +90,8 @@ struct AppRootView: View {
                 NavigationStack {
                     ConversationListView(viewModel: container.makeConversationListViewModel())
                 }
+            case .profile:
+                ProfileView(viewModel: container.makeProfileViewModel())
             }
         }
     }

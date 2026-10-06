@@ -53,4 +53,22 @@ struct UserProfile: Codable, Identifiable, Equatable {
         self.hometownSelection = hometownSelection
         self.ipArea = ipArea
     }
+
+    func collegeDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        let options = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
+        return options.faculties.first(where: { $0.code == collegeCode })?.label ?? college
+    }
+
+    func majorDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        let options = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
+        return options.faculties.first(where: { $0.code == collegeCode })?.majors.first(where: { $0.code == majorCode })?.label ?? major
+    }
+
+    func locationDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        ProfileLocationCatalog.displayName(for: locationSelection, fallback: location, localeIdentifier: localeIdentifier)
+    }
+
+    func hometownDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+        ProfileLocationCatalog.displayName(for: hometownSelection, fallback: hometown, localeIdentifier: localeIdentifier)
+    }
 }

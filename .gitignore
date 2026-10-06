@@ -30,6 +30,7 @@ Docs/
 Tools/*
 !Tools/build_simulator.sh
 !Tools/check_style.sh
+!Tools/check_localization.py
 !Tools/make_chat_picker_photo.py
 !Tools/seed_chat_picker_photo.sh
 AGENTS.md

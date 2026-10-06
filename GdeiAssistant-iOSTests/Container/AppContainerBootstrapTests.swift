@@ -58,13 +58,36 @@ final class AppContainerBootstrapTests: XCTestCase {
         )
 
         XCTAssertTrue(
-            profileSource.contains("profileMenuLink(title: localizedString(\"appearance.title\")"),
+            profileSource.contains("accessibilityIdentifier: \"profile.entry.appearance\"")
+                && profileSource.contains("AppearanceView()"),
             "Appearance 应该保留在个人中心 More 区域。"
         )
         XCTAssertFalse(
             settingsSource.contains("AppearanceView()"),
             "Settings 不应再直接暴露 Appearance 入口。"
         )
+    }
+
+    func testPrivacyEntriesAreGroupedAndSocialStatsStayInProfileHeader() throws {
+        let profileSource = try sourceFileContents(at: "GdeiAssistant-iOS/Features/Profile/Views/ProfileView.swift")
+        let privacySource = try sourceFileContents(at: "GdeiAssistant-iOS/Features/Profile/Views/PrivacySettingsView.swift")
+        XCTAssertFalse(profileSource.contains("DirectMessagePrivacyView("))
+        XCTAssertFalse(profileSource.contains("SocialBlockListView("))
+        XCTAssertEqual(privacySource.components(separatedBy: "DirectMessagePrivacyView(").count - 1, 1)
+        XCTAssertEqual(privacySource.components(separatedBy: "SocialBlockListView(").count - 1, 1)
+        let menu = try XCTUnwrap(profileSource.range(of: "private func profileMenuLink"))
+        let menuEnd = try XCTUnwrap(profileSource.range(of: "// MARK: - Editor field enum"))
+        XCTAssertTrue(profileSource[menu.lowerBound..<menuEnd.lowerBound].contains(".contentShape(Rectangle())"), "The menu row must make its Spacer tappable")
+        let stats = try XCTUnwrap(profileSource.range(of: "SocialProfileStatsRow(viewModel:"))
+        let fields = try XCTUnwrap(profileSource.range(of: "profileFields(profile)"))
+        let header = try XCTUnwrap(profileSource.range(of: "profile.header"))
+        XCTAssertLessThan(stats.lowerBound, header.lowerBound)
+        XCTAssertLessThan(header.lowerBound, fields.lowerBound)
+        XCTAssertTrue(profileSource[stats.lowerBound..<header.lowerBound].contains(".accessibilityElement(children: .contain)"))
+        let row = try XCTUnwrap(profileSource.range(of: "private struct SocialProfileStatsRow"))
+        XCTAssertFalse(profileSource[row.lowerBound...].contains("DSCard"))
+        XCTAssertTrue(profileSource[row.lowerBound...].contains("VStack(spacing: 0)"))
+        XCTAssertFalse(profileSource[row.lowerBound...].contains("Group {"), "An initially empty Group has no child to run the load task")
     }
 
     func testKnownHardCodedLocalizedStringsAreRemovedFromSharedUI() throws {

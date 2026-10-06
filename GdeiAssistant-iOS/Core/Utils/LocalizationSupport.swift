@@ -1,7 +1,7 @@
 import Foundation
 
 /// Returns a localized string from the bundle matching the given locale,
-/// falling back to `UserPreferences.shared` locale, then `NSLocalizedString`.
+/// using the persisted app language when a locale is not supplied.
 ///
 /// Use this helper anywhere `NSLocalizedString` would ignore the SwiftUI
 /// environment locale (non-SwiftUI contexts, computed properties, etc.).

@@ -122,3 +122,44 @@ xcodebuild test -project GdeiAssistant-iOS.xcodeproj -scheme GdeiAssistant-iOS \
 CI 首次运行 `37415308165`（`ba3310b`）实际完成构建、159 项单测和原有 4 项 UI 用例；3 项新增图片 UI 用例都停在系统相册定位。三份控件树与截图确认种图和测试使用同一模拟器，合成箭头图片位于相册第一项，另有系统默认照片。iOS 26.2 的缩略图类型为 `Image`/`PXGGridLayout-Info`，不是 `Cell`。测试改为在系统 `photosView_content_scroll_view` 中定位该 Image，继续保留真实系统选图、480×320 解码尺寸和全部后续断言；这项定位修正仍须由下一次 CI 实际复验。
 
 第二次 CI `37417003363`（`e12c6dd`）实际仍通过构建、159 项单测和原 4 项 UI；新增 3 项正确找到相册 Image，但 `Image.tap()` 自动计算命中点为 `{-1,-1}`，报 not hittable。真实截图确认首张合成照片完整显示、无遮挡，控件树实时 frame 为 `{{0,292},{132.9,133}}`、位于 402×874 屏幕内。helper 改为依据该已定位 Image 的实时 frame 中心发送真正的 `XCUICoordinate` 触摸，并检查 frame 非空且在窗口内；不硬编码屏幕坐标、不更换系统 picker、不调整超时或删改后续断言。实际选图与后续图片流程仍待下一次 CI 复验。
+
+### 2026-10-06 个人页、隐私入口及完整语言资源检查
+
+关注／粉丝／好友三项数量放入头像昵称下面的资料头部，点击仍分别进入原关系列表，互相关注才是好友。个人页只保留一个隐私设置入口；私信接收范围和黑名单都在 `PrivacySettingsView` 的同一组里。复用原导航和 ViewModel，数量入口至少 44pt，未引入新的页面或关系算法。SwiftUI UI Patterns 和 UIUXProMax 仅用于这一组布局、原生列表、文字尺寸及点击区域检查。
+
+支持语言保持六种：zh-CN（资源目录 zh-Hans）、zh-HK、zh-TW、en、ja、ko。每种有 1760 项 Localizable 和 1 项本地化麦克风权限说明；完整结构检查的缺失、多余、空值、重复、格式参数不一致都为 0，1500 个静态本地化引用未发现缺 key，静态 UI 字面量检查为 0。资料选项字典另有每语言 86 项，键集合一致。专名、外部状态解析及用户内容不作为需要翻译的界面文案。
+
+本次调整 zh-HK 394 项措辞，按完整提示句处理粤语表达，并统一私隱／電郵／短訊／登入等词；zh-TW 调整 66 项，使用追蹤／傳送／使用者／隱私權設定等台湾用语，全部资源中没有嘅／唔／咗／啲／撳／搵。简体中文 3 项、英语／日语／韩语各 2 项主要修正“关注了我”的关系描述或去除验证码提示里的实现路径。已有正确短标签及用户提交内容保留。
+
+运行时解析先取 Accept-Language 第一项、去掉参数，再处理空白、下划线和大小写，保留港澳、台湾及简体变体；首项不支持时回到简体中文。首次系统语言检测立即保存，避免 SwiftUI、非 View 文案及 HTTP 语言不同。UI 测试 app 使用自己的 standard 存储，而单测继续使用独立 suite；聊天日期和二手商品入学年份格式使用应用语言。应用生成的跑腿默认标题复用已有资源，地址、取件地和备注原样提交。
+
+`Tools/check_localization.py` 以 Python 标准库检查全部资源及静态调用，已加入 CI 的 Style Check。新增回归覆盖：六语言资源／格式参数／权限文案／资料选项结构、语言参数解析、首次保存、切换语言且保留资料草稿、默认跑腿标题和用户内容、聊天日期；UI 新增资料头部／隐私分组导航，以及在同一外观页面切换全部六种语言后返回资料页。原有系统 PhotosPicker 图片流程保留。UI 每阶段保存截图，失败时保留截图和控件树。
+
+本机 CLT 的 351 个 Swift 文件 parse、全部 strings 和 pbxproj 的 plutil、Style Check、资源扫描及 diff 检查通过。另将真实 AppLanguage／UserPreferences／LocalizationSupport／ProfileFormSupport 等源码编译为临时 macOS 检查程序，实际执行六语言查询、存储／参数解析、默认标题及聊天日期；没有替换业务实现。该程序验证可执行逻辑，不代表 iOS App 构建或 XCTest／模拟器通过。本轮实际 Xcode 26.3／iOS 26.2 的新增单测及 9 项 UI 流程交由 CI 执行。
+
+### PR 64 首次 CI 返修
+
+`37442929145`（`6711d44`）通过构建及 Style，但新语言测试出现三次实际 malloc 崩溃。新 `.xcresult` 内解出的 crash JSON 确认：聊天日期及首次语言保存测试在 `UserPreferences` 同步析构时进入 MainActor back-deployment 路径；六语言切换测试在 `ProfileViewModel` 释放 `MockProfileRepository` 时嵌套进入同一路径。三个类没有自定义 actor 清理，改用空 `nonisolated deinit`，仍由 ARC 释放属性及取消 Combine 订阅，不保留测试对象、不改 async 来避开同步释放。已有测试增加 20 次真实弱引用释放断言。语言测试每项先保存 standard locale、设置明确基线，结束时恢复原值（原值缺失则删除测试写入的键），避免后续 mapper／搜索测试读到韩语；原 mapper 和分页断言保持。
+
+同一 CI 的 HK 资料页截图和控件树确认三项社交数量完全没有渲染。数量子视图初始返回空 `Group`，附加的 `.task` 没有实际子视图可承载；改用稳定 `VStack` 承载加载任务。资料头部显式使用 `.accessibilityElement(children: .contain)`，让头部标识保留在容器且不覆盖内部关注／粉丝／好友按钮标识。现有 9 项 UI 流程及断言保留，新增数量栏与隐私分组测试仍须由下一次完整 CI 实际复验。本机语法／资源检查与 macOS 逻辑执行不能替代 iOS 26.2 析构或模拟器 UI 验证。
+
+
+### PR 64 第二次 CI 返修及系统地区显示
+
+`37446742862`（`d4c0c4d`）的实际 `.xcresult` 解包确认，语言切换用例这次在 `SessionState.__deallocating_deinit` 进入 `MainActorBackDeploy` 后发生 malloc 崩溃。此前 `UserPreferences`、资料 ViewModel 和 mock repository 的修正保留；`SessionState` 同样只有自动 ARC 属性清理，增加空 `nonisolated deinit`。同步 20 次 weak 释放、六语言切换及原 mapper／搜索断言全部保留。崩溃使 locale 恢复代码未执行，因此后续出现韩语年级及中文搜索失败；不修改这些断言来掩盖原因。
+
+同次 HK UI 的社交数量栏三个按钮已显示。隐私导航失败时的截图和控件树仍在个人页，按钮正常可见、标签正确、系统已合成 tap；自定义 `NavigationLink` 的 label 包含 `Spacer` 却未声明完整点击区域。菜单 label 增加 `.contentShape(Rectangle())`，使整行空白可点击。现有私隱設定／私訊规则／黑名單导航断言及全部 9 项 UI 流程保持。
+
+系统地区采用四端共享字典，按真实 code 合并到原 `states`／`cities`：236 个国家或地区、266 个省级节点、3777 个城市都有 `zh-HK` 和 `zh-TW` 标签，原 `name`、code、层级及顺序保持。广东、广州、汕头、佛山的日语／韩语及 `Foshan` 拼写采用共享标签。所在地、家乡按已存 selection 的 code 实时绘制；选择器只重新显示 repository 返回的选项，保持其代码集合、顺序及未知节点。country-only 和 state-only 的有效选择也保留，不要求不存在的城市 code。未知代码及没有结构化 selection 的自由文字原样显示。
+
+IP 和登录地区仅对完整的已知节点名称或父路径后缀进行精确匹配。接受原名称、六语言标签、latin 名称、locale 正常显示串、按父到子顺序的空格串以及中文／港澳／台湾紧凑串；按原路径层级输出当前语言，不补国家。若多个候选在目标语言有不同显示值，保留原文。未知文字、句子、带额外后缀的非目录格式不做 substring 替换。节点的六语言标签在索引内只解析一次，后续别名及查询复用。
+
+同类检查修正了个人资料院系／专业的旧标签缓存：展示根据 `collegeCode`／`majorCode`，下拉选项按原代码显示当前语言但保留选值；恢复草稿优先用 faculty code。保存前按缓存选项代码生成当前语言标签，配合 repository 每次保存获取当前语言 options 的既有流程，避免切换语言后提交旧标签失败。昵称、简介、地址及未知自由内容不因本地化重写。
+
+新增 6 项单测覆盖保留同一资料的六语言显示、稀疏选择器代码、country／state-only 与未知值、IP 完整路径／歧义，以及未先刷新缓存 options 的语言切换、真实 ViewModel 保存和 mapper DTO code。原六语言 UI 流程回到资料页后增加韩语所在地／家乡断言与截图，仍为 9 项 UI。Dating／Express 性别、Delivery／Marketplace 状态、LostFound 类型／状态及社交规则的系统枚举均已有计算型本地化；Marketplace 原先在映射时丢失后端数字分类 code，本轮追加可选 `typeID`（旧记录默认 nil）、mapper 保留及详情补图复制时透传；列表及详情按已知 code 显示当前语言分类。未知 code／旧记录的 tags 和 condition 原文保留，商品标题和正文不做猜译；回归覆盖同一 mapped detail 在六语言之间切换及新旧 Codable 记录。
+
+本轮本机可执行检查将真实地区 catalog、资料／偏好／SessionState、ProfileViewModel、mapper 源码编译为临时 macOS 程序。ViewModel 的受控数据使用仓库既有 XCTest recording fixture，生产逻辑未替换；验证实际保存请求及 code、六语言显示、未知完整地区保持、IP 精确路径和 20 次同步 weak 释放。首次完整路径索引实测 CPU 约 4.35 秒，本轮改为轻量单节点索引加完整字符串候选匹配／结果缓存；最终 debug 两次检查首个地区查询 wall 约 0.60～1.56 秒、CPU 约 0.36～0.74 秒，后续查询约 0.001 秒。前缀／后缀仅筛候选，最终仍要求完整 alias 等于输入。该计时来自本机 x86_64 macOS，不代表模拟器或真机性能。
+
+351 个 Swift 文件全量 parse 已通过，后续新增写集做定向 parse；1760×6 资源检查、格式参数、权限键、静态引用及 plutil 保持通过。本机没有完整 Xcode 和 XCTest 模块，真实 Xcode 26.3／iOS 26.2 的全部单测与 9 项 UI、析构及点按回归由最终精确 head CI 执行，不能用本机结果替代。
+
+追加的真实 Marketplace mapper／model 也已在同一 macOS 检查程序实际通过六语言分类、新旧 Codable、未知标签及用户文字保持检查。host 编译出现两处既有 `nonisolated` mapper 读取 `LocalizedProfileCatalog.current` 的 MainActor 警告（itemTypes 和 facultyName）；不是本轮新增字段或显示方法的错误，Swift 5 编译退出 0，未为此扩展隔离结构调整。

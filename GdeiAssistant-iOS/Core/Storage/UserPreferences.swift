@@ -82,7 +82,14 @@ final class UserPreferences: ObservableObject {
             self.fontScaleStep = defaults.integer(forKey: AppConstants.UserDefaultsKeys.fontScaleStep).clamped(to: 0...3)
         }
         hasInitialized = true
+        // Persist system detection once, so helpers and HTTP headers use the
+        // same language as SwiftUI even before the user changes a preference.
+        persistLocaleIfNeeded()
     }
+
+    // Only automatic ARC cleanup is needed. Avoid the iOS 26.2
+    // MainActor isolated-deinit back-deployment crash on synchronous release.
+    nonisolated deinit {}
 
     /// Reads the persisted locale directly from UserDefaults so that
     /// non-SwiftUI code (computed properties, utility functions) can resolve
