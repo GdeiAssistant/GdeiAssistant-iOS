@@ -17,6 +17,7 @@ struct DataCenterView: View {
                 Label(localizedString("dataCenter.yellowPage"), systemImage: "phone.fill")
             }
         }
+        .dsListBackground()
         .navigationTitle(AppDestination.dataCenter.title)
     }
 }
@@ -75,6 +76,7 @@ struct ElectricityFeesView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("dataCenter.electricQuery"))
     }
 
@@ -139,6 +141,7 @@ struct YellowPageView: View {
                         Text(category.name)
                     }
                 }
+                .dsListBackground()
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -206,6 +209,7 @@ private struct YellowPageEntryDetailView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("dataCenter.ypDetail"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

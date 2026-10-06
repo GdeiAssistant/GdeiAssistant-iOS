@@ -59,6 +59,7 @@ struct PhotographView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("photograph.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -289,6 +290,7 @@ struct PhotographDetailView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
             }
         }
@@ -545,8 +547,8 @@ private struct PublishPhotographView: View {
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
-                                .background(Color(.tertiarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .background(DSColor.fieldBackground)
+                                .clipShape(DSRadius.controlShape)
                             }
                         }
                     }
@@ -564,6 +566,7 @@ private struct PublishPhotographView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("photograph.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -606,13 +609,13 @@ private struct PublishPhotographView: View {
                     .scaledToFit()
             } else {
                 Rectangle()
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                    .fill(DSColor.fieldBackground)
                     .overlay { Image(systemName: "photo") }
             }
         }
         .frame(width: 92, height: 92)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.fieldBackground)
+        .clipShape(DSRadius.controlShape)
     }
 }
 

@@ -48,7 +48,7 @@ struct DeleteAccountView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(localizedString("deleteAccount.title"))
         .confirmationDialog(localizedString("deleteAccount.confirmDialog"), isPresented: $showConfirmation, titleVisibility: .visible) {
             Button(localizedString("deleteAccount.proceed"), role: .destructive) {

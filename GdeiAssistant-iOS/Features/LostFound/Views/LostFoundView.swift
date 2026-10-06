@@ -39,7 +39,7 @@ struct LostFoundView: View {
                                     Spacer()
                                     Text(item.type.displayName)
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.secondary)
+                                        .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.primary)
                                 }
 
                                 Text(item.summary)
@@ -118,7 +118,7 @@ private struct LostFoundProfileView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background)
+                .dsScreenBackground()
                 .refreshable {
                     await loadData()
                 }
@@ -172,8 +172,8 @@ private struct LostFoundProfileView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.surface)
+        .clipShape(DSRadius.cardShape)
     }
 
     @ViewBuilder
@@ -211,7 +211,7 @@ private struct LostFoundProfileView: View {
                                             .foregroundStyle(DSColor.subtitle)
                                         Text(item.type.displayName)
                                             .font(.caption)
-                                            .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.secondary)
+                                            .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.primary)
                                     }
                                     Spacer()
                                 }
@@ -244,20 +244,17 @@ private struct LostFoundProfileView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(summary.nickname)
                     .font(.title3.weight(.bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(DSColor.title)
                 Text(summary.introduction)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.92))
+                    .foregroundStyle(DSColor.subtitle)
                     .lineLimit(2)
             }
             Spacer()
         }
-        .padding(18)
+        .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(red: 0.27, green: 0.76, blue: 0.65))
-        )
+        .background(DSColor.primarySoft, in: DSRadius.cardShape)
     }
 
     private func items(for summary: LostFoundPersonalSummary) -> [LostFoundItem] {
@@ -454,7 +451,7 @@ struct LostFoundDetailView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("lostFound.detail"))
@@ -607,8 +604,8 @@ struct PublishLostFoundView: View {
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
-                                .background(Color(.tertiarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .background(DSColor.fieldBackground)
+                                .clipShape(DSRadius.controlShape)
                             }
                         }
                     }
@@ -629,6 +626,7 @@ struct PublishLostFoundView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("lostFound.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -711,7 +709,7 @@ struct PublishLostFoundView: View {
                     .scaledToFit()
             } else {
                 Rectangle()
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                    .fill(DSColor.fieldBackground)
                     .overlay {
                         Image(systemName: "photo")
                             .foregroundStyle(DSColor.subtitle)
@@ -719,8 +717,8 @@ struct PublishLostFoundView: View {
             }
         }
         .frame(width: 92, height: 92)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.fieldBackground)
+        .clipShape(DSRadius.controlShape)
     }
 }
 
@@ -782,6 +780,7 @@ private struct EditLostFoundView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("lostFound.editTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

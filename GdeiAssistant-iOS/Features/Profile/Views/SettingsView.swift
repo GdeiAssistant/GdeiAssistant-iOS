@@ -68,6 +68,7 @@ struct SettingsView: View {
                 Text(LocalizedStringKey("settings.appInfo"))
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("settings.title"))
     }
 

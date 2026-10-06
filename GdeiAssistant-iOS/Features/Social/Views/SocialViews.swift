@@ -41,6 +41,7 @@ struct SocialUserSearchView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("social.search.title"))
         .task {
             await viewModel.reload()
@@ -152,7 +153,7 @@ struct SocialPublicProfileView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background.ignoresSafeArea())
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("social.profile.title"))
@@ -238,6 +239,7 @@ struct SocialRelationshipListView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(viewModel.kind.title)
         .task { await viewModel.reload() }
     }
@@ -276,6 +278,7 @@ struct SocialBlockListView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("social.blockList.title"))
         .task { await viewModel.reload() }
     }
@@ -318,13 +321,14 @@ struct DirectMessagePrivacyView: View {
                 Text(errorMessage).foregroundStyle(DSColor.danger)
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("social.dmPolicy.title"))
         .overlay {
             if viewModel.isLoading {
                 ProgressView(localizedString("common.loading"))
                     .padding()
                     .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .clipShape(DSRadius.controlShape)
             }
         }
         .task { await viewModel.load() }
@@ -381,6 +385,7 @@ struct ConversationListView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("social.conversations.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -422,7 +427,8 @@ struct ConversationListView: View {
             if conversation.unreadCount > 0 {
                 Text(conversation.unreadCount > 99 ? "99+" : "\(conversation.unreadCount)")
                     .font(.caption2.weight(.bold))
-                    .foregroundStyle(.white)
+                    .monospacedDigit()
+                    .foregroundStyle(DSColor.onPrimary)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 4)
                     .background(DSColor.primary)
@@ -496,7 +502,7 @@ struct ChatThreadView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(DSColor.background.ignoresSafeArea())
+        .dsScreenBackground()
         .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(spacing: 0) {
                 Divider()
@@ -505,7 +511,7 @@ struct ChatThreadView: View {
                 }
                 composer
             }
-            .background(DSColor.cardBackground)
+            .background(DSColor.surface)
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -585,7 +591,7 @@ struct ChatThreadView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 56, height: 56)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .clipShape(DSRadius.controlShape)
                 .accessibilityLabel(localizedString("social.chat.imageReady"))
                 .accessibilityValue("\(Int(preview.size.width)) × \(Int(preview.size.height))")
                 .accessibilityIdentifier("social.chat.draftImage")
@@ -608,7 +614,7 @@ struct ChatThreadView: View {
             if viewModel.canSendImage {
                 PhotosPicker(selection: $photoPickerItem, matching: .images, photoLibrary: .shared()) {
                     Image(systemName: "photo")
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.title3.weight(.semibold))
                         .foregroundStyle(DSColor.primary)
                         .frame(width: 44, height: 44)
                 }
@@ -619,7 +625,9 @@ struct ChatThreadView: View {
 
             TextField(localizedString("social.chat.placeholder"), text: $viewModel.draft, axis: .vertical)
                 .lineLimit(1...4)
-                .textFieldStyle(.roundedBorder)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .dsFieldBackground()
                 .disabled(viewModel.conversation?.canSend == false || viewModel.draftImagePreview != nil)
                 .accessibilityIdentifier("social.chat.composer")
 
@@ -627,7 +635,7 @@ struct ChatThreadView: View {
                 Task { await viewModel.send() }
             } label: {
                 Image(systemName: "paperplane.fill")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.title3.weight(.semibold))
                     .foregroundStyle(DSColor.primary)
                     .frame(width: 44, height: 44)
             }
@@ -637,7 +645,10 @@ struct ChatThreadView: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
-        .background(DSColor.cardBackground)
+        .background(DSColor.surface)
+        .overlay(alignment: .top) {
+            DSColor.divider.frame(height: 1)
+        }
     }
 
     private var canTapSend: Bool {
@@ -671,7 +682,6 @@ struct ChatThreadView: View {
                                         .padding(8)
                                 }
                             }
-                            .shadow(color: Color.black.opacity(0.06), radius: 2, y: 1)
                         }
                         .buttonStyle(.plain)
                         .frame(minHeight: 44)
@@ -685,12 +695,14 @@ struct ChatThreadView: View {
                     case .text:
                         Text(message.content)
                             .font(.body)
-                            .foregroundStyle(isMine ? Color.white : DSColor.title)
+                            .foregroundStyle(isMine ? DSColor.onPrimary : DSColor.title)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 9)
-                            .background(isMine ? DSColor.primary : DSColor.cardBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                            .shadow(color: Color.black.opacity(isMine ? 0.08 : 0.04), radius: 2, y: 1)
+                            .background(isMine ? DSColor.primary : DSColor.surface, in: DSRadius.cardShape)
+                            .overlay(
+                                DSRadius.cardShape
+                                    .strokeBorder(isMine ? Color.clear : DSColor.border, lineWidth: 1)
+                            )
                     }
                 }
 

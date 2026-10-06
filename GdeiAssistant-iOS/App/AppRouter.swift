@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 enum UITestRuntimeOverrides {
     private static let environment = ProcessInfo.processInfo.environment
@@ -24,6 +25,15 @@ enum UITestRuntimeOverrides {
     static var initialScreen: UITestInitialScreen? {
         guard let rawValue = stringValue(for: "GDEI_UI_INITIAL_SCREEN") else { return nil }
         return UITestInitialScreen(rawValue: rawValue)
+    }
+
+    static var colorScheme: ColorScheme? {
+        guard AppRuntime.isRunningTests else { return nil }
+        switch stringValue(for: "GDEI_UI_APPEARANCE") {
+        case "dark": return .dark
+        case "light": return .light
+        default: return nil
+        }
     }
 
     static var failFirstChatImageSend: Bool {
@@ -51,6 +61,8 @@ enum UITestInitialScreen: String {
     case grade
     case conversations
     case profile
+    case schedule
+    case community
 }
 
 enum AppTab: Hashable {

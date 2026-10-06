@@ -30,7 +30,7 @@ struct SocialAvatarView: View {
     private var placeholder: some View {
         ZStack {
             Circle()
-                .fill(DSColor.cardBackground)
+                .fill(DSColor.surface)
             Image(systemName: fallbackSystemImage)
                 .font(.system(size: size * 0.56))
                 .foregroundStyle(DSColor.primary)

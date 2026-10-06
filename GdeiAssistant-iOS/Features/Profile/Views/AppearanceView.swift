@@ -92,6 +92,7 @@ struct AppearanceView: View {
                 Text(LocalizedStringKey("appearance.language.label"))
             }
         }
+        .dsListBackground()
         .listStyle(.insetGrouped)
         .navigationTitle(localizedString("appearance.title"))
     }

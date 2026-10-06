@@ -16,6 +16,7 @@ struct GdeiAssistant_iOSApp: App {
         _container = StateObject(
             wrappedValue: AppRuntime.isRunningTests ? AppContainer.testing : AppContainer()
         )
+        DSAppearance.configure()
     }
 
     var body: some Scene {
@@ -28,7 +29,8 @@ struct GdeiAssistant_iOSApp: App {
                 .environmentObject(container.router)
                 .environment(\.locale, Locale(identifier: container.userPreferences.selectedLocale))
                 .environment(\.sizeCategory, container.userPreferences.sizeCategory)
-                .preferredColorScheme(colorSchemeFor(container.userPreferences.selectedTheme))
+                .preferredColorScheme(UITestRuntimeOverrides.colorScheme ?? colorSchemeFor(container.userPreferences.selectedTheme))
+                .tint(DSColor.primary)
         }
     }
 

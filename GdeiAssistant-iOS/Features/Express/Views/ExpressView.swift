@@ -67,7 +67,7 @@ private struct ExpressPostRow: View {
                     .foregroundStyle(DSColor.title)
                 Image(systemName: "heart.fill")
                     .font(.caption)
-                    .foregroundStyle(.pink)
+                    .foregroundStyle(DSColor.danger)
                 Text(post.targetName)
                     .font(.headline)
                     .foregroundStyle(DSColor.title)
@@ -155,7 +155,7 @@ struct ExpressDetailView: View {
                                     .font(.headline)
                                 Image(systemName: "heart.fill")
                                     .font(.caption)
-                                    .foregroundStyle(.pink)
+                                    .foregroundStyle(DSColor.danger)
                                 Text(detail.post.targetName)
                                     .font(.headline)
                                 Spacer()
@@ -257,6 +257,7 @@ struct ExpressDetailView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
             }
         }
@@ -472,6 +473,7 @@ private struct PublishExpressView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(LocalizedStringKey("express.publish.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

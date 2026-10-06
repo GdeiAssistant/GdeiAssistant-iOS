@@ -85,13 +85,23 @@ struct AppRootView: View {
                     MarketplaceView(viewModel: container.makeMarketplaceViewModel())
                 }
             case .grade:
-                GradeView(viewModel: container.makeGradeViewModel())
+                NavigationStack {
+                    GradeView(viewModel: container.makeGradeViewModel())
+                }
             case .conversations:
                 NavigationStack {
                     ConversationListView(viewModel: container.makeConversationListViewModel())
                 }
             case .profile:
                 ProfileView(viewModel: container.makeProfileViewModel())
+            case .schedule:
+                NavigationStack {
+                    ScheduleView(viewModel: container.makeScheduleViewModel())
+                }
+            case .community:
+                NavigationStack {
+                    CommunityFeedView(viewModel: container.makeCommunityViewModel())
+                }
             }
         }
     }

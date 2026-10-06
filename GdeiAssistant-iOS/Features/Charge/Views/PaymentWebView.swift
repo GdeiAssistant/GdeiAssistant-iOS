@@ -46,26 +46,24 @@ struct PaymentWebView: View {
             }
             Text(order.localizedStatusMessage)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DSColor.subtitle)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private func statusTint(_ order: ChargeOrder) -> Color {
         switch order.normalizedStatus {
         case "PAYMENT_SESSION_CREATED":
-            return .blue
-        case "PROCESSING", "CREATED":
-            return .orange
+            return DSColor.primary
+        case "PROCESSING", "CREATED", "MANUAL_REVIEW", "UNKNOWN":
+            return DSColor.warning
         case "FAILED":
-            return .red
-        case "MANUAL_REVIEW", "UNKNOWN":
-            return .purple
+            return DSColor.danger
         default:
-            return .secondary
+            return DSColor.subtitle
         }
     }
 }

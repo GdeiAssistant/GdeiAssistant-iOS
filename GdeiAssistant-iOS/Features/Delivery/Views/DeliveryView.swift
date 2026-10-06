@@ -45,6 +45,7 @@ struct DeliveryView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
                 .refreshable {
                     await viewModel.refresh()
@@ -110,9 +111,9 @@ private struct DeliveryOrderRow: View {
         HStack(spacing: 8) {
             Text(title)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(DSColor.onPrimary)
                 .frame(width: 20, height: 20)
-                .background(title == localizedString("delivery.pickup") ? DSColor.primary : DSColor.secondary)
+                .background(title == localizedString("delivery.pickup") ? DSColor.primary : DSColor.subtitle)
                 .clipShape(Circle())
             Image(systemName: icon)
                 .font(.caption)
@@ -130,7 +131,7 @@ private struct DeliveryOrderRow: View {
         case .delivering:
             return DSColor.primary
         case .completed:
-            return DSColor.secondary
+            return DSColor.tertiaryText
         }
     }
 }
@@ -260,6 +261,7 @@ struct DeliveryDetailView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
             }
         }
@@ -330,7 +332,7 @@ struct DeliveryDetailView: View {
                 .font(.caption.weight(.semibold))
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
-                .background(DSColor.primary.opacity(0.14))
+                .background(DSColor.primarySoft)
                 .foregroundStyle(DSColor.primary)
                 .clipShape(Capsule())
         }
@@ -343,7 +345,7 @@ struct DeliveryDetailView: View {
         case .delivering:
             return DSColor.primary
         case .completed:
-            return DSColor.secondary
+            return DSColor.tertiaryText
         }
     }
 
@@ -408,6 +410,7 @@ private struct PublishDeliveryView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("delivery.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -465,7 +468,7 @@ private struct MyDeliveryView: View {
             Section {
                 HStack {
                     summaryCard(title: localizedString("delivery.publishedTab"), value: viewModel.mine.published.count, tint: DSColor.primary)
-                    summaryCard(title: localizedString("delivery.acceptedTab"), value: viewModel.mine.accepted.count, tint: DSColor.secondary)
+                    summaryCard(title: localizedString("delivery.acceptedTab"), value: viewModel.mine.accepted.count, tint: DSColor.title)
                 }
             }
 
@@ -509,6 +512,7 @@ private struct MyDeliveryView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("delivery.myDelivery"))
         .refreshable {
             await viewModel.refresh()

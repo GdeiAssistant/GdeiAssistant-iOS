@@ -3,10 +3,6 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var container: AppContainer
-    @Environment(\.colorScheme) private var colorScheme
-    private let entryColumns = [
-        GridItem(.adaptive(minimum: 72, maximum: 96), spacing: 8)
-    ]
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -34,77 +30,40 @@ struct HomeView: View {
     }
 
     private var contentView: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                ForEach(visibleSections) { section in
-                    if !section.entries.isEmpty {
-                        sectionCard(
-                            section: section.section,
-                            entries: section.entries
-                        )
-                    }
-                }
-            }
-            .padding(16)
-        }
-        .background(DSColor.background)
-    }
-
-    private var visibleSections: [HomeEntrySection] {
-        HomeEntryConfig.allSections
-    }
-
-    private func sectionCard(
-        section: HomeSection,
-        entries: [HomeEntryConfig]
-    ) -> some View {
-        DSCard {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(section.title)
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-                    Text(section.subtitle)
-                        .font(.caption)
-                        .foregroundStyle(DSColor.subtitle)
-                }
-
-                LazyVGrid(
-                    columns: entryColumns,
-                    spacing: 16
-                ) {
-                    ForEach(entries) { entry in
-                        NavigationLink {
-                            destinationView(for: entry.destination)
-                        } label: {
-                            VStack(spacing: 6) {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .fill(DSColor.primary.opacity(colorScheme == .dark ? 0.12 : 0.08))
-                                        .frame(width: 44, height: 44)
-
-                                    Image(systemName: entry.icon)
-                                        .font(.title3)
-                                        .foregroundStyle(DSColor.primary)
-                                        .accessibilityHidden(true)
+        List {
+            ForEach(HomeEntryConfig.allSections) { section in
+                if !section.entries.isEmpty {
+                    Section {
+                        ForEach(section.entries) { entry in
+                            NavigationLink {
+                                destinationView(for: entry.destination)
+                            } label: {
+                                Label {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(entry.title)
+                                            .font(.body)
+                                            .foregroundStyle(DSColor.title)
+                                        Text(entry.subtitle)
+                                            .font(.footnote)
+                                            .foregroundStyle(DSColor.subtitle)
+                                            .lineLimit(2)
+                                    }
+                                } icon: {
+                                    DSIconTile(systemName: entry.icon)
                                 }
-
-                                Text(entry.title)
-                                    .font(.caption2)
-                                    .lineLimit(2)
-                                    .minimumScaleFactor(0.85)
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(DSColor.title)
-                                    .frame(maxWidth: .infinity)
                             }
-                            .accessibilityElement(children: .combine)
+                            .accessibilityIdentifier("home.entry.\(entry.destination.featureID)")
                         }
-                        .accessibilityIdentifier("home.entry.\(entry.destination.featureID)")
-                        .buttonStyle(.plain)
+                    } header: {
+                        Text(section.section.title)
+                    } footer: {
+                        Text(section.section.subtitle)
                     }
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .dsListBackground()
     }
 
     @ViewBuilder

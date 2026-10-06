@@ -30,8 +30,8 @@ struct AvatarEditView: View {
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: 48)
-                        .background(DSColor.cardBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .background(DSColor.surface)
+                        .clipShape(DSRadius.cardShape)
                 }
                 .buttonStyle(.plain)
 
@@ -60,7 +60,7 @@ struct AvatarEditView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(localizedString("avatar.title"))
         .task {
             await viewModel.load()

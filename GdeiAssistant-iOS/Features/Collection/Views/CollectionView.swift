@@ -73,13 +73,14 @@ struct CollectionView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("collection.library"))
         .overlay {
             if viewModel.isDetailLoading {
                 DSLoadingView(text: localizedString("collection.detailLoading"))
                     .padding()
                     .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .clipShape(DSRadius.cardShape)
             }
         }
         .sheet(item: $viewModel.selectedDetail) { detail in
@@ -145,6 +146,7 @@ struct CollectionView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .navigationTitle(localizedString("collection.myBorrow"))
                 .alert(localizedString("collection.notice"), isPresented: Binding(
                     get: { viewModel.submitState.message != nil },
@@ -199,6 +201,7 @@ private struct CollectionDetailSheet: View {
                     Text(localizedString("collection.distribution"))
                 }
             }
+            .dsListBackground()
             .navigationTitle(localizedString("collection.detailTitle"))
         }
     }

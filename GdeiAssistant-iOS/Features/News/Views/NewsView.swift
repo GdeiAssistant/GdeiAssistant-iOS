@@ -63,6 +63,7 @@ struct NewsView: View {
                         }
                     }
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
                 .refreshable {
                     await viewModel.refresh()

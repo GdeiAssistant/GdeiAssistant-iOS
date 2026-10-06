@@ -59,140 +59,131 @@ struct ScheduleView: View {
     private func content(_ schedule: WeeklySchedule) -> some View {
         let nonEmptyDays = schedule.days.filter { !$0.courses.isEmpty }
 
-        return ScrollView {
-            VStack(spacing: 14) {
-                DSCard {
-                    HStack {
-                        Button {
-                            Task { await viewModel.previousWeek() }
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .foregroundStyle(DSColor.primary)
-                        }
-
-                        Spacer()
-
-                        VStack(spacing: 4) {
-                            Text(schedule.termName)
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.subtitle)
-                            Text(String(format: localizedString("schedule.weekLabel"), schedule.weekIndex))
-                                .font(.headline)
-                                .foregroundStyle(DSColor.title)
-                        }
-
-                        Spacer()
-
-                        Button {
-                            Task { await viewModel.nextWeek() }
-                        } label: {
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(DSColor.primary)
-                        }
+        return List {
+            Section {
+                HStack {
+                    Button {
+                        Task { await viewModel.previousWeek() }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .frame(width: 44, height: 44)
                     }
-                }
+                    .buttonStyle(.bordered)
+                    .tint(DSColor.primary)
+                    .accessibilityLabel(localizedString("schedule.title"))
 
-                DSCard {
-                    Text(LocalizedStringKey("schedule.todayCourses"))
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
+                    Spacer()
 
-                    if viewModel.todayCourses.isEmpty {
-                        Text(LocalizedStringKey("schedule.noCourses"))
-                            .font(.subheadline)
+                    VStack(spacing: 2) {
+                        Text(schedule.termName)
+                            .font(.footnote)
                             .foregroundStyle(DSColor.subtitle)
-                    } else {
-                        ForEach(viewModel.todayCourses) { course in
+                        Text(String(format: localizedString("schedule.weekLabel"), schedule.weekIndex))
+                            .font(.headline)
+                            .monospacedDigit()
+                            .foregroundStyle(DSColor.title)
+                    }
+                    .multilineTextAlignment(.center)
+
+                    Spacer()
+
+                    Button {
+                        Task { await viewModel.nextWeek() }
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .frame(width: 44, height: 44)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(DSColor.primary)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Section {
+                if viewModel.todayCourses.isEmpty {
+                    Text(LocalizedStringKey("schedule.noCourses"))
+                        .foregroundStyle(DSColor.subtitle)
+                } else {
+                    ForEach(viewModel.todayCourses) { course in
+                        Button {
+                            selectedCourse = course
+                        } label: {
                             courseSummaryRow(course)
-                                .onTapGesture { selectedCourse = course }
                         }
+                        .buttonStyle(.plain)
                     }
                 }
+            } header: {
+                Text(LocalizedStringKey("schedule.todayCourses"))
+            }
 
-                DSCard {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(LocalizedStringKey("schedule.weeklyGrid"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
+            Section {
+                ScheduleGridView(
+                    schedule: schedule,
+                    backgroundImage: backgroundImage,
+                    onSelectCourse: { selectedCourse = $0 }
+                )
+                .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+            } header: {
+                Text(LocalizedStringKey("schedule.weeklyGrid"))
+            }
 
-                        ScheduleGridView(
-                            schedule: schedule,
-                            backgroundImage: backgroundImage,
-                            onSelectCourse: { selectedCourse = $0 }
-                        )
-                    }
+            if nonEmptyDays.isEmpty {
+                Section {
+                    Text(LocalizedStringKey("schedule.noCourses"))
+                        .foregroundStyle(DSColor.subtitle)
+                } header: {
+                    Text(LocalizedStringKey("schedule.fullList"))
+                } footer: {
+                    Text(LocalizedStringKey("schedule.fullListHint"))
                 }
-
-                DSCard {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(LocalizedStringKey("schedule.fullList"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
-
-                        Text(LocalizedStringKey("schedule.fullListHint"))
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-
-                        if nonEmptyDays.isEmpty {
-                            Text(LocalizedStringKey("schedule.noCourses"))
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.subtitle)
-                        } else {
-                            ForEach(nonEmptyDays) { day in
-                                dayCourseList(day)
+            } else {
+                ForEach(nonEmptyDays) { day in
+                    Section {
+                        ForEach(day.courses) { course in
+                            Button {
+                                selectedCourse = course
+                            } label: {
+                                courseSummaryRow(course)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    } header: {
+                        HStack {
+                            Text(day.dayTitle)
+                            if !day.dateText.isEmpty {
+                                Text(day.dateText)
+                                    .font(.caption)
+                                    .monospacedDigit()
+                                    .foregroundStyle(DSColor.subtitle)
                             }
                         }
                     }
                 }
             }
-            .padding(16)
         }
-        .background(DSColor.background)
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.loadSchedule()
         }
     }
 
     private func courseSummaryRow(_ course: CourseItem) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 2) {
             Text(course.courseName)
-                .font(.subheadline.weight(.semibold))
+                .font(.body)
                 .foregroundStyle(DSColor.title)
-
             Text(String(format: localizedString("schedule.sectionLocation"), course.startSection, course.endSection, course.location))
-                .font(.caption)
+                .font(.footnote)
+                .monospacedDigit()
                 .foregroundStyle(DSColor.subtitle)
-
             Text(course.teacherName)
-                .font(.caption)
-                .foregroundStyle(DSColor.secondary)
+                .font(.footnote)
+                .foregroundStyle(DSColor.tertiaryText)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-    }
-
-    private func dayCourseList(_ day: CourseDaySection) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                Text(day.dayTitle)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(DSColor.primary)
-
-                if !day.dateText.isEmpty {
-                    Text(day.dateText)
-                        .font(.caption)
-                        .foregroundStyle(DSColor.subtitle)
-                }
-            }
-
-            ForEach(day.courses) { course in
-                courseSummaryRow(course)
-                    .onTapGesture { selectedCourse = course }
-            }
-        }
+        .accessibilityElement(children: .combine)
     }
 
     private func importBackground(from item: PhotosPickerItem?) async {
@@ -230,7 +221,7 @@ private struct ScheduleGridView: View {
     private let headerHeight: CGFloat = 42
     private let blockInset: CGFloat = 3
     private let sectionCount = 10
-    private let gridCornerRadius: CGFloat = 12
+    private let gridCornerRadius: CGFloat = DSRadius.control
 
     var body: some View {
         GeometryReader { proxy in
@@ -250,11 +241,13 @@ private struct ScheduleGridView: View {
                             if !day.dateText.isEmpty {
                                 Text(day.dateText)
                                     .font(.system(size: dateTextSize))
+                                    .monospacedDigit()
                                     .foregroundStyle(DSColor.subtitle)
                             }
                         }
                         .frame(width: dayColumnWidth, height: headerHeight)
-                        .background(isToday(day.dayOfWeek) ? DSColor.primary.opacity(0.08) : Color.clear)
+                        .background(isToday(day.dayOfWeek) ? DSColor.primarySoft : Color.clear)
+                        .accessibilityElement(children: .combine)
                     }
                 }
 
@@ -279,14 +272,7 @@ private struct ScheduleGridView: View {
                                 .frame(width: dayColumnWidth * CGFloat(schedule.days.count), height: totalHeight)
                                 .clipped()
                                 .overlay {
-                                    LinearGradient(
-                                        colors: [
-                                            Color.white.opacity(0.12),
-                                            Color.white.opacity(0.24)
-                                        ],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
+                                    DSColor.surface.opacity(0.2)
                                 }
                                 .opacity(0.52)
                         }
@@ -300,7 +286,7 @@ private struct ScheduleGridView: View {
                     .clipShape(RoundedRectangle(cornerRadius: gridCornerRadius, style: .continuous))
                     .overlay {
                         RoundedRectangle(cornerRadius: gridCornerRadius, style: .continuous)
-                            .stroke(Color(.separator).opacity(0.2), lineWidth: 0.8)
+                            .strokeBorder(DSColor.border, lineWidth: 1)
                     }
                 }
             }
@@ -320,7 +306,7 @@ private struct ScheduleGridView: View {
                         .fill(backgroundFillColor(for: day.dayOfWeek))
                         .frame(width: dayColumnWidth, height: cellHeight)
                         .overlay(
-                            Rectangle().stroke(Color(.separator).opacity(0.35), lineWidth: 0.5)
+                            Rectangle().stroke(DSColor.divider, lineWidth: 0.5)
                         )
                 }
             }
@@ -344,13 +330,13 @@ private struct ScheduleGridView: View {
     private func backgroundFillColor(for dayOfWeek: Int) -> Color {
         if backgroundImage != nil {
             return isToday(dayOfWeek)
-                ? DSColor.primary.opacity(0.18)
-                : Color.white.opacity(0.36)
+                ? DSColor.primarySoft.opacity(0.7)
+                : DSColor.surface.opacity(0.36)
         }
 
         return isToday(dayOfWeek)
-            ? DSColor.primary.opacity(0.05)
-            : Color(.tertiarySystemGroupedBackground).opacity(0.9)
+            ? DSColor.primarySoft.opacity(0.6)
+            : DSColor.surface
     }
 
     private func isToday(_ dayOfWeek: Int) -> Bool {
@@ -374,41 +360,31 @@ private struct ScheduleCourseBlock: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(course.courseName)
                     .font(.system(size: courseNameSize, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(DSColor.title)
                     .lineLimit(3)
                     .minimumScaleFactor(0.8)
 
                 Text(course.location)
                     .font(.system(size: locationSize))
-                    .foregroundStyle(.white.opacity(0.92))
+                    .foregroundStyle(DSColor.subtitle)
                     .lineLimit(2)
                     .minimumScaleFactor(0.85)
             }
-            .padding(.horizontal, 4)
+            .padding(.leading, 6)
+            .padding(.trailing, 3)
             .padding(.vertical, 5)
             .frame(width: width, height: height, alignment: .topLeading)
-            .background(blockColor)
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .shadow(color: blockColor.opacity(0.18), radius: 3, y: 2)
+            .background(DSColor.primarySoft)
+            .overlay(alignment: .leading) {
+                DSColor.primary.frame(width: 3)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: DSRadius.compact, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DSPressableButtonStyle())
     }
 
     private var height: CGFloat {
         CGFloat(max(course.endSection - course.startSection + 1, 1)) * cellHeight - 8
-    }
-
-    private var blockColor: Color {
-        let palette: [Color] = [
-            DSColor.primary,
-            DSColor.secondary,
-            DSColor.warning,
-            Color(red: 0.19, green: 0.58, blue: 0.82),
-            Color(red: 0.27, green: 0.65, blue: 0.54),
-            Color(red: 0.80, green: 0.47, blue: 0.24)
-        ]
-        let index = abs(course.courseName.hashValue) % palette.count
-        return palette[index]
     }
 }
 
@@ -426,6 +402,7 @@ private struct ScheduleCourseDetailView: View {
                 infoRow(localizedString("schedule.dayOfWeek"), weekdayText(course.dayOfWeek))
                 infoRow(localizedString("schedule.weeks"), course.weekIndices.isEmpty ? localizedString("schedule.allWeeks") : course.weekIndices.map(String.init).joined(separator: "\u{3001}"))
             }
+            .dsListBackground()
             .navigationTitle(localizedString("schedule.courseDetail"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

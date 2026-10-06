@@ -77,145 +77,168 @@ struct ProfileView: View {
     @ViewBuilder
     private func profileContent(_ profile: UserProfile) -> some View {
         ScrollView {
-            VStack(spacing: 0) {
-                DSCard {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(localizedString("profile.accountInfo"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
+            VStack(alignment: .leading, spacing: DSSpacing.xl) {
+                VStack(alignment: .leading, spacing: DSSpacing.md) {
+                    HStack(alignment: .center, spacing: DSSpacing.md) {
+                        NavigationLink {
+                            AvatarEditView(viewModel: container.makeAvatarEditViewModel())
+                        } label: {
+                            DSAvatarView(urlString: profile.avatarURL, size: 72)
+                                .overlay(
+                                    Circle().strokeBorder(DSColor.border, lineWidth: 1)
+                                )
+                        }
+                        .buttonStyle(.plain)
 
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(alignment: .top, spacing: 14) {
-                                NavigationLink {
-                                    AvatarEditView(viewModel: container.makeAvatarEditViewModel())
-                                } label: {
-                                    DSAvatarView(urlString: profile.avatarURL, size: 68)
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                            Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
+                                .font(.title2.weight(.bold))
+                                .foregroundStyle(DSColor.title)
+                                .lineLimit(2)
+
+                            Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
+                                .font(.subheadline)
+                                .foregroundStyle(DSColor.subtitle)
+
+                            if !profile.ipArea.isEmpty {
+                                Label {
+                                    Text("\(localizedString("profile.ipAreaLabel"))\(ProfileLocationCatalog.areaDisplayName(profile.ipArea, localeIdentifier: locale.identifier))")
+                                } icon: {
+                                    Image(systemName: "location")
                                 }
-                                .buttonStyle(.plain)
-
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
-                                        .font(.title3.weight(.bold))
-                                        .foregroundStyle(DSColor.title)
-
-                                    Text("\(localizedString("profile.usernameLabel"))\(profile.username)")
-                                        .font(.caption)
-                                        .foregroundStyle(DSColor.subtitle)
-
-                                    if !profile.ipArea.isEmpty {
-                                        Text("\(localizedString("profile.ipAreaLabel"))\(ProfileLocationCatalog.areaDisplayName(profile.ipArea, localeIdentifier: locale.identifier))")
-                                            .font(.caption)
-                                            .foregroundStyle(DSColor.subtitle)
-                                    }
-                                }
-
-                                Spacer()
+                                .font(.footnote)
+                                .foregroundStyle(DSColor.tertiaryText)
+                                .labelStyle(.titleAndIcon)
                             }
-
-                            SocialProfileStatsRow(viewModel: container.makeSocialMeSummaryViewModel())
                         }
-                        .accessibilityElement(children: .contain)
-                        .accessibilityIdentifier("profile.header")
 
-                        Divider()
+                        Spacer(minLength: 0)
+                    }
 
-                        profileFields(profile)
+                    SocialProfileStatsRow(viewModel: container.makeSocialMeSummaryViewModel())
+                        .padding(.vertical, DSSpacing.xs)
+                        .dsSurface()
+                }
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("profile.header")
+
+                profileGroup(title: localizedString("profile.accountInfo")) {
+                    profileFields(profile)
+                }
+
+                profileGroup(title: localizedString("profile.accountFunctions")) {
+                    profileMenuLink(title: localizedString("social.search.title"), systemImage: "magnifyingglass") {
+                        SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("social.conversations.title"), systemImage: "bubble.left.and.bubble.right") {
+                        ConversationListView(viewModel: container.makeConversationListViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(
+                        title: localizedString("profile.privacySettings"),
+                        systemImage: "lock.shield",
+                        accessibilityIdentifier: "profile.entry.privacy"
+                    ) {
+                        PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
+                        CampusCredentialView(viewModel: container.makeCampusCredentialViewModel())
+                            .environmentObject(container.environment)
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.loginRecord"), systemImage: "clock.arrow.circlepath") {
+                        LoginRecordView(viewModel: container.makeLoginRecordViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.bindPhone"), systemImage: "phone") {
+                        BindPhoneView(viewModel: container.makeBindPhoneViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.bindEmail"), systemImage: "envelope") {
+                        BindEmailView(viewModel: container.makeBindEmailViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.deleteAccount"), systemImage: "person.crop.circle.badge.xmark") {
+                        DeleteAccountView(viewModel: container.makeDeleteAccountViewModel())
                     }
                 }
 
-                Color.clear.frame(height: 24)
-
-                DSCard {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(localizedString("profile.accountFunctions"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
-                            .padding(.bottom, 10)
-
-                        profileMenuLink(title: localizedString("social.search.title"), systemImage: "magnifyingglass") {
-                            SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("social.conversations.title"), systemImage: "bubble.left.and.bubble.right") {
-                            ConversationListView(viewModel: container.makeConversationListViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(
-                            title: localizedString("profile.privacySettings"),
-                            systemImage: "lock.shield",
-                            accessibilityIdentifier: "profile.entry.privacy"
-                        ) {
-                            PrivacySettingsView(viewModel: container.makePrivacySettingsViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.campusCredential"), systemImage: "key") {
-                            CampusCredentialView(viewModel: container.makeCampusCredentialViewModel())
-                                .environmentObject(container.environment)
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.loginRecord"), systemImage: "clock.arrow.circlepath") {
-                            LoginRecordView(viewModel: container.makeLoginRecordViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.bindPhone"), systemImage: "phone") {
-                            BindPhoneView(viewModel: container.makeBindPhoneViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.bindEmail"), systemImage: "envelope") {
-                            BindEmailView(viewModel: container.makeBindEmailViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.deleteAccount"), systemImage: "person.crop.circle.badge.xmark") {
-                            DeleteAccountView(viewModel: container.makeDeleteAccountViewModel())
-                        }
+                profileGroup(title: localizedString("profile.moreServices")) {
+                    profileMenuLink(
+                        title: localizedString("appearance.title"),
+                        systemImage: "paintbrush",
+                        accessibilityIdentifier: "profile.entry.appearance"
+                    ) {
+                        AppearanceView()
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.downloadData"), systemImage: "arrow.down.doc") {
+                        DownloadDataView(viewModel: container.makeDownloadDataViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.helpFeedback"), systemImage: "questionmark.bubble") {
+                        FeedbackView(viewModel: container.makeFeedbackViewModel())
+                    }
+                    rowDivider
+                    profileMenuLink(title: localizedString("profile.settings"), systemImage: "gearshape") {
+                        SettingsView(viewModel: container.makeSettingsViewModel())
                     }
                 }
 
-                Color.clear.frame(height: 24)
-
-                DSCard {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(localizedString("profile.moreServices"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
-                            .padding(.bottom, 10)
-
-                        profileMenuLink(
-                            title: localizedString("appearance.title"),
-                            systemImage: "paintbrush",
-                            accessibilityIdentifier: "profile.entry.appearance"
-                        ) {
-                            AppearanceView()
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.downloadData"), systemImage: "arrow.down.doc") {
-                            DownloadDataView(viewModel: container.makeDownloadDataViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.helpFeedback"), systemImage: "questionmark.bubble") {
-                            FeedbackView(viewModel: container.makeFeedbackViewModel())
-                        }
-                        Divider()
-                        profileMenuLink(title: localizedString("profile.settings"), systemImage: "gearshape") {
-                            SettingsView(viewModel: container.makeSettingsViewModel())
-                        }
-                    }
-                }
-
-                Color.clear.frame(height: 20)
-
-                DSButton(title: localizedString("profile.logout"), icon: "rectangle.portrait.and.arrow.right", variant: .destructive) {
+                Button(role: .destructive) {
                     Task {
                         await container.authManager.logout()
                     }
+                } label: {
+                    Label(localizedString("profile.logout"), systemImage: "rectangle.portrait.and.arrow.right")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(DSColor.danger)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(DSPressableButtonStyle())
+                .dsSurface()
             }
-            .padding(16)
+            .padding(.horizontal, DSSpacing.md)
+            .padding(.top, DSSpacing.xs)
+            .padding(.bottom, DSSpacing.xxl)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .refreshable {
             await viewModel.loadProfile()
         }
+    }
+
+    /// Inset-grouped section: caption header outside, one continuous surface inside.
+    private func profileGroup<Rows: View>(title: String, @ViewBuilder rows: () -> Rows) -> some View {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+            Text(title)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(DSColor.subtitle)
+                .padding(.horizontal, DSSpacing.md)
+                .accessibilityAddTraits(.isHeader)
+
+            VStack(alignment: .leading, spacing: 0) {
+                rows()
+            }
+            .padding(.horizontal, DSSpacing.md)
+            .dsSurface()
+        }
+    }
+
+    private var rowDivider: some View {
+        Rectangle()
+            .fill(DSColor.divider)
+            .frame(height: 0.5)
+            .padding(.leading, 28 + DSSpacing.sm)
+    }
+
+    private var fieldDivider: some View {
+        Rectangle()
+            .fill(DSColor.divider)
+            .frame(height: 0.5)
     }
 
     private func profileFields(_ profile: UserProfile) -> some View {
@@ -223,31 +246,31 @@ struct ProfileView: View {
             editableRow(title: localizedString("profile.nickname"), value: viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet"))) {
                 activeEditor = .nickname
             }
-            Divider().padding(.leading, 0)
+            fieldDivider
             editableRow(title: localizedString("profile.birthday"), value: viewModel.displayText(profile.birthday, fallback: localizedString("profile.notSet"))) {
                 activeEditor = .birthday
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.collegeDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .college
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.majorDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .major
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.enrollment"), value: viewModel.displayText(profile.grade, fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .grade
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.locationDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .location
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometownDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .hometown
             }
-            Divider()
+            fieldDivider
             editableRow(title: localizedString("profile.bio"), value: viewModel.displayText(profile.bio, fallback: localizedString("profile.goWrite")), multiline: true) {
                 activeEditor = .bio
             }
@@ -256,28 +279,31 @@ struct ProfileView: View {
 
     private func editableRow(title: String, value: String, multiline: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            HStack(alignment: multiline ? .top : .center) {
+            HStack(alignment: multiline ? .firstTextBaseline : .center, spacing: DSSpacing.sm) {
                 Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(DSColor.subtitle)
-                    .frame(width: 80, alignment: .leading)
+                    .font(.body)
+                    .foregroundStyle(DSColor.title)
+                    .lineLimit(1)
+                    .layoutPriority(1)
+
+                Spacer(minLength: DSSpacing.xs)
 
                 Text(value)
-                    .font(.subheadline)
-                    .foregroundStyle(DSColor.title)
-                    .multilineTextAlignment(.leading)
+                    .font(.body)
+                    .foregroundStyle(DSColor.subtitle)
+                    .multilineTextAlignment(.trailing)
                     .lineLimit(multiline ? 3 : 1)
 
-                Spacer(minLength: 8)
-
                 Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(DSColor.subtitle)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(DSColor.tertiaryText)
+                    .accessibilityHidden(true)
             }
-            .padding(.vertical, 12)
+            .frame(minHeight: 44)
+            .padding(.vertical, DSSpacing.xxs)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DSPressableButtonStyle())
     }
 
     @ViewBuilder
@@ -290,24 +316,24 @@ struct ProfileView: View {
         let link = NavigationLink {
             destination()
         } label: {
-            HStack(spacing: 12) {
-                Image(systemName: systemImage)
-                    .font(.headline)
-                    .foregroundStyle(DSColor.primary)
-                    .frame(width: 20, alignment: .center)
+            HStack(spacing: DSSpacing.sm) {
+                DSIconTile(systemName: systemImage)
 
                 Text(title)
-                    .font(.headline)
+                    .font(.body)
                     .foregroundStyle(DSColor.title)
 
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .foregroundStyle(DSColor.subtitle)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(DSColor.tertiaryText)
+                    .accessibilityHidden(true)
             }
-            .padding(.vertical, 10)
+            .frame(minHeight: 44)
+            .padding(.vertical, DSSpacing.xxs)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DSPressableButtonStyle())
 
         if let accessibilityIdentifier {
             link.accessibilityIdentifier(accessibilityIdentifier)
@@ -453,6 +479,7 @@ private struct ProfileFieldEditorSheet: View {
                     }
                 }
             }
+            .dsListBackground()
             .navigationTitle(field.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -607,6 +634,7 @@ private struct ProfileLocationPickerSheet: View {
                             }
                         }
                     }
+                    .dsListBackground()
                 }
             }
             .navigationTitle(title)
@@ -808,7 +836,7 @@ private struct SocialProfileStatsRow: View {
         } label: {
             VStack(spacing: 4) {
                 Text("\(value)")
-                    .font(.headline)
+                    .font(.title3.weight(.semibold).monospacedDigit())
                     .foregroundStyle(DSColor.title)
                     .minimumScaleFactor(0.8)
                     .lineLimit(1)
