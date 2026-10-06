@@ -8,6 +8,9 @@ final class SessionState: ObservableObject {
     @Published var isRestoringSession = true
     @Published var authErrorMessage: String?
 
+    // ARC releases the published state without actor-bound cleanup.
+    nonisolated deinit {}
+
     func beginRestoringSession() {
         isRestoringSession = true
     }

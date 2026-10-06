@@ -29,6 +29,60 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(profile.locationSelection?.regionCode, "CN")
         XCTAssertEqual(profile.locationSelection?.cityCode, "1")
         XCTAssertEqual(profile.hometownSelection?.cityCode, "5")
+        let countryOnly = ProfileRemoteMapper.mapProfile(UserProfileDTO(
+            username: "demo", nickname: "Demo", avatar: nil, facultyCode: nil, majorCode: nil, enrollment: nil,
+            location: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: nil, cityCode: nil),
+            hometown: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: "44", cityCode: nil),
+            introduction: nil, birthday: nil, ipArea: nil, age: nil
+        ))
+        XCTAssertEqual(countryOnly.locationSelection?.regionCode, "CN")
+        XCTAssertEqual(countryOnly.locationSelection?.stateCode, "")
+        XCTAssertEqual(countryOnly.hometownSelection?.stateCode, "44")
+        XCTAssertEqual(countryOnly.hometownSelection?.cityCode, "")
+    }
+
+    func testLocaleRelabelingKeepsProfileDraftAndSubmissionCodes() async throws {
+        let defaults = UserDefaults.standard
+        let key = AppConstants.UserDefaultsKeys.selectedLocale
+        let previous = defaults.object(forKey: key)
+        defer {
+            if let previous { defaults.set(previous, forKey: key) }
+            else { defaults.removeObject(forKey: key) }
+        }
+        defaults.set("zh-CN", forKey: key)
+        let location = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: "CN", stateCode: "44", cityCode: "1"))
+        let hometown = try XCTUnwrap(ProfileLocationCatalog.selection(regionCode: "CN", stateCode: "44", cityCode: "5"))
+        let repository = RecordingProfileRepository()
+        repository.profile = UserProfile(id: "profile-locale-test", username: "demo", nickname: "Alice / 中國", avatarURL: "", college: "计算机科学系", collegeCode: 11, major: "软件工程", majorCode: "software_engineering", grade: "2023", bio: "我寫嘅內容", location: location.displayName, locationSelection: location, hometown: hometown.displayName, hometownSelection: hometown)
+        let viewModel = ProfileViewModel(repository: repository, sessionState: SessionState())
+        await viewModel.loadProfile()
+        for language in AppLanguage.allCases {
+            let locale = language.localeIdentifier
+            let faculty = try XCTUnwrap(LocalizedProfileCatalog.catalog(for: locale).defaultOptions.faculties.first(where: { $0.code == 11 }))
+            XCTAssertEqual(viewModel.selectionOptionDisplayName(viewModel.college, localeIdentifier: locale), faculty.label)
+            XCTAssertEqual(viewModel.selectionOptionDisplayName(viewModel.major, localeIdentifier: locale), faculty.majors.first(where: { $0.code == "software_engineering" })?.label)
+        }
+        defaults.set("en", forKey: key)
+        XCTAssertEqual(viewModel.profileOptions.faculties.first(where: { $0.code == 11 })?.label, "计算机科学系", "The options intentionally remain cached from before the switch")
+        let didSave = await viewModel.saveProfile()
+        XCTAssertTrue(didSave)
+        let request = try XCTUnwrap(repository.updateRequests.last)
+        XCTAssertEqual(request.location, location)
+        XCTAssertEqual(request.hometown, hometown)
+        XCTAssertEqual(request.nickname, "Alice / 中國")
+        XCTAssertEqual(request.bio, "我寫嘅內容")
+        XCTAssertEqual(request.college, "Department of Computer Science")
+        XCTAssertEqual(request.major, "Software Engineering")
+        let plan = try ProfileRemoteMapper.makeUpdatePlan(from: request, options: ProfileFormSupport.defaultOptions)
+        XCTAssertEqual(plan.faculty.faculty, 11)
+        XCTAssertEqual(plan.major?.major, "software_engineering")
+        XCTAssertEqual(plan.location?.region, "CN")
+        XCTAssertEqual(plan.location?.state, "44")
+        XCTAssertEqual(plan.location?.city, "1")
+        XCTAssertEqual(plan.hometown?.city, "5")
+        await viewModel.loadProfileOptions()
+        XCTAssertEqual(viewModel.college, "Department of Computer Science")
+        XCTAssertEqual(viewModel.major, "Software Engineering")
     }
 
     func testMapProfileOptionsReadsStructuredMajorOptions() {

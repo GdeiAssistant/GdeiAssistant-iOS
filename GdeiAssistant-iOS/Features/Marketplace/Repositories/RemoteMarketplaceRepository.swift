@@ -51,7 +51,8 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
                 location: detail.item.location,
                 state: detail.item.state,
                 tags: detail.item.tags,
-                previewImageURL: detail.item.previewImageURL ?? previewURL
+                previewImageURL: detail.item.previewImageURL ?? previewURL,
+                typeID: detail.item.typeID
             ),
             condition: detail.condition,
             description: detail.description,

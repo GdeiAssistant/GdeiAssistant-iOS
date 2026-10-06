@@ -103,7 +103,7 @@ struct ProfileView: View {
                                         .foregroundStyle(DSColor.subtitle)
 
                                     if !profile.ipArea.isEmpty {
-                                        Text("\(localizedString("profile.ipAreaLabel"))\(profile.ipArea)")
+                                        Text("\(localizedString("profile.ipAreaLabel"))\(ProfileLocationCatalog.areaDisplayName(profile.ipArea, localeIdentifier: locale.identifier))")
                                             .font(.caption)
                                             .foregroundStyle(DSColor.subtitle)
                                     }
@@ -228,11 +228,11 @@ struct ProfileView: View {
                 activeEditor = .birthday
             }
             Divider()
-            editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.college, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.faculty"), value: viewModel.displayText(profile.collegeDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .college
             }
             Divider()
-            editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.major, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.major"), value: viewModel.displayText(profile.majorDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeEditor = .major
             }
             Divider()
@@ -240,11 +240,11 @@ struct ProfileView: View {
                 activeEditor = .grade
             }
             Divider()
-            editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.location, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.country"), value: viewModel.displayText(profile.locationDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .location
             }
             Divider()
-            editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometown, fallback: localizedString("profile.notSelected"))) {
+            editableRow(title: localizedString("profile.hometown"), value: viewModel.displayText(profile.hometownDisplayName(localeIdentifier: locale.identifier), fallback: localizedString("profile.notSelected"))) {
                 activeLocationPicker = .hometown
             }
             Divider()
@@ -305,6 +305,7 @@ struct ProfileView: View {
                     .foregroundStyle(DSColor.subtitle)
             }
             .padding(.vertical, 10)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
 
@@ -328,6 +329,7 @@ private enum ProfileEditorField: String, Identifiable {
 private struct ProfileFieldEditorSheet: View {
     let field: ProfileEditorField
     @ObservedObject var viewModel: ProfileViewModel
+    @Environment(\.locale) private var locale
     @Environment(\.dismiss) private var dismiss
 
     @State private var text = ""
@@ -374,7 +376,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.college == option {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -399,7 +401,7 @@ private struct ProfileFieldEditorSheet: View {
                                     Task { await save() }
                                 } label: {
                                     HStack {
-                                        Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                        Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                         Spacer()
                                         if viewModel.major == option {
                                             Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -421,7 +423,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.isEnrollmentOptionSelected(option) {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -561,6 +563,7 @@ private struct ProfileLocationPickerSheet: View {
     let onConfirm: (ProfileLocationSelection) async -> ProfileSaveResult
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
     @State private var selectedRegionCode = ""
     @State private var selectedStateCode = ""
     @State private var selectedCityCode = ""
@@ -570,12 +573,12 @@ private struct ProfileLocationPickerSheet: View {
     var body: some View {
         NavigationStack {
             Group {
-                if regions.isEmpty {
+                if localizedRegions.isEmpty {
                     DSEmptyStateView(icon: "globe.asia.australia", title: localizedString("profile.noLocationData"), message: localizedString("profile.emptyMsg"))
                 } else {
                     Form {
                         Picker(localizedString("profile.regionPicker"), selection: $selectedRegionCode) {
-                            ForEach(regions) { region in
+                            ForEach(localizedRegions) { region in
                                 Text(region.name).tag(region.code)
                             }
                         }
@@ -628,8 +631,12 @@ private struct ProfileLocationPickerSheet: View {
         }
     }
 
+    private var localizedRegions: [ProfileLocationRegion] {
+        ProfileLocationCatalog.localizing(regions, localeIdentifier: locale.identifier)
+    }
+
     private var currentRegion: ProfileLocationRegion? {
-        regions.first(where: { $0.code == selectedRegionCode }) ?? regions.first
+        localizedRegions.first(where: { $0.code == selectedRegionCode }) ?? localizedRegions.first
     }
 
     private var currentStates: [ProfileLocationState] {
@@ -654,7 +661,8 @@ private struct ProfileLocationPickerSheet: View {
             displayName: ProfileFormSupport.makeLocationDisplay(
                 region: currentRegion.name,
                 state: currentState?.name ?? "",
-                city: currentCity?.name ?? ""
+                city: currentCity?.name ?? "",
+                localeIdentifier: locale.identifier
             ),
             regionCode: currentRegion.code,
             stateCode: currentState?.code ?? "",
@@ -704,7 +712,7 @@ private struct ProfileLocationPickerSheet: View {
 
     private var resolvedSelection: ProfileLocationSelection? {
         guard let currentSelection else { return nil }
-        guard let region = regions.first(where: { $0.code == currentSelection.regionCode }) else {
+        guard let region = localizedRegions.first(where: { $0.code == currentSelection.regionCode }) else {
             return nil
         }
         if currentSelection.stateCode.isEmpty {
@@ -729,8 +737,8 @@ private extension ProfileViewModel {
         return trimmed.isEmpty || trimmed == ProfileFormSupport.unselectedOption ? fallback : trimmed
     }
 
-    func displaySelectionOption(_ value: String) -> String {
-        value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected") : value
+    func displaySelectionOption(_ value: String, localeIdentifier: String) -> String {
+        selectionOptionDisplayName(value, localeIdentifier: localeIdentifier)
     }
 }
 

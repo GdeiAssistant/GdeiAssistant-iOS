@@ -131,7 +131,8 @@ enum MarketplaceRemoteMapper {
             location: RemoteMapperSupport.firstNonEmpty(dto.location, localizedString("marketplace.mapper.onCampusPickup")),
             state: state,
             tags: [typeName],
-            previewImageURL: imageURLs.first
+            previewImageURL: imageURLs.first,
+            typeID: dto.type
         )
     }
 

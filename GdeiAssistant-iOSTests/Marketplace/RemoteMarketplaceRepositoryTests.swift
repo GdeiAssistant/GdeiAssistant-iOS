@@ -31,8 +31,11 @@ private final class RepositoryTrackingURLProtocol: URLProtocol {
 @MainActor
 final class RemoteMarketplaceRepositoryTests: XCTestCase {
     private var repository: RemoteMarketplaceRepository!
+    private var savedLocale: Any?
 
     override func setUp() async throws {
+        savedLocale = UserDefaults.standard.object(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+        UserDefaults.standard.set("zh-CN", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
         RepositoryTrackingURLProtocol.requestedPaths = []
         RepositoryTrackingURLProtocol.responseStub = { request in
             let body = Data(#"{"code":200,"success":true,"message":"","data":[]}"#.utf8)
@@ -62,6 +65,9 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
     }
 
     override func tearDown() async throws {
+        if let savedLocale { UserDefaults.standard.set(savedLocale, forKey: AppConstants.UserDefaultsKeys.selectedLocale) }
+        else { UserDefaults.standard.removeObject(forKey: AppConstants.UserDefaultsKeys.selectedLocale) }
+        savedLocale = nil
         RepositoryTrackingURLProtocol.requestedPaths = []
         RepositoryTrackingURLProtocol.responseStub = nil
         repository = nil
@@ -137,4 +143,34 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
         XCTAssertEqual(summary.nickname, "Marketplace User")
         XCTAssertEqual(summary.introduction, "This person is lazy and left nothing here.")
     }
+    func testMappedMarketplaceTypeFollowsAllLocalesAndKeepsUnknownTagsAndUserText() throws {
+        let dto = try JSONDecoder().decode(MarketplaceDetailDTO.self, from: Data(#"{"secondhandItem":{"id":1,"name":"校园代步","description":"用户写的校园代步","type":0,"state":1}}"#.utf8))
+        let detail = try MarketplaceRemoteMapper.mapDetail(dto)
+        XCTAssertEqual(detail.item.typeID, 0)
+        let legacyData = try JSONEncoder().encode(detail.item)
+        var legacy = detail.item
+        legacy.typeID = nil
+        var unknown = detail.item
+        unknown.typeID = 999
+        for language in AppLanguage.allCases {
+            let locale = language.localeIdentifier
+            UserDefaults.standard.set(locale, forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+            let expected = LocalizedProfileCatalog.current.defaultOptions.marketplaceItemTypes.first(where: { $0.code == 0 })?.label
+            XCTAssertEqual(detail.item.typeDisplayName(), expected)
+            XCTAssertEqual(detail.categoryDisplayName(), expected)
+            XCTAssertEqual(detail.item.displayTags(), [expected ?? ""])
+            XCTAssertEqual(legacy.displayTags(), detail.item.tags)
+            XCTAssertEqual(unknown.displayTags(), detail.item.tags)
+            XCTAssertEqual(detail.item.title, "校园代步")
+            XCTAssertEqual(detail.description, "用户写的校园代步")
+        }
+        XCTAssertEqual(try JSONDecoder().decode(MarketplaceItem.self, from: legacyData).typeID, 0)
+        let old = try JSONSerialization.jsonObject(with: legacyData) as? [String: Any]
+        var withoutType = try XCTUnwrap(old)
+        withoutType.removeValue(forKey: "typeID")
+        let decodedOld = try JSONDecoder().decode(MarketplaceItem.self, from: JSONSerialization.data(withJSONObject: withoutType))
+        XCTAssertNil(decodedOld.typeID)
+        XCTAssertEqual(decodedOld.tags, detail.item.tags)
+    }
+
 }

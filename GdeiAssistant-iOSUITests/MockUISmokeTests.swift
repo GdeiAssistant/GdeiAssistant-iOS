@@ -113,6 +113,9 @@ final class MockUISmokeTests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.navigationBars["프로필"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["profile.entry.appearance"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["광저우, 광둥, 중국"].waitForExistence(timeout: 5), "Saved location must follow the current language after returning from Appearance")
+        XCTAssertTrue(app.staticTexts["산터우, 광둥, 중국"].waitForExistence(timeout: 5), "Saved hometown must follow the current language without changing codes")
+        attachScreenshot(app, name: "profile-system-region-after-language-switch-ko")
     }
 
     private func scrollToVisible(_ element: XCUIElement, in app: XCUIApplication) {
