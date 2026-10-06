@@ -1850,3 +1850,6 @@
 "social.error.invalidRequest" = "請求無效";
 "social.error.clientMessageConflict" = "訊息有衝突，請重新整理再試";
 "social.error.rateLimited" = "操作太頻密，請遲啲再試";
+
+"app.debug.mockCredentialsHint" = "Mock 帳號：gdeiassistant  密碼：gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "啟動逾時，請重試或重新登入";

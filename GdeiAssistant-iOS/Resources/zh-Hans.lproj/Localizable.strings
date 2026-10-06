@@ -1850,3 +1850,6 @@
 "social.error.invalidRequest" = "请求无效";
 "social.error.clientMessageConflict" = "消息冲突，请刷新后重试";
 "social.error.rateLimited" = "操作过于频繁，请稍后再试";
+
+"app.debug.mockCredentialsHint" = "Mock 账号：gdeiassistant  密码：gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "启动超时，请重试或重新登录";

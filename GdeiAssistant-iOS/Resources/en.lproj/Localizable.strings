@@ -1850,3 +1850,6 @@
 "social.error.invalidRequest" = "Invalid request";
 "social.error.clientMessageConflict" = "Message conflict. Refresh and try again";
 "social.error.rateLimited" = "Too many requests. Please try later";
+
+"app.debug.mockCredentialsHint" = "Mock account: gdeiassistant  password: gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "Startup timed out. Please retry or sign in again";

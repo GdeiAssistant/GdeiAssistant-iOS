@@ -1850,3 +1850,6 @@
 "social.error.invalidRequest" = "無効なリクエストです";
 "social.error.clientMessageConflict" = "メッセージが競合しました。更新して再試行してください";
 "social.error.rateLimited" = "操作が多すぎます。しばらくしてから再試行してください";
+
+"app.debug.mockCredentialsHint" = "Mock アカウント：gdeiassistant  パスワード：gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "起動がタイムアウトしました。再試行するか再度ログインしてください";
