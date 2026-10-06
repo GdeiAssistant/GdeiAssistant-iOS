@@ -9,36 +9,36 @@ struct FeedbackView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    Picker(localizedString("feedback.type"), selection: $viewModel.selectedType) {
-                        ForEach(viewModel.typeOptions, id: \.self) { option in
-                            Text(option).tag(option)
-                        }
-                    }
-                    .pickerStyle(.menu)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(localizedString("feedback.content"))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(DSColor.subtitle)
-                        TextEditor(text: $viewModel.content)
-                            .frame(minHeight: 120)
-                            .padding(10)
-                            .background(DSColor.fieldBackground)
-                            .clipShape(DSRadius.controlShape)
-                    }
-
-                    DSInputField(title: localizedString("feedback.contact"), placeholder: localizedString("feedback.contactPlaceholder"), text: $viewModel.contact)
-
-                    if case .failure(let message) = viewModel.submitState {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.danger)
+        Form {
+            Section {
+                Picker(localizedString("feedback.type"), selection: $viewModel.selectedType) {
+                    ForEach(viewModel.typeOptions, id: \.self) { option in
+                        Text(option).tag(option)
                     }
                 }
+                .pickerStyle(.menu)
+            }
 
+            Section {
+                TextEditor(text: $viewModel.content)
+                    .frame(minHeight: 140)
+                    .scrollContentBackground(.hidden)
+            } header: {
+                Text(localizedString("feedback.content"))
+            }
+
+            Section {
+                DSInputField(title: localizedString("feedback.contact"), placeholder: localizedString("feedback.contactPlaceholder"), text: $viewModel.contact)
+            } header: {
+                Text(localizedString("feedback.contact"))
+            } footer: {
+                if case .failure(let message) = viewModel.submitState {
+                    Text(message)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
+
+            Section {
                 DSButton(
                     title: localizedString("feedback.submit"),
                     icon: "paperplane",
@@ -47,10 +47,10 @@ struct FeedbackView: View {
                 ) {
                     Task { await viewModel.submit() }
                 }
+                .dsActionRow()
             }
-            .padding(16)
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("feedback.title"))
         .alert(localizedString("common.notice"), isPresented: Binding(
             get: {

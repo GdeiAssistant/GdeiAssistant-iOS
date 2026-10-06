@@ -10,7 +10,8 @@ struct PaymentWebView: View {
         VStack(spacing: 0) {
             HStack {
                 Button(localizedString("charge.backToForm"), action: onDismiss)
-                    .font(.subheadline)
+                    .font(.body)
+                    .tint(DSColor.primary)
                 Spacer()
                 Text(localizedString("charge.alipay"))
                     .font(.headline)
@@ -18,16 +19,19 @@ struct PaymentWebView: View {
                 // Balance the layout
                 Button(localizedString("charge.backToForm")) {}.opacity(0)
             }
-            .padding()
+            .padding(.horizontal, DSSpacing.md)
+            .padding(.vertical, DSSpacing.sm)
+            .background(DSColor.surface)
 
             if let order {
                 paymentOrderStatus(order)
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
+                    .padding(.horizontal, DSSpacing.md)
+                    .padding(.vertical, DSSpacing.xs)
             }
 
             AlipayWebViewRepresentable(session: session)
         }
+        .dsScreenBackground()
         .navigationBarBackButtonHidden(true)
     }
 
@@ -49,7 +53,7 @@ struct PaymentWebView: View {
                 .foregroundStyle(DSColor.subtitle)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(12)
+        .padding(DSSpacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
         .dsSurface()
     }

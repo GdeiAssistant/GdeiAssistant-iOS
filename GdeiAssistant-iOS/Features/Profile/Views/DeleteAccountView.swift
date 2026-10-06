@@ -10,32 +10,31 @@ struct DeleteAccountView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    Label(localizedString("deleteAccount.warning"), systemImage: "exclamationmark.triangle.fill")
-                        .font(.headline)
+        Form {
+            Section {
+                riskRow(localizedString("deleteAccount.risk1"))
+                riskRow(localizedString("deleteAccount.risk2"))
+                riskRow(localizedString("deleteAccount.risk3"))
+                riskRow(localizedString("deleteAccount.risk4"))
+                riskRow(localizedString("deleteAccount.risk5"))
+            } header: {
+                Label(localizedString("deleteAccount.warning"), systemImage: "exclamationmark.triangle.fill")
+                    .foregroundStyle(DSColor.danger)
+            }
+
+            Section {
+                SecureFormField(title: localizedString("deleteAccount.password"), placeholder: localizedString("deleteAccount.passwordPlaceholder"), text: $viewModel.password)
+
+                Toggle(localizedString("deleteAccount.agree"), isOn: $viewModel.agreed)
+                    .tint(DSColor.primary)
+            } footer: {
+                if case .failure(let message) = viewModel.submitState {
+                    Text(message)
                         .foregroundStyle(DSColor.danger)
-
-                    riskRow(localizedString("deleteAccount.risk1"))
-                    riskRow(localizedString("deleteAccount.risk2"))
-                    riskRow(localizedString("deleteAccount.risk3"))
-                    riskRow(localizedString("deleteAccount.risk4"))
-                    riskRow(localizedString("deleteAccount.risk5"))
                 }
+            }
 
-                DSCard {
-                    SecureFormField(title: localizedString("deleteAccount.password"), placeholder: localizedString("deleteAccount.passwordPlaceholder"), text: $viewModel.password)
-
-                    Toggle(localizedString("deleteAccount.agree"), isOn: $viewModel.agreed)
-
-                    if case .failure(let message) = viewModel.submitState {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.danger)
-                    }
-                }
-
+            Section {
                 DSButton(
                     title: localizedString("deleteAccount.confirmBtn"),
                     icon: "person.crop.circle.badge.xmark",
@@ -45,10 +44,10 @@ struct DeleteAccountView: View {
                 ) {
                     showConfirmation = true
                 }
+                .dsActionRow()
             }
-            .padding(16)
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("deleteAccount.title"))
         .confirmationDialog(localizedString("deleteAccount.confirmDialog"), isPresented: $showConfirmation, titleVisibility: .visible) {
             Button(localizedString("deleteAccount.proceed"), role: .destructive) {
@@ -66,12 +65,13 @@ struct DeleteAccountView: View {
     }
 
     private func riskRow(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            Image(systemName: "minus.circle.fill")
-                .foregroundStyle(DSColor.danger)
+        Label {
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
+                .foregroundStyle(DSColor.title)
+        } icon: {
+            Image(systemName: "minus.circle.fill")
+                .foregroundStyle(DSColor.danger)
         }
     }
 }

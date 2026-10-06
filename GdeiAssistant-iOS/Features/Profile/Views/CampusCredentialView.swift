@@ -11,14 +11,11 @@ struct CampusCredentialView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                statusCard
-                actionCard
-            }
-            .padding(16)
+        Form {
+            statusCard
+            actionCard
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("campusCredential.title"))
         .task {
             await viewModel.load()
@@ -73,18 +70,7 @@ struct CampusCredentialView: View {
     }
 
     private var statusCard: some View {
-        DSCard {
-            HStack {
-                Text(localizedString("campusCredential.title"))
-                    .font(.headline)
-                    .foregroundStyle(DSColor.title)
-                Spacer()
-                if viewModel.isLoading {
-                    ProgressView()
-                        .scaleEffect(0.85)
-                }
-            }
-
+        Section {
             statusRow(
                 localizedString("campusCredential.authStatus"),
                 viewModel.status.hasActiveConsent
@@ -120,30 +106,37 @@ struct CampusCredentialView: View {
                 statusRow(localizedString("campusCredential.account"), maskedCampusAccount)
             }
 
+        } header: {
+            HStack(spacing: DSSpacing.xs) {
+                Text(localizedString("campusCredential.title"))
+                if viewModel.isLoading {
+                    ProgressView()
+                        .controlSize(.mini)
+                }
+            }
+        } footer: {
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
-                    .font(.footnote)
                     .foregroundStyle(DSColor.danger)
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
 
+    @ViewBuilder
     private var actionCard: some View {
-        DSCard {
+        Section {
             Toggle(isOn: quickAuthBinding) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(localizedString("campusCredential.quickAuth"))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(DSColor.title)
-                    Text(localizedString("campusCredential.quickAuthHint"))
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.subtitle)
-                }
+                Text(localizedString("campusCredential.quickAuth"))
+                    .foregroundStyle(DSColor.title)
             }
+            .tint(DSColor.primary)
             .disabled(!viewModel.canRunAction)
             .accessibilityIdentifier("campusCredential.quickAuth")
+        } footer: {
+            Text(localizedString("campusCredential.quickAuthHint"))
+        }
 
+        Section {
             if !viewModel.status.hasActiveConsent {
                 DSButton(
                     title: localizedString("campusCredential.reauthorize"),
@@ -179,6 +172,9 @@ struct CampusCredentialView: View {
                 showDeleteConfirmation = true
             }
         }
+        .listRowInsets(EdgeInsets(top: DSSpacing.xs, leading: 0, bottom: DSSpacing.xs, trailing: 0))
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
     }
 
     private var quickAuthBinding: Binding<Bool> {
@@ -191,17 +187,8 @@ struct CampusCredentialView: View {
     }
 
     private func statusRow(_ title: String, _ value: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(title)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
-            Spacer(minLength: 12)
-            Text(value)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.title)
-                .multilineTextAlignment(.trailing)
-                .lineLimit(2)
-        }
+        LabeledContent(title, value: value)
+            .foregroundStyle(DSColor.title)
     }
 }
 

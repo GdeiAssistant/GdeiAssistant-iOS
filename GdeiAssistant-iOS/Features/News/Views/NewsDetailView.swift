@@ -17,7 +17,7 @@ struct NewsDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: DSSpacing.md) {
                 if let errorMessage {
                     Text(errorMessage)
                         .font(.footnote)
@@ -30,15 +30,16 @@ struct NewsDetailView: View {
                 }
 
                 Text(displayedTitle)
-                    .font(.title3.weight(.bold))
+                    .font(.title2.weight(.bold))
                     .foregroundStyle(DSColor.title)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
 
-                HStack(spacing: 10) {
-                    Text(displayedSourceTitle)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(DSColor.primary)
+                HStack(spacing: DSSpacing.xs) {
+                    DSTag(text: displayedSourceTitle)
                     Text(displayedPublishDate)
-                        .font(.caption)
+                        .font(.footnote)
+                        .monospacedDigit()
                         .foregroundStyle(DSColor.subtitle)
                 }
 
@@ -48,19 +49,31 @@ struct NewsDetailView: View {
                     } label: {
                         Label(localizedString("news.openOriginal"), systemImage: "safari")
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(DSColor.primary)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+                    .tint(DSColor.primary)
                 }
+
+                Rectangle()
+                    .fill(DSColor.divider)
+                    .frame(height: 0.5)
 
                 Text(displayedContent)
                     .font(.body)
+                    .lineSpacing(6)
                     .foregroundStyle(DSColor.title)
+                    .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(20)
+            .padding(.horizontal, DSSpacing.lg)
+            .padding(.vertical, DSSpacing.md)
+            .frame(maxWidth: 720, alignment: .leading)
+            .frame(maxWidth: .infinity)
         }
+        .dsScreenBackground()
         .navigationTitle(displayedSourceTitle)
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadDetail()
         }

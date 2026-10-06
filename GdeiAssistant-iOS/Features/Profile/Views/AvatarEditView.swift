@@ -13,29 +13,40 @@ struct AvatarEditView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    VStack(spacing: 16) {
-                        avatarPreview
-                        Text(localizedString("avatar.hint"))
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.subtitle)
-                    }
-                }
+        Form {
+            Section {
+                avatarPreview
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, DSSpacing.md)
+            } footer: {
+                Text(localizedString("avatar.hint"))
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+            }
 
+            Section {
                 PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
                     Label(localizedString("avatar.selectNew"), systemImage: "photo.badge.plus")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 48)
-                        .background(DSColor.surface)
-                        .clipShape(DSRadius.cardShape)
+                        .foregroundStyle(DSColor.primary)
                 }
-                .buttonStyle(.plain)
 
-                if let data = selectedImageData {
+                if viewModel.avatarState.url != nil || selectedImageData != nil {
+                    Button(role: .destructive) {
+                        showDeleteConfirmation = true
+                    } label: {
+                        Label(localizedString("avatar.restoreDefault"), systemImage: "trash")
+                            .foregroundStyle(DSColor.danger)
+                    }
+                }
+            } footer: {
+                if case .failure(let message) = viewModel.submitState {
+                    Text(message)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
+
+            if let data = selectedImageData {
+                Section {
                     DSButton(title: localizedString("avatar.upload"), icon: "arrow.up.circle", isLoading: viewModel.submitState.isSubmitting) {
                         let asset = UploadImageAsset(
                             fileName: "avatar-\(UUID().uuidString).jpg",
@@ -44,23 +55,11 @@ struct AvatarEditView: View {
                         )
                         Task { await viewModel.uploadAvatar(asset) }
                     }
-                }
-
-                if viewModel.avatarState.url != nil || selectedImageData != nil {
-                    DSButton(title: localizedString("avatar.restoreDefault"), icon: "trash", variant: .destructive) {
-                        showDeleteConfirmation = true
-                    }
-                }
-
-                if case .failure(let message) = viewModel.submitState {
-                    Text(message)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.danger)
+                    .dsActionRow()
                 }
             }
-            .padding(16)
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("avatar.title"))
         .task {
             await viewModel.load()

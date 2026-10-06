@@ -10,68 +10,72 @@ struct BindPhoneView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    infoRow(localizedString("bindPhone.status"), viewModel.status.isBound ? localizedString("bindPhone.bound") : localizedString("bindPhone.unbound"))
-                    if let username = viewModel.status.username {
-                        infoRow(localizedString("bindPhone.account"), username)
-                    }
-                    if let countryCode = viewModel.status.countryCode {
-                        infoRow(localizedString("bindPhone.areaCode"), "+\(countryCode)")
-                    }
-                    infoRow(localizedString("bindPhone.currentNumber"), viewModel.status.maskedValue)
-                    Text(viewModel.status.note)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.subtitle)
+        Form {
+            Section {
+                infoRow(localizedString("bindPhone.status"), viewModel.status.isBound ? localizedString("bindPhone.bound") : localizedString("bindPhone.unbound"))
+                if let username = viewModel.status.username {
+                    infoRow(localizedString("bindPhone.account"), username)
                 }
+                if let countryCode = viewModel.status.countryCode {
+                    infoRow(localizedString("bindPhone.areaCode"), "+\(countryCode)")
+                }
+                infoRow(localizedString("bindPhone.currentNumber"), viewModel.status.maskedValue)
+            } footer: {
+                Text(viewModel.status.note)
+            }
 
-                DSCard {
+            Section {
+                Button {
+                    showAreaCodePicker = true
+                } label: {
+                    HStack(spacing: DSSpacing.sm) {
+                        Text(localizedString("bindPhone.intlCode"))
+                            .foregroundStyle(DSColor.title)
+
+                        Spacer(minLength: DSSpacing.xs)
+
+                        Text(selectedAreaCodeText)
+                            .foregroundStyle(DSColor.subtitle)
+                            .multilineTextAlignment(.trailing)
+
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.footnote)
+                            .foregroundStyle(DSColor.tertiaryText)
+                            .accessibilityHidden(true)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+
+                DSInputField(title: localizedString("bindPhone.phone"), placeholder: localizedString("bindPhone.phonePlaceholder"), text: $viewModel.phone, keyboardType: .numberPad)
+
+                HStack(spacing: DSSpacing.sm) {
+                    DSInputField(title: localizedString("bindPhone.code"), placeholder: localizedString("bindPhone.codePlaceholder"), text: $viewModel.randomCode, keyboardType: .numberPad)
                     Button {
-                        showAreaCodePicker = true
+                        Task { await viewModel.sendCode() }
                     } label: {
-                        HStack(spacing: 12) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(localizedString("bindPhone.intlCode"))
-                                    .font(.footnote)
-                                    .foregroundStyle(DSColor.subtitle)
-
-                                Text(selectedAreaCodeText)
-                                    .foregroundStyle(DSColor.title)
-                                    .multilineTextAlignment(.leading)
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.up.chevron.down")
-                                .font(.footnote)
-                                .foregroundStyle(DSColor.subtitle)
+                        if viewModel.isSendingCode {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Text(retryCodeButtonTitle)
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
                         }
                     }
-                    .buttonStyle(.plain)
-
-                    Divider()
-
-                    DSInputField(title: localizedString("bindPhone.phone"), placeholder: localizedString("bindPhone.phonePlaceholder"), text: $viewModel.phone, keyboardType: .numberPad)
-                    DSInputField(title: localizedString("bindPhone.code"), placeholder: localizedString("bindPhone.codePlaceholder"), text: $viewModel.randomCode, keyboardType: .numberPad)
-
-                    DSButton(
-                        title: retryCodeButtonTitle,
-                        icon: "message.badge",
-                        variant: .secondary,
-                        isLoading: viewModel.isSendingCode,
-                        isDisabled: !viewModel.canSendCode
-                    ) {
-                        Task { await viewModel.sendCode() }
-                    }
-
-                    if case .failure(let message) = viewModel.submitState {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.danger)
-                    }
+                    .buttonStyle(.borderless)
+                    .tint(DSColor.primary)
+                    .disabled(viewModel.isSendingCode || !viewModel.canSendCode)
                 }
+            } header: {
+                Text(localizedString("bindPhone.phone"))
+            } footer: {
+                if case .failure(let message) = viewModel.submitState {
+                    Text(message)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
 
+            Section {
                 DSButton(
                     title: localizedString("bindPhone.bind"),
                     icon: "phone.badge.plus",
@@ -79,16 +83,21 @@ struct BindPhoneView: View {
                 ) {
                     Task { await viewModel.bind() }
                 }
+                .dsActionRow()
+            }
 
-                if viewModel.status.isBound {
-                    DSButton(title: localizedString("bindPhone.unbind"), icon: "phone.down.fill", variant: .destructive) {
+            if viewModel.status.isBound {
+                Section {
+                    Button(role: .destructive) {
                         showUnbindConfirmation = true
+                    } label: {
+                        Label(localizedString("bindPhone.unbind"), systemImage: "phone.down.fill")
+                            .foregroundStyle(DSColor.danger)
                     }
                 }
             }
-            .padding(16)
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("bindPhone.title"))
         .task {
             await viewModel.load()
@@ -128,13 +137,8 @@ struct BindPhoneView: View {
     }
 
     private func infoRow(_ title: String, _ value: String) -> some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(DSColor.subtitle)
-            Spacer()
-            Text(value)
-                .foregroundStyle(DSColor.title)
-        }
+        LabeledContent(title, value: value)
+            .foregroundStyle(DSColor.title)
     }
 
     private var retryCodeButtonTitle: String {

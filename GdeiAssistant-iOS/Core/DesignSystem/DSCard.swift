@@ -72,3 +72,77 @@ struct DSIconTile: View {
             .accessibilityHidden(true)
     }
 }
+
+/// Inset-grouped section for scroll-based pages: caption header outside, one
+/// continuous surface inside. Mirrors the native `.insetGrouped` list look.
+struct DSGroupedSection<Content: View>: View {
+    var title: String?
+    var footer: String?
+    private let content: Content
+
+    init(_ title: String? = nil, footer: String? = nil, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.footer = footer
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+            if let title, !title.isEmpty {
+                Text(title)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(DSColor.subtitle)
+                    .padding(.horizontal, DSSpacing.md)
+                    .accessibilityAddTraits(.isHeader)
+            }
+
+            VStack(alignment: .leading, spacing: 0) {
+                content
+            }
+            .padding(.horizontal, DSSpacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .dsSurface()
+
+            if let footer, !footer.isEmpty {
+                Text(footer)
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.tertiaryText)
+                    .padding(.horizontal, DSSpacing.md)
+            }
+        }
+    }
+}
+
+/// Hairline separator for rows inside `DSGroupedSection`.
+struct DSRowDivider: View {
+    var leadingInset: CGFloat = 0
+
+    var body: some View {
+        Rectangle()
+            .fill(DSColor.divider)
+            .frame(height: 0.5)
+            .padding(.leading, leadingInset)
+    }
+}
+
+/// Title / value row with native 44pt minimum height.
+struct DSValueRow: View {
+    let title: String
+    let value: String
+    var valueColor: Color = DSColor.subtitle
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: DSSpacing.sm) {
+            Text(title)
+                .font(.body)
+                .foregroundStyle(DSColor.title)
+            Spacer(minLength: DSSpacing.xs)
+            Text(value)
+                .font(.body)
+                .foregroundStyle(valueColor)
+                .multilineTextAlignment(.trailing)
+        }
+        .frame(minHeight: 44)
+        .accessibilityElement(children: .combine)
+    }
+}
