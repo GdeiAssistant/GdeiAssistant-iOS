@@ -80,107 +80,102 @@ struct CardView: View {
     }
 
     private func content(_ dashboard: CampusCardDashboard) -> some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                DSCard {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(LocalizedStringKey("card.balance"))
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-
-                        Text("\u{00A5}\(dashboard.info.balance, specifier: "%.2f")")
-                            .font(.largeTitle.weight(.bold))
-                            .foregroundStyle(DSColor.title)
-
-                        HStack {
-                            Text(String(format: localizedString("card.number"), dashboard.info.cardNumber))
-                            Spacer()
-                            Text(String(format: localizedString("card.status"), dashboard.info.status.displayName))
-                        }
-                        .font(.caption)
-                        .foregroundStyle(DSColor.subtitle)
-                    }
-                }
-
-                DSCard {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(LocalizedStringKey("card.transactions"))
-                            .font(.headline)
-                            .foregroundStyle(DSColor.title)
-
-                        DatePicker(
-                            LocalizedStringKey("card.queryDate"),
-                            selection: $viewModel.selectedDate,
-                            in: ...Date(),
-                            displayedComponents: .date
-                        )
-                        .datePickerStyle(.compact)
-
-                        DSButton(title: localizedString("card.queryButton"), icon: "calendar") {
-                            Task { await viewModel.loadDashboard(for: viewModel.selectedDate) }
-                        }
-                        .disabled(viewModel.isLoading)
-
-                        Text(String(format: localizedString("card.currentDate"), viewModel.selectedDateText))
-                            .font(.caption)
-                            .foregroundStyle(DSColor.subtitle)
-                    }
-                }
-
-                DSCard {
-                    Text(LocalizedStringKey("card.security"))
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-
-                    Text(LocalizedStringKey("card.securityNote"))
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Text(LocalizedStringKey("card.balance"))
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
-                        .lineSpacing(4)
 
-                    DSButton(
-                        title: dashboard.info.status == .lost ? localizedString("card.alreadyLost") : localizedString("card.reportLoss"),
-                        icon: "lock.shield",
-                        variant: .destructive,
-                        isLoading: viewModel.submitState.isSubmitting,
-                        isDisabled: dashboard.info.status == .lost
-                    ) {
-                        showLossConfirm = true
-                    }
-                }
-
-                DSCard {
-                    Text(String(format: localizedString("card.dateTransactions"), viewModel.selectedDateText))
-                        .font(.headline)
+                    Text("\u{00A5}\(dashboard.info.balance, specifier: "%.2f")")
+                        .font(.largeTitle.weight(.bold))
+                        .monospacedDigit()
                         .foregroundStyle(DSColor.title)
 
-                    if dashboard.transactions.isEmpty {
-                        Text(LocalizedStringKey("card.noTransactions"))
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                    } else {
-                        ForEach(dashboard.transactions) { transaction in
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(transaction.merchantName)
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(DSColor.title)
-                                    Text("\(transaction.timeText) \u{00B7} \(transaction.category)")
-                                        .font(.caption)
-                                        .foregroundStyle(DSColor.subtitle)
-                                }
-                                Spacer()
-                                Text(String(format: "-\u{00A5}%.2f", transaction.amount))
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(DSColor.danger)
+                    HStack {
+                        Text(String(format: localizedString("card.number"), dashboard.info.cardNumber))
+                        Spacer()
+                        DSTag(text: String(format: localizedString("card.status"), dashboard.info.status.displayName))
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(DSColor.subtitle)
+                }
+                .padding(.vertical, DSSpacing.xs)
+
+            }
+
+            Section {
+                DatePicker(
+                    LocalizedStringKey("card.queryDate"),
+                    selection: $viewModel.selectedDate,
+                    in: ...Date(),
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.compact)
+                .tint(DSColor.primary)
+
+                Button {
+                    Task { await viewModel.loadDashboard(for: viewModel.selectedDate) }
+                } label: {
+                    Label(localizedString("card.queryButton"), systemImage: "calendar")
+                        .foregroundStyle(DSColor.primary)
+                }
+                .disabled(viewModel.isLoading)
+            } header: {
+                Text(LocalizedStringKey("card.transactions"))
+            } footer: {
+                Text(String(format: localizedString("card.currentDate"), viewModel.selectedDateText))
+            }
+
+            Section {
+                if dashboard.transactions.isEmpty {
+                    Text(LocalizedStringKey("card.noTransactions"))
+                        .font(.subheadline)
+                        .foregroundStyle(DSColor.subtitle)
+                } else {
+                    ForEach(dashboard.transactions) { transaction in
+                        HStack(spacing: DSSpacing.sm) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                Text(transaction.merchantName)
+                                    .font(.body)
+                                    .foregroundStyle(DSColor.title)
+                                Text("\(transaction.timeText) \u{00B7} \(transaction.category)")
+                                    .font(.footnote)
+                                    .foregroundStyle(DSColor.subtitle)
                             }
-                            .padding(.vertical, 6)
+                            Spacer()
+                            Text(String(format: "-\u{00A5}%.2f", transaction.amount))
+                                .font(.body.weight(.semibold))
+                                .monospacedDigit()
+                                .foregroundStyle(DSColor.title)
                         }
+                        .padding(.vertical, DSSpacing.xxs)
+                        .accessibilityElement(children: .combine)
                     }
                 }
+            } header: {
+                Text(String(format: localizedString("card.dateTransactions"), viewModel.selectedDateText))
             }
-            .padding(16)
+
+            Section {
+                DSButton(
+                    title: dashboard.info.status == .lost ? localizedString("card.alreadyLost") : localizedString("card.reportLoss"),
+                    icon: "lock.shield",
+                    variant: .destructive,
+                    isLoading: viewModel.submitState.isSubmitting,
+                    isDisabled: dashboard.info.status == .lost
+                ) {
+                    showLossConfirm = true
+                }
+                .dsActionRow()
+            } header: {
+                Text(LocalizedStringKey("card.security"))
+            } footer: {
+                Text(LocalizedStringKey("card.securityNote"))
+            }
         }
-        .dsScreenBackground()
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.loadDashboard()
         }

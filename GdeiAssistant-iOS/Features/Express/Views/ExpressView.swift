@@ -27,7 +27,8 @@ struct ExpressView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -60,7 +61,7 @@ private struct ExpressPostRow: View {
     let post: ExpressPost
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(post.nickname)
                     .font(.headline)
@@ -86,7 +87,7 @@ private struct ExpressPostRow: View {
                 Label("\(post.likeCount)", systemImage: post.isLiked ? "heart.fill" : "heart")
                 Label("\(post.commentCount)", systemImage: "bubble.left")
                 Text(post.canGuess ? LocalizedStringKey("express.canGuess") : LocalizedStringKey("express.cannotGuess"))
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, DSSpacing.xs)
                     .padding(.vertical, 3)
                     .background((post.canGuess ? DSColor.warning : DSColor.subtitle).opacity(0.12))
                     .foregroundStyle(post.canGuess ? DSColor.warning : DSColor.subtitle)
@@ -95,7 +96,7 @@ private struct ExpressPostRow: View {
             .font(.caption)
             .foregroundStyle(DSColor.subtitle)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, DSSpacing.xs)
     }
 }
 
@@ -143,7 +144,7 @@ struct ExpressDetailView: View {
             } else if let detail {
                 List {
                     Section {
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             if let notificationContextText {
                                 Text(notificationContextText)
                                     .font(.caption)
@@ -164,7 +165,7 @@ struct ExpressDetailView: View {
                                     .foregroundStyle(DSColor.subtitle)
                             }
 
-                            HStack(spacing: 18) {
+                            HStack(spacing: DSSpacing.md) {
                                 statItem(title: localizedString("express.detail.likes"), value: detail.post.likeCount)
                                 statItem(title: localizedString("express.detail.comments"), value: detail.post.commentCount)
                                 if detail.post.canGuess {
@@ -237,7 +238,7 @@ struct ExpressDetailView: View {
                     } else {
                         Section {
                             ForEach(comments) { comment in
-                                VStack(alignment: .leading, spacing: 6) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     HStack {
                                         Text(comment.authorName)
                                             .font(.subheadline.weight(.semibold))
@@ -250,7 +251,7 @@ struct ExpressDetailView: View {
                                         .font(.subheadline)
                                         .foregroundStyle(DSColor.title)
                                 }
-                                .padding(.vertical, 4)
+                                .padding(.vertical, DSSpacing.xxs)
                             }
                         } header: {
                             Text(LocalizedStringKey("express.detail.commentsSection"))
@@ -268,7 +269,7 @@ struct ExpressDetailView: View {
     }
 
     private func statItem(title: String, value: Int) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: DSSpacing.xxs) {
             Text("\(value)")
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
@@ -398,7 +399,8 @@ private struct MyExpressPostsView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await loadData()
                 }

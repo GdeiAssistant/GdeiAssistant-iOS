@@ -29,7 +29,7 @@ struct SystemNoticeListView: View {
                                 fallbackCreatedAt: item.createdAt
                             )
                         } label: {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(item.title)
                                     .font(.headline)
                                     .foregroundStyle(DSColor.title)
@@ -41,7 +41,7 @@ struct SystemNoticeListView: View {
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
                             }
-                            .padding(.vertical, 6)
+                            .padding(.vertical, DSSpacing.xs)
                         }
                         .buttonStyle(.plain)
                         .task {
@@ -76,7 +76,7 @@ struct SystemNoticeListView: View {
         HStack {
             Spacer()
             ProgressView()
-                .padding(.vertical, 8)
+                .padding(.vertical, DSSpacing.xs)
             Spacer()
         }
         .listRowSeparator(.hidden)
@@ -84,7 +84,7 @@ struct SystemNoticeListView: View {
 
     private func loadMoreErrorRow(message: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: DSSpacing.xxs) {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
@@ -93,7 +93,7 @@ struct SystemNoticeListView: View {
                     .foregroundStyle(DSColor.primary)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
+            .padding(.vertical, DSSpacing.xs)
         }
         .buttonStyle(.plain)
         .listRowSeparator(.hidden)

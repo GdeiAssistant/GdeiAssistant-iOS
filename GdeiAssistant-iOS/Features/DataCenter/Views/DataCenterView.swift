@@ -114,8 +114,8 @@ struct YellowPageView: View {
                             Button {
                                 selectedEntry = item
                             } label: {
-                                HStack(spacing: 12) {
-                                    VStack(alignment: .leading, spacing: 4) {
+                                HStack(spacing: DSSpacing.sm) {
+                                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                         Text(item.section)
                                             .font(.headline)
                                             .foregroundStyle(DSColor.title)
@@ -219,7 +219,7 @@ private struct YellowPageEntryDetailView: View {
     }
 
     private func infoRow(_ title: String, _ value: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: DSSpacing.sm) {
             Text(title)
                 .foregroundStyle(DSColor.subtitle)
             Spacer()
@@ -229,12 +229,12 @@ private struct YellowPageEntryDetailView: View {
     }
 
     private func phoneActionRow(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             Text("\(title)：\(value)")
                 .font(.subheadline)
                 .foregroundStyle(DSColor.title)
 
-            HStack(spacing: 10) {
+            HStack(spacing: DSSpacing.sm) {
                 Button(localizedString("dataCenter.call")) {
                     guard let url = URL(string: "tel:\(sanitizedPhone(value))") else { return }
                     openURL(url)

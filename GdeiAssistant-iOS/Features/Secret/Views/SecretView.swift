@@ -31,7 +31,7 @@ struct SecretView: View {
                             }
                             .buttonStyle(.plain)
                             .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            .listRowInsets(EdgeInsets(top: DSSpacing.xs, leading: DSSpacing.md, bottom: DSSpacing.xs, trailing: DSSpacing.md))
                             .listRowBackground(Color.clear)
                         }
                     }
@@ -77,24 +77,24 @@ private struct SecretPostCard: View {
     let post: SecretPost
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(theme.textColor.opacity(0.85))
+                    .foregroundStyle(theme.textColor)
                 Spacer()
                 if let timerText = post.timerText {
                     Text(timerText)
                         .font(.caption2)
-                        .foregroundStyle(theme.textColor.opacity(0.75))
+                        .foregroundStyle(theme.textColor)
                 }
             }
 
             if post.isVoice {
-                HStack(spacing: 10) {
+                HStack(spacing: DSSpacing.sm) {
                     Image(systemName: "waveform.circle.fill")
                         .font(.title2)
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                         Text(post.title)
                             .font(.headline)
                         Text(post.summary)
@@ -109,18 +109,17 @@ private struct SecretPostCard: View {
                     .lineLimit(3)
             }
 
-            HStack(spacing: 12) {
+            HStack(spacing: DSSpacing.sm) {
                 Text(post.createdAt)
                 Label("\(post.likeCount)", systemImage: post.isLiked ? "heart.fill" : "heart")
                 Label("\(post.commentCount)", systemImage: "bubble.left")
             }
             .font(.caption)
-            .foregroundStyle(theme.textColor.opacity(0.82))
+            .foregroundStyle(theme.textColor)
         }
-        .padding(16)
+        .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.background)
-        .clipShape(DSRadius.cardShape)
+        .background(theme.background, in: DSRadius.cardShape)
     }
 
     private var theme: SecretThemeStyle.Palette {
@@ -166,27 +165,20 @@ struct SecretDetailView: View {
                 }
             } else if let detail {
                 ScrollView {
-                    VStack(spacing: 14) {
+                    VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                        if let notificationContextText {
+                            DSTag(text: notificationContextText)
+                        }
+
                         themedDetailCard(detail)
 
-                        DSCard {
-                            if let notificationContextText {
-                                Text(notificationContextText)
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.primary)
-                            }
-
-                            Text(localizedString("secret.comment"))
-                                .font(.headline)
-                                .foregroundStyle(DSColor.title)
-
-                            HStack(alignment: .bottom, spacing: 10) {
+                        DSGroupedSection(localizedString("secret.comment")) {
+                            HStack(alignment: .bottom, spacing: DSSpacing.xs) {
                                 TextField(localizedString("secret.commentPlaceholder"), text: $commentText, axis: .vertical)
-                                    .lineLimit(2...4)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 10)
-                                    .background(DSColor.fieldBackground)
-                                    .clipShape(DSRadius.controlShape)
+                                    .lineLimit(1...4)
+                                    .padding(.horizontal, DSSpacing.sm)
+                                    .padding(.vertical, DSSpacing.sm)
+                                    .dsFieldBackground()
 
                                 DSButton(
                                     title: localizedString("secret.send"),
@@ -196,37 +188,43 @@ struct SecretDetailView: View {
                                 ) {
                                     Task { await submitComment() }
                                 }
-                                .frame(width: 92)
+                                .frame(width: 88)
                             }
+                            .padding(.vertical, DSSpacing.sm)
 
                             if detail.comments.isEmpty {
+                                DSRowDivider()
                                 Text(localizedString("secret.emptyComments"))
                                     .font(.subheadline)
                                     .foregroundStyle(DSColor.subtitle)
+                                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                             } else {
                                 ForEach(detail.comments) { comment in
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        HStack {
+                                    DSRowDivider()
+                                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                                        HStack(alignment: .firstTextBaseline) {
                                             Text(comment.authorName)
                                                 .font(.subheadline.weight(.semibold))
                                                 .foregroundStyle(DSColor.title)
                                             Spacer()
                                             Text(comment.createdAt)
                                                 .font(.caption)
+                                                .monospacedDigit()
                                                 .foregroundStyle(DSColor.subtitle)
                                         }
                                         Text(comment.content)
-                                            .font(.subheadline)
+                                            .font(.body)
                                             .foregroundStyle(DSColor.title)
                                     }
-                                    .padding(.vertical, 6)
+                                    .padding(.vertical, DSSpacing.sm)
+                                    .accessibilityElement(children: .combine)
                                 }
                             }
                         }
-                        .padding(16)
                     }
-                    .dsScreenBackground()
+                    .padding(DSSpacing.md)
                 }
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("secret.anonymousDetail"))
@@ -238,15 +236,15 @@ struct SecretDetailView: View {
     @ViewBuilder
     private func themedDetailCard(_ detail: SecretPostDetail) -> some View {
         let theme = SecretThemeStyle.palette(for: detail.post.themeID)
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(theme.textColor.opacity(0.85))
+                    .foregroundStyle(theme.textColor)
                 Spacer()
                 Text(detail.post.stateText)
                     .font(.caption)
-                    .foregroundStyle(theme.textColor.opacity(0.75))
+                    .foregroundStyle(theme.textColor)
             }
 
             if detail.post.isVoice, let voiceURL = detail.post.voiceURL {
@@ -258,7 +256,7 @@ struct SecretDetailView: View {
                 .foregroundStyle(theme.textColor)
                 .lineSpacing(5)
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text("\(localizedString("secret.publisher"))\(detail.post.username)")
                 Text("\(localizedString("secret.contentType"))\(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))")
                 if let timerText = detail.post.timerText {
@@ -266,9 +264,9 @@ struct SecretDetailView: View {
                 }
             }
             .font(.caption)
-            .foregroundStyle(theme.textColor.opacity(0.8))
+            .foregroundStyle(theme.textColor)
 
-            HStack(spacing: 16) {
+            HStack(spacing: DSSpacing.md) {
                 Button {
                     Task { await toggleLike(detail.post) }
                 } label: {
@@ -282,18 +280,16 @@ struct SecretDetailView: View {
                 .disabled(isSubmittingLike)
 
                 Label("\(detail.post.commentCount)", systemImage: "bubble.left")
-                    .foregroundStyle(theme.textColor.opacity(0.82))
+                    .foregroundStyle(theme.textColor)
             }
             .font(.subheadline)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(actionHighlightBackground)
-            .clipShape(DSRadius.controlShape)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.xs)
+            .background(isLikeHighlighted ? theme.textColor.opacity(0.14) : Color.clear, in: DSRadius.controlShape)
         }
-        .padding(16)
+        .padding(DSSpacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(theme.background)
-        .clipShape(DSRadius.cardShape)
+        .background(theme.background, in: DSRadius.cardShape)
     }
 
     private func loadDetail() async {
@@ -358,10 +354,8 @@ struct SecretDetailView: View {
         }
     }
 
-    private var actionHighlightBackground: Color {
+    private var isLikeHighlighted: Bool {
         normalizedNotificationTargetType == "like" && notificationID != nil
-            ? DSColor.primarySoft
-            : .clear
     }
 }
 
@@ -391,7 +385,7 @@ private struct MySecretPostsView: View {
                         }
                         .buttonStyle(.plain)
                         .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowInsets(EdgeInsets(top: DSSpacing.xs, leading: DSSpacing.md, bottom: DSSpacing.xs, trailing: DSSpacing.md))
                         .listRowBackground(Color.clear)
                         .onAppear {
                             if post.id == viewModel.myPosts.last?.id {
@@ -449,7 +443,7 @@ private struct SecretVoicePlayer: View {
         Button {
             toggle()
         } label: {
-            HStack(spacing: 10) {
+            HStack(spacing: DSSpacing.sm) {
                 Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     .font(.title3)
                 Text(isPlaying ? localizedString("secret.pauseVoice") : localizedString("secret.playVoice"))
@@ -458,8 +452,8 @@ private struct SecretVoicePlayer: View {
                 Image(systemName: "waveform")
             }
             .foregroundStyle(foregroundColor)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.sm)
             .background(foregroundColor.opacity(0.12))
             .clipShape(DSRadius.controlShape)
         }
@@ -748,10 +742,10 @@ struct PublishSecretView: View {
 private struct SecretThemePalette: View {
     @Binding var selectedThemeID: Int
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: DSSpacing.sm), count: 4)
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 12) {
+        LazyVGrid(columns: columns, spacing: DSSpacing.sm) {
             ForEach(SecretRemoteMapper.themeIDs, id: \.self) { themeID in
                 Button {
                     selectedThemeID = themeID
@@ -779,32 +773,36 @@ private enum SecretThemeStyle {
         let textColor: Color
     }
 
+    /// Fixed dark ink for the light post themes; every theme keeps WCAG AA
+    /// contrast in both appearances because the theme colors are content.
+    private static let ink = Color(red: 0x11 / 255, green: 0x20 / 255, blue: 0x1C / 255)
+
     static func palette(for themeID: Int) -> Palette {
         switch themeID {
         case 1:
-            return Palette(background: Color(red: 0.96, green: 0.94, blue: 0.87), textColor: .black)
+            return Palette(background: Color(red: 0.96, green: 0.94, blue: 0.87), textColor: ink)
         case 2:
-            return Palette(background: Color(red: 0.84, green: 0.52, blue: 0.56), textColor: .white)
+            return Palette(background: Color(red: 0.84, green: 0.52, blue: 0.56), textColor: ink)
         case 3:
-            return Palette(background: Color(red: 0.56, green: 0.68, blue: 0.79), textColor: .white)
+            return Palette(background: Color(red: 0.56, green: 0.68, blue: 0.79), textColor: ink)
         case 4:
-            return Palette(background: Color(red: 0.91, green: 0.67, blue: 0.49), textColor: .white)
+            return Palette(background: Color(red: 0.91, green: 0.67, blue: 0.49), textColor: ink)
         case 5:
-            return Palette(background: Color(red: 0.54, green: 0.74, blue: 0.63), textColor: .white)
+            return Palette(background: Color(red: 0.54, green: 0.74, blue: 0.63), textColor: ink)
         case 6:
-            return Palette(background: Color(red: 0.64, green: 0.54, blue: 0.77), textColor: .white)
+            return Palette(background: Color(red: 0.64, green: 0.54, blue: 0.77), textColor: ink)
         case 7:
-            return Palette(background: Color(red: 0.37, green: 0.63, blue: 0.73), textColor: .white)
+            return Palette(background: Color(red: 0.37, green: 0.63, blue: 0.73), textColor: ink)
         case 8:
-            return Palette(background: Color(red: 0.93, green: 0.52, blue: 0.44), textColor: .white)
+            return Palette(background: Color(red: 0.93, green: 0.52, blue: 0.44), textColor: ink)
         case 9:
-            return Palette(background: Color(red: 0.95, green: 0.73, blue: 0.39), textColor: .white)
+            return Palette(background: Color(red: 0.95, green: 0.73, blue: 0.39), textColor: ink)
         case 10:
-            return Palette(background: Color(red: 0.40, green: 0.49, blue: 0.68), textColor: .white)
+            return Palette(background: Color(red: 0.33, green: 0.42, blue: 0.62), textColor: .white)
         case 11:
-            return Palette(background: Color(red: 0.33, green: 0.56, blue: 0.53), textColor: .white)
+            return Palette(background: Color(red: 0.26, green: 0.48, blue: 0.45), textColor: .white)
         case 12:
-            return Palette(background: Color(red: 0.58, green: 0.43, blue: 0.32), textColor: .white)
+            return Palette(background: Color(red: 0.52, green: 0.38, blue: 0.28), textColor: .white)
         default:
             return Palette(background: DSColor.surface, textColor: DSColor.title)
         }

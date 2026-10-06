@@ -54,7 +54,7 @@ struct SpareView: View {
             } else {
                 Section {
                     ForEach(viewModel.items) { item in
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text(item.roomName)
                                 .font(.headline)
                             Text("\(item.zoneName) \u{00B7} \(item.roomType)")
@@ -64,7 +64,7 @@ struct SpareView: View {
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 } header: {
                     Text(LocalizedStringKey("spare.results"))

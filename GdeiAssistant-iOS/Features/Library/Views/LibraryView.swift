@@ -24,7 +24,7 @@ struct LibraryView: View {
     }
 
     private var searchBar: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DSSpacing.sm) {
             TextField(LocalizedStringKey("library.searchPlaceholder"), text: $viewModel.keyword)
                 .textFieldStyle(.roundedBorder)
 
@@ -32,9 +32,11 @@ struct LibraryView: View {
                 Task { await viewModel.searchBooks() }
             }
             .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
             .tint(DSColor.primary)
         }
-        .padding(16)
+        .padding(.horizontal, DSSpacing.md)
+        .padding(.vertical, DSSpacing.sm)
         .dsScreenBackground()
     }
 
@@ -54,9 +56,9 @@ struct LibraryView: View {
                     NavigationLink {
                         LibraryBookDetailView(viewModel: viewModel, bookID: book.id)
                     } label: {
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text(book.title)
-                                .font(.subheadline.weight(.semibold))
+                                .font(.body.weight(.semibold))
                                 .foregroundStyle(DSColor.title)
                             Text("\(book.author) · \(book.location)")
                                 .font(.caption)
@@ -65,15 +67,16 @@ struct LibraryView: View {
                                 .font(.caption)
                                 .foregroundStyle(book.availableCount > 0 ? DSColor.primary : DSColor.danger)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await viewModel.refreshAll()
                 }
 
-                HStack(spacing: 16) {
+                HStack(spacing: DSSpacing.md) {
                     Button(LocalizedStringKey("library.previousPage")) {
                         Task { await viewModel.goToPreviousPage() }
                     }
@@ -87,7 +90,8 @@ struct LibraryView: View {
                         Task { await viewModel.goToNextPage() }
                     }
                 }
-                .padding(.vertical, 12)
+                .tint(DSColor.primary)
+                .padding(.vertical, DSSpacing.sm)
                 .frame(maxWidth: .infinity)
                 .dsScreenBackground()
             }
@@ -112,42 +116,50 @@ struct LibraryBookDetailView: View {
                     Task { await loadDetail() }
                 }
             } else if let detail {
-                ScrollView {
-                    DSCard {
-                        Text(detail.title)
-                            .font(.title3.weight(.bold))
-                            .foregroundStyle(DSColor.title)
-                        Text(localizedString("library.detail.author") + detail.author)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                        Text(localizedString("library.detail.publisher") + detail.publisher)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                        Text(localizedString("library.detail.isbn") + detail.isbn)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                        Text(localizedString("library.detail.location") + detail.location)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                        Text(localizedString("library.availableCount") + "\(detail.availableCount)")
-                            .font(.subheadline)
-                            .foregroundStyle(detail.availableCount > 0 ? DSColor.primary : DSColor.danger)
-
-                        Divider()
-                        Text(detail.summary)
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.title)
-                            .lineSpacing(4)
+                List {
+                    Section {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                            Text(detail.title)
+                                .font(.title3.weight(.bold))
+                                .foregroundStyle(DSColor.title)
+                            Text(localizedString("library.availableCount") + "\(detail.availableCount)")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(detail.availableCount > 0 ? DSColor.primary : DSColor.danger)
+                        }
+                        .padding(.vertical, DSSpacing.xxs)
                     }
-                    .padding(16)
+
+                    Section {
+                        detailLine(localizedString("library.detail.author") + detail.author)
+                        detailLine(localizedString("library.detail.publisher") + detail.publisher)
+                        detailLine(localizedString("library.detail.isbn") + detail.isbn)
+                        detailLine(localizedString("library.detail.location") + detail.location)
+                    }
+
+                    if !detail.summary.isEmpty {
+                        Section {
+                            Text(detail.summary)
+                                .font(.body)
+                                .foregroundStyle(DSColor.title)
+                                .lineSpacing(4)
+                        }
+                    }
                 }
-                .dsScreenBackground()
+                .listStyle(.insetGrouped)
+                .dsListBackground()
             }
         }
         .navigationTitle(LocalizedStringKey("library.detail.title"))
         .task {
             await loadDetail()
         }
+    }
+
+    private func detailLine(_ text: String) -> some View {
+        Text(text)
+            .font(.subheadline)
+            .foregroundStyle(DSColor.title)
+            .textSelection(.enabled)
     }
 
     private func loadDetail() async {
@@ -172,7 +184,11 @@ struct MyBorrowView: View {
             Section {
                 SecureField(LocalizedStringKey("library.borrow.passwordPlaceholder"), text: $viewModel.borrowPassword)
                     .textContentType(.password)
+            } footer: {
+                Text(LocalizedStringKey("library.borrow.hint"))
+            }
 
+            Section {
                 DSButton(
                     title: viewModel.hasLoadedBorrowRecords ? localizedString("library.borrow.refresh") : localizedString("library.borrow.query"),
                     icon: "arrow.clockwise",
@@ -180,10 +196,7 @@ struct MyBorrowView: View {
                 ) {
                     Task { await viewModel.fetchBorrowRecords() }
                 }
-
-                Text(LocalizedStringKey("library.borrow.hint"))
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.subtitle)
+                .dsActionRow()
             }
 
             if let borrowErrorMessage = viewModel.borrowErrorMessage {
@@ -212,7 +225,7 @@ struct MyBorrowView: View {
                         NavigationLink {
                             BorrowRecordDetailView(viewModel: viewModel, record: record)
                         } label: {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(record.bookTitle)
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(DSColor.title)
@@ -233,7 +246,7 @@ struct MyBorrowView: View {
                                         .foregroundStyle(record.renewable ? DSColor.primary : DSColor.subtitle)
                                 }
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, DSSpacing.xxs)
                         }
                     }
                 }
@@ -253,44 +266,39 @@ struct BorrowRecordDetailView: View {
     @State private var password = ""
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    Text(record.bookTitle)
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(DSColor.title)
+        List {
+            Section {
+                Text(record.bookTitle)
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(DSColor.title)
+                    .padding(.vertical, DSSpacing.xxs)
 
-                    infoRow(title: localizedString("library.renew.borrowDate"), value: record.borrowDate)
-                    infoRow(title: localizedString("library.renew.dueDate"), value: record.dueDate)
-                    infoRow(title: localizedString("library.renew.status"), value: record.status)
-                    infoRow(title: localizedString("library.renew.token"), value: record.renewable ? localizedString("library.renew.tokenAcquired") : localizedString("library.borrow.notRenewable"))
-                }
-
-                DSCard {
-                    Text(LocalizedStringKey("library.renew.instructions"))
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-
-                    Text(LocalizedStringKey("library.renew.instructionsDetail"))
-                        .font(.subheadline)
-                        .foregroundStyle(DSColor.subtitle)
-                        .lineSpacing(4)
-
-                    DSButton(
-                        title: localizedString("library.renew.button"),
-                        icon: "arrow.clockwise",
-                        isLoading: viewModel.submitState.isSubmitting,
-                        isDisabled: !record.renewable
-                    ) {
-                        viewModel.clearSubmitState()
-                        password = viewModel.borrowPassword
-                        showPasswordSheet = true
-                    }
-                }
+                infoRow(title: localizedString("library.renew.borrowDate"), value: record.borrowDate)
+                infoRow(title: localizedString("library.renew.dueDate"), value: record.dueDate)
+                infoRow(title: localizedString("library.renew.status"), value: record.status)
+                infoRow(title: localizedString("library.renew.token"), value: record.renewable ? localizedString("library.renew.tokenAcquired") : localizedString("library.borrow.notRenewable"))
             }
-            .padding(16)
+
+            Section {
+                DSButton(
+                    title: localizedString("library.renew.button"),
+                    icon: "arrow.clockwise",
+                    isLoading: viewModel.submitState.isSubmitting,
+                    isDisabled: !record.renewable
+                ) {
+                    viewModel.clearSubmitState()
+                    password = viewModel.borrowPassword
+                    showPasswordSheet = true
+                }
+                .dsActionRow()
+            } header: {
+                Text(LocalizedStringKey("library.renew.instructions"))
+            } footer: {
+                Text(LocalizedStringKey("library.renew.instructionsDetail"))
+            }
         }
-        .dsScreenBackground()
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .navigationTitle(LocalizedStringKey("library.renew.detailTitle"))
         .sheet(isPresented: $showPasswordSheet, onDismiss: {
             password = ""
@@ -346,14 +354,8 @@ struct BorrowRecordDetailView: View {
     }
 
     private func infoRow(title: String, value: String) -> some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(DSColor.subtitle)
-            Spacer()
-            Text(value)
-                .foregroundStyle(DSColor.title)
-        }
-        .font(.subheadline)
+        LabeledContent(title, value: value)
+            .foregroundStyle(DSColor.title)
     }
 }
 

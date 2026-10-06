@@ -130,7 +130,7 @@ struct CommunityFeedView: View {
                     .lineLimit(1)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DSSpacing.xxs)
         .accessibilityElement(children: .combine)
     }
 

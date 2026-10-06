@@ -13,19 +13,28 @@ struct GraduateExamView: View {
             Section {
                 TextField(localizedString("graduateExam.name"), text: $viewModel.query.name)
                 TextField(localizedString("graduateExam.examNumber"), text: $viewModel.query.examNumber)
+                    .keyboardType(.asciiCapable)
                 TextField(localizedString("graduateExam.idNumber"), text: $viewModel.query.idNumber)
-                Button(localizedString("graduateExam.query")) {
-                    Task { await viewModel.submit() }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(viewModel.isLoading)
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.danger)
-                }
+                    .keyboardType(.asciiCapable)
             } header: {
                 Text(localizedString("graduateExam.queryInfo"))
+            } footer: {
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
+
+            Section {
+                DSButton(
+                    title: localizedString("graduateExam.query"),
+                    icon: "magnifyingglass",
+                    isLoading: viewModel.isLoading,
+                    isDisabled: viewModel.isLoading
+                ) {
+                    Task { await viewModel.submit() }
+                }
+                .dsActionRow()
             }
 
             if viewModel.isLoading {
@@ -34,9 +43,16 @@ struct GraduateExamView: View {
                 }
             } else if let score = viewModel.score {
                 Section {
-                    Text("\(localizedString("graduateExam.totalScore"))\(score.totalScore)")
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(DSColor.primary)
+                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
+                        Text(localizedString("graduateExam.totalScore"))
+                            .font(.subheadline)
+                            .foregroundStyle(DSColor.subtitle)
+                        Text(score.totalScore)
+                            .font(.largeTitle.weight(.bold).monospacedDigit())
+                            .foregroundStyle(DSColor.primary)
+                    }
+                    .padding(.vertical, DSSpacing.xxs)
+                    .accessibilityElement(children: .combine)
                     infoRow(localizedString("graduateExam.name"), score.name)
                     infoRow(localizedString("graduateExam.regNumber"), score.signupNumber)
                     infoRow(localizedString("graduateExam.examNumber"), score.examNumber)
@@ -50,25 +66,27 @@ struct GraduateExamView: View {
             }
 
             Section {
-                Button(localizedString("graduateExam.openAltEntry")) {
+                Button {
                     if let url = URL(string: "https://yz.chsi.com.cn/apply/cjcxa/") {
                         openURL(url)
                     }
+                } label: {
+                    Label(localizedString("graduateExam.openAltEntry"), systemImage: "arrow.up.right.square")
                 }
             } header: {
                 Text(localizedString("graduateExam.altEntry"))
             }
         }
+        .listStyle(.insetGrouped)
         .dsListBackground()
+        .scrollDismissesKeyboard(.interactively)
         .navigationTitle(localizedString("graduateExam.title"))
     }
 
     private func infoRow(_ title: String, _ value: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
+        LabeledContent(title) {
             Text(value)
-                .foregroundStyle(DSColor.subtitle)
+                .monospacedDigit()
         }
     }
 }

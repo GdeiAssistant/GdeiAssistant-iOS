@@ -30,7 +30,7 @@ struct NewsView: View {
                                 fallbackSourceURL: item.sourceURL
                             )
                         } label: {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(item.sourceTitle)
                                     .font(.caption.weight(.semibold))
                                     .foregroundStyle(DSColor.primary)
@@ -45,7 +45,7 @@ struct NewsView: View {
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
                             }
-                            .padding(.vertical, 6)
+                            .padding(.vertical, DSSpacing.xs)
                         }
                         .buttonStyle(.plain)
                         .task {
@@ -80,7 +80,7 @@ struct NewsView: View {
         HStack {
             Spacer()
             ProgressView()
-                .padding(.vertical, 8)
+                .padding(.vertical, DSSpacing.xs)
             Spacer()
         }
         .listRowSeparator(.hidden)
@@ -88,7 +88,7 @@ struct NewsView: View {
 
     private func loadMoreErrorRow(message: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: DSSpacing.xxs) {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
@@ -97,7 +97,7 @@ struct NewsView: View {
                     .foregroundStyle(DSColor.primary)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
+            .padding(.vertical, DSSpacing.xs)
         }
         .buttonStyle(.plain)
         .listRowSeparator(.hidden)

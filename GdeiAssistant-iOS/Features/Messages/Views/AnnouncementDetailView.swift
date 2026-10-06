@@ -14,27 +14,42 @@ struct AnnouncementDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: DSSpacing.sm) {
                 if isLoading {
                     ProgressView()
                 }
 
                 Text(displayedTitle)
-                    .font(.title3.weight(.bold))
+                    .font(.title2.weight(.bold))
                     .foregroundStyle(DSColor.title)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
 
-                Text(displayedCreatedAt)
-                    .font(.caption)
+                Label(displayedCreatedAt, systemImage: "clock")
+                    .font(.footnote)
+                    .monospacedDigit()
                     .foregroundStyle(DSColor.subtitle)
+
+                Rectangle()
+                    .fill(DSColor.divider)
+                    .frame(height: 0.5)
+                    .padding(.vertical, DSSpacing.xxs)
 
                 Text(displayedContent)
                     .font(.body)
+                    .lineSpacing(6)
                     .foregroundStyle(DSColor.title)
+                    .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(20)
+            .padding(.horizontal, DSSpacing.lg)
+            .padding(.vertical, DSSpacing.md)
+            .frame(maxWidth: 720, alignment: .leading)
+            .frame(maxWidth: .infinity)
         }
+        .dsScreenBackground()
         .navigationTitle(navigationTitleText)
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadDetail()
         }

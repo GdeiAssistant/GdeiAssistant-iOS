@@ -89,13 +89,13 @@ private struct PhotographPostRow: View {
     let post: PhotographPost
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: DSSpacing.sm) {
             if post.firstImageURL != nil {
-                DSRemoteImageView(urlString: post.firstImageURL)
-                    .frame(width: 84, height: 84)
+                DSRemoteImageView(urlString: post.firstImageURL, cornerRadius: DSRadius.control)
+                    .frame(width: 76, height: 76)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 HStack {
                     Text(post.title)
                         .font(.headline)
@@ -129,7 +129,7 @@ private struct PhotographPostRow: View {
                 .foregroundStyle(DSColor.subtitle)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DSSpacing.xxs)
     }
 }
 
@@ -183,7 +183,7 @@ struct PhotographDetailView: View {
                                 .foregroundStyle(DSColor.primary)
                         }
 
-                        HStack(spacing: 20) {
+                        HStack(spacing: DSSpacing.lg) {
                             statItem(localizedString("photograph.photoSection"), value: detail.imageURLs.count)
                             statItem(localizedString("photograph.comment"), value: max(detail.post.commentCount, comments.count))
                             statItem(localizedString("photograph.like"), value: detail.post.likeCount)
@@ -273,7 +273,7 @@ struct PhotographDetailView: View {
                     } else {
                         Section {
                             ForEach(comments) { comment in
-                                VStack(alignment: .leading, spacing: 6) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     HStack {
                                         Text(comment.authorName)
                                             .font(.subheadline.weight(.semibold))
@@ -285,7 +285,7 @@ struct PhotographDetailView: View {
                                     Text(comment.content)
                                         .font(.subheadline)
                                 }
-                                .padding(.vertical, 4)
+                                .padding(.vertical, DSSpacing.xxs)
                             }
                         }
                     }
@@ -301,7 +301,7 @@ struct PhotographDetailView: View {
     }
 
     private func statItem(_ title: String, value: Int) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: DSSpacing.xxs) {
             Text("\(value)")
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
@@ -464,7 +464,8 @@ private struct MyPhotographPostsView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await loadData()
                 }
@@ -522,7 +523,7 @@ private struct PublishPhotographView: View {
 
             Section {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: DSSpacing.sm) {
                         ForEach(viewModel.images) { image in
                             ZStack(alignment: .topTrailing) {
                                 previewImageView(image)
@@ -541,7 +542,7 @@ private struct PublishPhotographView: View {
                                 maxSelectionCount: 4 - viewModel.images.count,
                                 matching: .images
                             ) {
-                                VStack(spacing: 8) {
+                                VStack(spacing: DSSpacing.xs) {
                                     Image(systemName: "photo.badge.plus")
                                     Text(localizedString("photograph.addImage"))
                                         .font(.caption)
@@ -552,7 +553,7 @@ private struct PublishPhotographView: View {
                             }
                         }
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                 }
             } header: {
                 Text(localizedString("photograph.imageSection"))

@@ -59,3 +59,18 @@ enum DSAppearance {
         UICollectionView.appearance().backgroundColor = DSUIColor.background
     }
 }
+
+extension View {
+    /// Full-width action button row inside a Form/List section (no row chrome).
+    func dsActionRow() -> some View {
+        listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+    }
+
+    /// Native grouped Form chrome on the brand background.
+    func dsForm() -> some View {
+        formStyle(.grouped)
+            .dsListBackground()
+            .scrollDismissesKeyboard(.interactively)
+    }
+}

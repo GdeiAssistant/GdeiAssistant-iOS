@@ -8,35 +8,46 @@ struct DownloadDataView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                DSCard {
-                    Label(viewModel.status.state.title, systemImage: iconName)
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
+        Form {
+            Section {
+                VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                    Label {
+                        Text(viewModel.status.state.title)
+                            .font(.headline)
+                            .foregroundStyle(DSColor.title)
+                    } icon: {
+                        DSIconTile(systemName: iconName)
+                    }
 
                     Text(viewModel.status.localizedMessage)
                         .font(.subheadline)
                         .foregroundStyle(DSColor.subtitle)
-                        .lineSpacing(4)
-
-                    if let url = viewModel.status.downloadURL, !url.isEmpty {
-                        Text(url)
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.primary)
-                            .textSelection(.enabled)
-                    }
+                        .lineSpacing(3)
                 }
+                .padding(.vertical, DSSpacing.xxs)
 
-                if let errorMessage = viewModel.errorMessage {
-                    DSErrorStateView(message: errorMessage) {}
+                if let url = viewModel.status.downloadURL, !url.isEmpty {
+                    Text(url)
+                        .font(.footnote.monospaced())
+                        .foregroundStyle(DSColor.primary)
+                        .textSelection(.enabled)
                 }
-
-                actionButton
             }
-            .padding(16)
+
+            if let errorMessage = viewModel.errorMessage {
+                Section {
+                    Label(errorMessage, systemImage: "exclamationmark.triangle")
+                        .font(.footnote)
+                        .foregroundStyle(DSColor.danger)
+                }
+            }
+
+            Section {
+                actionButton
+                    .dsActionRow()
+            }
         }
-        .dsScreenBackground()
+        .dsForm()
         .navigationTitle(localizedString("downloadData.title"))
         .task {
             await viewModel.load()

@@ -20,27 +20,17 @@ struct ChargeView: View {
     }
 
     private var chargeForm: some View {
-        ScrollView {
-            VStack(spacing: DSSpacing.md) {
-                overviewCard
-                if let order = viewModel.latestOrder {
-                    chargeOrderStatusCard(order)
-                }
-                amountSection
-                passwordSection
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundStyle(DSColor.danger)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                }
-                submitButton
-                recentOrdersSection
+        Form {
+            overviewCard
+            if let order = viewModel.latestOrder {
+                chargeOrderStatusCard(order)
             }
-            .padding(DSSpacing.md)
+            amountSection
+            passwordSection
+            submitButton
+            recentOrdersSection
         }
-        .dsScreenBackground()
+        .dsForm()
         .refreshable { viewModel.refresh() }
         .overlay {
             if viewModel.isLoading && viewModel.cardInfo == nil {
@@ -50,46 +40,34 @@ struct ChargeView: View {
     }
 
     private var overviewCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.cardInfo?.ownerName ?? NSLocalizedString("charge.fallbackUser", comment: ""))
-                .font(.caption.weight(.medium))
-                .foregroundStyle(DSColor.primary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(DSColor.primarySoft, in: Capsule())
+        Section {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                DSTag(text: viewModel.cardInfo?.ownerName ?? NSLocalizedString("charge.fallbackUser", comment: ""))
 
-            Text(NSLocalizedString("charge.subtitle", comment: ""))
-                .font(.title2.bold())
-                .foregroundStyle(DSColor.title)
+                Text(NSLocalizedString("charge.subtitle", comment: ""))
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(DSColor.title)
+            }
+            .padding(.vertical, DSSpacing.xxs)
 
-            HStack(spacing: 12) {
-                metricCard(label: NSLocalizedString("charge.currentBalance", comment: ""), value: viewModel.balanceText)
-                metricCard(label: NSLocalizedString("charge.cardStatus", comment: ""), value: viewModel.cardInfo?.status.displayName ?? "—")
-            }
-            HStack(spacing: 12) {
-                metricCard(label: NSLocalizedString("charge.cardNumber", comment: ""), value: viewModel.cardNumber)
-            }
+            metricCard(label: NSLocalizedString("charge.currentBalance", comment: ""), value: viewModel.balanceText)
+            metricCard(label: NSLocalizedString("charge.cardStatus", comment: ""), value: viewModel.cardInfo?.status.displayName ?? "—")
+            metricCard(label: NSLocalizedString("charge.cardNumber", comment: ""), value: viewModel.cardNumber)
         }
-        .padding()
-        .dsSurface()
     }
 
     private func metricCard(label: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label).font(.caption).foregroundStyle(DSColor.subtitle)
-            Text(value).font(.headline).monospacedDigit().foregroundStyle(DSColor.title)
+        LabeledContent(label) {
+            Text(value)
+                .monospacedDigit()
+                .foregroundStyle(DSColor.subtitle)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(DSColor.fieldBackground, in: DSRadius.controlShape)
+        .foregroundStyle(DSColor.title)
     }
 
     private var amountSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(NSLocalizedString("charge.inputTitle", comment: "")).font(.headline)
-            Text(NSLocalizedString("charge.quickAmount", comment: "")).font(.caption).foregroundStyle(DSColor.subtitle)
-
-            HStack(spacing: 10) {
+        Section {
+            HStack(spacing: DSSpacing.xs) {
                 ForEach(["20", "50", "100", "200"], id: \.self) { preset in
                     let isSelected = viewModel.amount == preset
                     Button {
@@ -103,137 +81,134 @@ struct ChargeView: View {
                             .background(isSelected ? DSColor.primarySoft : DSColor.fieldBackground, in: DSRadius.controlShape)
                             .overlay(
                                 DSRadius.controlShape
-                                    .strokeBorder(isSelected ? DSColor.primary : DSColor.border, lineWidth: 1)
+                                    .strokeBorder(isSelected ? DSColor.primary : Color.clear, lineWidth: 1)
                             )
                     }
                     .buttonStyle(DSPressableButtonStyle())
                     .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
+            .padding(.vertical, DSSpacing.xxs)
 
             TextField(NSLocalizedString("charge.amountHint", comment: ""), text: $viewModel.amount)
                 .keyboardType(.numberPad)
-                .padding(.horizontal, 14)
-                .frame(minHeight: 48)
-                .dsFieldBackground()
+                .monospacedDigit()
+        } header: {
+            Text(NSLocalizedString("charge.inputTitle", comment: ""))
+        } footer: {
+            Text(NSLocalizedString("charge.quickAmount", comment: ""))
         }
-        .padding()
-        .dsSurface()
     }
 
     private var passwordSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(NSLocalizedString("charge.passwordLabel", comment: "")).font(.caption).foregroundStyle(DSColor.subtitle)
+        Section {
             SecureField(NSLocalizedString("charge.passwordHint", comment: ""), text: $viewModel.password)
-                .padding(.horizontal, 14)
-                .frame(minHeight: 48)
-                .dsFieldBackground()
+        } header: {
+            Text(NSLocalizedString("charge.passwordLabel", comment: ""))
+        } footer: {
+            if let error = viewModel.errorMessage {
+                Text(error)
+                    .foregroundStyle(DSColor.danger)
+            }
         }
-        .padding()
-        .dsSurface()
     }
 
     private var submitButton: some View {
-        DSButton(
-            title: viewModel.isSubmitting ? NSLocalizedString("charge.processing", comment: "") : NSLocalizedString("charge.submit", comment: ""),
-            icon: "creditcard",
-            isLoading: viewModel.isSubmitting,
-            isDisabled: !viewModel.canSubmit
-        ) {
-            viewModel.submitCharge()
+        Section {
+            DSButton(
+                title: viewModel.isSubmitting ? NSLocalizedString("charge.processing", comment: "") : NSLocalizedString("charge.submit", comment: ""),
+                icon: "creditcard",
+                isLoading: viewModel.isSubmitting,
+                isDisabled: !viewModel.canSubmit
+            ) {
+                viewModel.submitCharge()
+            }
+            .dsActionRow()
         }
     }
 
     private func chargeOrderStatusCard(_ order: ChargeOrder) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(localizedString("charge.order.statusTitle"))
-                    .font(.headline)
-                Spacer()
-                statusBadge(order)
+        Section {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(order.localizedStatusMessage)
+                        .font(.subheadline)
+                        .foregroundStyle(DSColor.title)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: DSSpacing.xs)
+                    statusBadge(order)
+                }
+
+                orderMetaRows(order)
             }
-
-            Text(order.localizedStatusMessage)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
-                .fixedSize(horizontal: false, vertical: true)
-
-            orderMetaRows(order)
+            .padding(.vertical, DSSpacing.xxs)
+        } header: {
+            Text(localizedString("charge.order.statusTitle"))
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dsSurface()
     }
 
     private var recentOrdersSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(localizedString("charge.order.recentTitle"))
-                        .font(.headline)
-                    Text(localizedString("charge.order.recentHint"))
-                        .font(.caption)
-                        .foregroundStyle(DSColor.subtitle)
+        Section {
+            if viewModel.isLoadingOrders && viewModel.recentOrders.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, DSSpacing.xs)
+            } else if let error = viewModel.orderErrorMessage {
+                Text(error)
+                    .font(.subheadline)
+                    .foregroundStyle(DSColor.danger)
+            } else if viewModel.recentOrders.isEmpty {
+                Text(localizedString("charge.order.empty"))
+                    .font(.subheadline)
+                    .foregroundStyle(DSColor.subtitle)
+            } else {
+                ForEach(viewModel.recentOrders) { order in
+                    chargeOrderRow(order)
                 }
+            }
+        } header: {
+            HStack(alignment: .center) {
+                Text(localizedString("charge.order.recentTitle"))
                 Spacer()
                 Button {
                     viewModel.refreshChargeOrders()
                 } label: {
                     Image(systemName: "arrow.clockwise")
+                        .font(.footnote.weight(.semibold))
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderless)
+                .tint(DSColor.primary)
                 .disabled(viewModel.isLoadingOrders)
                 .accessibilityLabel(localizedString("charge.order.refresh"))
             }
-
-            if viewModel.isLoadingOrders && viewModel.recentOrders.isEmpty {
-                ProgressView()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 8)
-            } else if let error = viewModel.orderErrorMessage {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(DSColor.danger)
-            } else if viewModel.recentOrders.isEmpty {
-                Text(localizedString("charge.order.empty"))
-                    .font(.caption)
-                    .foregroundStyle(DSColor.subtitle)
-            } else {
-                VStack(spacing: 10) {
-                    ForEach(viewModel.recentOrders) { order in
-                        chargeOrderRow(order)
-                    }
-                }
-            }
+        } footer: {
+            Text(localizedString("charge.order.recentHint"))
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .dsSurface()
     }
 
     private func chargeOrderRow(_ order: ChargeOrder) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             HStack(alignment: .firstTextBaseline) {
                 Text(orderTitle(order))
-                    .font(.subheadline.weight(.semibold))
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(DSColor.title)
                     .lineLimit(1)
                 Spacer()
                 statusBadge(order)
             }
 
             Text(order.localizedStatusMessage)
-                .font(.caption)
+                .font(.footnote)
                 .foregroundStyle(DSColor.subtitle)
                 .fixedSize(horizontal: false, vertical: true)
 
             orderMetaRows(order)
         }
-        .padding(12)
-        .background(DSColor.fieldBackground, in: DSRadius.controlShape)
+        .padding(.vertical, DSSpacing.xxs)
     }
 
     private func orderMetaRows(_ order: ChargeOrder) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
             HStack {
                 Label(orderAmountText(order), systemImage: "yensign.circle")
                 Spacer()
@@ -253,8 +228,8 @@ struct ChargeView: View {
     private func statusBadge(_ order: ChargeOrder) -> some View {
         Text(order.localizedStatusLabel)
             .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.xxs)
             .foregroundStyle(statusTint(order))
             .background(statusTint(order).opacity(0.12), in: Capsule())
     }
