@@ -2,7 +2,7 @@ import Foundation
 
 struct MarketplaceProfileDTO: Decodable {
     let avatarURL: String?
-    let username: String?
+    let displayName: String?
     let nickname: String?
     let faculty: Int?
     let enrollment: Int?
@@ -11,7 +11,7 @@ struct MarketplaceProfileDTO: Decodable {
 
 struct MarketplaceItemDTO: Decodable {
     let id: Int?
-    let username: String?
+    let displayName: String?
     let authorId: String?
     let name: String?
     let description: String?
@@ -26,8 +26,9 @@ struct MarketplaceItemDTO: Decodable {
 }
 
 struct MarketplaceDetailDTO: Decodable {
+    let ownedByCurrentUser: Bool?
     let profile: MarketplaceProfileDTO?
-    let secondhandItem: MarketplaceItemDTO?
+    let item: MarketplaceItemDTO?
 }
 
 struct MarketplacePersonalSummaryDTO: Decodable {

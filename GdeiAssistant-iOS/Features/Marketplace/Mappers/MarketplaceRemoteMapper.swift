@@ -8,7 +8,7 @@ enum MarketplaceRemoteMapper {
     nonisolated static func mapItems(_ dtos: [MarketplaceItemDTO]) -> [MarketplaceItem] {
         dtos
             .filter { mapState($0.state) == .selling }
-            .map { mapItem($0, sellerName: $0.username) }
+            .map { mapItem($0, sellerName: $0.displayName) }
             .sorted { $0.postedAt > $1.postedAt }
     }
 
@@ -71,14 +71,14 @@ enum MarketplaceRemoteMapper {
     }
 
     nonisolated static func mapDetail(_ dto: MarketplaceDetailDTO) throws -> MarketplaceDetail {
-        guard let itemDTO = dto.secondhandItem else {
+        guard let itemDTO = dto.item else {
             throw NetworkError.noData
         }
 
         let sellerName = RemoteMapperSupport.firstNonEmpty(
             dto.profile?.nickname,
-            dto.profile?.username,
-            itemDTO.username,
+            dto.profile?.displayName,
+            itemDTO.displayName,
             localizedString("marketplace.mapper.defaultSeller")
         )
         let item = mapItem(itemDTO, sellerName: sellerName, sellerAvatarURL: dto.profile?.avatarURL)
@@ -94,12 +94,13 @@ enum MarketplaceRemoteMapper {
             condition: typeName,
             description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, localizedString("marketplace.mapper.noDescription")),
             contactHint: contactHint.isEmpty ? localizedString("marketplace.contactUnavailable") : contactHint,
-            sellerUsername: dto.profile?.username ?? itemDTO.username,
+            sellerUsername: dto.profile?.displayName ?? itemDTO.displayName,
             sellerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
             sellerCollege: facultyName(dto.profile?.faculty),
             sellerMajor: RemoteMapperSupport.sanitizedText(dto.profile?.major),
             sellerGrade: enrollmentText(dto.profile?.enrollment),
-            imageURLs: imageURLs
+            imageURLs: imageURLs,
+            ownedByCurrentUser: dto.ownedByCurrentUser == true
         )
     }
 
@@ -124,7 +125,7 @@ enum MarketplaceRemoteMapper {
             title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("marketplace.mapper.unnamedItem")),
             price: RemoteMapperSupport.double(dto.price),
             summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, localizedString("marketplace.mapper.noSummary")), limit: 60),
-            sellerName: RemoteMapperSupport.firstNonEmpty(sellerName, dto.username, localizedString("marketplace.mapper.defaultSeller")),
+            sellerName: RemoteMapperSupport.firstNonEmpty(sellerName, dto.displayName, localizedString("marketplace.mapper.defaultSeller")),
             sellerAvatarURL: RemoteMapperSupport.sanitizedText(sellerAvatarURL),
             authorId: RemoteMapperSupport.sanitizedText(dto.authorId),
             postedAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("common.justNow")),

@@ -59,6 +59,7 @@ struct MarketplaceDetail: Codable, Identifiable, Hashable {
     let sellerMajor: String?
     let sellerGrade: String?
     let imageURLs: [String]
+    var ownedByCurrentUser: Bool = false
 
     func categoryDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
         item.typeDisplayName(localeIdentifier: localeIdentifier) ?? condition

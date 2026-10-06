@@ -8,6 +8,7 @@ final class APIClient {
     private let session: URLSession
     private let requestBuilder: RequestBuilder
     private let onUnauthorized: UnauthorizedHandler
+    private let tokenProvider: @MainActor () -> String?
     private let decoder = JSONDecoder()
 
     init(
@@ -16,6 +17,7 @@ final class APIClient {
         tokenProvider: @escaping @MainActor () -> String?,
         onUnauthorized: @escaping UnauthorizedHandler
     ) {
+        self.tokenProvider = tokenProvider
         self.session = session
         self.requestBuilder = RequestBuilder(environment: environment, tokenProvider: tokenProvider)
         self.onUnauthorized = onUnauthorized
@@ -145,7 +147,7 @@ final class APIClient {
         }
 
         if httpResponse.statusCode == 401 {
-            onUnauthorized()
+            handleUnauthorized(for: urlRequest)
             throw NetworkError.unauthorized
         }
 
@@ -161,6 +163,11 @@ final class APIClient {
             throw NetworkError.httpStatus(httpResponse.statusCode, failure.message)
         }
 
+        if httpResponse.statusCode == 204 || data.isEmpty {
+            if responseType == EmptyPayload.self { return EmptyPayload() as! T }
+            throw NetworkError.noData
+        }
+
         let apiResponse: APIResponse<T>
         do {
             apiResponse = try decoder.decode(APIResponse<T>.self, from: data)
@@ -171,7 +178,7 @@ final class APIClient {
         if !apiResponse.isSuccess {
             if AppConstants.API.unauthorizedBusinessCodes.contains(apiResponse.code)
                 || apiResponse.errorCode == SocialErrorCode.authRequired {
-                onUnauthorized()
+                handleUnauthorized(for: urlRequest)
                 throw NetworkError.unauthorized
             }
             if let errorCode = apiResponse.errorCode {
@@ -193,6 +200,12 @@ final class APIClient {
         }
 
         throw NetworkError.noData
+    }
+
+    private func handleUnauthorized(for request: URLRequest) {
+        guard let token = tokenProvider(), !token.isEmpty,
+              request.value(forHTTPHeaderField: "Authorization") == "Bearer \(token)" else { return }
+        onUnauthorized()
     }
 
     private func parseFailure(from data: Data) -> (message: String, errorCode: String?) {

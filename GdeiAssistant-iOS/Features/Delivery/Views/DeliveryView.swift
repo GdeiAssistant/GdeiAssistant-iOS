@@ -130,6 +130,8 @@ private struct DeliveryOrderRow: View {
             return DSColor.warning
         case .delivering:
             return DSColor.primary
+        case .unknown:
+            return DSColor.tertiaryText
         case .completed:
             return DSColor.tertiaryText
         }
@@ -198,7 +200,7 @@ struct DeliveryDetailView: View {
 
                     Section {
                         roleRow(detail.userRoleTitle)
-                        infoRow(localizedString("delivery.publisherLabel"), detail.order.username)
+                        infoRow(localizedString("delivery.publisherLabel"), detail.order.displayName)
                         infoRow(localizedString("delivery.pickupLocation"), "\(detail.order.company) \(localizedString("delivery.pickupSuffix"))")
                         infoRow(localizedString("delivery.deliveryAddress"), detail.order.address)
                         infoRow(localizedString("delivery.contactPhone"), detail.displayContactPhone)
@@ -220,7 +222,7 @@ struct DeliveryDetailView: View {
 
                     if let trade = detail.trade {
                         Section {
-                            infoRow(localizedString("delivery.acceptor"), trade.username)
+                            infoRow(localizedString("delivery.acceptor"), trade.displayName)
                             infoRow(localizedString("delivery.acceptTime"), trade.createTime)
                         } header: {
                             Text(localizedString("delivery.tradeInfo"))
@@ -344,6 +346,8 @@ struct DeliveryDetailView: View {
             return DSColor.warning
         case .delivering:
             return DSColor.primary
+        case .unknown:
+            return DSColor.tertiaryText
         case .completed:
             return DSColor.tertiaryText
         }

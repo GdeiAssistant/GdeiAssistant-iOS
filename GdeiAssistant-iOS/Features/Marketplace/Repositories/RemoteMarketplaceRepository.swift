@@ -11,9 +11,9 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
     func fetchItems(typeID: Int?) async throws -> [MarketplaceItem] {
         let path: String
         if let typeID {
-            path = "/ershou/item/type/\(typeID)/start/0"
+            path = "/marketplace/item/type/\(typeID)/start/0"
         } else {
-            path = "/ershou/item/start/0"
+            path = "/marketplace/item/start/0"
         }
 
         let dtos: [MarketplaceItemDTO] = try await apiClient.get(path, requiresAuth: true)
@@ -22,12 +22,12 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
 
     func searchItems(keyword: String, start: Int) async throws -> [MarketplaceItem] {
         let encoded = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? keyword
-        let dtos: [MarketplaceItemDTO] = try await apiClient.get("/ershou/keyword/\(encoded)/start/\(start)", requiresAuth: true)
+        let dtos: [MarketplaceItemDTO] = try await apiClient.get("/marketplace/keyword/\(encoded)/start/\(start)", requiresAuth: true)
         return MarketplaceRemoteMapper.mapItems(dtos)
     }
 
     func fetchItemDetail(itemID: String) async throws -> MarketplaceDetail {
-        let dto: MarketplaceDetailDTO = try await apiClient.get("/ershou/item/id/\(itemID)", requiresAuth: true)
+        let dto: MarketplaceDetailDTO = try await apiClient.get("/marketplace/item/id/\(itemID)", requiresAuth: true)
         let detail = try MarketplaceRemoteMapper.mapDetail(dto)
         guard detail.imageURLs.isEmpty else {
             return detail
@@ -62,13 +62,14 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
             sellerCollege: detail.sellerCollege,
             sellerMajor: detail.sellerMajor,
             sellerGrade: detail.sellerGrade,
-            imageURLs: [previewURL]
+            imageURLs: [previewURL],
+            ownedByCurrentUser: detail.ownedByCurrentUser
         )
     }
 
     func fetchMySummary() async throws -> MarketplacePersonalSummary {
         let profile: UserProfileDTO = try await apiClient.get("/user/profile", requiresAuth: true)
-        let summary: MarketplacePersonalSummaryDTO = try await apiClient.get("/ershou/profile", requiresAuth: true)
+        let summary: MarketplacePersonalSummaryDTO = try await apiClient.get("/marketplace/profile", requiresAuth: true)
         return MarketplaceRemoteMapper.mapPersonalSummary(summary, profile: profile)
     }
 
@@ -77,7 +78,7 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         let fields = MarketplaceRemoteMapper.mapPublishFields(dto)
         let files = MarketplaceRemoteMapper.mapPublishFiles(draft)
         let _: EmptyPayload = try await apiClient.postMultipart(
-            "/ershou/item",
+            "/marketplace/item",
             fields: fields,
             files: files,
             requiresAuth: true
@@ -88,7 +89,7 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         let dto = MarketplaceRemoteMapper.mapUpdateDTO(draft)
         let fields = MarketplaceRemoteMapper.mapPublishFields(dto)
         let _: EmptyPayload = try await apiClient.postForm(
-            "/ershou/item/id/\(itemID)",
+            "/marketplace/item/id/\(itemID)",
             fields: fields,
             requiresAuth: true
         )
@@ -96,14 +97,14 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
 
     func updateItemState(itemID: String, state: MarketplaceItemState) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/ershou/item/state/id/\(itemID)",
+            "/marketplace/item/state/id/\(itemID)",
             queryItems: [URLQueryItem(name: "state", value: String(state.rawValue))],
             requiresAuth: true
         )
     }
 
     private func fetchPreviewURL(itemID: String) async throws -> String? {
-        let preview: String = try await apiClient.get("/ershou/item/id/\(itemID)/preview", requiresAuth: true)
+        let preview: String = try await apiClient.get("/marketplace/item/id/\(itemID)/preview", requiresAuth: true)
         return RemoteMapperSupport.sanitizedText(preview)
     }
 }

@@ -4,6 +4,7 @@ enum DeliveryOrderState: Int, Codable, Hashable {
     case pending = 0
     case delivering = 1
     case completed = 2
+    case unknown = -1
 
     var title: String {
         switch self {
@@ -11,6 +12,8 @@ enum DeliveryOrderState: Int, Codable, Hashable {
             return localizedString("delivery.state.pending")
         case .delivering:
             return localizedString("delivery.state.delivering")
+        case .unknown:
+            return localizedString("common.notProvided")
         case .completed:
             return localizedString("delivery.state.completed")
         }
@@ -22,6 +25,8 @@ enum DeliveryOrderState: Int, Codable, Hashable {
             return localizedString("delivery.stateDescription.pending")
         case .delivering:
             return localizedString("delivery.stateDescription.delivering")
+        case .unknown:
+            return localizedString("common.notProvided")
         case .completed:
             return localizedString("delivery.stateDescription.completed")
         }
@@ -92,7 +97,7 @@ struct DeliveryOrder: Codable, Identifiable, Hashable {
     var id: String { orderID }
 
     let orderID: String
-    let username: String
+    let displayName: String
     let name: String
     let pickupCode: String
     let contactPhone: String
@@ -107,7 +112,7 @@ struct DeliveryOrder: Codable, Identifiable, Hashable {
 struct DeliveryTrade: Codable, Hashable {
     let tradeID: String
     let orderID: String
-    let username: String
+    let displayName: String
     let createTime: String
     let state: Int
 }
@@ -133,7 +138,7 @@ struct DeliveryOrderDetail: Codable, Identifiable, Hashable {
     }
 
     var canViewSensitiveInfo: Bool {
-        detailType == 0 || detailType == 3 || order.state != .pending
+        detailType == 0 || detailType == 3
     }
 
     var statusDescription: String {

@@ -148,9 +148,9 @@ final class RemoteAccountCenterRepository: AccountCenterRepository {
     }
 
     func deleteAccount(password: String) async throws {
-        let _: EmptyPayload = try await apiClient.postForm(
+        let _: EmptyPayload = try await apiClient.post(
             "/close/submit",
-            fields: [FormFieldValue(name: "password", value: password)],
+            body: ["password": password],
             requiresAuth: true
         )
     }
