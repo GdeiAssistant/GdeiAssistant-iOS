@@ -385,7 +385,7 @@ struct MarketplaceStateChangeContext: Identifiable {
             return localizedString("marketplace.confirmSold")
         case .selling:
             return localizedString("marketplace.confirmSelling")
-        case .systemDeleted:
+        case .unknown, .systemDeleted:
             return localizedString("marketplace.confirm")
         }
     }
@@ -402,7 +402,7 @@ struct MarketplaceStateChangeContext: Identifiable {
             return localizedString("marketplace.stateMarkedSold")
         case .selling:
             return localizedString("marketplace.stateRelist")
-        case .systemDeleted:
+        case .unknown, .systemDeleted:
             return localizedString("marketplace.stateUpdated")
         }
     }

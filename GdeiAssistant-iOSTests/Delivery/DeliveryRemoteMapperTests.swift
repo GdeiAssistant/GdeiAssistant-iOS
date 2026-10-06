@@ -18,4 +18,13 @@ final class DeliveryRemoteMapperTests: XCTestCase {
         XCTAssertEqual(detail.order.state, .unknown)
         XCTAssertFalse(detail.canViewSensitiveInfo)
     }
+    func testMarketplaceDoesNotInventIdentifiersOrSellingState() throws {
+        let invalid = try JSONDecoder().decode(MarketplaceItemDTO.self, from: Data(#"{"name":"Missing ID","state":1}"#.utf8))
+        XCTAssertTrue(MarketplaceRemoteMapper.mapItems([invalid]).isEmpty)
+        XCTAssertEqual(MarketplaceRemoteMapper.mapState(nil), .unknown)
+        XCTAssertEqual(LostFoundRemoteMapper.mapState(nil), .unknown)
+        let detail = try JSONDecoder().decode(MarketplaceDetailDTO.self, from: Data(#"{"item":{"id":1}}"#.utf8))
+        XCTAssertThrowsError(try MarketplaceRemoteMapper.mapDetail(detail))
+    }
+
 }

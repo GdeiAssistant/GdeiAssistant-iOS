@@ -7,7 +7,7 @@ enum MarketplaceRemoteMapper {
 
     nonisolated static func mapItems(_ dtos: [MarketplaceItemDTO]) -> [MarketplaceItem] {
         dtos
-            .filter { mapState($0.state) == .selling }
+            .filter { ($0.id ?? 0) > 0 && mapState($0.state) == .selling }
             .map { mapItem($0, sellerName: $0.displayName) }
             .sorted { $0.postedAt > $1.postedAt }
     }
@@ -71,7 +71,7 @@ enum MarketplaceRemoteMapper {
     }
 
     nonisolated static func mapDetail(_ dto: MarketplaceDetailDTO) throws -> MarketplaceDetail {
-        guard let itemDTO = dto.item else {
+        guard let itemDTO = dto.item, (itemDTO.id ?? 0) > 0, mapState(itemDTO.state) != .unknown else {
             throw NetworkError.noData
         }
 
@@ -109,9 +109,9 @@ enum MarketplaceRemoteMapper {
             avatarURL: RemoteMapperSupport.sanitizedText(profile.avatar),
             nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, localizedString("marketplace.mapper.defaultUser")),
             introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, localizedString("marketplace.mapper.defaultIntro")),
-            doing: (dto.doing ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
-            sold: (dto.sold ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
-            off: (dto.off ?? []).map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) }
+            doing: (dto.doing ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
+            sold: (dto.sold ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) },
+            off: (dto.off ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, sellerName: profile.nickname ?? profile.username, sellerAvatarURL: profile.avatar) }
         )
     }
 
@@ -121,7 +121,7 @@ enum MarketplaceRemoteMapper {
         let imageURLs = RemoteMapperSupport.sanitizedTextList(dto.pictureURL)
 
         return MarketplaceItem(
-            id: String(dto.id ?? Int.random(in: 1...999_999)),
+            id: String(dto.id ?? 0),
             title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("marketplace.mapper.unnamedItem")),
             price: RemoteMapperSupport.double(dto.price),
             summary: RemoteMapperSupport.truncated(RemoteMapperSupport.firstNonEmpty(dto.description, localizedString("marketplace.mapper.noSummary")), limit: 60),
@@ -145,8 +145,10 @@ enum MarketplaceRemoteMapper {
             return .sold
         case 3:
             return .systemDeleted
-        default:
+        case 1:
             return .selling
+        default:
+            return .unknown
         }
     }
 

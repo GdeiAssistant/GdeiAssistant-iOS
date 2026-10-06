@@ -1,6 +1,7 @@
 import Foundation
 
 enum MarketplaceItemState: Int, Codable, Hashable {
+    case unknown = -1
     case offShelf = 0
     case selling = 1
     case sold = 2
@@ -14,6 +15,8 @@ enum MarketplaceItemState: Int, Codable, Hashable {
             return localizedString("marketplace.stateSelling")
         case .sold:
             return localizedString("marketplace.stateSold")
+        case .unknown:
+            return localizedString("common.notProvided")
         case .systemDeleted:
             return localizedString("marketplace.stateSystemDeleted")
         }

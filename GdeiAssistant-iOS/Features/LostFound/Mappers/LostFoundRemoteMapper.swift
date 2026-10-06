@@ -27,10 +27,10 @@ enum LostFoundRemoteMapper {
 
     nonisolated static func mapItems(lostItems: [LostFoundItemDTO], foundItems: [LostFoundItemDTO]) -> [LostFoundItem] {
         let mappedLost = lostItems
-            .filter { mapState($0.state) == .active }
+            .filter { ($0.id ?? 0) > 0 && mapState($0.state) == .active }
             .map { mapItem($0, fallbackType: .lost) }
         let mappedFound = foundItems
-            .filter { mapState($0.state) == .active }
+            .filter { ($0.id ?? 0) > 0 && mapState($0.state) == .active }
             .map { mapItem($0, fallbackType: .found) }
 
         return (mappedLost + mappedFound)
@@ -101,7 +101,7 @@ enum LostFoundRemoteMapper {
     }
 
     nonisolated static func mapDetail(_ dto: LostFoundDetailDTO) throws -> LostFoundDetail {
-        guard let itemDTO = dto.item else {
+        guard let itemDTO = dto.item, (itemDTO.id ?? 0) > 0, mapState(itemDTO.state) != .unknown else {
             throw NetworkError.noData
         }
 
@@ -139,7 +139,7 @@ enum LostFoundRemoteMapper {
 
     nonisolated private static func mapItem(_ dto: LostFoundItemDTO, fallbackType: LostFoundType) -> LostFoundItem {
         LostFoundItem(
-            id: String(dto.id ?? Int.random(in: 1...999_999)),
+            id: String(dto.id ?? 0),
             title: RemoteMapperSupport.firstNonEmpty(dto.name, localizedString("lostFound.mapper.unnamedItem")),
             type: fallbackType,
             itemTypeID: dto.itemType ?? 0,
@@ -157,8 +157,10 @@ enum LostFoundRemoteMapper {
             return .resolved
         case 2:
             return .systemDeleted
-        default:
+        case 0:
             return .active
+        default:
+            return .unknown
         }
     }
 
