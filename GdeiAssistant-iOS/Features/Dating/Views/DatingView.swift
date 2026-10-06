@@ -41,11 +41,11 @@ struct DatingView: View {
                         NavigationLink {
                             DatingDetailView(viewModel: viewModel, profileID: profile.id)
                         } label: {
-                            HStack(alignment: .top, spacing: 12) {
+                            HStack(alignment: .top, spacing: DSSpacing.sm) {
                                 DSRemoteImageView(urlString: profile.imageURL, fallbackSystemImage: "person.crop.rectangle")
                                     .frame(width: 96, height: 120)
 
-                                VStack(alignment: .leading, spacing: 8) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     Text(profile.nickname)
                                         .font(.headline)
                                         .foregroundStyle(DSColor.title)
@@ -64,13 +64,14 @@ struct DatingView: View {
                                         .lineLimit(3)
                                 }
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, DSSpacing.xxs)
                         }
                     }
                 }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.refresh()
         }
@@ -185,9 +186,9 @@ private struct DatingCenterContent: View {
             } else {
                 Section {
                     ForEach(viewModel.receivedItems) { item in
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             HStack {
-                                HStack(spacing: 10) {
+                                HStack(spacing: DSSpacing.sm) {
                                     DSAvatarView(urlString: item.avatarURL, size: 40)
                                     Text(item.senderName)
                                         .font(.headline)
@@ -216,7 +217,7 @@ private struct DatingCenterContent: View {
                                     .foregroundStyle(item.status == .accepted ? DSColor.primary : DSColor.danger)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 } header: {
                     Text(localizedString("dating.receivedHeader"))
@@ -230,9 +231,9 @@ private struct DatingCenterContent: View {
             } else {
                 Section {
                     ForEach(viewModel.sentItems) { item in
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             HStack {
-                                HStack(spacing: 10) {
+                                HStack(spacing: DSSpacing.sm) {
                                     DSAvatarView(urlString: item.targetAvatarURL, size: 40)
                                     Text(item.targetName)
                                         .font(.headline)
@@ -245,7 +246,7 @@ private struct DatingCenterContent: View {
                             Text(item.content)
                                 .font(.subheadline)
                             if item.status == .accepted {
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                     if let qq = item.targetQq, !qq.isEmpty {
                                         Text(String(format: localizedString("dating.qqLabel"), qq))
                                     }
@@ -257,7 +258,7 @@ private struct DatingCenterContent: View {
                                 .foregroundStyle(DSColor.subtitle)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 } header: {
                     Text(localizedString("dating.sentHeader"))
@@ -272,9 +273,9 @@ private struct DatingCenterContent: View {
                 Section {
                     ForEach(viewModel.myPosts) { item in
                         HStack {
-                            HStack(spacing: 10) {
+                            HStack(spacing: DSSpacing.sm) {
                                 DSAvatarView(urlString: item.imageURL, size: 40)
-                                VStack(alignment: .leading, spacing: 6) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     Text(item.name)
                                         .font(.headline)
                                     Text("\(item.grade) · \(item.faculty) · \(String(format: localizedString("dating.from"), item.hometown))")
@@ -291,7 +292,7 @@ private struct DatingCenterContent: View {
                             }
                             .buttonStyle(.bordered)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 } header: {
                     Text(localizedString("dating.myPostsHeader"))
@@ -323,11 +324,11 @@ private struct DatingDetailView: View {
             } else if let detail {
                 List {
                     Section {
-                        HStack(alignment: .top, spacing: 16) {
+                        HStack(alignment: .top, spacing: DSSpacing.md) {
                             DSRemoteImageView(urlString: detail.profile.imageURL, fallbackSystemImage: "person.crop.rectangle")
                                 .frame(width: 120, height: 160)
 
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(detail.profile.nickname)
                                     .font(.title3.weight(.semibold))
                                     .foregroundStyle(DSColor.title)
@@ -352,7 +353,7 @@ private struct DatingDetailView: View {
                                 }
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
 
                     Section(localizedString("dating.contactSection")) {
@@ -409,7 +410,8 @@ private struct DatingDetailView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await loadDetail()
                 }
@@ -489,7 +491,7 @@ private struct PublishDatingView: View {
                     }
                 } else {
                     PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
-                        VStack(spacing: 8) {
+                        VStack(spacing: DSSpacing.xs) {
                             Image(systemName: "photo.badge.plus")
                                 .font(.title3)
                             Text(localizedString("dating.addPhoto"))

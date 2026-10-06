@@ -48,7 +48,7 @@ struct TopicFeedView: View {
                                 NavigationLink {
                                     PostDetailView(viewModel: container.makePostDetailViewModel(postID: post.id))
                                 } label: {
-                                    VStack(alignment: .leading, spacing: 4) {
+                                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                         Text(post.title)
                                             .font(.headline)
                                             .foregroundStyle(DSColor.title)
@@ -56,7 +56,7 @@ struct TopicFeedView: View {
                                             .font(.subheadline)
                                             .foregroundStyle(DSColor.subtitle)
                                             .lineLimit(2)
-                                        HStack(spacing: 12) {
+                                        HStack(spacing: DSSpacing.sm) {
                                             Label("\(post.likeCount)", systemImage: "hand.thumbsup")
                                             Label("\(post.commentCount)", systemImage: "bubble.left")
                                         }
@@ -64,7 +64,7 @@ struct TopicFeedView: View {
                                         .monospacedDigit()
                                         .foregroundStyle(DSColor.tertiaryText)
                                     }
-                                    .padding(.vertical, 4)
+                                    .padding(.vertical, DSSpacing.xxs)
                                 }
                             }
                         }

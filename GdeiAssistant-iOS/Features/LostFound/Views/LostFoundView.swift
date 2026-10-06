@@ -25,13 +25,13 @@ struct LostFoundView: View {
                     NavigationLink {
                         LostFoundDetailView(viewModel: viewModel, itemID: item.id)
                     } label: {
-                        HStack(alignment: .top, spacing: 12) {
+                        HStack(alignment: .top, spacing: DSSpacing.sm) {
                             if item.previewImageURL != nil {
-                                DSRemoteImageView(urlString: item.previewImageURL)
-                                    .frame(width: 84, height: 84)
+                                DSRemoteImageView(urlString: item.previewImageURL, cornerRadius: DSRadius.control)
+                                    .frame(width: 76, height: 76)
                             }
 
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 HStack {
                                     Text(item.title)
                                         .font(.headline)
@@ -56,10 +56,11 @@ struct LostFoundView: View {
                                 .foregroundStyle(DSColor.subtitle)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -111,12 +112,12 @@ private struct LostFoundProfileView: View {
                 }
             } else if let summary {
                 ScrollView {
-                    VStack(spacing: 14) {
+                    VStack(spacing: DSSpacing.md) {
                         profileHeader(summary)
                         tabSelector
                         content(summary)
                     }
-                    .padding(16)
+                    .padding(DSSpacing.md)
                 }
                 .dsScreenBackground()
                 .refreshable {
@@ -152,66 +153,56 @@ private struct LostFoundProfileView: View {
     }
 
     private var tabSelector: some View {
-        HStack(spacing: 0) {
+        Picker(selection: $selectedTab) {
             ForEach(LostFoundProfileTab.allCases) { tab in
-                Button {
-                    selectedTab = tab
-                } label: {
-                    VStack(spacing: 6) {
-                        Text(tab.title)
-                            .font(.subheadline.weight(selectedTab == tab ? .semibold : .regular))
-                            .foregroundStyle(selectedTab == tab ? DSColor.primary : DSColor.subtitle)
-                        Rectangle()
-                            .fill(selectedTab == tab ? DSColor.primary : Color.clear)
-                            .frame(height: 2)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.plain)
+                Text(tab.title).tag(tab)
             }
+        } label: {
+            EmptyView()
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 12)
-        .background(DSColor.surface)
-        .clipShape(DSRadius.cardShape)
+        .pickerStyle(.segmented)
     }
 
     @ViewBuilder
     private func content(_ summary: LostFoundPersonalSummary) -> some View {
         if let actionMessage {
-            DSCard {
-                Text(actionMessage)
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.primary)
-            }
+            Label(actionMessage, systemImage: "info.circle.fill")
+                .font(.footnote)
+                .foregroundStyle(DSColor.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
 
         let items = items(for: summary)
         if items.isEmpty {
             DSEmptyStateView(icon: "shippingbox.circle", title: selectedTab.emptyTitle, message: selectedTab.emptyMessage)
         } else {
-            VStack(spacing: 10) {
-                ForEach(items) { item in
-                    DSCard {
-                        VStack(alignment: .leading, spacing: 12) {
+            VStack(spacing: 0) {
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                    if index > 0 {
+                        DSRowDivider(leadingInset: 72 + DSSpacing.sm)
+                    }
+                    VStack(alignment: .leading, spacing: 0) {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             Button {
                                 Task { await openDetail(item.id) }
                             } label: {
-                                HStack(alignment: .top, spacing: 12) {
+                                HStack(alignment: .top, spacing: DSSpacing.sm) {
                                     if item.previewImageURL != nil {
-                                        DSRemoteImageView(urlString: item.previewImageURL)
+                                        DSRemoteImageView(urlString: item.previewImageURL, cornerRadius: DSRadius.control)
                                             .frame(width: 72, height: 72)
                                     }
-                                    VStack(alignment: .leading, spacing: 6) {
+                                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                         Text(item.title)
                                             .font(.headline)
                                             .foregroundStyle(DSColor.title)
                                         Text(item.createdAt)
-                                            .font(.caption)
+                                            .font(.footnote)
                                             .foregroundStyle(DSColor.subtitle)
-                                        Text(item.type.displayName)
-                                            .font(.caption)
-                                            .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.primary)
+                                        DSTag(
+                                            text: item.type.displayName,
+                                            tint: item.type == .lost ? DSColor.warning : DSColor.primary,
+                                            background: item.type == .lost ? DSColor.warning.opacity(0.14) : DSColor.primarySoft
+                                        )
                                     }
                                     Spacer()
                                 }
@@ -219,7 +210,7 @@ private struct LostFoundProfileView: View {
                             .buttonStyle(.plain)
 
                             if selectedTab != .didFound {
-                                HStack(spacing: 10) {
+                                HStack(spacing: DSSpacing.sm) {
                                     Button(localizedString("lostFound.edit")) {
                                         Task { await openDetail(item.id, forEditing: true) }
                                     }
@@ -230,18 +221,24 @@ private struct LostFoundProfileView: View {
                                     }
                                     .buttonStyle(.borderedProminent)
                                 }
+                                .controlSize(.small)
+                                .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+                                .tint(DSColor.primary)
                             }
                         }
+                        .padding(.vertical, DSSpacing.sm)
                     }
                 }
             }
+            .padding(.horizontal, DSSpacing.md)
+            .dsSurface()
         }
     }
 
     private func profileHeader(_ summary: LostFoundPersonalSummary) -> some View {
-        HStack(alignment: .center, spacing: 14) {
+        HStack(alignment: .center, spacing: DSSpacing.sm) {
             DSAvatarView(urlString: summary.avatarURL, size: 64)
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text(summary.nickname)
                     .font(.title3.weight(.bold))
                     .foregroundStyle(DSColor.title)
@@ -254,7 +251,7 @@ private struct LostFoundProfileView: View {
         }
         .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DSColor.primarySoft, in: DSRadius.cardShape)
+        .dsSurface()
     }
 
     private func items(for summary: LostFoundPersonalSummary) -> [LostFoundItem] {
@@ -368,34 +365,46 @@ struct LostFoundDetailView: View {
                 }
             } else if let detail {
                 ScrollView {
-                    VStack(spacing: 16) {
-                        DSCard {
-                            if !detail.imageURLs.isEmpty {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 12) {
-                                        ForEach(detail.imageURLs, id: \.self) { imageURL in
-                                            DSRemoteImageView(urlString: imageURL)
-                                                .frame(width: 220, height: 160)
-                                        }
+                    VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                        if !detail.imageURLs.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: DSSpacing.sm) {
+                                    ForEach(detail.imageURLs, id: \.self) { imageURL in
+                                        DSRemoteImageView(urlString: imageURL)
+                                            .frame(width: 240, height: 180)
                                     }
                                 }
+                                .padding(.horizontal, DSSpacing.md)
                             }
+                            .padding(.horizontal, -DSSpacing.md)
+                        }
 
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                            DSTag(
+                                text: detail.item.type.displayName,
+                                tint: detail.item.type == .lost ? DSColor.warning : DSColor.primary,
+                                background: detail.item.type == .lost ? DSColor.warning.opacity(0.14) : DSColor.primarySoft
+                            )
                             Text(detail.item.title)
-                                .font(.title3.weight(.bold))
+                                .font(.title2.weight(.bold))
                                 .foregroundStyle(DSColor.title)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
 
+                        DSGroupedSection {
                             Text(detail.description)
-                                .font(.subheadline)
+                                .font(.body)
                                 .foregroundStyle(DSColor.title)
                                 .lineSpacing(4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, DSSpacing.sm)
+                        }
 
-                            Divider()
+                        DSGroupedSection {
+                            HStack(spacing: DSSpacing.sm) {
+                                SocialAvatarView(urlString: detail.ownerAvatarURL, size: 44)
 
-                            HStack(spacing: 12) {
-                                SocialAvatarView(urlString: detail.ownerAvatarURL, size: 52)
-
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     if let authorId = detail.authorId {
                                         NavigationLink {
                                             SocialPublicProfileRoute(userID: authorId)
@@ -411,19 +420,25 @@ struct LostFoundDetailView: View {
                                             .foregroundStyle(DSColor.title)
                                     }
                                     Text(detail.ownerUsername ?? localizedString("lostFound.publisher"))
-                                        .font(.caption)
+                                        .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
+                                Spacer(minLength: 0)
                             }
+                            .padding(.vertical, DSSpacing.sm)
 
+                            DSRowDivider()
                             detailRow(title: localizedString("lostFound.type"), value: detail.item.type.displayName)
+                            DSRowDivider()
                             detailRow(title: localizedString("lostFound.location"), value: detail.item.location)
+                            DSRowDivider()
                             detailRow(title: localizedString("lostFound.contactHint"), value: detail.contactHint)
+                            DSRowDivider()
                             detailRow(title: localizedString("lostFound.status"), value: detail.statusText)
                         }
 
                         if isOwnedByCurrentUser(detail) {
-                            DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.sm) {
                                 if let resultMessage {
                                     Text(resultMessage)
                                         .font(.footnote)
@@ -431,25 +446,34 @@ struct LostFoundDetailView: View {
                                 }
 
                                 if detail.item.state == .active {
-                                    Button(localizedString("lostFound.editInfo")) {
-                                        editingDetail = detail
-                                    }
-                                    .buttonStyle(.bordered)
-
-                                    Button(isSubmitting ? localizedString("lostFound.processing") : localizedString("lostFound.markFound")) {
+                                    Button {
                                         confirmDidFound = true
+                                    } label: {
+                                        Text(isSubmitting ? localizedString("lostFound.processing") : localizedString("lostFound.markFound"))
+                                            .font(.body.weight(.semibold))
+                                            .frame(maxWidth: .infinity, minHeight: 36)
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .disabled(isSubmitting)
+
+                                    Button {
+                                        editingDetail = detail
+                                    } label: {
+                                        Text(localizedString("lostFound.editInfo"))
+                                            .frame(maxWidth: .infinity, minHeight: 36)
+                                    }
+                                    .buttonStyle(.bordered)
                                 } else {
                                     Text(LocalizedStringKey("lostFound.itemCompleted"))
                                         .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                             }
+                            .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+                            .tint(DSColor.primary)
                         }
                     }
-                    .padding(16)
+                    .padding(DSSpacing.md)
                 }
                 .dsScreenBackground()
             }
@@ -512,15 +536,7 @@ struct LostFoundDetailView: View {
     }
 
     private func detailRow(title: String, value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(title)
-                .foregroundStyle(DSColor.subtitle)
-            Spacer()
-            Text(value)
-                .multilineTextAlignment(.trailing)
-                .foregroundStyle(DSColor.title)
-        }
-        .font(.subheadline)
+        DSValueRow(title: title, value: value)
     }
 }
 
@@ -576,7 +592,7 @@ struct PublishLostFoundView: View {
 
             Section {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: DSSpacing.sm) {
                         ForEach(publishViewModel.images) { image in
                             ZStack(alignment: .topTrailing) {
                                 previewImageView(image)
@@ -597,7 +613,7 @@ struct PublishLostFoundView: View {
                                 maxSelectionCount: 4 - publishViewModel.images.count,
                                 matching: .images
                             ) {
-                                VStack(spacing: 8) {
+                                VStack(spacing: DSSpacing.xs) {
                                     Image(systemName: "photo.badge.plus")
                                         .font(.title3)
                                     Text(LocalizedStringKey("lostFound.addImage"))
@@ -609,7 +625,7 @@ struct PublishLostFoundView: View {
                             }
                         }
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                 }
                 Text(LocalizedStringKey("lostFound.maxImages"))
                     .font(.caption)

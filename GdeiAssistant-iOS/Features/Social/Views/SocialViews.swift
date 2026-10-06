@@ -68,10 +68,10 @@ struct SocialPublicProfileView: View {
                 }
             } else if let user = viewModel.user {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack(alignment: .center, spacing: 14) {
+                    VStack(alignment: .leading, spacing: DSSpacing.md) {
+                        HStack(alignment: .center, spacing: DSSpacing.sm) {
                             SocialAvatarView(urlString: user.avatarURL, size: 76)
-                            VStack(alignment: .leading, spacing: 6) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(user.nickname)
                                     .font(.title2.weight(.bold))
                                     .foregroundStyle(DSColor.title)
@@ -90,7 +90,7 @@ struct SocialPublicProfileView: View {
                                 .foregroundStyle(DSColor.subtitle)
                         }
 
-                        HStack(spacing: 18) {
+                        HStack(spacing: DSSpacing.md) {
                             statLink(
                                 title: localizedString("social.relationship.following"),
                                 value: user.followingCount,
@@ -112,7 +112,7 @@ struct SocialPublicProfileView: View {
                         }
 
                         if !user.isSelf {
-                            HStack(spacing: 12) {
+                            HStack(spacing: DSSpacing.sm) {
                                 DSButton(
                                     title: user.isFollowing
                                         ? localizedString("social.action.unfollow")
@@ -151,7 +151,7 @@ struct SocialPublicProfileView: View {
                             .disabled(viewModel.isMutating)
                         }
                     }
-                    .padding(16)
+                    .padding(DSSpacing.md)
                 }
                 .dsScreenBackground()
             }
@@ -186,7 +186,7 @@ struct SocialPublicProfileView: View {
                 viewModel: container.makeSocialRelationshipListViewModel(userID: userID, kind: kind)
             )
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: DSSpacing.xxs) {
                 Text("\(value)")
                     .font(.headline)
                     .foregroundStyle(DSColor.title)
@@ -298,8 +298,8 @@ struct DirectMessagePrivacyView: View {
                     Button {
                         Task { await viewModel.update(policy) }
                     } label: {
-                        HStack(alignment: .top, spacing: 12) {
-                            VStack(alignment: .leading, spacing: 4) {
+                        HStack(alignment: .top, spacing: DSSpacing.sm) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                 Text(policy.title)
                                     .foregroundStyle(DSColor.title)
                                 Text(policy.subtitle)
@@ -406,7 +406,7 @@ struct ConversationListView: View {
     }
 
     private func conversationRow(_ conversation: ConversationSummary) -> some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: DSSpacing.sm) {
             SocialAvatarView(urlString: conversation.peer.avatarURL, size: 48)
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .firstTextBaseline) {
@@ -430,7 +430,7 @@ struct ConversationListView: View {
                     .monospacedDigit()
                     .foregroundStyle(DSColor.onPrimary)
                     .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                     .background(DSColor.primary)
                     .clipShape(Capsule())
                     .accessibilityLabel(
@@ -438,7 +438,7 @@ struct ConversationListView: View {
                     )
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, DSSpacing.xs)
         .frame(minHeight: 44)
     }
 }
@@ -466,7 +466,7 @@ struct ChatThreadView: View {
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(spacing: 12) {
+                        LazyVStack(spacing: DSSpacing.sm) {
                             if viewModel.hasMoreEarlier {
                                 Button(localizedString("social.chat.loadEarlier")) {
                                     Task { await viewModel.loadEarlier() }
@@ -481,8 +481,8 @@ struct ChatThreadView: View {
                                     .id(message.id)
                             }
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
+                        .padding(.horizontal, DSSpacing.md)
+                        .padding(.vertical, DSSpacing.sm)
                     }
                     .scrollDismissesKeyboard(.interactively)
                     .onChange(of: viewModel.messages) { previous, current in
@@ -516,7 +516,7 @@ struct ChatThreadView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                HStack(spacing: 8) {
+                HStack(spacing: DSSpacing.xs) {
                     SocialAvatarView(
                         urlString: viewModel.conversation?.peer.avatarURL,
                         size: 30
@@ -586,7 +586,7 @@ struct ChatThreadView: View {
     }
 
     private func draftImageBar(_ preview: UIImage) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DSSpacing.sm) {
             Image(uiImage: preview)
                 .resizable()
                 .scaledToFill()
@@ -605,12 +605,12 @@ struct ChatThreadView: View {
             .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier("social.chat.removeImage")
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DSSpacing.sm)
+        .padding(.vertical, DSSpacing.xs)
     }
 
     private var composer: some View {
-        HStack(alignment: .bottom, spacing: 8) {
+        HStack(alignment: .bottom, spacing: DSSpacing.xs) {
             if viewModel.canSendImage {
                 PhotosPicker(selection: $photoPickerItem, matching: .images, photoLibrary: .shared()) {
                     Image(systemName: "photo")
@@ -625,8 +625,8 @@ struct ChatThreadView: View {
 
             TextField(localizedString("social.chat.placeholder"), text: $viewModel.draft, axis: .vertical)
                 .lineLimit(1...4)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.sm)
                 .dsFieldBackground()
                 .disabled(viewModel.conversation?.canSend == false || viewModel.draftImagePreview != nil)
                 .accessibilityIdentifier("social.chat.composer")
@@ -643,8 +643,8 @@ struct ChatThreadView: View {
             .accessibilityLabel(localizedString("social.chat.send"))
             .accessibilityIdentifier("social.chat.send")
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
+        .padding(.horizontal, DSSpacing.sm)
+        .padding(.vertical, DSSpacing.xs)
         .background(DSColor.surface)
         .overlay(alignment: .top) {
             DSColor.divider.frame(height: 1)
@@ -658,7 +658,7 @@ struct ChatThreadView: View {
 
     private func messageBubble(_ message: ChatMessage) -> some View {
         let isMine = message.senderId == viewModel.currentUserID
-        return HStack(alignment: .bottom, spacing: 8) {
+        return HStack(alignment: .bottom, spacing: DSSpacing.xs) {
             if isMine { Spacer(minLength: 48) }
             VStack(alignment: isMine ? .trailing : .leading, spacing: 5) {
                 Group {
@@ -679,7 +679,7 @@ struct ChatThreadView: View {
                                 if message.deliveryState == .pending {
                                     ProgressView()
                                         .tint(.white)
-                                        .padding(8)
+                                        .padding(DSSpacing.xs)
                                 }
                             }
                         }
@@ -696,7 +696,7 @@ struct ChatThreadView: View {
                         Text(message.content)
                             .font(.body)
                             .foregroundStyle(isMine ? DSColor.onPrimary : DSColor.title)
-                            .padding(.horizontal, 12)
+                            .padding(.horizontal, DSSpacing.sm)
                             .padding(.vertical, 9)
                             .background(isMine ? DSColor.primary : DSColor.surface, in: DSRadius.cardShape)
                             .overlay(
@@ -706,7 +706,7 @@ struct ChatThreadView: View {
                     }
                 }
 
-                HStack(spacing: 6) {
+                HStack(spacing: DSSpacing.xs) {
                     Text(SocialDisplayTime.format(message.createdAt))
                         .font(.caption2)
                         .foregroundStyle(DSColor.subtitle)
@@ -747,9 +747,9 @@ struct SocialUserRow: View {
     let user: SocialUser
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DSSpacing.sm) {
             SocialAvatarView(urlString: user.avatarURL, size: 40)
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                 Text(user.nickname)
                     .font(.headline)
                     .foregroundStyle(DSColor.title)
@@ -761,6 +761,6 @@ struct SocialUserRow: View {
                 }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DSSpacing.xxs)
     }
 }

@@ -45,15 +45,15 @@ struct MessagesView: View {
 
     private var content: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: DSSpacing.md) {
                 directMessagePanel
                 newsPanel
                 systemNoticePanel
                 festivalPanel
                 interactionPanel
             }
-            .padding(16)
-            .padding(.bottom, 24)
+            .padding(DSSpacing.md)
+            .padding(.bottom, DSSpacing.xl)
         }
         .dsScreenBackground()
         .safeAreaInset(edge: .bottom) {
@@ -78,7 +78,7 @@ struct MessagesView: View {
             }
             .buttonStyle(.plain)
         } content: {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text(localizedString("social.conversations.entryHint"))
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
@@ -204,8 +204,8 @@ struct MessagesView: View {
     private var festivalPanel: some View {
         if let festival = viewModel.festival {
             DSCard {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    HStack(spacing: DSSpacing.xs) {
                         Image(systemName: "calendar.badge.clock")
                             .foregroundStyle(DSColor.primary)
                         Text(festival.name)
@@ -229,7 +229,7 @@ struct MessagesView: View {
             tint: DSColor.primary,
             titleAccessibilityIdentifier: "messages.section.interaction"
         ) {
-            HStack(spacing: 8) {
+            HStack(spacing: DSSpacing.xs) {
                 if viewModel.interactionUnreadCount > 0 {
                     headerMetaChip(title: String(format: localizedString("messages.unreadCount"), viewModel.interactionUnreadCount), tint: DSColor.primary)
                     headerActionButton(title: localizedString("messages.markAllRead"), tint: DSColor.primary) {
@@ -365,7 +365,7 @@ struct MessagesView: View {
     }
 
     private func newsRow(_ item: NewsItem) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             Text(item.sourceTitle)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(DSColor.primary)
@@ -394,7 +394,7 @@ struct MessagesView: View {
     }
 
     private func standardTextRow(title: String, summary: String, dateText: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             Text(title)
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
@@ -414,7 +414,7 @@ struct MessagesView: View {
     private func notificationRow(_ item: AppNotificationItem) -> some View {
         let iconSpec = notificationIconSpec(for: item)
 
-        return HStack(alignment: .top, spacing: 12) {
+        return HStack(alignment: .top, spacing: DSSpacing.sm) {
             DSRadius.controlShape
                 .fill(iconSpec.tint.opacity(0.14))
                 .frame(width: 40, height: 40)
@@ -424,13 +424,13 @@ struct MessagesView: View {
                         .foregroundStyle(iconSpec.tint)
                 }
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .top, spacing: 8) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                HStack(alignment: .top, spacing: DSSpacing.xs) {
                     if item.isInteractionItem && !item.isRead {
                         Circle()
                             .fill(DSColor.primary)
                             .frame(width: 8, height: 8)
-                            .padding(.top, 6)
+                            .padding(.top, DSSpacing.xs)
                     }
 
                     Text(item.title)
@@ -450,7 +450,7 @@ struct MessagesView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .lineLimit(3)
 
-                HStack(spacing: 8) {
+                HStack(spacing: DSSpacing.xs) {
                     if let moduleBadgeText = item.moduleBadgeText {
                         badge(title: moduleBadgeText, tint: DSColor.subtitle)
                     }
@@ -463,16 +463,16 @@ struct MessagesView: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
+        .padding(.horizontal, DSSpacing.md)
+        .padding(.vertical, DSSpacing.sm)
     }
 
     private func headerMetaChip(title: String, tint: Color) -> some View {
         Text(title)
             .font(.caption2.weight(.semibold))
             .foregroundStyle(tint)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DSSpacing.xs)
+            .padding(.vertical, DSSpacing.xxs)
             .background(tint.opacity(0.12))
             .clipShape(Capsule())
     }
@@ -482,8 +482,8 @@ struct MessagesView: View {
             Text(title)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(tint)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.xs)
                 .background(tint.opacity(0.12))
                 .clipShape(Capsule())
         }
@@ -494,8 +494,8 @@ struct MessagesView: View {
         Text(localizedString("messages.more"))
             .font(.caption2.weight(.semibold))
             .foregroundStyle(DSColor.subtitle)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.xs)
             .background(DSColor.subtitle.opacity(0.12))
             .clipShape(Capsule())
     }
@@ -504,8 +504,8 @@ struct MessagesView: View {
         Text(title)
             .font(.caption2.weight(.semibold))
             .foregroundStyle(tint)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DSSpacing.xs)
+            .padding(.vertical, DSSpacing.xxs)
             .background(tint.opacity(0.12))
             .clipShape(Capsule())
     }
@@ -514,13 +514,13 @@ struct MessagesView: View {
         HStack {
             Spacer()
             ProgressView()
-                .padding(.vertical, 18)
+                .padding(.vertical, DSSpacing.md)
             Spacer()
         }
     }
 
     private func sectionEmptyRow(title: String, systemImage: String) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DSSpacing.sm) {
             Image(systemName: systemImage)
                 .foregroundStyle(DSColor.subtitle)
             Text(title)
@@ -528,12 +528,12 @@ struct MessagesView: View {
                 .foregroundStyle(DSColor.subtitle)
         }
         .frame(maxWidth: .infinity, alignment: .center)
-        .padding(.vertical, 18)
+        .padding(.vertical, DSSpacing.md)
     }
 
     private func sectionRetryRow(message: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 6) {
+            VStack(spacing: DSSpacing.xs) {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
@@ -542,7 +542,7 @@ struct MessagesView: View {
                     .foregroundStyle(DSColor.primary)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 18)
+            .padding(.vertical, DSSpacing.md)
         }
         .buttonStyle(.plain)
     }

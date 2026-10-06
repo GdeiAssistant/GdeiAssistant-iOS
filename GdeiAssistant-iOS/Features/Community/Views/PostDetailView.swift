@@ -124,7 +124,7 @@ struct PostDetailView: View {
                         .foregroundStyle(DSColor.subtitle)
                 } else {
                     ForEach(viewModel.comments) { comment in
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             HStack {
                                 Text(comment.isAnonymous ? localizedString("community.anonymousUser") : comment.authorName)
                                     .font(.subheadline.weight(.semibold))
@@ -139,7 +139,7 @@ struct PostDetailView: View {
                                 .font(.body)
                                 .foregroundStyle(DSColor.title)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 }
             }

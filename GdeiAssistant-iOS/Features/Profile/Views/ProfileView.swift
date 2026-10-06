@@ -786,7 +786,7 @@ private struct SocialProfileStatsRow: View {
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: 44)
             } else if let me = viewModel.me {
-                HStack(spacing: 12) {
+                HStack(spacing: DSSpacing.sm) {
                     statItem(
                         title: localizedString("social.relationship.following", locale: locale.identifier),
                         value: me.followingCount,
@@ -834,7 +834,7 @@ private struct SocialProfileStatsRow: View {
                 viewModel: container.makeSocialRelationshipListViewModel(userID: userID, kind: kind)
             )
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: DSSpacing.xxs) {
                 Text("\(value)")
                     .font(.title3.weight(.semibold).monospacedDigit())
                     .foregroundStyle(DSColor.title)

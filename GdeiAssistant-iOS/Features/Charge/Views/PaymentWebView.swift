@@ -36,15 +36,15 @@ struct PaymentWebView: View {
     }
 
     private func paymentOrderStatus(_ order: ChargeOrder) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             HStack {
                 Text(localizedString("charge.order.statusTitle"))
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 Text(order.localizedStatusLabel)
                     .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, DSSpacing.sm)
+                    .padding(.vertical, DSSpacing.xxs)
                     .foregroundStyle(statusTint(order))
                     .background(statusTint(order).opacity(0.12), in: Capsule())
             }

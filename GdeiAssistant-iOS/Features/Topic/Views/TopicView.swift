@@ -25,8 +25,8 @@ struct TopicView: View {
                         .buttonStyle(.plain)
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DSSpacing.md)
+                .padding(.vertical, DSSpacing.xs)
             }
 
             if viewModel.isLoading && viewModel.posts.isEmpty {
@@ -46,7 +46,8 @@ struct TopicView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await viewModel.refresh()
                 }
@@ -79,15 +80,15 @@ private struct TopicPostRow: View {
     let post: TopicPost
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: DSSpacing.sm) {
             if post.firstImageURL != nil {
-                DSRemoteImageView(urlString: post.firstImageURL)
-                    .frame(width: 84, height: 84)
+                DSRemoteImageView(urlString: post.firstImageURL, cornerRadius: DSRadius.control)
+                    .frame(width: 72, height: 72)
             }
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: DSSpacing.sm) {
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
                         Text("#\(post.topic)")
                             .font(.headline)
                             .foregroundStyle(DSColor.primary)
@@ -117,7 +118,7 @@ private struct TopicPostRow: View {
                     .foregroundStyle(DSColor.title)
                     .lineLimit(3)
 
-                HStack(spacing: 14) {
+                HStack(spacing: DSSpacing.sm) {
                     Label("\(post.likeCount)", systemImage: post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
                     if post.imageCount > 0 {
                         Label("\(post.imageCount)", systemImage: "photo.on.rectangle")
@@ -127,7 +128,7 @@ private struct TopicPostRow: View {
                 .foregroundStyle(DSColor.subtitle)
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, DSSpacing.xs)
     }
 }
 
@@ -167,86 +168,92 @@ struct TopicDetailView: View {
                     Task { await loadDetail() }
                 }
             } else if let detail {
-                ScrollView {
-                    VStack(spacing: 16) {
-                        DSCard {
+                List {
+                    Section {
+                        VStack(alignment: .leading, spacing: DSSpacing.sm) {
                             if let notificationContextText {
-                                Text(notificationContextText)
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.primary)
+                                DSTag(text: notificationContextText)
                             }
 
-                            HStack(alignment: .top) {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("#\(detail.post.topic)")
-                                        .font(.title3.weight(.bold))
-                                        .foregroundStyle(DSColor.primary)
-                                    if let authorId = detail.post.authorId {
-                                        NavigationLink {
-                                            SocialPublicProfileRoute(userID: authorId)
-                                        } label: {
-                                            Text(detail.post.authorName)
-                                                .font(.subheadline)
-                                                .foregroundStyle(DSColor.primary)
-                                        }
-                                        .buttonStyle(.plain)
-                                    } else {
-                                        Text(detail.post.authorName)
-                                            .font(.subheadline)
-                                            .foregroundStyle(DSColor.subtitle)
-                                    }
-                                }
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("#\(detail.post.topic)")
+                                    .font(.title2.weight(.bold))
+                                    .foregroundStyle(DSColor.primary)
                                 Spacer()
                                 Text(detail.post.publishedAt)
-                                    .font(.caption)
+                                    .font(.footnote)
+                                    .monospacedDigit()
                                     .foregroundStyle(DSColor.subtitle)
                             }
 
-                            HStack(spacing: 20) {
-                                statItem(title: localizedString("topic.likes"), value: detail.post.likeCount)
-                                statItem(title: localizedString("topic.images"), value: detail.imageURLs.count)
+                            if let authorId = detail.post.authorId {
+                                NavigationLink {
+                                    SocialPublicProfileRoute(userID: authorId)
+                                } label: {
+                                    Label(detail.post.authorName, systemImage: "person.crop.circle")
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundStyle(DSColor.primary)
+                                }
+                                .buttonStyle(.plain)
+                            } else {
+                                Label(detail.post.authorName, systemImage: "person.crop.circle")
+                                    .font(.subheadline)
+                                    .foregroundStyle(DSColor.subtitle)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
 
                             Text(detail.content)
                                 .font(.body)
+                                .lineSpacing(4)
                                 .foregroundStyle(DSColor.title)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                                .padding(.top, DSSpacing.xxs)
 
-                        if !detail.imageURLs.isEmpty {
-                            DSCard {
-                                TabView(selection: $selectedImageIndex) {
-                                    ForEach(Array(detail.imageURLs.enumerated()), id: \.offset) { index, url in
-                                        VStack(spacing: 10) {
-                                            DSRemoteImageView(urlString: url)
-                                                .frame(height: 220)
-                                            Text(String(format: localizedString("topic.imageCounter"), index + 1, detail.imageURLs.count))
-                                                .font(.caption)
-                                                .foregroundStyle(DSColor.subtitle)
-                                        }
-                                        .tag(index)
-                                    }
-                                }
-                                .tabViewStyle(.page(indexDisplayMode: .never))
-                                .frame(height: 260)
+                            HStack(spacing: DSSpacing.lg) {
+                                statItem(title: localizedString("topic.likes"), value: detail.post.likeCount)
+                                statItem(title: localizedString("topic.images"), value: detail.imageURLs.count)
+                                Spacer()
                             }
                         }
+                        .padding(.vertical, DSSpacing.xxs)
+                    }
 
+                    if !detail.imageURLs.isEmpty {
+                        Section {
+                            TabView(selection: $selectedImageIndex) {
+                                ForEach(Array(detail.imageURLs.enumerated()), id: \.offset) { index, url in
+                                    VStack(spacing: DSSpacing.xs) {
+                                        DSRemoteImageView(urlString: url, cornerRadius: DSRadius.control)
+                                            .frame(height: 220)
+                                        Text(String(format: localizedString("topic.imageCounter"), index + 1, detail.imageURLs.count))
+                                            .font(.caption)
+                                            .monospacedDigit()
+                                            .foregroundStyle(DSColor.subtitle)
+                                    }
+                                    .tag(index)
+                                }
+                            }
+                            .tabViewStyle(.page(indexDisplayMode: .never))
+                            .frame(height: 260)
+                        }
+                    }
+
+                    Section {
                         Button {
                             Task { await like() }
                         } label: {
                             Label(isLiking ? localizedString("topic.likeProcessing") : (detail.post.isLiked ? localizedString("topic.liked") : localizedString("topic.like")), systemImage: detail.post.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
-                                .frame(maxWidth: .infinity)
+                                .font(.body.weight(.semibold))
+                                .frame(maxWidth: .infinity, minHeight: 34)
                         }
                         .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
                         .disabled(isLiking || detail.post.isLiked)
-                        .tint(isLikeNotification ? DSColor.primary : .accentColor)
+                        .tint(DSColor.primary)
+                        .dsActionRow()
                     }
-                    .padding(16)
                 }
-                .dsScreenBackground()
+                .listStyle(.insetGrouped)
+                .dsListBackground()
             }
         }
         .navigationTitle(localizedString("topic.detailTitle"))
@@ -256,14 +263,16 @@ struct TopicDetailView: View {
     }
 
     private func statItem(title: String, value: Int) -> some View {
-        VStack(spacing: 4) {
+        HStack(alignment: .firstTextBaseline, spacing: DSSpacing.xxs) {
             Text("\(value)")
                 .font(.headline)
+                .monospacedDigit()
                 .foregroundStyle(DSColor.title)
             Text(title)
-                .font(.caption)
+                .font(.footnote)
                 .foregroundStyle(DSColor.subtitle)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func loadDetail() async {
@@ -331,7 +340,8 @@ private struct MyTopicPostsView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
                 .refreshable {
                     await loadData()
                 }
@@ -382,7 +392,7 @@ private struct PublishTopicView: View {
 
             Section {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: DSSpacing.sm) {
                         ForEach(viewModel.images) { image in
                             ZStack(alignment: .topTrailing) {
                                 previewImageView(image)
@@ -402,7 +412,7 @@ private struct PublishTopicView: View {
                                 maxSelectionCount: 9 - viewModel.images.count,
                                 matching: .images
                             ) {
-                                VStack(spacing: 8) {
+                                VStack(spacing: DSSpacing.xs) {
                                     Image(systemName: "photo.badge.plus")
                                     Text(LocalizedStringKey("topic.addImage"))
                                         .font(.caption)
@@ -413,7 +423,7 @@ private struct PublishTopicView: View {
                             }
                         }
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                 }
             } header: {
                 Text(LocalizedStringKey("topic.imageSection"))

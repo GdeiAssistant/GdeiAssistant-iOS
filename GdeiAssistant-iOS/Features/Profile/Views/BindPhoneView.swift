@@ -169,8 +169,8 @@ private struct BindPhoneAreaCodePickerView: View {
                 onSelect(attribution.code)
                 dismiss()
             } label: {
-                HStack(spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: DSSpacing.sm) {
+                    VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                         Text(attribution.displayName())
                             .foregroundStyle(DSColor.title)
                         Text("+\(attribution.code)")

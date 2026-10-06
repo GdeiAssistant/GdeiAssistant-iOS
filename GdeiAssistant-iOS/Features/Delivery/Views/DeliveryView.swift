@@ -78,7 +78,7 @@ private struct DeliveryOrderRow: View {
     let order: DeliveryOrder
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(localizedString("delivery.pickupDelivery"))
                     .font(.subheadline.weight(.semibold))
@@ -96,19 +96,19 @@ private struct DeliveryOrderRow: View {
                 Text(order.orderTime)
                 Spacer()
                 Text(order.state.title)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, DSSpacing.sm)
+                    .padding(.vertical, DSSpacing.xxs)
                     .background(statusTint.opacity(0.12))
                     .foregroundStyle(statusTint)
                     .clipShape(Capsule())
             }
             .font(.caption)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DSSpacing.xxs)
     }
 
     private func routeRow(icon: String, title: String, value: String) -> some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DSSpacing.xs) {
             Text(title)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(DSColor.onPrimary)
@@ -179,7 +179,7 @@ struct DeliveryDetailView: View {
             } else if let detail {
                 List {
                     Section {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             if let notificationSummaryText {
                                 Text(notificationSummaryText)
                                     .font(.caption)
@@ -330,8 +330,8 @@ struct DeliveryDetailView: View {
             Spacer()
             Text(role)
                 .font(.caption.weight(.semibold))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.xs)
                 .background(DSColor.primarySoft)
                 .foregroundStyle(DSColor.primary)
                 .clipShape(Capsule())
@@ -534,7 +534,7 @@ private struct MyDeliveryView: View {
     }
 
     private func summaryCard(title: String, value: Int, tint: Color) -> some View {
-        VStack(spacing: 6) {
+        VStack(spacing: DSSpacing.xs) {
             Text("\(value)")
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
@@ -543,7 +543,7 @@ private struct MyDeliveryView: View {
                 .foregroundStyle(tint)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .padding(.vertical, DSSpacing.xs)
     }
 }
 

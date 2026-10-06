@@ -76,13 +76,13 @@ struct InteractionMessagesListView: View {
     }
 
     private func interactionContent(_ item: AppNotificationItem) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top, spacing: 8) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+            HStack(alignment: .top, spacing: DSSpacing.xs) {
                 if !item.isRead {
                     Circle()
                         .fill(DSColor.primary)
                         .frame(width: 8, height: 8)
-                        .padding(.top, 6)
+                        .padding(.top, DSSpacing.xs)
                 }
 
                 Text(item.title)
@@ -100,7 +100,7 @@ struct InteractionMessagesListView: View {
                 .foregroundStyle(DSColor.subtitle)
                 .lineLimit(3)
 
-            HStack(spacing: 8) {
+            HStack(spacing: DSSpacing.xs) {
                 if let moduleBadge = item.moduleBadgeText {
                     badge(title: moduleBadge, tint: DSColor.subtitle)
                 }
@@ -112,15 +112,15 @@ struct InteractionMessagesListView: View {
                 }
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, DSSpacing.xs)
     }
 
     private func badge(title: String, tint: Color) -> some View {
         Text(title)
             .font(.caption2.weight(.semibold))
             .foregroundStyle(tint)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DSSpacing.xs)
+            .padding(.vertical, DSSpacing.xxs)
             .background(tint.opacity(0.12))
             .clipShape(Capsule())
     }
@@ -129,7 +129,7 @@ struct InteractionMessagesListView: View {
         HStack {
             Spacer()
             ProgressView()
-                .padding(.vertical, 8)
+                .padding(.vertical, DSSpacing.xs)
             Spacer()
         }
         .listRowSeparator(.hidden)
@@ -137,7 +137,7 @@ struct InteractionMessagesListView: View {
 
     private func loadMoreErrorRow(message: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: DSSpacing.xxs) {
                 Text(message)
                     .font(.subheadline)
                     .foregroundStyle(DSColor.subtitle)
@@ -146,7 +146,7 @@ struct InteractionMessagesListView: View {
                     .foregroundStyle(DSColor.primary)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
+            .padding(.vertical, DSSpacing.xs)
         }
         .buttonStyle(.plain)
         .listRowSeparator(.hidden)

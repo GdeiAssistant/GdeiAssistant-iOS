@@ -54,13 +54,13 @@ struct MarketplaceView: View {
                         NavigationLink {
                             MarketplaceDetailView(viewModel: viewModel, itemID: item.id)
                         } label: {
-                            HStack(alignment: .top, spacing: 12) {
+                            HStack(alignment: .top, spacing: DSSpacing.sm) {
                                 if item.previewImageURL != nil {
-                                    DSRemoteImageView(urlString: item.previewImageURL)
-                                        .frame(width: 84, height: 84)
+                                    DSRemoteImageView(urlString: item.previewImageURL, cornerRadius: DSRadius.control)
+                                        .frame(width: 76, height: 76)
                                 }
 
-                                VStack(alignment: .leading, spacing: 8) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     HStack {
                                         Text(item.title)
                                             .font(.headline)
@@ -68,6 +68,7 @@ struct MarketplaceView: View {
                                         Spacer()
                                         Text("¥\(item.price, specifier: "%.2f")")
                                             .font(.headline)
+                                            .monospacedDigit()
                                             .foregroundStyle(DSColor.primary)
                                     }
 
@@ -101,14 +102,15 @@ struct MarketplaceView: View {
                                     .foregroundStyle(DSColor.subtitle)
                                 }
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, DSSpacing.xxs)
                         }
                         .accessibilityIdentifier("marketplace.item.\(item.id)")
                     }
                 }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.refresh()
         }
@@ -141,7 +143,7 @@ struct MarketplaceView: View {
 
     private var typeSelector: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
+            HStack(spacing: DSSpacing.sm) {
                 filterChip(title: localizedString("marketplace.all"), isSelected: viewModel.selectedTypeID == nil) {
                     Task {
                         viewModel.selectedTypeID = nil
@@ -158,7 +160,7 @@ struct MarketplaceView: View {
                     }
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, DSSpacing.xxs)
         }
     }
 
@@ -167,8 +169,8 @@ struct MarketplaceView: View {
             Text(title)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(isSelected ? DSColor.onPrimary : DSColor.primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.horizontal, DSSpacing.sm)
+                .padding(.vertical, DSSpacing.xs)
                 .background(isSelected ? DSColor.primary : DSColor.primarySoft)
                 .clipShape(Capsule())
         }
@@ -319,23 +321,25 @@ private struct MarketplaceProfileSummaryView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 14) {
+            VStack(spacing: DSSpacing.md) {
                 MarketplaceProfileHeaderView(summary: summary)
                 MarketplaceProfileTabSelector(selectedTab: $selectedTab)
 
                 if let actionMessage {
-                    DSCard {
-                        Text(actionMessage)
-                            .font(.footnote)
-                            .foregroundStyle(DSColor.primary)
-                    }
+                    Label(actionMessage, systemImage: "checkmark.circle.fill")
+                        .font(.footnote)
+                        .foregroundStyle(DSColor.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if currentItems.isEmpty {
                     DSEmptyStateView(icon: "bag", title: selectedTab.emptyTitle, message: selectedTab.emptyMessage)
                 } else {
-                    VStack(spacing: 10) {
-                        ForEach(currentItems, id: \.id) { item in
+                    VStack(spacing: 0) {
+                        ForEach(Array(currentItems.enumerated()), id: \.element.id) { index, item in
+                            if index > 0 {
+                                DSRowDivider(leadingInset: 72 + DSSpacing.sm)
+                            }
                             MarketplaceProfileItemCard(
                                 item: item,
                                 actions: actionsProvider(item),
@@ -346,9 +350,11 @@ private struct MarketplaceProfileSummaryView: View {
                             )
                         }
                     }
+                    .padding(.horizontal, DSSpacing.md)
+                    .dsSurface()
                 }
             }
-            .padding(16)
+            .padding(DSSpacing.md)
         }
         .dsScreenBackground()
     }
@@ -369,9 +375,9 @@ private struct MarketplaceProfileHeaderView: View {
     let summary: MarketplacePersonalSummary
 
     var body: some View {
-        HStack(alignment: .center, spacing: 14) {
+        HStack(alignment: .center, spacing: DSSpacing.sm) {
             DSAvatarView(urlString: summary.avatarURL, size: 64)
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text(summary.nickname)
                     .font(.title3.weight(.bold))
                     .foregroundStyle(DSColor.title)
@@ -384,7 +390,7 @@ private struct MarketplaceProfileHeaderView: View {
         }
         .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(DSColor.primarySoft, in: DSRadius.cardShape)
+        .dsSurface()
     }
 }
 
@@ -392,28 +398,14 @@ private struct MarketplaceProfileTabSelector: View {
     @Binding var selectedTab: MarketplaceProfileTab
 
     var body: some View {
-        HStack(spacing: 0) {
+        Picker(selection: $selectedTab) {
             ForEach(MarketplaceProfileTab.allCases) { tab in
-                Button {
-                    selectedTab = tab
-                } label: {
-                    VStack(spacing: 6) {
-                        Text(tab.title)
-                            .font(.subheadline.weight(selectedTab == tab ? .semibold : .regular))
-                            .foregroundStyle(selectedTab == tab ? DSColor.primary : DSColor.subtitle)
-                        Rectangle()
-                            .fill(selectedTab == tab ? DSColor.primary : Color.clear)
-                            .frame(height: 2)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.plain)
+                Text(tab.title).tag(tab)
             }
+        } label: {
+            EmptyView()
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 12)
-        .background(DSColor.surface)
-        .clipShape(DSRadius.cardShape)
+        .pickerStyle(.segmented)
     }
 }
 
@@ -467,16 +459,16 @@ private struct MarketplaceProfileItemCard: View {
     @Environment(\.locale) private var locale
 
     var body: some View {
-        DSCard {
-            VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DSSpacing.sm) {
+            VStack(alignment: .leading, spacing: DSSpacing.sm) {
                 Button(action: onOpen) {
-                    HStack(alignment: .top, spacing: 12) {
+                    HStack(alignment: .top, spacing: DSSpacing.sm) {
                         if item.previewImageURL != nil {
-                            DSRemoteImageView(urlString: item.previewImageURL)
+                            DSRemoteImageView(urlString: item.previewImageURL, cornerRadius: DSRadius.control)
                                 .frame(width: 72, height: 72)
                         }
 
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text(item.title)
                                 .font(.headline)
                                 .foregroundStyle(DSColor.title)
@@ -499,7 +491,7 @@ private struct MarketplaceProfileItemCard: View {
                 .buttonStyle(.plain)
 
                 if !actions.isEmpty {
-                    HStack(spacing: 10) {
+                    HStack(spacing: DSSpacing.sm) {
                         ForEach(actions) { action in
                             if action.isPrimary {
                                 Button(action.title, role: action.role) {
@@ -514,9 +506,13 @@ private struct MarketplaceProfileItemCard: View {
                             }
                         }
                     }
+                    .controlSize(.small)
+                    .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+                    .tint(DSColor.primary)
                 }
             }
         }
+        .padding(.vertical, DSSpacing.sm)
     }
 }
 
@@ -612,41 +608,47 @@ struct MarketplaceDetailView: View {
                 }
             } else if let detail {
                 ScrollView {
-                    VStack(spacing: 16) {
-                        DSCard {
-                            if !detail.imageURLs.isEmpty {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 12) {
-                                        ForEach(detail.imageURLs, id: \.self) { imageURL in
-                                            DSRemoteImageView(urlString: imageURL)
-                                                .frame(width: 220, height: 160)
-                                        }
+                    VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                        if !detail.imageURLs.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: DSSpacing.sm) {
+                                    ForEach(detail.imageURLs, id: \.self) { imageURL in
+                                        DSRemoteImageView(urlString: imageURL)
+                                            .frame(width: 240, height: 180)
                                     }
                                 }
+                                .padding(.horizontal, DSSpacing.md)
                             }
+                            .padding(.horizontal, -DSSpacing.md)
+                        }
 
-                            HStack {
-                                Text(detail.item.title)
-                                    .font(.title3.weight(.bold))
-                                    .foregroundStyle(DSColor.title)
-                                Spacer()
-                                Text("¥\(detail.item.price, specifier: "%.2f")")
-                                    .font(.title3.weight(.bold))
-                                    .foregroundStyle(DSColor.primary)
-                            }
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                            Text("¥\(detail.item.price, specifier: "%.2f")")
+                                .font(.title.weight(.bold))
+                                .monospacedDigit()
+                                .foregroundStyle(DSColor.primary)
+                            Text(detail.item.title)
+                                .font(.title3.weight(.semibold))
+                                .foregroundStyle(DSColor.title)
+                                .fixedSize(horizontal: false, vertical: true)
+                            DSTag(text: detail.item.state.title)
+                        }
 
+                        DSGroupedSection {
                             Text(detail.description)
-                                .font(.subheadline)
+                                .font(.body)
                                 .foregroundStyle(DSColor.title)
                                 .lineSpacing(4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, DSSpacing.sm)
                                 .accessibilityIdentifier("marketplace.detail.description")
+                        }
 
-                            Divider()
+                        DSGroupedSection {
+                            HStack(spacing: DSSpacing.sm) {
+                                SocialAvatarView(urlString: detail.item.sellerAvatarURL, size: 44)
 
-                            HStack(spacing: 12) {
-                                SocialAvatarView(urlString: detail.item.sellerAvatarURL, size: 52)
-
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     if let authorId = detail.item.authorId {
                                         NavigationLink {
                                             SocialPublicProfileRoute(userID: authorId)
@@ -662,20 +664,27 @@ struct MarketplaceDetailView: View {
                                             .foregroundStyle(DSColor.title)
                                     }
                                     Text(sellerMetaText(detail))
-                                        .font(.caption)
+                                        .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
+                                Spacer(minLength: 0)
                             }
+                            .padding(.vertical, DSSpacing.sm)
 
+                            DSRowDivider()
                             infoRow(title: localizedString("marketplace.seller"), value: detail.item.sellerName)
+                            DSRowDivider()
                             infoRow(title: localizedString("marketplace.status"), value: detail.item.state.title)
+                            DSRowDivider()
                             infoRow(title: localizedString("marketplace.category"), value: detail.categoryDisplayName(localeIdentifier: locale.identifier))
+                            DSRowDivider()
                             infoRow(title: localizedString("marketplace.location"), value: detail.item.location)
+                            DSRowDivider()
                             infoRow(title: localizedString("marketplace.contactHint"), value: detail.contactHint)
                         }
 
                         if isOwnedByCurrentUser(detail) {
-                            DSCard {
+                            VStack(alignment: .leading, spacing: DSSpacing.sm) {
                                 if let resultMessage {
                                     Text(resultMessage)
                                         .font(.footnote)
@@ -683,31 +692,46 @@ struct MarketplaceDetailView: View {
                                 }
 
                                 if detail.item.state == .selling {
-                                    Button(localizedString("marketplace.editItemInfo")) {
-                                        editingDetail = detail
-                                    }
-                                    .buttonStyle(.bordered)
-
-                                    Button(isSubmitting ? localizedString("marketplace.processing") : localizedString("marketplace.markSold")) {
+                                    Button {
                                         confirmState = .sold
+                                    } label: {
+                                        Text(isSubmitting ? localizedString("marketplace.processing") : localizedString("marketplace.markSold"))
+                                            .font(.body.weight(.semibold))
+                                            .frame(maxWidth: .infinity, minHeight: 36)
                                     }
                                     .buttonStyle(.borderedProminent)
                                     .disabled(isSubmitting)
 
-                                    Button(localizedString("marketplace.removeItem"), role: .destructive) {
-                                        confirmState = .offShelf
+                                    HStack(spacing: DSSpacing.sm) {
+                                        Button {
+                                            editingDetail = detail
+                                        } label: {
+                                            Text(localizedString("marketplace.editItemInfo"))
+                                                .frame(maxWidth: .infinity, minHeight: 36)
+                                        }
+                                        .buttonStyle(.bordered)
+
+                                        Button(role: .destructive) {
+                                            confirmState = .offShelf
+                                        } label: {
+                                            Text(localizedString("marketplace.removeItem"))
+                                                .frame(maxWidth: .infinity, minHeight: 36)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .disabled(isSubmitting)
                                     }
-                                    .buttonStyle(.bordered)
-                                    .disabled(isSubmitting)
                                 } else {
                                     Text(localizedString("marketplace.itemNotInHall"))
                                         .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                             }
+                            .buttonBorderShape(.roundedRectangle(radius: DSRadius.control))
+                            .tint(DSColor.primary)
                         }
                     }
-                    .padding(16)
+                    .padding(.horizontal, DSSpacing.md)
+                    .padding(.vertical, DSSpacing.md)
                 }
                 .dsScreenBackground()
             }
@@ -775,15 +799,7 @@ struct MarketplaceDetailView: View {
     }
 
     private func infoRow(title: String, value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(title)
-                .foregroundStyle(DSColor.subtitle)
-            Spacer()
-            Text(value)
-                .multilineTextAlignment(.trailing)
-                .foregroundStyle(DSColor.title)
-        }
-        .font(.subheadline)
+        DSValueRow(title: title, value: value)
     }
 
     private func sellerMetaText(_ detail: MarketplaceDetail) -> String {
@@ -814,7 +830,7 @@ struct PublishMarketplaceView: View {
         Form {
             Section {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: DSSpacing.sm) {
                         ForEach(publishViewModel.images) { image in
                             ZStack(alignment: .topTrailing) {
                                 previewImageView(image)
@@ -835,7 +851,7 @@ struct PublishMarketplaceView: View {
                                 maxSelectionCount: 4 - publishViewModel.images.count,
                                 matching: .images
                             ) {
-                                VStack(spacing: 8) {
+                                VStack(spacing: DSSpacing.xs) {
                                     Image(systemName: "photo.badge.plus")
                                         .font(.title3)
                                     Text(localizedString("marketplace.addImage"))
@@ -847,7 +863,7 @@ struct PublishMarketplaceView: View {
                             }
                         }
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                 }
 
                 Text(localizedString("marketplace.imageHint"))

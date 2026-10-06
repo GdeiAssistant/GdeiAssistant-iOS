@@ -208,7 +208,7 @@ struct ChargeView: View {
     }
 
     private func orderMetaRows(_ order: ChargeOrder) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
             HStack {
                 Label(orderAmountText(order), systemImage: "yensign.circle")
                 Spacer()
@@ -228,8 +228,8 @@ struct ChargeView: View {
     private func statusBadge(_ order: ChargeOrder) -> some View {
         Text(order.localizedStatusLabel)
             .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 4)
+            .padding(.horizontal, DSSpacing.sm)
+            .padding(.vertical, DSSpacing.xxs)
             .foregroundStyle(statusTint(order))
             .background(statusTint(order).opacity(0.12), in: Capsule())
     }

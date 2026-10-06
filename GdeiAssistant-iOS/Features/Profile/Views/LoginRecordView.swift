@@ -20,7 +20,7 @@ struct LoginRecordView: View {
                 DSEmptyStateView(icon: "clock.arrow.circlepath", title: localizedString("loginRecord.emptyTitle"), message: localizedString("loginRecord.emptyMsg"))
             } else {
                 List(viewModel.records) { record in
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
                         HStack {
                             Text(record.timeText)
                                 .font(.headline)
@@ -36,7 +36,7 @@ struct LoginRecordView: View {
                             .font(.caption)
                             .foregroundStyle(DSColor.subtitle)
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DSSpacing.xxs)
                 }
                 .dsListBackground()
                 .listStyle(.insetGrouped)

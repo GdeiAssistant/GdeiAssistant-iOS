@@ -53,7 +53,7 @@ struct SettingsView: View {
             }
 
             Section {
-                VStack(spacing: 6) {
+                VStack(spacing: DSSpacing.xs) {
                     Text(AppConstants.Brand.displayName)
                     Text(LocalizedStringKey("settings.iOSClient"))
                         .font(.footnote)
@@ -91,7 +91,7 @@ struct SettingsView: View {
     }
 
     private func infoRow(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(DSColor.subtitle)

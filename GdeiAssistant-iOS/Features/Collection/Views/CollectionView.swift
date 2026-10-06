@@ -11,7 +11,7 @@ struct CollectionView: View {
     var body: some View {
         List {
             Section {
-                HStack(spacing: 12) {
+                HStack(spacing: DSSpacing.sm) {
                     TextField(localizedString("collection.searchPlaceholder"), text: $viewModel.keyword)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
@@ -54,7 +54,7 @@ struct CollectionView: View {
                         Button {
                             Task { await viewModel.loadDetail(for: item) }
                         } label: {
-                            VStack(alignment: .leading, spacing: 6) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(item.title)
                                     .font(.headline)
                                     .foregroundStyle(DSColor.title)
@@ -122,7 +122,7 @@ struct CollectionView: View {
                     } else {
                         Section {
                             ForEach(viewModel.borrowedBooks) { item in
-                                VStack(alignment: .leading, spacing: 6) {
+                                VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     HStack {
                                         Text(item.title)
                                             .font(.headline)
@@ -139,7 +139,7 @@ struct CollectionView: View {
                                         .font(.caption)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
-                                .padding(.vertical, 4)
+                                .padding(.vertical, DSSpacing.xxs)
                             }
                         } header: {
                             Text(localizedString("collection.borrowList"))
@@ -186,7 +186,7 @@ private struct CollectionDetailSheet: View {
 
                 Section {
                     ForEach(detail.distributions) { item in
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                             Text(item.location)
                                 .font(.headline)
                             Text("\(localizedString("collection.callNumber"))\(item.callNumber)")

@@ -24,7 +24,7 @@ struct LibraryView: View {
     }
 
     private var searchBar: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: DSSpacing.sm) {
             TextField(LocalizedStringKey("library.searchPlaceholder"), text: $viewModel.keyword)
                 .textFieldStyle(.roundedBorder)
 
@@ -56,7 +56,7 @@ struct LibraryView: View {
                     NavigationLink {
                         LibraryBookDetailView(viewModel: viewModel, bookID: book.id)
                     } label: {
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text(book.title)
                                 .font(.body.weight(.semibold))
                                 .foregroundStyle(DSColor.title)
@@ -67,7 +67,7 @@ struct LibraryView: View {
                                 .font(.caption)
                                 .foregroundStyle(book.availableCount > 0 ? DSColor.primary : DSColor.danger)
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, DSSpacing.xxs)
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -76,7 +76,7 @@ struct LibraryView: View {
                     await viewModel.refreshAll()
                 }
 
-                HStack(spacing: 16) {
+                HStack(spacing: DSSpacing.md) {
                     Button(LocalizedStringKey("library.previousPage")) {
                         Task { await viewModel.goToPreviousPage() }
                     }
@@ -225,7 +225,7 @@ struct MyBorrowView: View {
                         NavigationLink {
                             BorrowRecordDetailView(viewModel: viewModel, record: record)
                         } label: {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 Text(record.bookTitle)
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(DSColor.title)
@@ -246,7 +246,7 @@ struct MyBorrowView: View {
                                         .foregroundStyle(record.renewable ? DSColor.primary : DSColor.subtitle)
                                 }
                             }
-                            .padding(.vertical, 4)
+                            .padding(.vertical, DSSpacing.xxs)
                         }
                     }
                 }
