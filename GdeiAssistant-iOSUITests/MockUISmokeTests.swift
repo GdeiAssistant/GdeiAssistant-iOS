@@ -162,15 +162,17 @@ final class MockUISmokeTests: XCTestCase {
         let picker = app.buttons["social.chat.pickImage"]
         XCTAssertTrue(picker.waitForExistence(timeout: 5))
         picker.tap()
-        // PhotosPicker/PHPicker hosts the real system photo grid. CI seeds its sole
-        // synthetic asset with simctl addmedia; no app-side Data injection is used.
-        let firstPhoto = app.cells.firstMatch
+        // The iOS 26.2 system picker exposes thumbnails as Images, not Cells.
+        // Scope the observed grid identifier to the system Photos scroll view so
+        // icons/underlying chat images cannot match. CI imports the newest photo.
+        let firstPhoto = app.scrollViews["photosView_content_scroll_view"]
+            .images.matching(identifier: "PXGGridLayout-Info").firstMatch
         let photoExists = firstPhoto.waitForExistence(timeout: 20)
         attachScreenshot(app, name: "system-photos-picker")
         attachHierarchy(app, name: "system-photos-picker-accessibility-tree")
         XCTAssertTrue(
             photoExists,
-            "System PhotosPicker must expose a photo cell. Run Tools/seed_chat_picker_photo.sh first."
+            "System PhotosPicker must expose the seeded image in its photo grid."
         )
         firstPhoto.tap()
         let preview = app.images["social.chat.draftImage"]
