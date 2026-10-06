@@ -11,30 +11,29 @@ struct EvaluateView: View {
         List {
             Section {
                 Toggle(localizedString("evaluate.description"), isOn: $viewModel.submission.directSubmit)
-                Text(localizedString("evaluate.warning"))
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.subtitle)
+                    .tint(DSColor.primary)
             } header: {
                 Text(localizedString("evaluate.title"))
+            } footer: {
+                Label(localizedString("evaluate.warning"), systemImage: "exclamationmark.triangle.fill")
+                    .foregroundStyle(DSColor.warning)
             }
 
             Section {
-                Button {
+                DSButton(
+                    title: viewModel.submitState.isSubmitting
+                        ? localizedString("evaluate.submitting")
+                        : localizedString("evaluate.oneClick"),
+                    icon: "checkmark.seal",
+                    isLoading: viewModel.submitState.isSubmitting,
+                    isDisabled: viewModel.submitState.isSubmitting
+                ) {
                     viewModel.requestSubmit()
-                } label: {
-                    if viewModel.submitState.isSubmitting {
-                        HStack {
-                            ProgressView()
-                            Text(localizedString("evaluate.submitting"))
-                        }
-                    } else {
-                        Text(localizedString("evaluate.oneClick"))
-                    }
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .disabled(viewModel.submitState.isSubmitting)
+                .dsActionRow()
             }
         }
+        .listStyle(.insetGrouped)
         .dsListBackground()
         .navigationTitle(localizedString("evaluate.title"))
         .confirmationDialog(localizedString("evaluate.confirmTitle"), isPresented: $viewModel.showConfirm, titleVisibility: .visible) {
