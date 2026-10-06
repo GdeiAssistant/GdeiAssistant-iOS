@@ -33,6 +33,10 @@ final class ProfileViewModel: ObservableObject {
         bindSessionState()
     }
 
+    // ARC still releases the repository and cancels the Combine subscriptions.
+    // No custom actor-bound cleanup requires an isolated deinitializer.
+    nonisolated deinit {}
+
     var displayProfile: UserProfile? {
         sessionState.currentUser ?? profile
     }

@@ -4,6 +4,10 @@ import Foundation
 final class MockProfileRepository: ProfileRepository {
     private var currentProfile = MockFactory.makeUserProfile()
 
+    // No actor-bound cleanup; allow synchronous ARC release without the
+    // iOS 26.2 MainActor isolated-deinit back-deployment path.
+    nonisolated deinit {}
+
     func fetchProfile() async throws -> UserProfile {
         try await Task.sleep(nanoseconds: 300_000_000)
         return currentProfile

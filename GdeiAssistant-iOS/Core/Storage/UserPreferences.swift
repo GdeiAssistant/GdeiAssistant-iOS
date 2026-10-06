@@ -87,6 +87,10 @@ final class UserPreferences: ObservableObject {
         persistLocaleIfNeeded()
     }
 
+    // Only automatic ARC cleanup is needed. Avoid the iOS 26.2
+    // MainActor isolated-deinit back-deployment crash on synchronous release.
+    nonisolated deinit {}
+
     /// Reads the persisted locale directly from UserDefaults so that
     /// non-SwiftUI code (computed properties, utility functions) can resolve
     /// the correct localization bundle without holding an instance reference.

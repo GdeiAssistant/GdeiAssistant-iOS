@@ -114,6 +114,7 @@ struct ProfileView: View {
 
                             SocialProfileStatsRow(viewModel: container.makeSocialMeSummaryViewModel())
                         }
+                        .accessibilityElement(children: .contain)
                         .accessibilityIdentifier("profile.header")
 
                         Divider()
@@ -743,7 +744,7 @@ private struct SocialProfileStatsRow: View {
     }
 
     var body: some View {
-        Group {
+        VStack(spacing: 0) {
             if viewModel.isLoading && viewModel.me == nil {
                 ProgressView()
                     .frame(maxWidth: .infinity)

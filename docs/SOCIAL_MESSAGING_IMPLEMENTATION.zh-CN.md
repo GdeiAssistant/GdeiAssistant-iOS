@@ -136,3 +136,9 @@ CI 首次运行 `37415308165`（`ba3310b`）实际完成构建、159 项单测�
 `Tools/check_localization.py` 以 Python 标准库检查全部资源及静态调用，已加入 CI 的 Style Check。新增回归覆盖：六语言资源／格式参数／权限文案／资料选项结构、语言参数解析、首次保存、切换语言且保留资料草稿、默认跑腿标题和用户内容、聊天日期；UI 新增资料头部／隐私分组导航，以及在同一外观页面切换全部六种语言后返回资料页。原有系统 PhotosPicker 图片流程保留。UI 每阶段保存截图，失败时保留截图和控件树。
 
 本机 CLT 的 351 个 Swift 文件 parse、全部 strings 和 pbxproj 的 plutil、Style Check、资源扫描及 diff 检查通过。另将真实 AppLanguage／UserPreferences／LocalizationSupport／ProfileFormSupport 等源码编译为临时 macOS 检查程序，实际执行六语言查询、存储／参数解析、默认标题及聊天日期；没有替换业务实现。该程序验证可执行逻辑，不代表 iOS App 构建或 XCTest／模拟器通过。本轮实际 Xcode 26.3／iOS 26.2 的新增单测及 9 项 UI 流程交由 CI 执行。
+
+### PR 64 首次 CI 返修
+
+`37442929145`（`6711d44`）通过构建及 Style，但新语言测试出现三次实际 malloc 崩溃。新 `.xcresult` 内解出的 crash JSON 确认：聊天日期及首次语言保存测试在 `UserPreferences` 同步析构时进入 MainActor back-deployment 路径；六语言切换测试在 `ProfileViewModel` 释放 `MockProfileRepository` 时嵌套进入同一路径。三个类没有自定义 actor 清理，改用空 `nonisolated deinit`，仍由 ARC 释放属性及取消 Combine 订阅，不保留测试对象、不改 async 来避开同步释放。已有测试增加 20 次真实弱引用释放断言。语言测试每项先保存 standard locale、设置明确基线，结束时恢复原值（原值缺失则删除测试写入的键），避免后续 mapper／搜索测试读到韩语；原 mapper 和分页断言保持。
+
+同一 CI 的 HK 资料页截图和控件树确认三项社交数量完全没有渲染。数量子视图初始返回空 `Group`，附加的 `.task` 没有实际子视图可承载；改用稳定 `VStack` 承载加载任务。资料头部显式使用 `.accessibilityElement(children: .contain)`，让头部标识保留在容器且不覆盖内部关注／粉丝／好友按钮标识。现有 9 项 UI 流程及断言保留，新增数量栏与隐私分组测试仍须由下一次完整 CI 实际复验。本机语法／资源检查与 macOS 逻辑执行不能替代 iOS 26.2 析构或模拟器 UI 验证。

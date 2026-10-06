@@ -80,8 +80,11 @@ final class AppContainerBootstrapTests: XCTestCase {
         let header = try XCTUnwrap(profileSource.range(of: "profile.header"))
         XCTAssertLessThan(stats.lowerBound, header.lowerBound)
         XCTAssertLessThan(header.lowerBound, fields.lowerBound)
+        XCTAssertTrue(profileSource[stats.lowerBound..<header.lowerBound].contains(".accessibilityElement(children: .contain)"))
         let row = try XCTUnwrap(profileSource.range(of: "private struct SocialProfileStatsRow"))
         XCTAssertFalse(profileSource[row.lowerBound...].contains("DSCard"))
+        XCTAssertTrue(profileSource[row.lowerBound...].contains("VStack(spacing: 0)"))
+        XCTAssertFalse(profileSource[row.lowerBound...].contains("Group {"), "An initially empty Group has no child to run the load task")
     }
 
     func testKnownHardCodedLocalizedStringsAreRemovedFromSharedUI() throws {

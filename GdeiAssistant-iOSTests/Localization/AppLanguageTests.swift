@@ -2,6 +2,28 @@ import XCTest
 @testable import GdeiAssistant_iOS
 
 final class AppLanguageTests: XCTestCase {
+    private var savedStandardLocale: Any?
+
+    override func setUp() {
+        super.setUp()
+        let defaults = UserDefaults.standard
+        let key = AppConstants.UserDefaultsKeys.selectedLocale
+        savedStandardLocale = defaults.object(forKey: key)
+        defaults.set("zh-CN", forKey: key)
+    }
+
+    override func tearDown() {
+        let defaults = UserDefaults.standard
+        let key = AppConstants.UserDefaultsKeys.selectedLocale
+        if let savedStandardLocale {
+            defaults.set(savedStandardLocale, forKey: key)
+        } else {
+            defaults.removeObject(forKey: key)
+        }
+        savedStandardLocale = nil
+        super.tearDown()
+    }
+
     func testNormalizePreservesSupportedLocaleIdentifiers() {
         XCTAssertEqual(AppLanguage.normalizedIdentifier(from: "zh-CN"), "zh-CN")
         XCTAssertEqual(AppLanguage.normalizedIdentifier(from: "zh-HK"), "zh-HK")
@@ -108,12 +130,23 @@ final class AppLanguageTests: XCTestCase {
         let suite = "gdeiassistant.locale.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
-        let initial = UserPreferences(defaults: defaults)
-        XCTAssertEqual(defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale), initial.selectedLocale)
-        defaults.set(" ZH_hAnT_MO ;q=0.9,en;q=0.8", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
-        let restored = UserPreferences(defaults: defaults)
-        XCTAssertEqual(restored.selectedLocale, "zh-HK")
-        XCTAssertEqual(AppLanguage.currentIdentifier(defaults: defaults), "zh-HK")
+        for _ in 0 ..< 20 {
+            weak var releasedInitial: UserPreferences?
+            weak var releasedRestored: UserPreferences?
+            do {
+                defaults.removeObject(forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+                let initial = UserPreferences(defaults: defaults)
+                releasedInitial = initial
+                XCTAssertEqual(defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedLocale), initial.selectedLocale)
+                defaults.set(" ZH_hAnT_MO ;q=0.9,en;q=0.8", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
+                let restored = UserPreferences(defaults: defaults)
+                releasedRestored = restored
+                XCTAssertEqual(restored.selectedLocale, "zh-HK")
+                XCTAssertEqual(AppLanguage.currentIdentifier(defaults: defaults), "zh-HK")
+            }
+            XCTAssertNil(releasedInitial)
+            XCTAssertNil(releasedRestored)
+        }
     }
 
     @MainActor
@@ -122,21 +155,38 @@ final class AppLanguageTests: XCTestCase {
         let key = AppConstants.UserDefaultsKeys.selectedLocale
         let previous = defaults.object(forKey: key)
         defer { defaults.set(previous, forKey: key) }
-        let preferences = UserPreferences(defaults: defaults)
-        let session = SessionState()
-        let profile = ProfileViewModel(repository: MockProfileRepository(), sessionState: session)
-        profile.nickname = "小明 / Alice"
-        profile.bio = "我寫嘅內容不翻譯"
         let expected = [
             "zh-CN": "隐私设置", "zh-HK": "私隱設定", "zh-TW": "隱私權設定",
             "en": "Privacy Settings", "ja": "プライバシー設定", "ko": "개인정보 설정"
         ]
-        for language in AppLanguage.allCases {
-            preferences.selectedLocale = language.localeIdentifier
-            XCTAssertEqual(AppLanguage.currentIdentifier(), language.localeIdentifier)
-            XCTAssertEqual(localizedString("privacy.title"), expected[language.localeIdentifier])
-            XCTAssertEqual(profile.nickname, "小明 / Alice")
-            XCTAssertEqual(profile.bio, "我寫嘅內容不翻譯")
+        for _ in 0 ..< 20 {
+            weak var releasedPreferences: UserPreferences?
+            weak var releasedRepository: MockProfileRepository?
+            weak var releasedProfile: ProfileViewModel?
+            weak var releasedSession: SessionState?
+            do {
+                let preferences = UserPreferences(defaults: defaults)
+                let session = SessionState()
+                let repository = MockProfileRepository()
+                let profile = ProfileViewModel(repository: repository, sessionState: session)
+                releasedPreferences = preferences
+                releasedRepository = repository
+                releasedProfile = profile
+                releasedSession = session
+                profile.nickname = "小明 / Alice"
+                profile.bio = "我寫嘅內容不翻譯"
+                for language in AppLanguage.allCases {
+                    preferences.selectedLocale = language.localeIdentifier
+                    XCTAssertEqual(AppLanguage.currentIdentifier(), language.localeIdentifier)
+                    XCTAssertEqual(localizedString("privacy.title"), expected[language.localeIdentifier])
+                    XCTAssertEqual(profile.nickname, "小明 / Alice")
+                    XCTAssertEqual(profile.bio, "我寫嘅內容不翻譯")
+                }
+            }
+            XCTAssertNil(releasedPreferences)
+            XCTAssertNil(releasedProfile)
+            XCTAssertNil(releasedRepository)
+            XCTAssertNil(releasedSession)
         }
     }
 
