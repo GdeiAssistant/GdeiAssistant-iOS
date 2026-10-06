@@ -120,3 +120,5 @@ xcodebuild test -project GdeiAssistant-iOS.xcodeproj -scheme GdeiAssistant-iOS \
 本机仅 CLT，新增流程待 CI 真实执行。模拟器 mock 测试不验证真机相册权限/iCloud 照片下载、真实 API/R2 鉴权与上传、真实 WebSocket 网络、后台系统行为或发布签名。
 
 CI 首次运行 `37415308165`（`ba3310b`）实际完成构建、159 项单测和原有 4 项 UI 用例；3 项新增图片 UI 用例都停在系统相册定位。三份控件树与截图确认种图和测试使用同一模拟器，合成箭头图片位于相册第一项，另有系统默认照片。iOS 26.2 的缩略图类型为 `Image`/`PXGGridLayout-Info`，不是 `Cell`。测试改为在系统 `photosView_content_scroll_view` 中定位该 Image，继续保留真实系统选图、480×320 解码尺寸和全部后续断言；这项定位修正仍须由下一次 CI 实际复验。
+
+第二次 CI `37417003363`（`e12c6dd`）实际仍通过构建、159 项单测和原 4 项 UI；新增 3 项正确找到相册 Image，但 `Image.tap()` 自动计算命中点为 `{-1,-1}`，报 not hittable。真实截图确认首张合成照片完整显示、无遮挡，控件树实时 frame 为 `{{0,292},{132.9,133}}`、位于 402×874 屏幕内。helper 改为依据该已定位 Image 的实时 frame 中心发送真正的 `XCUICoordinate` 触摸，并检查 frame 非空且在窗口内；不硬编码屏幕坐标、不更换系统 picker、不调整超时或删改后续断言。实际选图与后续图片流程仍待下一次 CI 复验。

@@ -174,7 +174,16 @@ final class MockUISmokeTests: XCTestCase {
             photoExists,
             "System PhotosPicker must expose the seeded image in its photo grid."
         )
-        firstPhoto.tap()
+        // Photos renders this visible thumbnail as a virtual AX Image whose
+        // automatic hit point is {-1, -1}. Send a real touch at its live center.
+        let photoFrame = firstPhoto.frame
+        let window = app.windows.firstMatch
+        let windowFrame = window.frame
+        XCTAssertFalse(photoFrame.isEmpty)
+        XCTAssertTrue(windowFrame.contains(photoFrame), "The seeded photo must be visible on screen")
+        window.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            .withOffset(CGVector(dx: photoFrame.midX - windowFrame.minX, dy: photoFrame.midY - windowFrame.minY))
+            .tap()
         let preview = app.images["social.chat.draftImage"]
         if !preview.waitForExistence(timeout: 5) {
             // Some picker versions use an explicit confirmation for a single selection.
