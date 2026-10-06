@@ -31,7 +31,9 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
 
-        return detail
+        var visible = detail
+        visible.ownedByCurrentUser = detail.sellerUsername == MockSeedData.demoProfile.username
+        return visible
     }
 
     func fetchMySummary() async throws -> MarketplacePersonalSummary {

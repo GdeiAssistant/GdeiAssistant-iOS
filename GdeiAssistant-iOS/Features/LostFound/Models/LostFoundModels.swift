@@ -24,6 +24,7 @@ enum LostFoundType: String, Codable, CaseIterable {
 }
 
 enum LostFoundItemState: Int, Codable, Hashable {
+    case unknown = -1
     case active = 0
     case resolved = 1
     case systemDeleted = 2
@@ -34,6 +35,8 @@ enum LostFoundItemState: Int, Codable, Hashable {
             return localizedString("lostFound.state.active")
         case .resolved:
             return localizedString("lostFound.state.resolved")
+        case .unknown:
+            return localizedString("common.notProvided")
         case .systemDeleted:
             return localizedString("lostFound.state.systemDeleted")
         }

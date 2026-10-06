@@ -45,7 +45,7 @@ final class AppContainerBootstrapTests: XCTestCase {
     func testProdEnvironmentUsesCanonicalAPIHost() {
         XCTAssertEqual(
             NetworkEnvironment.prod.baseURL.absoluteString,
-            "https://gdeiassistant.cn/api"
+            "https://gdeiassistant.azurewebsites.net/api"
         )
     }
 

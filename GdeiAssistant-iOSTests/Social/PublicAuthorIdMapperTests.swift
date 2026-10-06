@@ -4,17 +4,18 @@ import XCTest
 final class PublicAuthorIdMapperTests: XCTestCase {
     func testMarketplaceDetailPreservesAuthorIdAndAvatarPath() throws {
         let dto = MarketplaceDetailDTO(
+            ownedByCurrentUser: false,
             profile: MarketplaceProfileDTO(
                 avatarURL: "/api/social/users/user-seller-1/avatar",
-                username: "seller",
+                displayName: "seller",
                 nickname: "卖家甲",
                 faculty: nil,
                 enrollment: nil,
                 major: nil
             ),
-            secondhandItem: MarketplaceItemDTO(
+            item: MarketplaceItemDTO(
                 id: 11,
-                username: "seller",
+                displayName: "seller",
                 authorId: " user-seller-1 ",
                 name: "二手书",
                 description: "几乎全新",
@@ -37,10 +38,11 @@ final class PublicAuthorIdMapperTests: XCTestCase {
 
     func testMarketplaceDetailOmitsBlankAuthorId() throws {
         let dto = MarketplaceDetailDTO(
+            ownedByCurrentUser: false,
             profile: nil,
-            secondhandItem: MarketplaceItemDTO(
+            item: MarketplaceItemDTO(
                 id: 12,
-                username: "seller",
+                displayName: "seller",
                 authorId: "   ",
                 name: "风扇",
                 description: "能用",

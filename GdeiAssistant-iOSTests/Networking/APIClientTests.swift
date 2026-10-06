@@ -79,6 +79,34 @@ final class APIClientTests: XCTestCase {
 
     // MARK: - Tests
 
+    func testStaleHTTP401DoesNotExpireReplacementSession() async throws {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        let environment = AppEnvironment(networkEnvironment: .prod, dataSourceMode: .remote, isDebug: false, clientType: "IOS")
+        environment.baseURL = URL(string: "https://test.example.com")!
+        var reads = 0
+        client = APIClient(environment: environment, session: URLSession(configuration: config), tokenProvider: {
+            reads += 1
+            return reads == 1 ? "old-token" : "new-token"
+        }, onUnauthorized: { [weak self] in self?.unauthorizedCallCount += 1 })
+        stub(statusCode: 401, body: "")
+        do {
+            let _: EmptyPayload = try await client.get("/protected")
+            XCTFail("Expected unauthorized")
+        } catch NetworkError.unauthorized {
+            XCTAssertEqual(unauthorizedCallCount, 0)
+        }
+    }
+
+    func testNoContentSucceedsOnlyForEmptyPayload() async throws {
+        stub(statusCode: 204, body: "")
+        let _: EmptyPayload = try await client.post("/command")
+        do {
+            let _: String = try await client.get("/required-value")
+            XCTFail("Expected missing payload")
+        } catch NetworkError.noData { }
+    }
+
     func testSuccessResponseDecodesPayload() async throws {
         struct Payload: Codable { let name: String }
         stub(statusCode: 200, body: #"{"code":200,"success":true,"message":"","data":{"name":"张三"}}"#)
@@ -114,7 +142,7 @@ final class APIClientTests: XCTestCase {
         stub(statusCode: 200, body: #"{"code":10001,"message":"商品已下架","success":false}"#)
 
         do {
-            let _: EmptyPayload = try await client.get("/ershou/item/id/1")
+            let _: EmptyPayload = try await client.get("/marketplace/item/id/1")
             XCTFail("Expected NetworkError.server")
         } catch NetworkError.server(let code, let message) {
             XCTAssertEqual(code, 10001)

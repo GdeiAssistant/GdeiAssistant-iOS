@@ -13,12 +13,12 @@ final class RemoteDeliveryRepository: DeliveryRepository {
             "/delivery/order/start/\(max(start, 0))/size/\(max(size, 1))",
             requiresAuth: true
         )
-        return dtos.map(DeliveryRemoteMapper.mapOrder)
+        return try dtos.map(DeliveryRemoteMapper.mapOrder)
     }
 
     func fetchMine() async throws -> DeliveryMineSummary {
         let dto: DeliveryMineRemoteDTO = try await apiClient.get("/delivery/mine", requiresAuth: true)
-        return DeliveryRemoteMapper.mapMine(dto)
+        return try DeliveryRemoteMapper.mapMine(dto)
     }
 
     func fetchDetail(orderID: String) async throws -> DeliveryOrderDetail {
@@ -26,13 +26,13 @@ final class RemoteDeliveryRepository: DeliveryRepository {
             "/delivery/order/id/\(orderID)",
             requiresAuth: true
         )
-        return DeliveryRemoteMapper.mapDetail(dto)
+        return try DeliveryRemoteMapper.mapDetail(dto)
     }
 
     func publish(draft: DeliveryDraft) async throws {
-        let _: EmptyPayload = try await apiClient.postForm(
+        let _: EmptyPayload = try await apiClient.post(
             "/delivery/order",
-            fields: DeliveryRemoteMapper.formFields(for: draft),
+            body: DeliveryRemoteMapper.publishRequest(for: draft),
             requiresAuth: true
         )
     }

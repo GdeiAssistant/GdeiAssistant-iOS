@@ -1,6 +1,7 @@
 import Foundation
 
 enum MarketplaceItemState: Int, Codable, Hashable {
+    case unknown = -1
     case offShelf = 0
     case selling = 1
     case sold = 2
@@ -14,6 +15,8 @@ enum MarketplaceItemState: Int, Codable, Hashable {
             return localizedString("marketplace.stateSelling")
         case .sold:
             return localizedString("marketplace.stateSold")
+        case .unknown:
+            return localizedString("common.notProvided")
         case .systemDeleted:
             return localizedString("marketplace.stateSystemDeleted")
         }
@@ -59,6 +62,7 @@ struct MarketplaceDetail: Codable, Identifiable, Hashable {
     let sellerMajor: String?
     let sellerGrade: String?
     let imageURLs: [String]
+    var ownedByCurrentUser: Bool = false
 
     func categoryDisplayName(localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
         item.typeDisplayName(localeIdentifier: localeIdentifier) ?? condition

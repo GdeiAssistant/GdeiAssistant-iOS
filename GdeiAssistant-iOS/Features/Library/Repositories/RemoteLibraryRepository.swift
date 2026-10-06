@@ -30,9 +30,9 @@ final class RemoteLibraryRepository: LibraryRepository {
     }
 
     func fetchBorrowRecords(password: String) async throws -> [BorrowRecord] {
-        let dtos: [BorrowBookDTO] = try await apiClient.get(
+        let dtos: [BorrowBookDTO] = try await apiClient.post(
             "/library/borrow",
-            queryItems: [URLQueryItem(name: "password", value: password)],
+            body: ["password": password],
             requiresAuth: true
         )
         return LibraryRemoteMapper.mapBorrowRecords(dtos)

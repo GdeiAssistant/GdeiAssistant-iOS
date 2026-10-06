@@ -105,7 +105,7 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
 
         XCTAssertEqual(RepositoryTrackingURLProtocol.requestedPaths.count, 1)
         XCTAssertTrue(
-            RepositoryTrackingURLProtocol.requestedPaths[0].contains("/ershou/item/start/0"),
+            RepositoryTrackingURLProtocol.requestedPaths[0].contains("/marketplace/item/start/0"),
             "Expected list endpoint, got: \(RepositoryTrackingURLProtocol.requestedPaths)"
         )
     }
@@ -144,7 +144,7 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
         XCTAssertEqual(summary.introduction, "This person is lazy and left nothing here.")
     }
     func testMappedMarketplaceTypeFollowsAllLocalesAndKeepsUnknownTagsAndUserText() throws {
-        let dto = try JSONDecoder().decode(MarketplaceDetailDTO.self, from: Data(#"{"secondhandItem":{"id":1,"name":"校园代步","description":"用户写的校园代步","type":0,"state":1}}"#.utf8))
+        let dto = try JSONDecoder().decode(MarketplaceDetailDTO.self, from: Data(#"{"item":{"id":1,"name":"校园代步","description":"用户写的校园代步","type":0,"state":1}}"#.utf8))
         let detail = try MarketplaceRemoteMapper.mapDetail(dto)
         XCTAssertEqual(detail.item.typeID, 0)
         let legacyData = try JSONEncoder().encode(detail.item)
