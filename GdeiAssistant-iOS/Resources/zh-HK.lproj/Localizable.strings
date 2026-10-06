@@ -1778,7 +1778,7 @@
 "social.search.title" = "搜尋用戶";
 "social.search.placeholder" = "用暱稱或公開 ID 搜尋";
 "social.search.empty" = "搵唔到符合嘅用戶";
-"social.search.emptyHint" = "換過關鍵字試試";
+"social.search.emptyHint" = "換個關鍵字再試下";
 "social.search.failed" = "搜尋用戶失敗";
 "social.profile.title" = "用戶主頁";
 "social.profile.loading" = "正在載入主頁...";
@@ -1852,4 +1852,4 @@
 "social.error.rateLimited" = "操作太頻密，請遲啲再試";
 
 "app.debug.mockCredentialsHint" = "Mock 帳號：gdeiassistant  密碼：gdeiassistant";
-"app.debug.bootstrapTimeoutMessage" = "啟動逾時，請重試或重新登入";
+"app.debug.bootstrapTimeoutMessage" = "啟動超時，請再試過或者重新登入";
