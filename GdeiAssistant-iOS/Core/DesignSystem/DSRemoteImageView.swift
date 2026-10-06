@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DSRemoteImageView: View {
     let urlString: String?
-    var cornerRadius: CGFloat = 16
+    var cornerRadius: CGFloat = DSRadius.card
     var fallbackSystemImage: String = "photo"
     var accessibilityLabel: String? = nil
 
@@ -27,14 +27,14 @@ struct DSRemoteImageView: View {
                 placeholderView
             }
         }
-        .background(DSColor.cardBackground)
+        .background(DSColor.fieldBackground)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
         .accessibilityLabel(accessibilityLabel ?? localizedString("common.image"))
     }
 
     private var placeholderView: some View {
         ZStack {
-            DSColor.cardBackground
+            DSColor.surface
             Image(systemName: fallbackSystemImage)
                 .font(.title3)
                 .foregroundStyle(DSColor.subtitle)
@@ -75,7 +75,7 @@ struct DSAvatarView: View {
     private var placeholder: some View {
         ZStack {
             Circle()
-                .fill(DSColor.cardBackground)
+                .fill(DSColor.primarySoft)
             Image(systemName: fallbackSystemImage)
                 .font(.system(size: size * 0.56))
                 .foregroundStyle(DSColor.primary)

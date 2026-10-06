@@ -9,81 +9,77 @@ struct TopicFeedView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
-                ForEach(CommunityFeedSort.allCases) { sort in
-                    Text(sort.title).tag(sort)
+        Group {
+            if viewModel.isLoading && viewModel.posts.isEmpty {
+                DSLoadingView(text: localizedString("community.topicFeed.loading"))
+            } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
+                DSErrorStateView(message: errorMessage) {
+                    Task { await viewModel.load() }
                 }
-            }
-            .pickerStyle(.segmented)
-            .padding([.horizontal, .top], 16)
-
-            content
-        }
-        .background(DSColor.background)
-        .navigationTitle(viewModel.topic?.title ?? localizedString("community.topicFeed.defaultTitle"))
-        .task {
-            await viewModel.loadIfNeeded()
-        }
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        if viewModel.isLoading && viewModel.posts.isEmpty {
-            DSLoadingView(text: localizedString("community.topicFeed.loading"))
-        } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
-            DSErrorStateView(message: errorMessage) {
-                Task { await viewModel.load() }
-            }
-        } else if viewModel.posts.isEmpty {
-            DSEmptyStateView(icon: "number.circle", title: localizedString("community.topicFeed.emptyTitle"), message: localizedString("community.topicFeed.emptyMessage"))
-        } else {
-            ScrollView {
-                VStack(spacing: 14) {
+            } else {
+                List {
                     if let topic = viewModel.topic {
-                        DSCard {
-                            Text(topic.title)
-                                .font(.headline)
-                                .foregroundStyle(DSColor.title)
-
+                        Section {
                             Text(topic.summary)
                                 .font(.subheadline)
                                 .foregroundStyle(DSColor.subtitle)
                         }
                     }
 
-                    LazyVStack(spacing: 12) {
-                        ForEach(viewModel.posts) { post in
-                            NavigationLink {
-                                PostDetailView(viewModel: container.makePostDetailViewModel(postID: post.id))
-                            } label: {
-                                DSCard {
-                                    Text(post.title)
-                                        .font(.headline)
-                                        .foregroundStyle(DSColor.title)
+                    Section {
+                        Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
+                            ForEach(CommunityFeedSort.allCases) { sort in
+                                Text(sort.title).tag(sort)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
 
-                                    Text(post.summary)
-                                        .font(.subheadline)
-                                        .foregroundStyle(DSColor.subtitle)
-                                        .lineLimit(2)
-
-                                    HStack(spacing: 12) {
-                                        Label("\(post.likeCount)", systemImage: "hand.thumbsup")
-                                        Label("\(post.commentCount)", systemImage: "bubble.left")
+                    Section {
+                        if viewModel.posts.isEmpty {
+                            DSEmptyStateView(
+                                icon: "number.circle",
+                                title: localizedString("community.topicFeed.emptyTitle"),
+                                message: localizedString("community.topicFeed.emptyMessage")
+                            )
+                            .listRowBackground(Color.clear)
+                        } else {
+                            ForEach(viewModel.posts) { post in
+                                NavigationLink {
+                                    PostDetailView(viewModel: container.makePostDetailViewModel(postID: post.id))
+                                } label: {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(post.title)
+                                            .font(.headline)
+                                            .foregroundStyle(DSColor.title)
+                                        Text(post.summary)
+                                            .font(.subheadline)
+                                            .foregroundStyle(DSColor.subtitle)
+                                            .lineLimit(2)
+                                        HStack(spacing: 12) {
+                                            Label("\(post.likeCount)", systemImage: "hand.thumbsup")
+                                            Label("\(post.commentCount)", systemImage: "bubble.left")
+                                        }
+                                        .font(.caption)
+                                        .monospacedDigit()
+                                        .foregroundStyle(DSColor.tertiaryText)
                                     }
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.subtitle)
+                                    .padding(.vertical, 4)
                                 }
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
-                .padding(16)
+                .listStyle(.insetGrouped)
+                .dsListBackground()
+                .refreshable {
+                    await viewModel.load()
+                }
             }
-            .refreshable {
-                await viewModel.load()
-            }
+        }
+        .navigationTitle(viewModel.topic?.title ?? localizedString("community.topicFeed.defaultTitle"))
+        .task {
+            await viewModel.loadIfNeeded()
         }
     }
 

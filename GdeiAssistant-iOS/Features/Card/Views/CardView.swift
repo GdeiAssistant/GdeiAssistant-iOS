@@ -180,7 +180,7 @@ struct CardView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .refreshable {
             await viewModel.loadDashboard()
         }

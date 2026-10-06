@@ -30,150 +30,124 @@ struct PostDetailView: View {
     }
 
     private func content(_ detail: CommunityPostDetail) -> some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                DSCard {
-                    HStack(alignment: .top) {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: DSSpacing.sm) {
+                    HStack(spacing: DSSpacing.xs) {
                         Image(systemName: detail.post.isAnonymous ? "person.crop.circle.badge.questionmark" : "person.crop.circle.fill")
-                            .font(.title2)
                             .foregroundStyle(DSColor.primary)
+                            .accessibilityHidden(true)
 
-                        VStack(alignment: .leading, spacing: 4) {
-                            if !detail.post.isAnonymous, let authorId = detail.post.authorId {
-                                NavigationLink {
-                                    SocialPublicProfileRoute(userID: authorId)
-                                } label: {
-                                    Text(detail.post.authorName)
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(DSColor.primary)
-                                }
-                                .buttonStyle(.plain)
-                            } else {
-                                Text(detail.post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(detail.post.authorName))
+                        if !detail.post.isAnonymous, let authorId = detail.post.authorId {
+                            NavigationLink {
+                                SocialPublicProfileRoute(userID: authorId)
+                            } label: {
+                                Text(detail.post.authorName)
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(DSColor.title)
+                                    .foregroundStyle(DSColor.primary)
                             }
-
-                            Text(detail.post.createdAt)
-                                .font(.caption)
-                                .foregroundStyle(DSColor.subtitle)
+                        } else {
+                            Text(detail.post.isAnonymous ? localizedString("community.anonymousStudent") : detail.post.authorName)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(DSColor.title)
                         }
 
                         Spacer()
+                        Text(detail.post.createdAt)
+                            .font(.caption)
+                            .monospacedDigit()
+                            .foregroundStyle(DSColor.tertiaryText)
                     }
 
                     Text(detail.post.title)
-                        .font(.title3.weight(.bold))
+                        .font(.title3.weight(.semibold))
                         .foregroundStyle(DSColor.title)
 
                     Text(detail.content)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(DSColor.title)
-                        .lineSpacing(5)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(detail.topics) { topic in
-                                NavigationLink {
-                                    TopicFeedView(viewModel: container.makeTopicFeedViewModel(topicID: topic.id))
-                                } label: {
-                                    Text(topic.title)
-                                        .font(.caption)
-                                        .foregroundStyle(DSColor.primary)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 6)
-                                        .background(DSColor.primary.opacity(0.12))
-                                        .clipShape(Capsule())
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
-
-                    HStack(spacing: 12) {
-                        Button {
-                            Task { await viewModel.toggleLike() }
-                        } label: {
-                            Label(
-                                "\(detail.post.likeCount)",
-                                systemImage: detail.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup"
-                            )
-                            .font(.subheadline)
-                            .foregroundStyle(detail.isLiked ? DSColor.primary : DSColor.subtitle)
-                        }
-                        .buttonStyle(.plain)
-
-                        Spacer()
-
-                        Label("\(detail.post.commentCount)", systemImage: "bubble.left")
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                    }
                 }
+            }
 
-                DSCard {
-                    Text(LocalizedStringKey("community.postDetail.commentsSection"))
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-
-                    commentInput
-
-                    if viewModel.comments.isEmpty {
-                        Text(LocalizedStringKey("community.postDetail.noComments"))
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.subtitle)
-                    } else {
-                        ForEach(viewModel.comments) { comment in
-                            VStack(alignment: .leading, spacing: 6) {
-                                HStack {
-                                    Text(comment.isAnonymous ? LocalizedStringKey("community.anonymousUser") : LocalizedStringKey(comment.authorName))
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(DSColor.title)
-                                    Spacer()
-                                    Text(comment.createdAt)
-                                        .font(.caption)
-                                        .foregroundStyle(DSColor.subtitle)
-                                }
-
-                                Text(comment.content)
-                                    .font(.subheadline)
-                                    .foregroundStyle(DSColor.title)
-
-                                Label("\(comment.likeCount)", systemImage: "hand.thumbsup")
-                                    .font(.caption)
-                                    .foregroundStyle(DSColor.subtitle)
-                            }
-                            .padding(.vertical, 6)
+            if !detail.topics.isEmpty {
+                Section {
+                    ForEach(detail.topics) { topic in
+                        NavigationLink {
+                            TopicFeedView(viewModel: container.makeTopicFeedViewModel(topicID: topic.id))
+                        } label: {
+                            Text(topic.title)
                         }
                     }
                 }
             }
-            .padding(16)
+
+            Section {
+                Button {
+                    Task { await viewModel.toggleLike() }
+                } label: {
+                    Label(
+                        "\(detail.post.likeCount)",
+                        systemImage: detail.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup"
+                    )
+                    .monospacedDigit()
+                    .foregroundStyle(detail.isLiked ? DSColor.primary : DSColor.title)
+                }
+                .accessibilityAddTraits(detail.isLiked ? .isSelected : [])
+
+                LabeledContent {
+                    Text("\(detail.post.commentCount)")
+                        .monospacedDigit()
+                } label: {
+                    Label(localizedString("community.postDetail.commentsSection"), systemImage: "bubble.left")
+                }
+            }
+
+            Section {
+                TextField(
+                    LocalizedStringKey("community.postDetail.commentPlaceholder"),
+                    text: $viewModel.commentText,
+                    axis: .vertical
+                )
+                .lineLimit(2...4)
+
+                Button(localizedString("community.postDetail.send")) {
+                    Task { await viewModel.submitComment() }
+                }
+                .disabled(viewModel.isSubmittingComment || viewModel.commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            } header: {
+                Text(LocalizedStringKey("community.postDetail.commentsSection"))
+            }
+
+            Section {
+                if viewModel.comments.isEmpty {
+                    Text(LocalizedStringKey("community.postDetail.noComments"))
+                        .foregroundStyle(DSColor.subtitle)
+                } else {
+                    ForEach(viewModel.comments) { comment in
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text(comment.isAnonymous ? localizedString("community.anonymousUser") : comment.authorName)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(DSColor.title)
+                                Spacer()
+                                Text(comment.createdAt)
+                                    .font(.caption)
+                                    .monospacedDigit()
+                                    .foregroundStyle(DSColor.tertiaryText)
+                            }
+                            Text(comment.content)
+                                .font(.body)
+                                .foregroundStyle(DSColor.title)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
         }
-        .background(DSColor.background)
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.loadDetail()
-        }
-    }
-
-    private var commentInput: some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            TextField(LocalizedStringKey("community.postDetail.commentPlaceholder"), text: $viewModel.commentText, axis: .vertical)
-                .lineLimit(2...4)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(Color(.tertiarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-            DSButton(
-                title: localizedString("community.postDetail.send"),
-                variant: .primary,
-                isLoading: viewModel.isSubmittingComment,
-                isDisabled: viewModel.commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ) {
-                Task { await viewModel.submitComment() }
-            }
-            .frame(width: 92)
         }
     }
 }

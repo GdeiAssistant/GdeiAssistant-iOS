@@ -246,7 +246,7 @@ struct TopicDetailView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("topic.detailTitle"))
@@ -408,8 +408,8 @@ private struct PublishTopicView: View {
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
-                                .background(Color(.tertiarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .background(DSColor.fieldBackground)
+                                .clipShape(DSRadius.controlShape)
                             }
                         }
                     }
@@ -427,6 +427,7 @@ private struct PublishTopicView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("topic.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -469,13 +470,13 @@ private struct PublishTopicView: View {
                     .scaledToFit()
             } else {
                 Rectangle()
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                    .fill(DSColor.fieldBackground)
                     .overlay { Image(systemName: "photo") }
             }
         }
         .frame(width: 92, height: 92)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.fieldBackground)
+        .clipShape(DSRadius.controlShape)
     }
 }
 

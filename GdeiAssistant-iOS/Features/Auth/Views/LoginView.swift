@@ -11,26 +11,129 @@ struct LoginView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                LinearGradient(
-                    colors: [DSColor.background, DSColor.primary.opacity(0.08)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+            Form {
+                Section {
+                    EmptyView()
+                } header: {
+                    VStack(spacing: DSSpacing.sm) {
+                        Image(systemName: "graduationcap.fill")
+                            .font(.largeTitle)
+                            .foregroundStyle(DSColor.primary)
+                            .symbolRenderingMode(.hierarchical)
+                            .accessibilityHidden(true)
 
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        header
-                        form
-                        privacyNote
-                        devPanel
+                        Text(AppConstants.Brand.shortDisplayName)
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(DSColor.title)
+                            .accessibilityAddTraits(.isHeader)
+
+                        Text(AppConstants.Brand.displayName)
+                            .font(.subheadline)
+                            .foregroundStyle(DSColor.subtitle)
+                            .multilineTextAlignment(.center)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 28)
-                    .padding(.bottom, 20)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, DSSpacing.md)
+                    .textCase(nil)
+                }
+
+                Section {
+                    DSInputField(
+                        title: localizedString("login.account"),
+                        placeholder: localizedString("login.accountPlaceholder"),
+                        text: $viewModel.username,
+                        accessibilityIdentifier: "login.username",
+                        textContentType: .username
+                    )
+
+                    DSInputField(
+                        title: localizedString("login.password"),
+                        placeholder: localizedString("login.passwordPlaceholder"),
+                        text: $viewModel.password,
+                        isSecureEntry: $viewModel.isPasswordSecure,
+                        accessibilityIdentifier: "login.password",
+                        textContentType: .password
+                    )
+                } header: {
+                    Text(LocalizedStringKey("login.account"))
+                }
+
+                if viewModel.requiresCampusCredentialConsent {
+                    Section {
+                        Toggle(isOn: $viewModel.campusCredentialConsentChecked) {
+                            Text(localizedString("login.campusCredentialConsentText"))
+                                .font(.footnote)
+                                .foregroundStyle(DSColor.title)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .tint(DSColor.primary)
+                        .disabled(viewModel.isLoading)
+                        .accessibilityIdentifier("login.campusCredentialConsent")
+                    }
+                }
+
+                if let errorMessage = viewModel.errorMessage {
+                    Section {
+                        Label(errorMessage, systemImage: "exclamationmark.circle")
+                            .font(.footnote)
+                            .foregroundStyle(DSColor.danger)
+                    }
+                }
+
+                Section {
+                    DSButton(
+                        title: localizedString("login.submit"),
+                        variant: .primary,
+                        isLoading: viewModel.isLoading,
+                        isDisabled: !viewModel.canSubmit,
+                        accessibilityIdentifier: "login.submit"
+                    ) {
+                        Task {
+                            await viewModel.login()
+                        }
+                    }
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowBackground(Color.clear)
+
+                    if viewModel.shouldShowMockHint {
+                        Text(localizedString("login.mockCredentialsHint"))
+                            .font(.caption)
+                            .foregroundStyle(DSColor.tertiaryText)
+                    }
+                }
+
+                Section {
+                    Text(LocalizedStringKey("login.privacyNote"))
+                        .font(.footnote)
+                        .foregroundStyle(DSColor.tertiaryText)
+                }
+
+                if environment.isDebug {
+                    Section {
+                        Toggle(isOn: Binding(
+                            get: { preferences.useMockData },
+                            set: { newValue in
+                                preferences.setUseMockData(newValue)
+                                environment.updateDataSourceMode(newValue ? .mock : .remote)
+                            }
+                        )) {
+                            Text(LocalizedStringKey("settings.useMockData"))
+                        }
+                        .tint(DSColor.primary)
+                        .accessibilityIdentifier("login.mock.toggle")
+
+                        if preferences.useMockData {
+                            Text(localizedString("login.mockCredentialsHint"))
+                                .font(.caption)
+                                .foregroundStyle(DSColor.subtitle)
+                                .accessibilityIdentifier("login.mock.hint")
+                        }
+                    }
                 }
             }
+            .dsListBackground()
+            .scrollDismissesKeyboard(.interactively)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     languageMenuButton
@@ -55,147 +158,8 @@ struct LoginView: View {
             }
         } label: {
             Image(systemName: "globe")
-                .font(.body)
-                .foregroundStyle(DSColor.subtitle)
         }
-    }
-
-    private var header: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "graduationcap.circle.fill")
-                .font(.largeTitle)
-                .foregroundStyle(DSColor.primary)
-
-            Text(AppConstants.Brand.shortDisplayName)
-                .font(.largeTitle.weight(.bold))
-                .foregroundStyle(DSColor.title)
-
-            Text(AppConstants.Brand.displayName)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, alignment: .center)
-        .multilineTextAlignment(.center)
-        .padding(.top, 20)
-    }
-
-    private var form: some View {
-        DSCard {
-            VStack(spacing: 16) {
-                DSInputField(
-                    title: localizedString("login.account"),
-                    placeholder: localizedString("login.accountPlaceholder"),
-                    text: $viewModel.username,
-                    accessibilityIdentifier: "login.username",
-                    textContentType: .username
-                )
-
-                DSInputField(
-                    title: localizedString("login.password"),
-                    placeholder: localizedString("login.passwordPlaceholder"),
-                    text: $viewModel.password,
-                    isSecureEntry: $viewModel.isPasswordSecure,
-                    accessibilityIdentifier: "login.password",
-                    textContentType: .password
-                )
-
-                if viewModel.requiresCampusCredentialConsent {
-                    campusCredentialConsentToggle
-                }
-
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(DSColor.danger)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                DSButton(
-                    title: localizedString("login.submit"),
-                    icon: "arrow.right.circle.fill",
-                    variant: .primary,
-                    isLoading: viewModel.isLoading,
-                    isDisabled: !viewModel.canSubmit,
-                    accessibilityIdentifier: "login.submit"
-                ) {
-                    Task {
-                        await viewModel.login()
-                    }
-                }
-
-                if viewModel.shouldShowMockHint {
-                    Text(localizedString("login.mockCredentialsHint"))
-                        .font(.caption)
-                        .foregroundStyle(DSColor.subtitle)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-            }
-        }
-    }
-
-    private var campusCredentialConsentToggle: some View {
-        Button {
-            guard !viewModel.isLoading else { return }
-            viewModel.campusCredentialConsentChecked.toggle()
-        } label: {
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: viewModel.campusCredentialConsentChecked ? "checkmark.square.fill" : "square")
-                    .font(.title3)
-                    .foregroundStyle(viewModel.campusCredentialConsentChecked ? DSColor.primary : DSColor.subtitle)
-
-                Text(localizedString("login.campusCredentialConsentText"))
-                    .font(.footnote)
-                    .foregroundStyle(DSColor.title)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .disabled(viewModel.isLoading)
-        .accessibilityIdentifier("login.campusCredentialConsent")
-    }
-
-    private var privacyNote: some View {
-        Text(LocalizedStringKey("login.privacyNote"))
-            .font(.footnote)
-            .foregroundStyle(DSColor.subtitle)
-            .lineSpacing(4)
-            .padding(.horizontal, 4)
-    }
-
-    @ViewBuilder
-    private var devPanel: some View {
-        // Mock toggle (debug builds only)
-        if environment.isDebug {
-            DSCard {
-                VStack(spacing: 8) {
-                    Toggle(isOn: Binding(
-                        get: { preferences.useMockData },
-                        set: { newValue in
-                            preferences.setUseMockData(newValue)
-                            environment.updateDataSourceMode(newValue ? .mock : .remote)
-                        }
-                    )) {
-                        Text(LocalizedStringKey("settings.useMockData"))
-                            .font(.subheadline)
-                            .foregroundStyle(DSColor.title)
-                    }
-                    .accessibilityIdentifier("login.mock.toggle")
-
-                    if preferences.useMockData {
-                        Text(localizedString("login.mockCredentialsHint"))
-                            .font(.caption)
-                            .foregroundStyle(DSColor.subtitle)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .accessibilityIdentifier("login.mock.hint")
-                    }
-                }
-            }
-        }
+        .accessibilityLabel(Text(LocalizedStringKey("appearance.language.label")))
     }
 }
 

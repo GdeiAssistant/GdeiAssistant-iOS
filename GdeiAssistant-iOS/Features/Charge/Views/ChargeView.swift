@@ -21,7 +21,7 @@ struct ChargeView: View {
 
     private var chargeForm: some View {
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(spacing: DSSpacing.md) {
                 overviewCard
                 if let order = viewModel.latestOrder {
                     chargeOrderStatusCard(order)
@@ -31,15 +31,16 @@ struct ChargeView: View {
                 if let error = viewModel.errorMessage {
                     Text(error)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(DSColor.danger)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                 }
                 submitButton
                 recentOrdersSection
             }
-            .padding()
+            .padding(DSSpacing.md)
         }
+        .dsScreenBackground()
         .refreshable { viewModel.refresh() }
         .overlay {
             if viewModel.isLoading && viewModel.cardInfo == nil {
@@ -51,13 +52,15 @@ struct ChargeView: View {
     private var overviewCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(viewModel.cardInfo?.ownerName ?? NSLocalizedString("charge.fallbackUser", comment: ""))
-                .font(.caption)
+                .font(.caption.weight(.medium))
+                .foregroundStyle(DSColor.primary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(.blue.opacity(0.1), in: Capsule())
+                .background(DSColor.primarySoft, in: Capsule())
 
             Text(NSLocalizedString("charge.subtitle", comment: ""))
                 .font(.title2.bold())
+                .foregroundStyle(DSColor.title)
 
             HStack(spacing: 12) {
                 metricCard(label: NSLocalizedString("charge.currentBalance", comment: ""), value: viewModel.balanceText)
@@ -68,74 +71,77 @@ struct ChargeView: View {
             }
         }
         .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private func metricCard(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(label).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(.headline)
+            Text(label).font(.caption).foregroundStyle(DSColor.subtitle)
+            Text(value).font(.headline).monospacedDigit().foregroundStyle(DSColor.title)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(DSColor.fieldBackground, in: DSRadius.controlShape)
     }
 
     private var amountSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(NSLocalizedString("charge.inputTitle", comment: "")).font(.headline)
-            Text(NSLocalizedString("charge.quickAmount", comment: "")).font(.caption).foregroundStyle(.secondary)
+            Text(NSLocalizedString("charge.quickAmount", comment: "")).font(.caption).foregroundStyle(DSColor.subtitle)
 
             HStack(spacing: 10) {
                 ForEach(["20", "50", "100", "200"], id: \.self) { preset in
+                    let isSelected = viewModel.amount == preset
                     Button {
                         viewModel.amount = preset
                     } label: {
                         Text(preset)
                             .font(.subheadline.weight(.semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
+                            .monospacedDigit()
+                            .foregroundStyle(isSelected ? DSColor.primary : DSColor.title)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .background(isSelected ? DSColor.primarySoft : DSColor.fieldBackground, in: DSRadius.controlShape)
+                            .overlay(
+                                DSRadius.controlShape
+                                    .strokeBorder(isSelected ? DSColor.primary : DSColor.border, lineWidth: 1)
+                            )
                     }
-                    .buttonStyle(.bordered)
-                    .tint(viewModel.amount == preset ? .blue : .secondary)
+                    .buttonStyle(DSPressableButtonStyle())
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
 
             TextField(NSLocalizedString("charge.amountHint", comment: ""), text: $viewModel.amount)
                 .keyboardType(.numberPad)
-                .textFieldStyle(.roundedBorder)
+                .padding(.horizontal, 14)
+                .frame(minHeight: 48)
+                .dsFieldBackground()
         }
         .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private var passwordSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(NSLocalizedString("charge.passwordLabel", comment: "")).font(.caption).foregroundStyle(.secondary)
+            Text(NSLocalizedString("charge.passwordLabel", comment: "")).font(.caption).foregroundStyle(DSColor.subtitle)
             SecureField(NSLocalizedString("charge.passwordHint", comment: ""), text: $viewModel.password)
-                .textFieldStyle(.roundedBorder)
+                .padding(.horizontal, 14)
+                .frame(minHeight: 48)
+                .dsFieldBackground()
         }
         .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private var submitButton: some View {
-        Button {
+        DSButton(
+            title: viewModel.isSubmitting ? NSLocalizedString("charge.processing", comment: "") : NSLocalizedString("charge.submit", comment: ""),
+            icon: "creditcard",
+            isLoading: viewModel.isSubmitting,
+            isDisabled: !viewModel.canSubmit
+        ) {
             viewModel.submitCharge()
-        } label: {
-            HStack {
-                if viewModel.isSubmitting {
-                    ProgressView().tint(.white)
-                } else {
-                    Image(systemName: "creditcard")
-                }
-                Text(viewModel.isSubmitting ? NSLocalizedString("charge.processing", comment: "") : NSLocalizedString("charge.submit", comment: ""))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
         }
-        .buttonStyle(.borderedProminent)
-        .disabled(!viewModel.canSubmit)
     }
 
     private func chargeOrderStatusCard(_ order: ChargeOrder) -> some View {
@@ -149,14 +155,14 @@ struct ChargeView: View {
 
             Text(order.localizedStatusMessage)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DSColor.subtitle)
                 .fixedSize(horizontal: false, vertical: true)
 
             orderMetaRows(order)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private var recentOrdersSection: some View {
@@ -167,7 +173,7 @@ struct ChargeView: View {
                         .font(.headline)
                     Text(localizedString("charge.order.recentHint"))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(DSColor.subtitle)
                 }
                 Spacer()
                 Button {
@@ -187,11 +193,11 @@ struct ChargeView: View {
             } else if let error = viewModel.orderErrorMessage {
                 Text(error)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(DSColor.danger)
             } else if viewModel.recentOrders.isEmpty {
                 Text(localizedString("charge.order.empty"))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DSColor.subtitle)
             } else {
                 VStack(spacing: 10) {
                     ForEach(viewModel.recentOrders) { order in
@@ -202,7 +208,7 @@ struct ChargeView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .dsSurface()
     }
 
     private func chargeOrderRow(_ order: ChargeOrder) -> some View {
@@ -217,13 +223,13 @@ struct ChargeView: View {
 
             Text(order.localizedStatusMessage)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DSColor.subtitle)
                 .fixedSize(horizontal: false, vertical: true)
 
             orderMetaRows(order)
         }
         .padding(12)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(DSColor.fieldBackground, in: DSRadius.controlShape)
     }
 
     private func orderMetaRows(_ order: ChargeOrder) -> some View {
@@ -234,12 +240,12 @@ struct ChargeView: View {
                 Label(orderUpdatedText(order), systemImage: "clock")
             }
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(DSColor.subtitle)
 
             if let retryAfter = order.retryAfter, retryAfter > 0 {
                 Text(String(format: localizedString("charge.order.retryAfter"), retryAfter))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(DSColor.subtitle)
             }
         }
     }
@@ -275,15 +281,13 @@ struct ChargeView: View {
     private func statusTint(_ order: ChargeOrder) -> Color {
         switch order.normalizedStatus {
         case "PAYMENT_SESSION_CREATED":
-            return .blue
-        case "PROCESSING", "CREATED":
-            return .orange
+            return DSColor.primary
+        case "PROCESSING", "CREATED", "MANUAL_REVIEW", "UNKNOWN":
+            return DSColor.warning
         case "FAILED":
-            return .red
-        case "MANUAL_REVIEW", "UNKNOWN":
-            return .purple
+            return DSColor.danger
         default:
-            return .secondary
+            return DSColor.subtitle
         }
     }
 }

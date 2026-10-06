@@ -117,7 +117,7 @@ struct CETView: View {
                                     Spacer()
                                     Text(localizedString("cet.totalScore") + " \(record.totalScore)")
                                         .font(.subheadline.weight(.bold))
-                                        .foregroundStyle(record.passed ? DSColor.secondary : DSColor.danger)
+                                        .foregroundStyle(record.passed ? DSColor.primary : DSColor.danger)
                                 }
 
                                 Text("\(localizedString("cet.listening")) \(record.listeningScore)  \(localizedString("cet.reading")) \(record.readingScore)  \(localizedString("cet.writing")) \(record.writingScore)")
@@ -137,7 +137,7 @@ struct CETView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .refreshable {
             await viewModel.refreshCaptcha()
         }

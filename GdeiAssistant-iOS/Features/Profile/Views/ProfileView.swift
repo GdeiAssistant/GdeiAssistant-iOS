@@ -212,7 +212,7 @@ struct ProfileView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .refreshable {
             await viewModel.loadProfile()
         }
@@ -453,6 +453,7 @@ private struct ProfileFieldEditorSheet: View {
                     }
                 }
             }
+            .dsListBackground()
             .navigationTitle(field.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -607,6 +608,7 @@ private struct ProfileLocationPickerSheet: View {
                             }
                         }
                     }
+                    .dsListBackground()
                 }
             }
             .navigationTitle(title)

@@ -38,6 +38,7 @@ struct LoginRecordView: View {
                     }
                     .padding(.vertical, 4)
                 }
+                .dsListBackground()
                 .listStyle(.insetGrouped)
             }
         }

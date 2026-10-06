@@ -4,16 +4,16 @@ struct DSLoadingView: View {
     var text: String = localizedString("common.loading")
 
     var body: some View {
-        VStack(spacing: 12) {
+        ContentUnavailableView {
             ProgressView()
-                .progressViewStyle(.circular)
+                .controlSize(.large)
                 .tint(DSColor.primary)
-
+        } description: {
             Text(text)
                 .font(.subheadline)
                 .foregroundStyle(DSColor.subtitle)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
+        .accessibilityElement(children: .combine)
     }
 }

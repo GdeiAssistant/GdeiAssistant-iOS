@@ -28,79 +28,74 @@ struct GradeView: View {
     }
 
     private func content(_ report: GradeReport) -> some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                DSCard {
-                    Text(localizedString("grade.academicYear"))
-                        .font(.subheadline)
-                        .foregroundStyle(DSColor.subtitle)
-
-                    Picker(localizedString("grade.academicYear"), selection: yearBinding) {
-                        ForEach(viewModel.displayYearOptions) { option in
-                            Text(option.title).tag(option.id)
-                        }
+        List {
+            Section {
+                Picker(localizedString("grade.academicYear"), selection: yearBinding) {
+                    ForEach(viewModel.displayYearOptions) { option in
+                        Text(option.title).tag(option.id)
                     }
-                    .pickerStyle(.segmented)
-                    .accessibilityIdentifier("grade.yearPicker")
                 }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("grade.yearPicker")
 
-                DSCard {
-                    Text(localizedString("grade.semester"))
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-
-                    Picker(localizedString("grade.semester"), selection: $viewModel.selectedTermID) {
-                        ForEach(report.terms) { term in
-                            Text(term.title).tag(term.id)
-                        }
+                Picker(localizedString("grade.semester"), selection: $viewModel.selectedTermID) {
+                    ForEach(report.terms) { term in
+                        Text(term.title).tag(term.id)
                     }
-                    .pickerStyle(.segmented)
-                    .accessibilityIdentifier("grade.termPicker")
                 }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("grade.termPicker")
+            } header: {
+                Text(localizedString("grade.academicYear"))
+            }
 
-                if let term = viewModel.selectedTermReport {
-                    DSCard {
-                        Text(term.title)
-                            .font(.headline)
+            if let term = viewModel.selectedTermReport {
+                Section {
+                    LabeledContent(localizedString("grade.gpa")) {
+                        Text(String(format: "%.2f", term.gpa))
+                            .font(.body.weight(.semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(DSColor.primary)
+                    }
+                    LabeledContent(localizedString("grade.courseCount")) {
+                        Text("\(term.items.count)")
+                            .monospacedDigit()
                             .foregroundStyle(DSColor.title)
-                            .accessibilityIdentifier("grade.term.title")
+                    }
+                } header: {
+                    Text(term.title)
+                        .accessibilityIdentifier("grade.term.title")
+                }
 
-                        HStack {
-                            summaryItem(title: localizedString("grade.gpa"), value: String(format: "%.2f", term.gpa))
-                            summaryItem(title: localizedString("grade.courseCount"), value: "\(term.items.count)")
-                        }
-
-                        if term.items.isEmpty {
-                            Text(localizedString("grade.noGrade"))
-                                .font(.subheadline)
-                                .foregroundStyle(DSColor.subtitle)
-                        } else {
-                            ForEach(term.items) { item in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(item.courseName)
-                                            .font(.subheadline.weight(.semibold))
-                                            .foregroundStyle(DSColor.title)
-                                            .accessibilityIdentifier("grade.course.\(item.id)")
-                                        Spacer()
-                                        Text(String(format: "%.1f", item.score))
-                                            .font(.subheadline.weight(.bold))
-                                            .foregroundStyle(DSColor.primary)
-                                    }
-
+                Section {
+                    if term.items.isEmpty {
+                        Text(localizedString("grade.noGrade"))
+                            .foregroundStyle(DSColor.subtitle)
+                    } else {
+                        ForEach(term.items) { item in
+                            HStack(alignment: .firstTextBaseline) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(item.courseName)
+                                        .foregroundStyle(DSColor.title)
+                                        .accessibilityIdentifier("grade.course.\(item.id)")
                                     Text("\(item.courseType) · \(item.credit, specifier: "%.1f")\(localizedString("grade.credit"))")
-                                        .font(.caption)
+                                        .font(.footnote)
                                         .foregroundStyle(DSColor.subtitle)
                                 }
-                                .padding(.vertical, 6)
+                                Spacer(minLength: DSSpacing.xs)
+                                Text(String(format: "%.1f", item.score))
+                                    .font(.body.weight(.semibold))
+                                    .monospacedDigit()
+                                    .foregroundStyle(item.score < 60 ? DSColor.danger : DSColor.title)
                             }
+                            .accessibilityElement(children: .combine)
                         }
                     }
                 }
             }
-            .padding(16)
         }
-        .background(DSColor.background)
+        .listStyle(.insetGrouped)
+        .dsListBackground()
         .refreshable {
             await viewModel.loadGrades(academicYear: report.selectedYear)
         }
@@ -113,18 +108,6 @@ struct GradeView: View {
                 Task { await viewModel.changeYear(newValue) }
             }
         )
-    }
-
-    private func summaryItem(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(DSColor.subtitle)
-            Text(value)
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(DSColor.title)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

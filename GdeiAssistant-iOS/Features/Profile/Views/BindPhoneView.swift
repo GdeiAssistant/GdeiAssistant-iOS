@@ -88,7 +88,7 @@ struct BindPhoneView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(localizedString("bindPhone.title"))
         .task {
             await viewModel.load()
@@ -187,6 +187,7 @@ private struct BindPhoneAreaCodePickerView: View {
             }
             .buttonStyle(.plain)
         }
+        .dsListBackground()
         .searchable(text: $searchText)
         .navigationTitle(localizedString("bindPhone.intlCode"))
         .toolbar {

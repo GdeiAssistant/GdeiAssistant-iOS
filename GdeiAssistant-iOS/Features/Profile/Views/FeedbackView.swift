@@ -26,8 +26,8 @@ struct FeedbackView: View {
                         TextEditor(text: $viewModel.content)
                             .frame(minHeight: 120)
                             .padding(10)
-                            .background(Color(.tertiarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .background(DSColor.fieldBackground)
+                            .clipShape(DSRadius.controlShape)
                     }
 
                     DSInputField(title: localizedString("feedback.contact"), placeholder: localizedString("feedback.contactPlaceholder"), text: $viewModel.contact)
@@ -50,7 +50,7 @@ struct FeedbackView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(localizedString("feedback.title"))
         .alert(localizedString("common.notice"), isPresented: Binding(
             get: {

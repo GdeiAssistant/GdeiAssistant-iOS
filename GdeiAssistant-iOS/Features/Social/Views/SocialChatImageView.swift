@@ -28,8 +28,8 @@ struct SocialChatImageView: View {
                     )
             } else {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(DSColor.cardBackground)
+                    DSRadius.controlShape
+                        .fill(DSColor.surface)
                     if failed {
                         Button(localizedString("common.retry")) { attempt += 1 }
                             .frame(minWidth: 44, minHeight: 44)
@@ -41,7 +41,7 @@ struct SocialChatImageView: View {
         }
         .frame(width: maxWidth, height: maxHeight)
         .clipped()
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(DSRadius.controlShape)
         .task(id: cacheKey) {
             await reload()
         }

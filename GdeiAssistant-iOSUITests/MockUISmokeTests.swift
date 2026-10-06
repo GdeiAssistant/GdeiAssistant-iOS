@@ -8,6 +8,8 @@ final class MockUISmokeTests: XCTestCase {
         case grade
         case conversations
         case profile
+        case schedule
+        case community
     }
 
     private var appUnderTest: XCUIApplication?
@@ -22,6 +24,30 @@ final class MockUISmokeTests: XCTestCase {
             attachHierarchy(app, name: "failure-accessibility-tree")
         }
         appUnderTest = nil
+    }
+
+    func testDesignPreviewScreenshotsInLightAndDark() throws {
+        let screens: [(name: String, screen: InitialScreen?, readyElement: (XCUIApplication) -> XCUIElement)] = [
+            ("login", nil, { $0.textFields["login.username"] }),
+            ("home", .home, { $0.buttons["home.entry.grade"] }),
+            ("schedule", .schedule, { $0.navigationBars.firstMatch }),
+            ("grade", .grade, { $0.staticTexts["grade.course.grade_2526_01"] }),
+            ("community", .community, { $0.navigationBars.firstMatch })
+        ]
+
+        for appearance in ["light", "dark"] {
+            for entry in screens {
+                let app = launchApp(
+                    authenticated: entry.screen != nil,
+                    initialScreen: entry.screen,
+                    appearance: appearance
+                )
+                XCTAssertTrue(entry.readyElement(app).waitForExistence(timeout: 10), "\(entry.name) not ready")
+                waitForIdleContent()
+                attachScreenshot(app, name: "design-preview-\(entry.name)-\(appearance)")
+                app.terminate()
+            }
+        }
     }
 
     func testMockLoginShowsHomeEntries() throws {
@@ -298,6 +324,11 @@ final class MockUISmokeTests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed)
     }
 
+    private func waitForIdleContent() {
+        let settle = XCTestExpectation(description: "content settles")
+        _ = XCTWaiter.wait(for: [settle], timeout: 2)
+    }
+
     private func attachScreenshot(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name
@@ -317,12 +348,16 @@ final class MockUISmokeTests: XCTestCase {
         authenticated: Bool = false,
         initialScreen: InitialScreen? = nil,
         failFirstImageSend: Bool = false,
-        locale: String = "zh-Hans"
+        locale: String = "zh-Hans",
+        appearance: String? = nil
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["GDEIASSISTANT_RUNNING_TESTS"] = "1"
         app.launchEnvironment["GDEI_UI_USE_MOCK"] = "1"
         app.launchEnvironment["GDEI_UI_LOCALE"] = locale
+        if let appearance {
+            app.launchEnvironment["GDEI_UI_APPEARANCE"] = appearance
+        }
         if failFirstImageSend {
             app.launchEnvironment["GDEI_UI_FAIL_FIRST_CHAT_IMAGE"] = "1"
         }

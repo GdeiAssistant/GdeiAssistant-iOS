@@ -35,7 +35,7 @@ struct LibraryView: View {
             .tint(DSColor.primary)
         }
         .padding(16)
-        .background(DSColor.background)
+        .dsScreenBackground()
     }
 
     @ViewBuilder
@@ -63,7 +63,7 @@ struct LibraryView: View {
                                 .foregroundStyle(DSColor.subtitle)
                             Text(localizedString("library.availableCount") + "\(book.availableCount)")
                                 .font(.caption)
-                                .foregroundStyle(book.availableCount > 0 ? DSColor.secondary : DSColor.danger)
+                                .foregroundStyle(book.availableCount > 0 ? DSColor.primary : DSColor.danger)
                         }
                         .padding(.vertical, 4)
                     }
@@ -89,7 +89,7 @@ struct LibraryView: View {
                 }
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity)
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
     }
@@ -131,7 +131,7 @@ struct LibraryBookDetailView: View {
                             .foregroundStyle(DSColor.subtitle)
                         Text(localizedString("library.availableCount") + "\(detail.availableCount)")
                             .font(.subheadline)
-                            .foregroundStyle(detail.availableCount > 0 ? DSColor.secondary : DSColor.danger)
+                            .foregroundStyle(detail.availableCount > 0 ? DSColor.primary : DSColor.danger)
 
                         Divider()
                         Text(detail.summary)
@@ -141,7 +141,7 @@ struct LibraryBookDetailView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
         .navigationTitle(LocalizedStringKey("library.detail.title"))
@@ -224,7 +224,7 @@ struct MyBorrowView: View {
                                 HStack {
                                     Text(record.status)
                                         .font(.caption)
-                                        .foregroundStyle(DSColor.secondary)
+                                        .foregroundStyle(DSColor.subtitle)
 
                                     Spacer()
 
@@ -239,6 +239,7 @@ struct MyBorrowView: View {
                 }
             }
         }
+        .dsListBackground()
         .listStyle(.insetGrouped)
         .navigationTitle(LocalizedStringKey("library.myBorrow"))
     }
@@ -289,7 +290,7 @@ struct BorrowRecordDetailView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
         .navigationTitle(LocalizedStringKey("library.renew.detailTitle"))
         .sheet(isPresented: $showPasswordSheet, onDismiss: {
             password = ""

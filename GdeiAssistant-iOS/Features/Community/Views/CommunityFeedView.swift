@@ -9,49 +9,22 @@ struct CommunityFeedView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            communityShortcutBar
-
-            Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
-                ForEach(CommunityFeedSort.allCases) { sort in
-                    Text(sort.title).tag(sort)
+        Group {
+            if viewModel.isLoading && viewModel.posts.isEmpty {
+                DSLoadingView(text: localizedString("community.feed.loading"))
+            } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
+                DSErrorStateView(message: errorMessage) {
+                    Task { await viewModel.loadPosts() }
                 }
+            } else {
+                feedList
             }
-            .pickerStyle(.segmented)
-            .padding([.horizontal, .top], 16)
-
-            contentView
         }
         .background(DSColor.background)
         .navigationTitle(AppDestination.community.title)
+        .navigationBarTitleDisplayMode(.large)
         .task {
             await viewModel.loadIfNeeded()
-        }
-    }
-
-    private var communityShortcutBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(HomeEntryConfig.campusLife.map(\.destination), id: \.self) { destination in
-                    NavigationLink {
-                        destinationView(for: destination)
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: destination.icon)
-                                .font(.subheadline)
-                            Text(destination.title)
-                                .font(.subheadline.weight(.medium))
-                        }
-                        .foregroundStyle(DSColor.title)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(DSColor.cardBackground)
-                        .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding([.horizontal, .top], 16)
         }
     }
 
@@ -66,109 +39,99 @@ struct CommunityFeedView: View {
         )
     }
 
-    @ViewBuilder
-    private var contentView: some View {
-        if viewModel.isLoading && viewModel.posts.isEmpty {
-            DSLoadingView(text: localizedString("community.feed.loading"))
-        } else if let errorMessage = viewModel.errorMessage, viewModel.posts.isEmpty {
-            DSErrorStateView(message: errorMessage) {
-                Task { await viewModel.loadPosts() }
-            }
-        } else if viewModel.posts.isEmpty {
-            DSEmptyStateView(
-                icon: "bubble.left.and.bubble.right",
-                title: localizedString("community.feed.emptyTitle"),
-                message: localizedString("community.feed.emptyMessage")
-            )
-        } else {
-            ScrollView {
-                LazyVStack(spacing: 12) {
-                    ForEach(viewModel.posts) { post in
-                        postCard(post)
+    private var feedList: some View {
+        List {
+            Section {
+                Picker(LocalizedStringKey("community.sort"), selection: sortBinding) {
+                    ForEach(CommunityFeedSort.allCases) { sort in
+                        Text(sort.title).tag(sort)
                     }
                 }
-                .padding(16)
+                .pickerStyle(.segmented)
             }
-            .refreshable {
-                await viewModel.refresh()
+
+            Section {
+                ForEach(HomeEntryConfig.campusLife.map(\.destination), id: \.self) { destination in
+                    NavigationLink {
+                        destinationView(for: destination)
+                    } label: {
+                        Label(destination.title, systemImage: destination.icon)
+                    }
+                }
+            } header: {
+                Text(localizedString("home.campusLife"))
             }
+
+            if viewModel.posts.isEmpty {
+                Section {
+                    DSEmptyStateView(
+                        icon: "bubble.left.and.bubble.right",
+                        title: localizedString("community.feed.emptyTitle"),
+                        message: localizedString("community.feed.emptyMessage")
+                    )
+                    .listRowBackground(Color.clear)
+                }
+            } else {
+                Section {
+                    ForEach(viewModel.posts) { post in
+                        NavigationLink {
+                            PostDetailView(viewModel: container.makePostDetailViewModel(postID: post.id))
+                        } label: {
+                            postRow(post)
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .dsListBackground()
+        .refreshable {
+            await viewModel.refresh()
         }
     }
 
-    private func postCard(_ post: CommunityPost) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            NavigationLink {
-                PostDetailView(viewModel: container.makePostDetailViewModel(postID: post.id))
-            } label: {
-                DSCard {
-                    HStack(alignment: .top) {
-                        Image(systemName: post.isAnonymous ? "person.crop.circle.badge.questionmark" : "person.crop.circle")
-                            .font(.title2)
-                            .foregroundStyle(DSColor.primary)
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            if !post.isAnonymous, let authorId = post.authorId {
-                                NavigationLink {
-                                    SocialPublicProfileRoute(userID: authorId)
-                                } label: {
-                                    Text(post.authorName)
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(DSColor.primary)
-                                }
-                                .buttonStyle(.plain)
-                            } else {
-                                Text(post.isAnonymous ? LocalizedStringKey("community.anonymousStudent") : LocalizedStringKey(post.authorName))
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(DSColor.title)
-                            }
-
-                            Text(post.createdAt)
-                                .font(.caption)
-                                .foregroundStyle(DSColor.subtitle)
-                        }
-
-                        Spacer()
-                    }
-
-                    Text(post.title)
-                        .font(.headline)
-                        .foregroundStyle(DSColor.title)
-
-                    Text(post.summary)
-                        .font(.subheadline)
-                        .foregroundStyle(DSColor.subtitle)
-                        .lineLimit(3)
-
-                    HStack(spacing: 16) {
-                        Label("\(post.likeCount)", systemImage: "hand.thumbsup")
-                        Label("\(post.commentCount)", systemImage: "bubble.left")
-                    }
+    private func postRow(_ post: CommunityPost) -> some View {
+        VStack(alignment: .leading, spacing: DSSpacing.xs) {
+            HStack(spacing: DSSpacing.xs) {
+                Image(systemName: post.isAnonymous ? "person.crop.circle.badge.questionmark" : "person.crop.circle.fill")
+                    .foregroundStyle(DSColor.primary)
+                    .accessibilityHidden(true)
+                Text(post.isAnonymous ? localizedString("community.anonymousStudent") : post.authorName)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(DSColor.title)
+                Spacer()
+                Text(post.createdAt)
                     .font(.caption)
-                    .foregroundStyle(DSColor.subtitle)
-                }
+                    .monospacedDigit()
+                    .foregroundStyle(DSColor.tertiaryText)
             }
-            .buttonStyle(.plain)
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(post.tags, id: \.self) { tag in
-                        NavigationLink {
-                            TopicFeedView(viewModel: container.makeTopicFeedViewModel(topicID: tag))
-                        } label: {
-                            Text(tag)
-                                .font(.caption)
-                                .foregroundStyle(DSColor.primary)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(DSColor.primary.opacity(0.12))
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal, 4)
+            Text(post.title)
+                .font(.headline)
+                .foregroundStyle(DSColor.title)
+
+            Text(post.summary)
+                .font(.subheadline)
+                .foregroundStyle(DSColor.subtitle)
+                .lineLimit(3)
+
+            HStack(spacing: DSSpacing.md) {
+                Label("\(post.likeCount)", systemImage: "hand.thumbsup")
+                Label("\(post.commentCount)", systemImage: "bubble.left")
+            }
+            .font(.caption)
+            .monospacedDigit()
+            .foregroundStyle(DSColor.tertiaryText)
+
+            if !post.tags.isEmpty {
+                Text(post.tags.joined(separator: " · "))
+                    .font(.caption)
+                    .foregroundStyle(DSColor.primary)
+                    .lineLimit(1)
             }
         }
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
     }
 
     @ViewBuilder

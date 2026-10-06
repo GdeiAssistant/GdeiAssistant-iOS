@@ -166,10 +166,10 @@ struct MarketplaceView: View {
         Button(action: action) {
             Text(title)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(isSelected ? Color.white : DSColor.primary)
+                .foregroundStyle(isSelected ? DSColor.onPrimary : DSColor.primary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background(isSelected ? DSColor.primary : DSColor.primary.opacity(0.12))
+                .background(isSelected ? DSColor.primary : DSColor.primarySoft)
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -350,7 +350,7 @@ private struct MarketplaceProfileSummaryView: View {
             }
             .padding(16)
         }
-        .background(DSColor.background)
+        .dsScreenBackground()
     }
 
     private var currentItems: [MarketplaceItem] {
@@ -374,20 +374,17 @@ private struct MarketplaceProfileHeaderView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(summary.nickname)
                     .font(.title3.weight(.bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(DSColor.title)
                 Text(summary.introduction)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.92))
+                    .foregroundStyle(DSColor.subtitle)
                     .lineLimit(2)
             }
             Spacer()
         }
-        .padding(18)
+        .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(red: 0.27, green: 0.76, blue: 0.65))
-        )
+        .background(DSColor.primarySoft, in: DSRadius.cardShape)
     }
 }
 
@@ -415,8 +412,8 @@ private struct MarketplaceProfileTabSelector: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.surface)
+        .clipShape(DSRadius.cardShape)
     }
 }
 
@@ -712,7 +709,7 @@ struct MarketplaceDetailView: View {
                     }
                     .padding(16)
                 }
-                .background(DSColor.background)
+                .dsScreenBackground()
             }
         }
         .navigationTitle(localizedString("marketplace.detailTitle"))
@@ -845,8 +842,8 @@ struct PublishMarketplaceView: View {
                                         .font(.caption)
                                 }
                                 .frame(width: 92, height: 92)
-                                .background(Color(.tertiarySystemGroupedBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .background(DSColor.fieldBackground)
+                                .clipShape(DSRadius.controlShape)
                             }
                         }
                     }
@@ -898,6 +895,7 @@ struct PublishMarketplaceView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("marketplace.publishTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -981,7 +979,7 @@ struct PublishMarketplaceView: View {
                     .scaledToFit()
             } else {
                 Rectangle()
-                    .fill(Color(.tertiarySystemGroupedBackground))
+                    .fill(DSColor.fieldBackground)
                     .overlay {
                         Image(systemName: "photo")
                             .foregroundStyle(DSColor.subtitle)
@@ -989,8 +987,8 @@ struct PublishMarketplaceView: View {
             }
         }
         .frame(width: 92, height: 92)
-        .background(Color(.tertiarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(DSColor.fieldBackground)
+        .clipShape(DSRadius.controlShape)
     }
 }
 
@@ -1046,6 +1044,7 @@ private struct EditMarketplaceView: View {
                 }
             }
         }
+        .dsListBackground()
         .navigationTitle(localizedString("marketplace.editTitle"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
