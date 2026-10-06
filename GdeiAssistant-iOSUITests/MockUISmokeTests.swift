@@ -19,7 +19,8 @@ final class MockUISmokeTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        if let app = appUnderTest, let run = testRun, !run.hasSucceeded {
+        // A terminated app cannot provide screenshot data; only capture a live failure screen.
+        if let app = appUnderTest, app.state != .notRunning, let run = testRun, !run.hasSucceeded {
             attachScreenshot(app, name: "failure-screen")
             attachHierarchy(app, name: "failure-accessibility-tree")
         }
@@ -32,7 +33,8 @@ final class MockUISmokeTests: XCTestCase {
             ("home", .home, { $0.buttons["home.entry.grade"] }),
             ("schedule", .schedule, { $0.navigationBars.firstMatch }),
             ("grade", .grade, { $0.staticTexts["grade.course.grade_2526_01"] }),
-            ("community", .community, { $0.navigationBars.firstMatch })
+            ("community", .community, { $0.navigationBars.firstMatch }),
+            ("profile", .profile, { $0.buttons["profile.stats.following"] })
         ]
 
         for appearance in ["light", "dark"] {
