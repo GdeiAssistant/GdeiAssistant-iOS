@@ -1778,6 +1778,7 @@
 "social.search.title" = "搜索用户";
 "social.search.placeholder" = "按昵称或公开 ID 搜索";
 "social.search.empty" = "未找到匹配用户";
+"social.search.emptyHint" = "换个关键词试试";
 "social.search.failed" = "搜索用户失败";
 "social.profile.title" = "用户主页";
 "social.profile.loading" = "正在加载主页...";
@@ -1790,6 +1791,7 @@
 "social.relationship.none" = "未关注";
 "social.relationship.followedBy" = "关注了我";
 "social.list.empty" = "暂无列表内容";
+"social.list.emptyHint" = "这里还没有任何用户";
 "social.list.loadFailed" = "加载关系列表失败";
 "social.blockList.title" = "黑名单";
 "social.blockList.empty" = "暂无拉黑用户";
@@ -1848,3 +1850,6 @@
 "social.error.invalidRequest" = "请求无效";
 "social.error.clientMessageConflict" = "消息冲突，请刷新后重试";
 "social.error.rateLimited" = "操作过于频繁，请稍后再试";
+
+"app.debug.mockCredentialsHint" = "Mock 账号：gdeiassistant  密码：gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "启动超时，请重试或重新登录";

@@ -87,13 +87,14 @@ private enum AppBuildSettings {
 
 enum AppConstants {
     enum Brand {
+        // 品牌名为专有名词（广东第二师范学院校名），保持原文不做本地化
         nonisolated static let displayName = "广东第二师范学院校园助手系统"
         nonisolated static let shortDisplayName = "校园助手系统"
     }
 
     enum Debug {
-        nonisolated static let mockCredentialsHint = "Mock 账号：gdeiassistant  密码：gdeiassistant"
-        nonisolated static let bootstrapTimeoutMessage = "启动超时，请重试或重新登录"
+        nonisolated static var mockCredentialsHint: String { localizedString("app.debug.mockCredentialsHint") }
+        nonisolated static var bootstrapTimeoutMessage: String { localizedString("app.debug.bootstrapTimeoutMessage") }
     }
 
     enum Delivery {

@@ -1778,6 +1778,7 @@
 "social.search.title" = "ユーザー検索";
 "social.search.placeholder" = "ニックネームまたは公開IDで検索";
 "social.search.empty" = "一致するユーザーがいません";
+"social.search.emptyHint" = "キーワードを変えてみてください";
 "social.search.failed" = "ユーザー検索に失敗しました";
 "social.profile.title" = "ユーザーページ";
 "social.profile.loading" = "プロフィールを読み込み中...";
@@ -1790,6 +1791,7 @@
 "social.relationship.none" = "未フォロー";
 "social.relationship.followedBy" = "フォローされています";
 "social.list.empty" = "リストは空です";
+"social.list.emptyHint" = "まだユーザーがいません";
 "social.list.loadFailed" = "リストの読み込みに失敗しました";
 "social.blockList.title" = "ブロックリスト";
 "social.blockList.empty" = "ブロック中のユーザーはいません";
@@ -1848,3 +1850,6 @@
 "social.error.invalidRequest" = "無効なリクエストです";
 "social.error.clientMessageConflict" = "メッセージが競合しました。更新して再試行してください";
 "social.error.rateLimited" = "操作が多すぎます。しばらくしてから再試行してください";
+
+"app.debug.mockCredentialsHint" = "Mock アカウント：gdeiassistant  パスワード：gdeiassistant";
+"app.debug.bootstrapTimeoutMessage" = "起動がタイムアウトしました。再試行するか再度ログインしてください";
