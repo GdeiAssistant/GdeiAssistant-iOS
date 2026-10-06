@@ -194,7 +194,6 @@
 "schedule.noCourses" = "今天没有课程安排";
 "schedule.weeklyGrid" = "周课表";
 "schedule.fullList" = "完整课程列表";
-"schedule.fullListHint" = "按星期展开，长课程名、地点和教师会完整显示。";
 "schedule.selectBackground" = "选择背景图";
 "schedule.changeBackground" = "更换背景图";
 "schedule.clearBackground" = "清除背景图";
@@ -367,7 +366,7 @@
 "cet.mapper.pendingQuery" = "待查询";
 "cet.mapper.ticketNotSaved" = "未保存准考证号";
 "cet.mapper.captchaRequired" = "需验证码后查询";
-"cet.mapper.apiNotAvailable" = "后端接口暂未提供";
+"cet.mapper.apiNotAvailable" = "暂无";
 "cet.mapper.latestResult" = "最近一次查询结果";
 "cet.mapper.latestQuery" = "最近一次查询";
 "cet.mapper.unknownLevel" = "未知级别";
@@ -539,7 +538,6 @@
 "express.detail.likes" = "点赞";
 "express.detail.comments" = "评论";
 "express.detail.correctGuess" = "猜中";
-"express.detail.guessHint" = "猜名字功能会实时刷新猜测次数与猜中次数。";
 "express.detail.realName" = "真实姓名：";
 "express.detail.liked" = "已点赞";
 "express.detail.like" = "点赞";
@@ -1041,7 +1039,6 @@
 "marketplace.contact" = "联系方式";
 "marketplace.qq" = "QQ 号";
 "marketplace.phoneOptional" = "手机号（选填）";
-"marketplace.qqHint" = "后端真实接口要求至少提供 QQ，手机号为补充联系方式。";
 "marketplace.submit" = "提交";
 "marketplace.notice" = "提示";
 "marketplace.understood" = "知道了";
@@ -1572,7 +1569,7 @@
 "marketplace.contactQQPrefix" = "QQ：";
 "marketplace.contactPhonePrefix" = "手机号：";
 "marketplace.itemNotFound" = "商品不存在";
-"marketplace.contactUnavailable" = "后端详情页未提供可展示联系方式";
+"marketplace.contactUnavailable" = "卖家暂未提供联系方式";
 "marketplace.mapper.other" = "其他";
 "marketplace.mapper.defaultType" = "闲置物品";
 "marketplace.mapper.noDescription" = "暂无详细说明";

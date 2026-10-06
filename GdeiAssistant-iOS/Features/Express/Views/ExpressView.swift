@@ -177,12 +177,6 @@ struct ExpressDetailView: View {
                                 .font(.body)
                                 .foregroundStyle(DSColor.title)
 
-                            if detail.post.canGuess {
-                                Text(LocalizedStringKey("express.detail.guessHint"))
-                                    .font(.footnote)
-                                    .foregroundStyle(DSColor.subtitle)
-                            }
-
                             if let realName = detail.realName, detail.post.canGuess {
                                 Text(localizedString("express.detail.realName") + realName)
                                     .font(.caption)

@@ -194,7 +194,6 @@
 "schedule.noCourses" = "今日の授業はありません";
 "schedule.weeklyGrid" = "週間時間割";
 "schedule.fullList" = "全授業リスト";
-"schedule.fullListHint" = "曜日ごとに表示し、長い科目名・場所・教員名も確認できます。";
 "schedule.selectBackground" = "背景画像を選択";
 "schedule.changeBackground" = "背景画像を変更";
 "schedule.clearBackground" = "背景画像を削除";
@@ -367,7 +366,7 @@
 "cet.mapper.pendingQuery" = "照会待ち";
 "cet.mapper.ticketNotSaved" = "受験票番号未保存";
 "cet.mapper.captchaRequired" = "キャプチャ入力後に照会";
-"cet.mapper.apiNotAvailable" = "サーバー未対応";
+"cet.mapper.apiNotAvailable" = "なし";
 "cet.mapper.latestResult" = "最新の照会結果";
 "cet.mapper.latestQuery" = "最新の照会";
 "cet.mapper.unknownLevel" = "不明なレベル";
@@ -539,7 +538,6 @@
 "express.detail.likes" = "いいね";
 "express.detail.comments" = "コメント";
 "express.detail.correctGuess" = "正解";
-"express.detail.guessHint" = "名前当て機能は推測回数と正解回数をリアルタイムで更新します。";
 "express.detail.realName" = "本名：";
 "express.detail.liked" = "いいね済み";
 "express.detail.like" = "いいね";
@@ -1041,7 +1039,6 @@
 "marketplace.contact" = "連絡先";
 "marketplace.qq" = "QQ番号";
 "marketplace.phoneOptional" = "電話番号（任意）";
-"marketplace.qqHint" = "QQは必須です。電話番号は任意です。";
 "marketplace.submit" = "投稿";
 "marketplace.notice" = "お知らせ";
 "marketplace.understood" = "了解";
@@ -1572,7 +1569,7 @@
 "marketplace.contactQQPrefix" = "QQ: ";
 "marketplace.contactPhonePrefix" = "電話: ";
 "marketplace.itemNotFound" = "商品が見つかりません";
-"marketplace.contactUnavailable" = "表示できる連絡先情報がありません";
+"marketplace.contactUnavailable" = "出品者の連絡先はまだ登録されていません";
 "marketplace.mapper.other" = "その他";
 "marketplace.mapper.defaultType" = "中古品";
 "marketplace.mapper.noDescription" = "詳細説明はありません";
