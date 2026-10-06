@@ -92,9 +92,9 @@ struct LoginView: View {
                             await viewModel.login()
                         }
                     }
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
-
+                } footer: {
                     if viewModel.shouldShowMockHint {
                         Text(localizedString("login.mockCredentialsHint"))
                             .font(.caption)
