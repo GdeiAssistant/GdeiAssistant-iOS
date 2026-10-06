@@ -194,7 +194,6 @@
 "schedule.noCourses" = "오늘 수업이 없습니다";
 "schedule.weeklyGrid" = "주간 시간표";
 "schedule.fullList" = "전체 수업 목록";
-"schedule.fullListHint" = "요일별로 펼쳐 긴 수업명, 장소와 교수 정보를 확인할 수 있습니다.";
 "schedule.selectBackground" = "배경 이미지 선택";
 "schedule.changeBackground" = "배경 이미지 변경";
 "schedule.clearBackground" = "배경 이미지 삭제";
@@ -367,7 +366,7 @@
 "cet.mapper.pendingQuery" = "조회 대기";
 "cet.mapper.ticketNotSaved" = "수험표 번호 미저장";
 "cet.mapper.captchaRequired" = "보안 문자 입력 후 조회";
-"cet.mapper.apiNotAvailable" = "서버 미지원";
+"cet.mapper.apiNotAvailable" = "없음";
 "cet.mapper.latestResult" = "최근 조회 결과";
 "cet.mapper.latestQuery" = "최근 조회";
 "cet.mapper.unknownLevel" = "알 수 없는 등급";
@@ -539,7 +538,6 @@
 "express.detail.likes" = "좋아요";
 "express.detail.comments" = "댓글";
 "express.detail.correctGuess" = "정답";
-"express.detail.guessHint" = "이름 맞히기 기능은 추측 횟수와 정답 횟수를 실시간으로 갱신합니다.";
 "express.detail.realName" = "실명: ";
 "express.detail.liked" = "좋아요 완료";
 "express.detail.like" = "좋아요";
@@ -1041,7 +1039,6 @@
 "marketplace.contact" = "연락처";
 "marketplace.qq" = "QQ 번호";
 "marketplace.phoneOptional" = "전화번호 (선택)";
-"marketplace.qqHint" = "QQ는 필수이며, 전화번호는 선택 사항입니다.";
 "marketplace.submit" = "제출";
 "marketplace.notice" = "알림";
 "marketplace.understood" = "확인";
@@ -1572,7 +1569,7 @@
 "marketplace.contactQQPrefix" = "QQ: ";
 "marketplace.contactPhonePrefix" = "전화: ";
 "marketplace.itemNotFound" = "상품을 찾을 수 없습니다";
-"marketplace.contactUnavailable" = "표시할 연락처 정보가 없습니다";
+"marketplace.contactUnavailable" = "판매자가 아직 연락처를 제공하지 않았습니다";
 "marketplace.mapper.other" = "기타";
 "marketplace.mapper.defaultType" = "중고 물품";
 "marketplace.mapper.noDescription" = "상세 설명이 없습니다";

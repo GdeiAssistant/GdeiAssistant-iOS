@@ -134,8 +134,6 @@ struct ScheduleView: View {
                         .foregroundStyle(DSColor.subtitle)
                 } header: {
                     Text(LocalizedStringKey("schedule.fullList"))
-                } footer: {
-                    Text(LocalizedStringKey("schedule.fullListHint"))
                 }
             } else {
                 ForEach(nonEmptyDays) { day in

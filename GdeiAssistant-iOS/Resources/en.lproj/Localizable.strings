@@ -194,7 +194,6 @@
 "schedule.noCourses" = "No courses today";
 "schedule.weeklyGrid" = "Weekly Schedule";
 "schedule.fullList" = "Full Course List";
-"schedule.fullListHint" = "Grouped by day, with long names, locations and teachers shown in full.";
 "schedule.selectBackground" = "Select Background";
 "schedule.changeBackground" = "Change Background";
 "schedule.clearBackground" = "Clear Background";
@@ -367,7 +366,7 @@
 "cet.mapper.pendingQuery" = "Pending Query";
 "cet.mapper.ticketNotSaved" = "Ticket number not saved";
 "cet.mapper.captchaRequired" = "Captcha required to query";
-"cet.mapper.apiNotAvailable" = "Not available from server";
+"cet.mapper.apiNotAvailable" = "Not available";
 "cet.mapper.latestResult" = "Latest query result";
 "cet.mapper.latestQuery" = "Latest query";
 "cet.mapper.unknownLevel" = "Unknown level";
@@ -539,7 +538,6 @@
 "express.detail.likes" = "Likes";
 "express.detail.comments" = "Comments";
 "express.detail.correctGuess" = "Correct";
-"express.detail.guessHint" = "Guess counts and correct guesses refresh in real time.";
 "express.detail.realName" = "Real name: ";
 "express.detail.liked" = "Liked";
 "express.detail.like" = "Like";
@@ -1041,7 +1039,6 @@
 "marketplace.contact" = "Contact";
 "marketplace.qq" = "QQ Number";
 "marketplace.phoneOptional" = "Phone (optional)";
-"marketplace.qqHint" = "QQ is required; phone is optional.";
 "marketplace.submit" = "Submit";
 "marketplace.notice" = "Notice";
 "marketplace.understood" = "Got it";
@@ -1572,7 +1569,7 @@
 "marketplace.contactQQPrefix" = "QQ: ";
 "marketplace.contactPhonePrefix" = "Phone: ";
 "marketplace.itemNotFound" = "Item not found";
-"marketplace.contactUnavailable" = "No contact info available";
+"marketplace.contactUnavailable" = "The seller hasn't shared contact info yet";
 "marketplace.mapper.other" = "Other";
 "marketplace.mapper.defaultType" = "Idle Item";
 "marketplace.mapper.noDescription" = "No detailed description";

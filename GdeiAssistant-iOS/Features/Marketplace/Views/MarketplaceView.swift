@@ -896,9 +896,6 @@ struct PublishMarketplaceView: View {
                     .keyboardType(.numberPad)
                 TextField(localizedString("marketplace.phoneOptional"), text: $publishViewModel.phone)
                     .keyboardType(.numberPad)
-                Text(localizedString("marketplace.qqHint"))
-                    .font(.caption)
-                    .foregroundStyle(DSColor.subtitle)
             } header: {
                 Text(localizedString("marketplace.contact"))
             }

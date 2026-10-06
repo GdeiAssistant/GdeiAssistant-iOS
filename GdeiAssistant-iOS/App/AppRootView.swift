@@ -117,11 +117,13 @@ struct AppRootView: View {
                     .font(.title3.weight(.bold))
                     .foregroundStyle(DSColor.title)
 
+                #if DEBUG
                 Text(environment.dataSourceMode == .mock
                      ? localizedString("startup.dataSource.mock")
                      : localizedString("startup.dataSource.remote"))
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
+                #endif
             }
 
             DSErrorStateView(message: localizedString("startup.timeout")) {
