@@ -107,7 +107,7 @@ enum AppConstants {
         static let stagingBaseURLString = AppBuildSettings.apiBaseURLStaging(
             default: "https://gdeiassistant.azurewebsites.net/api"
         )
-        static let prodBaseURLString = AppBuildSettings.apiBaseURLProduction(default: "https://gdeiassistant.cn/api")
+        static let prodBaseURLString = AppBuildSettings.apiBaseURLProduction(default: "https://gdeiassistant.azurewebsites.net/api")
         static let defaultNetworkEnvironment = AppBuildSettings.defaultNetworkEnvironment(default: "prod")
         static let allowsRuntimeDebugOptions = AppBuildSettings.allowRuntimeDebugOptions(
             default: _isDebugAssertConfiguration()
