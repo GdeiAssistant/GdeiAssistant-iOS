@@ -3,16 +3,15 @@ import Foundation
 enum GradeRemoteMapper {
     static func mapReport(
         _ dto: GradeQueryResultDTO,
-        requestedAcademicYear: String
+        requestedYearIndex: Int?
     ) -> GradeReport {
-        let selectedStartYear = dto.year ?? startYear(from: requestedAcademicYear) ?? currentAcademicStartYear()
-        let selectedYear = academicYearText(startYear: selectedStartYear)
+        let selectedYear = String(dto.year ?? requestedYearIndex ?? 0)
 
         let firstTermItems = (dto.firstTermGradeList ?? []).map {
-            mapGradeItem($0, fallbackAcademicYear: selectedYear, fallbackTerm: "1")
+            mapGradeItem($0, fallbackAcademicYear: "", fallbackTerm: "1")
         }
         let secondTermItems = (dto.secondTermGradeList ?? []).map {
-            mapGradeItem($0, fallbackAcademicYear: selectedYear, fallbackTerm: "2")
+            mapGradeItem($0, fallbackAcademicYear: "", fallbackTerm: "2")
         }
         let allItems = (firstTermItems + secondTermItems).sorted { lhs, rhs in
             if lhs.term == rhs.term {
@@ -38,26 +37,10 @@ enum GradeRemoteMapper {
 
         return GradeReport(
             selectedYear: selectedYear,
-            yearOptions: buildYearOptions(selectedStartYear: selectedStartYear),
+            yearOptions: yearOptions(),
             summary: buildSummary(dto: dto, items: allItems),
             terms: terms
         )
-    }
-
-    static func startYear(from academicYear: String) -> Int? {
-        let pattern = #"\d{4}"#
-        guard
-            let regex = try? NSRegularExpression(pattern: pattern),
-            let match = regex.firstMatch(
-                in: academicYear,
-                range: NSRange(academicYear.startIndex..<academicYear.endIndex, in: academicYear)
-            ),
-            let range = Range(match.range, in: academicYear)
-        else {
-            return nil
-        }
-
-        return Int(academicYear[range])
     }
 
     private static func mapGradeItem(
@@ -111,24 +94,11 @@ enum GradeRemoteMapper {
         return totalCredits > 0 ? weightedPoints / totalCredits : 0
     }
 
-    private static func buildYearOptions(selectedStartYear: Int) -> [AcademicYearOption] {
-        (0..<4).map { offset in
-            let startYear = selectedStartYear - offset
-            let title = academicYearText(startYear: startYear)
-            return AcademicYearOption(id: title, title: title)
+    static func yearOptions() -> [AcademicYearOption] {
+        let labels = ["grade.year.freshman", "grade.year.sophomore", "grade.year.junior", "grade.year.senior"]
+        return labels.enumerated().map { index, key in
+            AcademicYearOption(id: String(index), title: localizedString(key))
         }
-    }
-
-    private static func academicYearText(startYear: Int) -> String {
-        "\(startYear)-\(startYear + 1)"
-    }
-
-    private static func currentAcademicStartYear() -> Int {
-        let calendar = Calendar(identifier: .gregorian)
-        let currentDate = Date()
-        let currentYear = calendar.component(.year, from: currentDate)
-        let currentMonth = calendar.component(.month, from: currentDate)
-        return currentMonth >= 8 ? currentYear : currentYear - 1
     }
 
     private static func numericValue(from text: String?) -> Double {

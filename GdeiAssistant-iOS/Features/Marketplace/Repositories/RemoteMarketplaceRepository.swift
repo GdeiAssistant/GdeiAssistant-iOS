@@ -69,7 +69,20 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
 
     func fetchMySummary() async throws -> MarketplacePersonalSummary {
         let profile: UserProfileDTO = try await apiClient.get("/user/profile", requiresAuth: true)
-        let summary: MarketplacePersonalSummaryDTO = try await apiClient.get("/marketplace/profile", requiresAuth: true)
+        var page: MarketplacePersonalSummaryDTO = try await apiClient.get("/marketplace/profile", requiresAuth: true)
+        var doing = page.doing ?? []
+        var sold = page.sold ?? []
+        var off = page.off ?? []
+        var previousStart = 0
+        while page.hasMore == true {
+            guard let start = page.nextStart, start > previousStart else { throw URLError(.cannotParseResponse) }
+            previousStart = start
+            page = try await apiClient.get("/marketplace/profile", queryItems: [URLQueryItem(name: "start", value: String(start))], requiresAuth: true)
+            doing += page.doing ?? []
+            sold += page.sold ?? []
+            off += page.off ?? []
+        }
+        let summary = MarketplacePersonalSummaryDTO(doing: doing, sold: sold, off: off, hasMore: false, nextStart: nil)
         return MarketplaceRemoteMapper.mapPersonalSummary(summary, profile: profile)
     }
 

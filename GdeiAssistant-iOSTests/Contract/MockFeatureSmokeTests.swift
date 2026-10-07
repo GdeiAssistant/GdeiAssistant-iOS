@@ -3,6 +3,23 @@ import XCTest
 
 @MainActor
 final class MockFeatureSmokeTests: XCTestCase {
+    func testGradeYearIsAnIndexAndCourseKeepsActualAcademicYear() throws {
+        let json = #"{"year":2,"firstTermGradeList":[{"gradeId":"synthetic","gradeYear":"2023-2024","gradeTerm":"1","gradeName":"Synthetic course","gradeScore":"90","gradeCredit":"2"}]}"#
+        let dto = try JSONDecoder().decode(GradeQueryResultDTO.self, from: Data(json.utf8))
+        let report = GradeRemoteMapper.mapReport(dto, requestedYearIndex: 1)
+        XCTAssertEqual(report.selectedYear, "2")
+        XCTAssertEqual(report.yearOptions.map(\.id), ["0", "1", "2", "3"])
+        XCTAssertEqual(report.terms[0].items[0].term, "2023-2024-1")
+    }
+
+    func testGradeMissingYearDoesNotInventCalendarYearFromIndex() throws {
+        let json = #"{"firstTermGradeList":[{"gradeId":"synthetic","gradeTerm":"1"}]}"#
+        let dto = try JSONDecoder().decode(GradeQueryResultDTO.self, from: Data(json.utf8))
+        let report = GradeRemoteMapper.mapReport(dto, requestedYearIndex: 3)
+        XCTAssertEqual(report.selectedYear, "3")
+        XCTAssertEqual(report.terms[0].items[0].term, "-1")
+    }
+
     func testTopicMultipartFilesUseBackendArrayFieldName() {
         let files = TopicRemoteMapper.multipartFiles(from: [
             UploadImageAsset(
@@ -79,7 +96,7 @@ final class MockFeatureSmokeTests: XCTestCase {
     }
 
     func testAcademicAndCampusMockFlows() async throws {
-        let gradeReport = try await MockGradeRepository().fetchGrades(academicYear: "2025-2026")
+        let gradeReport = try await MockGradeRepository().fetchGrades(yearIndex: 3)
         XCTAssertFalse(gradeReport.terms.isEmpty)
 
         let schedule = try await MockScheduleRepository().fetchWeeklySchedule(weekIndex: 6)

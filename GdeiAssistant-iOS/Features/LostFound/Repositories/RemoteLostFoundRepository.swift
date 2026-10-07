@@ -53,7 +53,20 @@ final class RemoteLostFoundRepository: LostFoundRepository {
 
     func fetchMySummary() async throws -> LostFoundPersonalSummary {
         let profile: UserProfileDTO = try await apiClient.get("/user/profile", requiresAuth: true)
-        let summary: LostFoundPersonalSummaryDTO = try await apiClient.get("/lostandfound/profile", requiresAuth: true)
+        var page: LostFoundPersonalSummaryDTO = try await apiClient.get("/lostandfound/profile", requiresAuth: true)
+        var lost = page.lost ?? []
+        var found = page.found ?? []
+        var didfound = page.didfound ?? []
+        var previousStart = 0
+        while page.hasMore == true {
+            guard let start = page.nextStart, start > previousStart else { throw URLError(.cannotParseResponse) }
+            previousStart = start
+            page = try await apiClient.get("/lostandfound/profile", queryItems: [URLQueryItem(name: "start", value: String(start))], requiresAuth: true)
+            lost += page.lost ?? []
+            found += page.found ?? []
+            didfound += page.didfound ?? []
+        }
+        let summary = LostFoundPersonalSummaryDTO(lost: lost, found: found, didfound: didfound, hasMore: false, nextStart: nil)
         return LostFoundRemoteMapper.mapPersonalSummary(summary, profile: profile)
     }
 

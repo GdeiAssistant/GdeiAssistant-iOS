@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 protocol GradeRepository {
-    func fetchGrades(academicYear: String) async throws -> GradeReport
+    func fetchGrades(yearIndex: Int?) async throws -> GradeReport
 }
 
 @MainActor
@@ -21,8 +21,8 @@ final class SwitchingGradeRepository: GradeRepository {
         self.mockRepository = mockRepository
     }
 
-    func fetchGrades(academicYear: String) async throws -> GradeReport {
-        try await currentRepository.fetchGrades(academicYear: academicYear)
+    func fetchGrades(yearIndex: Int?) async throws -> GradeReport {
+        try await currentRepository.fetchGrades(yearIndex: yearIndex)
     }
 
     private var currentRepository: any GradeRepository {

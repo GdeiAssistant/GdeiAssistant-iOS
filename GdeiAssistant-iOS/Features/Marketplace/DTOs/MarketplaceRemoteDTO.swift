@@ -35,6 +35,8 @@ struct MarketplacePersonalSummaryDTO: Decodable {
     let doing: [MarketplaceItemDTO]?
     let sold: [MarketplaceItemDTO]?
     let off: [MarketplaceItemDTO]?
+    let hasMore: Bool?
+    let nextStart: Int?
 }
 
 struct MarketplacePublishRemoteDTO: Codable {
