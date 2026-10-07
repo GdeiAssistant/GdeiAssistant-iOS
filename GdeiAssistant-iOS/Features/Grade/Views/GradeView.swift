@@ -97,7 +97,7 @@ struct GradeView: View {
         .listStyle(.insetGrouped)
         .dsListBackground()
         .refreshable {
-            await viewModel.loadGrades(academicYear: report.selectedYear)
+            await viewModel.loadGrades(yearIndex: Int(report.selectedYear))
         }
     }
 

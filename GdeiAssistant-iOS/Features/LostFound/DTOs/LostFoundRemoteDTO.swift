@@ -32,6 +32,8 @@ struct LostFoundPersonalSummaryDTO: Decodable {
     let lost: [LostFoundItemDTO]?
     let found: [LostFoundItemDTO]?
     let didfound: [LostFoundItemDTO]?
+    let hasMore: Bool?
+    let nextStart: Int?
 }
 
 struct LostFoundPublishRemoteDTO: Codable {

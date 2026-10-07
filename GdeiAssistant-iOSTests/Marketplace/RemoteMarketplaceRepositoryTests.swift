@@ -123,7 +123,7 @@ final class RemoteMarketplaceRepositoryTests: XCTestCase {
         UserDefaults.standard.set("en-US", forKey: AppConstants.UserDefaultsKeys.selectedLocale)
 
         let summary = MarketplaceRemoteMapper.mapPersonalSummary(
-            MarketplacePersonalSummaryDTO(doing: nil, sold: nil, off: nil),
+            MarketplacePersonalSummaryDTO(doing: nil, sold: nil, off: nil, hasMore: false, nextStart: nil),
             profile: UserProfileDTO(
                 username: "",
                 nickname: nil,

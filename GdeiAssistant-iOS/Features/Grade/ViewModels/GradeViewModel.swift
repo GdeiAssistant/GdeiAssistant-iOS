@@ -23,29 +23,35 @@ final class GradeViewModel: ObservableObject {
 
     func loadIfNeeded() async {
         if report == nil {
-            await loadGrades(academicYear: selectedYear.isEmpty ? "2025-2026" : selectedYear)
+            await loadGrades(yearIndex: Int(selectedYear))
         }
     }
 
     func changeYear(_ year: String) async {
         guard selectedYear != year else { return }
-        await loadGrades(academicYear: year)
+        await loadGrades(yearIndex: Int(year))
     }
 
-    func loadGrades(academicYear: String) async {
+    private var loadGeneration = 0
+
+    func loadGrades(yearIndex: Int?) async {
+        loadGeneration += 1
+        let generation = loadGeneration
         isLoading = true
         errorMessage = nil
 
-        defer { isLoading = false }
+        defer { if generation == loadGeneration { isLoading = false } }
 
         do {
-            let fetched = try await repository.fetchGrades(academicYear: academicYear)
+            let fetched = try await repository.fetchGrades(yearIndex: yearIndex)
+            guard generation == loadGeneration, !Task.isCancelled else { return }
             report = fetched
             yearOptions = fetched.yearOptions
             selectedYear = fetched.selectedYear
             let preferredTerm = fetched.terms.first(where: { $0.id == selectedTermID && !$0.items.isEmpty })?.id
             selectedTermID = preferredTerm ?? fetched.terms.first(where: { !$0.items.isEmpty })?.id ?? "1"
         } catch {
+            guard generation == loadGeneration, !Task.isCancelled else { return }
             report = nil
             errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("grade.loadFailed")
         }

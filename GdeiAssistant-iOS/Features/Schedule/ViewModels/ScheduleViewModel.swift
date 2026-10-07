@@ -8,6 +8,7 @@ final class ScheduleViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
+    private var loadGeneration = 0
     private let repository: any ScheduleRepository
 
     init(repository: any ScheduleRepository, initialWeekIndex: Int = 6) {
@@ -28,16 +29,21 @@ final class ScheduleViewModel: ObservableObject {
     }
 
     func loadSchedule(weekIndex: Int? = nil) async {
+        loadGeneration += 1
+        let generation = loadGeneration
         let targetWeek = weekIndex ?? selectedWeekIndex
         selectedWeekIndex = max(1, targetWeek)
         isLoading = true
         errorMessage = nil
 
-        defer { isLoading = false }
+        defer { if generation == loadGeneration { isLoading = false } }
 
         do {
-            schedule = try await repository.fetchWeeklySchedule(weekIndex: selectedWeekIndex)
+            let result = try await repository.fetchWeeklySchedule(weekIndex: selectedWeekIndex)
+            guard generation == loadGeneration, !Task.isCancelled else { return }
+            schedule = result
         } catch {
+            guard generation == loadGeneration, !Task.isCancelled else { return }
             schedule = nil
             errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("schedule.loadFailed")
         }
