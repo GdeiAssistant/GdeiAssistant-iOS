@@ -1,12 +1,12 @@
 "tab.home" = "ホーム";
-"tab.info" = "お知らせ";
+"tab.info" = "メッセージ";
 "tab.profile" = "マイページ";
 
 "feature.community" = "発見";
 "feature.topic" = "トピック";
 "feature.express" = "告白の壁";
-"feature.delivery" = "デリバリー";
-"feature.photograph" = "フォトウォール";
+"feature.delivery" = "宅配代行";
+"feature.photograph" = "キャンパスフォト";
 "feature.schedule" = "時間割";
 "feature.grade" = "成績照会";
 "feature.card" = "学生証";
@@ -27,7 +27,7 @@
 "home.campusServicesSubtitle" = "成績、時間割、CET、図書館、学生証などの照会ツール";
 "home.campusLifeSubtitle" = "フリマ、デリバリー、落とし物、秘密の木、ルームメイト、告白、トピック、フォト";
 
-"common.loading" = "読み込み中...";
+"common.loading" = "読み込み中……";
 "common.retry" = "再試行";
 "common.error" = "読み込み失敗";
 "common.noData" = "データがありません";
@@ -70,7 +70,7 @@
 "appearance.font.preview" = "プレビュー：広東第二師範学院キャンパスアシスタント";
 "appearance.language.label" = "言語";
 
-"startup.restoringSession" = "ログイン状態を復元中...";
+"startup.restoringSession" = "ログイン状態を復元中……";
 "startup.alert.title" = "お知らせ";
 "startup.alert.dismiss" = "了解";
 "startup.dataSource.mock" = "ローカルサンプルデータを使用中";
@@ -103,17 +103,17 @@
 "spare.classGroup" = "授業グループ：%d";
 "spare.search" = "空き教室を検索";
 "spare.queryConditions" = "検索条件";
-"spare.searching" = "空き教室を検索中...";
+"spare.searching" = "空き教室を検索中……";
 "spare.emptyTitle" = "空き教室が見つかりません";
 "spare.emptyMessage" = "条件を設定して検索してください";
 "spare.results" = "検索結果";
 "spare.sectionSeating" = "時限：%@  座席：%@";
 
-"home.loading" = "ホームを読み込み中...";
+"home.loading" = "ホームを読み込み中……";
 "home.title" = "ホーム";
 
 "card.title" = "学生証";
-"card.loading" = "学生証を読み込み中...";
+"card.loading" = "学生証を読み込み中……";
 "card.emptyTitle" = "学生証情報がありません";
 "card.emptyMessage" = "しばらくしてから再試行してください";
 "card.balance" = "学生証残高";
@@ -155,10 +155,10 @@
 "charge.amountRange" = "チャージ金額は1〜500元の範囲で入力してください";
 "charge.submit" = "チャージする";
 "charge.submitFailed" = "チャージリクエストの送信に失敗しました。後でもう一度お試しください。";
-"charge.processing" = "送信中…";
+"charge.processing" = "送信中……";
 "charge.paymentTitle" = "Alipay決済";
 "charge.backToForm" = "入力画面に戻る";
-"charge.loading" = "読み込み中…";
+"charge.loading" = "読み込み中……";
 "charge.errorNoPayment" = "決済情報を取得できませんでした";
 "charge.fallbackUser" = "カード利用者";
 "charge.order.statusTitle" = "チャージ注文ステータス";
@@ -186,7 +186,7 @@
 "charge.order.statusLabel.manualReview" = "確認中";
 
 "schedule.title" = "マイ時間割";
-"schedule.loading" = "時間割を読み込み中...";
+"schedule.loading" = "時間割を読み込み中……";
 "schedule.emptyTitle" = "時間割データがありません";
 "schedule.emptyMessage" = "しばらくしてから再試行してください";
 "schedule.weekLabel" = "第%d週";
@@ -250,11 +250,11 @@
 "lostFound.title" = "落とし物";
 "lostFound.mine" = "マイページ";
 "lostFound.publish" = "投稿";
-"lostFound.loading" = "落とし物を読み込み中...";
+"lostFound.loading" = "落とし物を読み込み中……";
 "lostFound.emptyTitle" = "落とし物情報がありません";
 "lostFound.emptyMessage" = "最初の情報を投稿しましょう";
 "lostFound.profileCenter" = "マイページ";
-"lostFound.profileLoading" = "マイページを読み込み中...";
+"lostFound.profileLoading" = "マイページを読み込み中……";
 "lostFound.confirmMarkFound" = "見つかった物として記録しますか？";
 "lostFound.confirmFound" = "確認";
 "lostFound.statusUpdated" = "ステータスが更新されました";
@@ -271,7 +271,7 @@
 "lostFound.emptyLostMessage" = "紛失物がここに表示されます";
 "lostFound.emptyFoundMessage" = "拾得して投稿した情報がここに表示されます";
 "lostFound.emptyDidFoundMessage" = "回収確認後の内容がここに保存されます";
-"lostFound.detailLoading" = "詳細を読み込み中...";
+"lostFound.detailLoading" = "詳細を読み込み中……";
 "lostFound.detail" = "詳細";
 "lostFound.publisher" = "投稿者";
 "lostFound.type" = "種類";
@@ -279,7 +279,7 @@
 "lostFound.contactHint" = "連絡先情報";
 "lostFound.status" = "ステータス";
 "lostFound.editInfo" = "情報を編集";
-"lostFound.processing" = "処理中...";
+"lostFound.processing" = "処理中……";
 "lostFound.markFound" = "回収済みにする";
 "lostFound.confirmMarkFoundBtn" = "回収済みを確認";
 "lostFound.itemCompleted" = "この情報は回収済みで、メインリストには表示されません。";
@@ -305,7 +305,7 @@
 "lostFound.publishSuccess" = "投稿完了。まもなくリストに表示されます。";
 "lostFound.publishFailed" = "投稿に失敗しました";
 "lostFound.editTitle" = "情報を編集";
-"lostFound.saving" = "保存中...";
+"lostFound.saving" = "保存中……";
 "lostFound.updateSuccess" = "情報が更新されました";
 "lostFound.saveFailed" = "保存に失敗しました";
 
@@ -313,14 +313,14 @@
 "topic.mine" = "マイページ";
 "topic.publish" = "投稿";
 "topic.searchPlaceholder" = "トピックを検索";
-"topic.loading" = "トピックを読み込み中...";
+"topic.loading" = "トピックを読み込み中……";
 "topic.emptyTitle" = "トピックがありません";
 "topic.emptyMessage" = "最初のキャンパストピックを投稿しましょう";
 "topic.detailTitle" = "トピック詳細";
-"topic.detailLoading" = "詳細を読み込み中...";
+"topic.detailLoading" = "詳細を読み込み中……";
 "topic.detailLoadFailed" = "詳細の読み込みに失敗しました";
 "topic.imageCounter" = "%d / %d 枚";
-"topic.likeProcessing" = "処理中...";
+"topic.likeProcessing" = "処理中……";
 "topic.liked" = "いいね済み";
 "topic.like" = "いいね";
 "topic.likeFailed" = "いいねに失敗しました";
@@ -328,7 +328,7 @@
 "topic.images" = "画像";
 "topic.notificationLike" = "通知：このトピックにいいねがありました";
 "topic.notificationGeneric" = "通知から";
-"topic.myTopicsLoading" = "マイトピックを読み込み中...";
+"topic.myTopicsLoading" = "マイトピックを読み込み中……";
 "topic.myTopicsTitle" = "マイページ";
 "topic.myTopicsEmptyTitle" = "トピックがありません";
 "topic.myTopicsEmptyMessage" = "最初のキャンパストピックを投稿しましょう";
@@ -340,7 +340,7 @@
 "topic.contentSection" = "トピック内容";
 "topic.imageSection" = "画像";
 "topic.addImage" = "画像を追加";
-"topic.submitting" = "送信中...";
+"topic.submitting" = "送信中……";
 "topic.submitBtn" = "送信";
 
 "homeEntry.grade.subtitle" = "各学期の成績とGPAを確認";
@@ -510,7 +510,7 @@
 "express.title" = "告白の壁";
 "express.mine" = "マイページ";
 "express.publish" = "投稿";
-"express.loading" = "告白の壁を読み込み中...";
+"express.loading" = "告白の壁を読み込み中……";
 "express.emptyTitle" = "コンテンツがありません";
 "express.emptyMessage" = "心のこもった告白を投稿しましょう";
 "express.canGuess" = "名前当て可";
@@ -533,7 +533,7 @@
 "express.vm.publishSuccess" = "告白が投稿されました";
 "express.vm.publishFailed" = "投稿に失敗しました";
 "express.detail.title" = "詳細";
-"express.detail.loading" = "詳細を読み込み中...";
+"express.detail.loading" = "詳細を読み込み中……";
 "express.detail.loadFailed" = "詳細の読み込みに失敗しました";
 "express.detail.likes" = "いいね";
 "express.detail.comments" = "コメント";
@@ -545,7 +545,7 @@
 "express.detail.guessButton" = "推測する";
 "express.detail.bodySection" = "本文";
 "express.detail.commentPlaceholder" = "メッセージを書く";
-"express.detail.submitting" = "送信中...";
+"express.detail.submitting" = "送信中……";
 "express.detail.sendComment" = "コメント送信";
 "express.detail.interactionSection" = "やりとり";
 "express.detail.noComments" = "コメントなし";
@@ -561,7 +561,7 @@
 "express.notification.like" = "通知：この告白にいいねがありました";
 "express.notification.guess" = "通知：名前当てに参加した人がいます";
 "express.notification.generic" = "通知から";
-"express.myPosts.loading" = "マイコンテンツを読み込み中...";
+"express.myPosts.loading" = "マイコンテンツを読み込み中……";
 "express.myPosts.emptyTitle" = "まだ投稿がありません";
 "express.myPosts.emptyMessage" = "伝えたいことを書いてみましょう";
 "express.myPosts.loadFailed" = "読み込みに失敗しました";
@@ -574,16 +574,16 @@
 "express.publish.targetGender" = "相手の性別";
 "express.publish.contentPlaceholder" = "告白内容";
 "express.publish.contentSection" = "内容";
-"express.publish.submitting" = "送信中...";
+"express.publish.submitting" = "送信中……";
 "express.publish.submit" = "送信";
-"express.detailLoading" = "詳細を読み込み中...";
+"express.detailLoading" = "詳細を読み込み中……";
 
 // MARK: - Library
 "library.title" = "図書館";
 "library.myBorrow" = "貸出一覧";
 "library.searchPlaceholder" = "書名・著者を検索";
 "library.search" = "検索";
-"library.loading" = "図書を検索中...";
+"library.loading" = "図書を検索中……";
 "library.emptyTitle" = "該当する図書がありません";
 "library.emptyMessage" = "別のキーワードで試してみてください";
 "library.availableCount" = "貸出可能数：";
@@ -591,7 +591,7 @@
 "library.nextPage" = "次のページ";
 "library.pageIndicator" = "ページ ";
 "library.detail.title" = "図書詳細";
-"library.detailLoading" = "詳細を読み込み中...";
+"library.detailLoading" = "詳細を読み込み中……";
 "library.detail.author" = "著者：";
 "library.detail.publisher" = "出版社：";
 "library.detail.isbn" = "ISBN：";
@@ -601,7 +601,7 @@
 "library.borrow.refresh" = "貸出記録を更新";
 "library.borrow.query" = "貸出記録を検索";
 "library.borrow.hint" = "貸出一覧には図書館パスワードが必要です。延長時に再度パスワードが確認されます。";
-"library.borrow.loading" = "貸出記録を読み込み中...";
+"library.borrow.loading" = "貸出記録を読み込み中……";
 "library.borrow.notQueried" = "まだ検索していません";
 "library.borrow.notQueriedMessage" = "図書館パスワードを入力すると貸出記録を表示できます";
 "library.borrow.emptyTitle" = "貸出記録がありません";
@@ -649,22 +649,22 @@
 "community.sort.latest" = "最新";
 "community.anonymousStudent" = "匿名ユーザー";
 "community.anonymousUser" = "匿名ユーザー";
-"community.feed.loading" = "発見ページを読み込み中...";
+"community.feed.loading" = "発見ページを読み込み中……";
 "community.feed.emptyTitle" = "投稿がありません";
 "community.feed.emptyMessage" = "並べ替えを変更するか、後で更新してください";
 "community.vm.feedLoadFailed" = "発見ページの読み込みに失敗しました";
 "community.topicFeed.defaultTitle" = "トピック";
-"community.topicFeed.loading" = "トピック内容を読み込み中...";
+"community.topicFeed.loading" = "トピック内容を読み込み中……";
 "community.topicFeed.emptyTitle" = "関連する投稿がありません";
 "community.topicFeed.emptyMessage" = "別の並べ替えを試してください";
 "community.vm.topicLoadFailed" = "トピックの読み込みに失敗しました";
 "community.postDetail.title" = "投稿詳細";
-"community.postDetail.loading" = "投稿詳細を読み込み中...";
+"community.postDetail.loading" = "投稿詳細を読み込み中……";
 "community.postDetail.emptyTitle" = "投稿詳細がありません";
 "community.postDetail.emptyMessage" = "しばらくしてから再試行してください";
 "community.postDetail.commentsSection" = "コメント欄";
 "community.postDetail.noComments" = "まだコメントがありません。最初にコメントしましょう。";
-"community.postDetail.commentPlaceholder" = "コメントを書く...";
+"community.postDetail.commentPlaceholder" = "コメントを書く……";
 "community.postDetail.send" = "送信";
 "community.vm.postDetailLoadFailed" = "投稿詳細の読み込みに失敗しました";
 "community.vm.enterComment" = "コメント内容を入力してください";
@@ -797,8 +797,8 @@
 "mock.community.content.latest3" = "数日前に多くの学生から3階コンセントの接触不良の報告がありましたが、館内メンテナンスが完了しました。今後新たな問題があれば、この投稿にコメントしてください。図書館スタッフにまとめてフィードバックします。";
 "mock.community.content.default" = "これはキャンパスコミュニティの投稿詳細で、コメント・タグ・インタラクション機能を紹介するものです。";
 
-"delivery.title" = "デリバリー";
-"delivery.loading" = "配達注文を読み込み中...";
+"delivery.title" = "宅配代行";
+"delivery.loading" = "配達注文を読み込み中……";
 "delivery.noOrders" = "注文なし";
 "delivery.noOrdersMessage" = "受けられる配達タスクがありません";
 "delivery.hall" = "デリバリーホール";
@@ -808,7 +808,7 @@
 "delivery.pickup" = "取";
 "delivery.deliver" = "届";
 "delivery.pickupSuffix" = "受取";
-"delivery.detailLoading" = "タスク詳細を読み込み中...";
+"delivery.detailLoading" = "タスク詳細を読み込み中……";
 "delivery.detailLoadFailed" = "詳細の読み込みに失敗しました";
 "delivery.statusHeader" = "ステータス";
 "delivery.orderInfo" = "注文情報";
@@ -825,9 +825,9 @@
 "delivery.acceptor" = "受注者";
 "delivery.acceptTime" = "受注日時";
 "delivery.actions" = "操作";
-"delivery.accepting" = "受注中...";
+"delivery.accepting" = "受注中……";
 "delivery.acceptNow" = "今すぐ受注";
-"delivery.processing" = "処理中...";
+"delivery.processing" = "処理中……";
 "delivery.confirmComplete" = "完了を確認";
 "delivery.confirmCompleteDialog" = "注文の配達が完了しましたか？";
 "delivery.confirmCompleteButton" = "完了を確認";
@@ -840,7 +840,7 @@
 "delivery.operationFailed" = "操作に失敗しました";
 "delivery.listLoadFailed" = "デリバリーリストの読み込みに失敗しました";
 "delivery.mineRefreshFailed" = "マイデリバリーの更新に失敗しました";
-"delivery.publishTitle" = "デリバリータスクを投稿";
+"delivery.publishTitle" = "宅配代行を投稿";
 "delivery.pickupPlacePlaceholder" = "受取場所";
 "delivery.pickupCodePlaceholder" = "受取コード（任意）";
 "delivery.phonePlaceholder" = "電話番号";
@@ -848,7 +848,7 @@
 "delivery.remarksPlaceholder" = "備考（任意）";
 "delivery.rewardPlaceholder" = "報酬";
 "delivery.publishFooter" = "受取コードは任意です。未入力の場合はデフォルト値で送信されます。";
-"delivery.submitting" = "送信中...";
+"delivery.submitting" = "送信中……";
 "delivery.pickupPlaceRequired" = "受取場所を入力してください";
 "delivery.pickupPlaceTooLong" = "受取場所は10文字以内です";
 "delivery.phoneRequired" = "電話番号を入力してください";
@@ -877,7 +877,7 @@
 
 "dating.title" = "ルームメイト";
 "dating.areaFilter" = "エリア";
-"dating.loading" = "プロフィールを読み込み中...";
+"dating.loading" = "プロフィールを読み込み中……";
 "dating.noProfiles" = "プロフィールなし";
 "dating.noProfilesMessage" = "このエリアにはまだ新しいプロフィールがありません";
 "dating.from" = "%@出身";
@@ -886,7 +886,7 @@
 "dating.publish" = "投稿";
 "dating.confirmHide" = "この投稿を非表示にしますか？非表示後は他の人に見えなくなります。";
 "dating.confirmHideButton" = "非表示を確認";
-"dating.loadingGeneric" = "読み込み中...";
+"dating.loadingGeneric" = "読み込み中……";
 "dating.noReceived" = "受信したリクエストはありません";
 "dating.noReceivedMessage" = "メッセージが届くとここに表示されます";
 "dating.receivedHeader" = "受信";
@@ -901,7 +901,7 @@
 "dating.noPostsMessage" = "処理できる投稿はありません";
 "dating.hideButton" = "非表示";
 "dating.myPostsHeader" = "マイ投稿";
-"dating.detailLoading" = "プロフィールを読み込み中...";
+"dating.detailLoading" = "プロフィールを読み込み中……";
 "dating.detailLoadFailed" = "プロフィールの読み込みに失敗しました";
 "dating.contactSection" = "連絡先";
 "dating.noContact" = "QQまたはWeChatが未記入です";
@@ -952,7 +952,7 @@
 "dating.grade4" = "4年生";
 
 "messages.title" = "お知らせ";
-"messages.loading" = "お知らせを読み込み中...";
+"messages.loading" = "お知らせを読み込み中……";
 "messages.newsSection" = "ニュース";
 "messages.noNews" = "ニュースなし";
 "messages.systemNoticeSection" = "システム通知";
@@ -963,10 +963,10 @@
 "messages.markAllRead" = "すべて既読";
 "messages.more" = "もっと見る";
 "messages.tapRetry" = "タップして再試行";
-"messages.systemNoticeLoading" = "システム通知を読み込み中...";
+"messages.systemNoticeLoading" = "システム通知を読み込み中……";
 "messages.noSystemNoticeEmpty" = "システム通知なし";
 "messages.noSystemNoticeMessage" = "最新の通知は後で確認してください";
-"messages.interactionLoading" = "インタラクションを読み込み中...";
+"messages.interactionLoading" = "インタラクションを読み込み中……";
 "messages.noInteractionEmpty" = "インタラクションなし";
 "messages.noInteractionMessage" = "新しいインタラクションがここに表示されます";
 "messages.interactionTitle" = "インタラクション";
@@ -979,14 +979,14 @@
 
 // MARK: - Marketplace
 "marketplace.search" = "フリマを検索";
-"marketplace.loading" = "フリマを読み込み中...";
+"marketplace.loading" = "フリマを読み込み中……";
 "marketplace.emptyTitle" = "フリマの商品はありません";
 "marketplace.emptyMessage" = "このカテゴリーにはまだ商品がありません";
 "marketplace.mine" = "マイページ";
 "marketplace.publish" = "投稿";
 "marketplace.all" = "すべて";
 "marketplace.profileCenter" = "マイページ";
-"marketplace.profileLoading" = "マイページを読み込み中...";
+"marketplace.profileLoading" = "マイページを読み込み中……";
 "marketplace.profileLoadFailed" = "マイページの読み込みに失敗しました";
 "marketplace.confirmUpdateState" = "商品の状態を更新しますか？";
 "marketplace.tabSelling" = "出品中";
@@ -1011,7 +1011,7 @@
 "marketplace.stateUpdated" = "ステータスを更新しました";
 "marketplace.actionFailed" = "操作に失敗しました";
 "marketplace.detailTitle" = "商品詳細";
-"marketplace.detailLoading" = "商品詳細を読み込み中...";
+"marketplace.detailLoading" = "商品詳細を読み込み中……";
 "marketplace.detailLoadFailed" = "商品詳細の読み込みに失敗しました";
 "marketplace.seller" = "出品者";
 "marketplace.status" = "ステータス";
@@ -1020,7 +1020,7 @@
 "marketplace.contactHint" = "連絡先";
 "marketplace.editItemInfo" = "商品情報を編集";
 "marketplace.markSold" = "売却済みにする";
-"marketplace.processing" = "処理中...";
+"marketplace.processing" = "処理中……";
 "marketplace.removeItem" = "出品を停止";
 "marketplace.itemNotInHall" = "この商品は現在リストに表示されていません。再出品するにはWeb版をご利用ください。";
 "marketplace.itemStatusUpdated" = "商品ステータスを更新しました";
@@ -1046,29 +1046,29 @@
 "marketplace.publishFailed" = "出品に失敗しました";
 "marketplace.editTitle" = "商品を編集";
 "marketplace.save" = "保存";
-"marketplace.saving" = "保存中...";
+"marketplace.saving" = "保存中……";
 "marketplace.saveFailed" = "保存に失敗しました";
 "marketplace.itemUpdated" = "商品情報を更新しました";
 "marketplace.listLoadFailed" = "フリマの読み込みに失敗しました";
 
 // MARK: - Secret
-"secret.title" = "秘密の壁";
+"secret.title" = "秘密の木";
 "secret.mine" = "マイページ";
 "secret.publish" = "投稿";
-"secret.loading" = "読み込み中...";
+"secret.loading" = "読み込み中……";
 "secret.emptyTitle" = "まだ投稿がありません";
 "secret.emptyMessage" = "今日の気持ちを書いてみましょう";
 "secret.noMore" = "これ以上ありません";
-"secret.loadingMore" = "読み込み中...";
+"secret.loadingMore" = "読み込み中……";
 "secret.comment" = "コメント";
-"secret.commentPlaceholder" = "コメントを入力...";
+"secret.commentPlaceholder" = "コメントを入力……";
 "secret.send" = "送信";
 "secret.emptyComments" = "まだコメントがありません。最初のコメントを残しましょう。";
 "secret.likeFailed" = "いいね操作に失敗しました";
 "secret.commentFailed" = "コメント送信に失敗しました";
 "secret.commentEmpty" = "コメントを入力してください";
 "secret.commentTooLong" = "コメントは50文字以内にしてください";
-"secret.detailLoading" = "詳細を読み込み中...";
+"secret.detailLoading" = "詳細を読み込み中……";
 "secret.detailLoadFailed" = "詳細の読み込みに失敗しました";
 "secret.anonymousDetail" = "匿名投稿";
 "secret.fromInteraction" = "通知から";
@@ -1111,7 +1111,7 @@
 "photograph.title" = "キャンパスフォト";
 "photograph.mine" = "マイページ";
 "photograph.publish" = "投稿";
-"photograph.loading" = "読み込み中...";
+"photograph.loading" = "読み込み中……";
 "photograph.all" = "すべて";
 "photograph.filterCategory" = "カテゴリーで絞り込み";
 "photograph.emptyTitle" = "このカテゴリーにはまだ作品がありません";
@@ -1123,7 +1123,7 @@
 "photograph.likeItem" = "この作品にいいね";
 "photograph.likeFailed" = "いいねに失敗しました";
 "photograph.detailTitle" = "作品詳細";
-"photograph.detailLoading" = "作品詳細を読み込み中...";
+"photograph.detailLoading" = "作品詳細を読み込み中……";
 "photograph.detailLoadFailed" = "詳細の読み込みに失敗しました";
 "photograph.infoSection" = "作品情報";
 "photograph.category" = "カテゴリー";
@@ -1142,7 +1142,7 @@
 "photograph.categoryLabel" = "カテゴリー：";
 "photograph.publishedAt" = "投稿日：";
 "photograph.myTitle" = "マイ作品";
-"photograph.myLoading" = "マイ作品を読み込み中...";
+"photograph.myLoading" = "マイ作品を読み込み中……";
 "photograph.myEmpty" = "投稿した作品はありません";
 "photograph.myEmptyMsg" = "最初のキャンパスフォトをアップロードしましょう";
 "photograph.noWorks" = "作品なし";
@@ -1153,7 +1153,7 @@
 "photograph.titleField" = "タイトル";
 "photograph.descriptionField" = "キャプション（任意）";
 "photograph.submit" = "投稿";
-"photograph.submitting" = "投稿中...";
+"photograph.submitting" = "投稿中……";
 
 // MARK: - Datacenter
 "dataCenter.electricQuery" = "電気料金照会";
@@ -1163,7 +1163,7 @@
 "dataCenter.studentId" = "学籍番号";
 "dataCenter.queryElec" = "照会";
 "dataCenter.queryCondition" = "検索条件";
-"dataCenter.queryingElec" = "電気料金を照会中...";
+"dataCenter.queryingElec" = "電気料金を照会中……";
 "dataCenter.dorm" = "寮";
 "dataCenter.occupants" = "入居者数";
 "dataCenter.college" = "学部";
@@ -1174,7 +1174,7 @@
 "dataCenter.totalFee" = "合計電気料金";
 "dataCenter.avgFee" = "平均電気料金";
 "dataCenter.queryResult" = "照会結果";
-"dataCenter.ypLoading" = "イエローページを読み込み中...";
+"dataCenter.ypLoading" = "イエローページを読み込み中……";
 "dataCenter.department" = "部署";
 "dataCenter.campus" = "キャンパス";
 "dataCenter.address" = "住所";
@@ -1196,7 +1196,7 @@
 "graduateExam.idNumber" = "身分証番号";
 "graduateExam.query" = "成績照会";
 "graduateExam.queryInfo" = "照会情報";
-"graduateExam.querying" = "大学院入試成績を照会中...";
+"graduateExam.querying" = "大学院入試成績を照会中……";
 "graduateExam.result" = "照会結果";
 "graduateExam.regNumber" = "登録番号";
 "graduateExam.politics" = "政治理論";
@@ -1213,18 +1213,18 @@
 "collection.catalogSearch" = "蔵書検索";
 "collection.myBorrow" = "マイ貸出";
 "collection.borrowService" = "貸出サービス";
-"collection.searching" = "蔵書を検索中...";
+"collection.searching" = "蔵書を検索中……";
 "collection.noResult" = "検索結果なし";
 "collection.searchHint" = "書名・著者を入力して検索";
 "collection.searchResult" = "検索結果";
 "collection.library" = "図書館";
-"collection.detailLoading" = "詳細を読み込み中...";
+"collection.detailLoading" = "詳細を読み込み中……";
 "collection.libPassword" = "図書館パスワード";
 "collection.enterPassword" = "図書館パスワードを入力";
 "collection.refreshBorrow" = "貸出記録を更新";
 "collection.queryBorrow" = "貸出記録を検索";
 "collection.borrowHint" = "貸出記録の閲覧には図書館パスワードが必要です。";
-"collection.borrowLoading" = "貸出記録を読み込み中...";
+"collection.borrowLoading" = "貸出記録を読み込み中……";
 "collection.notQueried" = "まだ検索していません";
 "collection.borrowEmptyHint" = "パスワードを入力して貸出記録を確認";
 "collection.noBorrow" = "貸出記録なし";
@@ -1244,7 +1244,7 @@
 "collection.renewCount" = "延長：";
 
 // MARK: - Grade
-"grade.loading" = "成績を読み込み中...";
+"grade.loading" = "成績を読み込み中……";
 "grade.emptyTitle" = "成績データなし";
 "grade.emptyMsg" = "後で再試行してください";
 "grade.title" = "成績表";
@@ -1269,7 +1269,7 @@
 "graduateExam.totalScore" = "合計：";
 
 // MARK: - Profile
-"profile.loading" = "プロフィールを読み込み中...";
+"profile.loading" = "プロフィールを読み込み中……";
 "profile.emptyTitle" = "プロフィールがありません";
 "profile.emptyMsg" = "後で再試行してください";
 "profile.center" = "マイページ";
@@ -1294,7 +1294,7 @@
 "profile.notSelected" = "未選択";
 "profile.goWrite" = "記入する";
 "profile.nicknamePlaceholder" = "ニックネームを入力";
-"profile.bioPlaceholder" = "一言で自己紹介...";
+"profile.bioPlaceholder" = "一言で自己紹介……";
 "profile.clearBirthday" = "誕生日をクリア";
 "profile.selectFacultyFirst" = "先に学部を選択してください";
 "profile.selectCountry" = "国 / 地域を選択";
@@ -1307,11 +1307,11 @@
 "profile.confirm" = "確定";
 
 // MARK: - Common
-"common.saving" = "保存中...";
+"common.saving" = "保存中……";
 "common.saveFailed" = "保存に失敗しました";
 
 // MARK: - News
-"news.loading" = "ニュースを読み込み中...";
+"news.loading" = "ニュースを読み込み中……";
 "news.emptyTitle" = "ニュースなし";
 "news.emptyMsg" = "表示するニュースがありません";
 "news.title" = "ニュース";
@@ -1392,7 +1392,7 @@
 
 // MARK: - Login Record
 "loginRecord.title" = "ログイン履歴";
-"loginRecord.loading" = "ログイン履歴を読み込み中...";
+"loginRecord.loading" = "ログイン履歴を読み込み中……";
 "loginRecord.emptyTitle" = "ログイン履歴なし";
 "loginRecord.emptyMsg" = "最近のログイン履歴はありません";
 
@@ -1407,7 +1407,7 @@
 "privacy.age" = "年齢を公開";
 "privacy.cache" = "教務データをキャッシュ";
 "privacy.robotsIndex" = "検索エンジンのインデックスを許可";
-"privacy.loading" = "読み込み中...";
+"privacy.loading" = "読み込み中……";
 
 // MARK: - Common
 "common.notice" = "お知らせ";
@@ -1523,7 +1523,7 @@
 "common.hidePassword" = "パスワードを非表示";
 "common.retryAfterSeconds" = "%d秒後に再試行";
 "passwordSheet.verificationTitle" = "セキュリティ確認";
-"login.mockCredentialsHint" = "ローカルサンプルアカウント: gdeiassistant  パスワード: gdeiassistant";
+"login.mockCredentialsHint" = "デモモードアカウント：gdeiassistant、パスワード：gdeiassistant";
 "photograph.emptyCategoryMessage" = "このカテゴリにはまだ投稿がありません。最初のキャンパス写真を投稿しましょう。";
 "photograph.myEmptyFilteredMessage" = "現在のカテゴリにはまだ投稿がありません。";
 "auth.repositoryNotConfigured" = "認証リポジトリが設定されていません";
@@ -1588,7 +1588,7 @@
 "messages.mapper.expressInteraction" = "告白ウォールの通知";
 "messages.mapper.topicInteraction" = "トピックの通知";
 "messages.mapper.photographInteraction" = "キャンパス写真の通知";
-"messages.mapper.deliveryInteraction" = "みんなの配達通知";
+"messages.mapper.deliveryInteraction" = "宅配代行の通知";
 "messages.mapper.marketplaceInteraction" = "中古取引の通知";
 "messages.mapper.lostFoundInteraction" = "遺失物のお知らせ";
 "messages.category.all" = "すべて";
@@ -1601,7 +1601,7 @@
 "messages.badge.news" = "ニュース";
 "messages.badge.marketplace" = "中古";
 "messages.badge.lostFound" = "遺失物";
-"messages.badge.delivery" = "配達";
+"messages.badge.delivery" = "宅配代行";
 "messages.badge.secret" = "ツリーホール";
 "messages.badge.express" = "告白";
 "messages.badge.topic" = "話題";
@@ -1781,7 +1781,7 @@
 "social.search.emptyHint" = "キーワードを変えてみてください";
 "social.search.failed" = "ユーザー検索に失敗しました";
 "social.profile.title" = "ユーザーページ";
-"social.profile.loading" = "プロフィールを読み込み中...";
+"social.profile.loading" = "プロフィールを読み込み中……";
 "social.profile.loadFailed" = "プロフィールの読み込みに失敗しました";
 "social.stats.title" = "フォローと友達";
 "social.relationship.following" = "フォロー";
@@ -1822,7 +1822,7 @@
 "social.conversations.loadFailed" = "会話の読み込みに失敗しました";
 "social.conversations.unreadTotal" = "未読メッセージ %d";
 "social.chat.title" = "チャット";
-"social.chat.loading" = "チャットを読み込み中...";
+"social.chat.loading" = "チャットを読み込み中……";
 "social.chat.loadFailed" = "チャットの読み込みに失敗しました";
 "social.chat.placeholder" = "メッセージを入力";
 "social.chat.sendFailed" = "送信に失敗しました";
@@ -1851,5 +1851,3 @@
 "social.error.clientMessageConflict" = "メッセージが競合しました。更新して再試行してください";
 "social.error.rateLimited" = "操作が多すぎます。しばらくしてから再試行してください";
 
-"app.debug.mockCredentialsHint" = "Mock アカウント：gdeiassistant  パスワード：gdeiassistant";
-"app.debug.bootstrapTimeoutMessage" = "起動がタイムアウトしました。再試行するか再度ログインしてください";

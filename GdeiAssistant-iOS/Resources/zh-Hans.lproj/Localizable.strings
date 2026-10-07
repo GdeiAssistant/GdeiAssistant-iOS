@@ -1,11 +1,11 @@
 "tab.home" = "首页";
-"tab.info" = "资讯";
+"tab.info" = "消息";
 "tab.profile" = "我的";
 
 "feature.community" = "发现";
 "feature.topic" = "话题";
 "feature.express" = "表白墙";
-"feature.delivery" = "全民快递";
+"feature.delivery" = "快递代取";
 "feature.photograph" = "拍好校园";
 "feature.schedule" = "课表查询";
 "feature.grade" = "成绩查询";
@@ -19,7 +19,7 @@
 "feature.dataCenter" = "数据查询";
 "feature.marketplace" = "二手交易";
 "feature.lostFound" = "失物招领";
-"feature.secret" = "校园树洞";
+"feature.secret" = "树洞";
 "feature.dating" = "卖室友";
 
 "home.campusServices" = "校园服务";
@@ -27,7 +27,7 @@
 "home.campusServicesSubtitle" = "查成绩、课表、四六级、图书馆、校园卡和常用查询工具";
 "home.campusLifeSubtitle" = "二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影";
 
-"common.loading" = "加载中...";
+"common.loading" = "加载中……";
 "common.retry" = "重试";
 "common.error" = "加载失败";
 "common.noData" = "暂无数据";
@@ -70,7 +70,7 @@
 "appearance.font.preview" = "预览：广东第二师范学院校园助手";
 "appearance.language.label" = "语言";
 
-"startup.restoringSession" = "正在恢复登录状态...";
+"startup.restoringSession" = "正在恢复登录状态……";
 "startup.alert.title" = "提示";
 "startup.alert.dismiss" = "知道了";
 "startup.dataSource.mock" = "当前使用本地示例数据";
@@ -103,17 +103,17 @@
 "spare.classGroup" = "课节组：%d";
 "spare.search" = "查询空教室";
 "spare.queryConditions" = "查询条件";
-"spare.searching" = "正在查询空教室...";
+"spare.searching" = "正在查询空教室……";
 "spare.emptyTitle" = "暂无空教室结果";
 "spare.emptyMessage" = "设置条件后开始查询";
 "spare.results" = "查询结果";
 "spare.sectionSeating" = "节次：%@  座位：%@";
 
-"home.loading" = "正在加载首页...";
+"home.loading" = "正在加载首页……";
 "home.title" = "首页";
 
 "card.title" = "校园卡";
-"card.loading" = "正在加载校园卡...";
+"card.loading" = "正在加载校园卡……";
 "card.emptyTitle" = "暂无校园卡信息";
 "card.emptyMessage" = "请稍后重试";
 "card.balance" = "校园卡余额";
@@ -155,10 +155,10 @@
 "charge.amountRange" = "充值金额需在 1 到 500 元之间";
 "charge.submit" = "提交充值";
 "charge.submitFailed" = "充值请求提交失败，请稍后重试";
-"charge.processing" = "正在提交充值请求…";
+"charge.processing" = "正在提交充值请求……";
 "charge.paymentTitle" = "支付宝付款";
 "charge.backToForm" = "返回填写页";
-"charge.loading" = "加载中…";
+"charge.loading" = "加载中……";
 "charge.errorNoPayment" = "服务端未返回支付信息";
 "charge.fallbackUser" = "校园卡用户";
 "charge.order.statusTitle" = "充值订单状态";
@@ -186,7 +186,7 @@
 "charge.order.statusLabel.manualReview" = "核实中";
 
 "schedule.title" = "我的课程表";
-"schedule.loading" = "正在加载课表...";
+"schedule.loading" = "正在加载课表……";
 "schedule.emptyTitle" = "暂无课表数据";
 "schedule.emptyMessage" = "请稍后重试";
 "schedule.weekLabel" = "第 %d 周";
@@ -250,11 +250,11 @@
 "lostFound.title" = "失物招领";
 "lostFound.mine" = "我的";
 "lostFound.publish" = "发布";
-"lostFound.loading" = "正在加载失物招领...";
+"lostFound.loading" = "正在加载失物招领……";
 "lostFound.emptyTitle" = "暂无失物招领信息";
 "lostFound.emptyMessage" = "可以先发布一条信息";
 "lostFound.profileCenter" = "个人中心";
-"lostFound.profileLoading" = "正在加载个人中心...";
+"lostFound.profileLoading" = "正在加载个人中心……";
 "lostFound.confirmMarkFound" = "确认标记为已找回？";
 "lostFound.confirmFound" = "确认寻回";
 "lostFound.statusUpdated" = "状态已更新";
@@ -271,7 +271,7 @@
 "lostFound.emptyLostMessage" = "遗失信息会展示在这里";
 "lostFound.emptyFoundMessage" = "拾到并发布的信息会展示在这里";
 "lostFound.emptyDidFoundMessage" = "确认寻回后的内容会保留在这里";
-"lostFound.detailLoading" = "正在加载详情...";
+"lostFound.detailLoading" = "正在加载详情……";
 "lostFound.detail" = "详情";
 "lostFound.publisher" = "发布者";
 "lostFound.type" = "类型";
@@ -279,7 +279,7 @@
 "lostFound.contactHint" = "联系说明";
 "lostFound.status" = "状态";
 "lostFound.editInfo" = "编辑信息";
-"lostFound.processing" = "处理中...";
+"lostFound.processing" = "处理中……";
 "lostFound.markFound" = "标记已找回";
 "lostFound.confirmMarkFoundBtn" = "确认已找回";
 "lostFound.itemCompleted" = "该信息已完成找回，不再展示在大厅列表。";
@@ -305,7 +305,7 @@
 "lostFound.publishSuccess" = "信息已发布，稍后会出现在列表中";
 "lostFound.publishFailed" = "发布失败";
 "lostFound.editTitle" = "编辑信息";
-"lostFound.saving" = "保存中...";
+"lostFound.saving" = "保存中……";
 "lostFound.updateSuccess" = "信息已更新";
 "lostFound.saveFailed" = "保存失败";
 
@@ -313,14 +313,14 @@
 "topic.mine" = "我的";
 "topic.publish" = "发布";
 "topic.searchPlaceholder" = "搜索话题";
-"topic.loading" = "正在加载话题...";
+"topic.loading" = "正在加载话题……";
 "topic.emptyTitle" = "暂无话题";
 "topic.emptyMessage" = "去发布第一条校园话题";
 "topic.detailTitle" = "话题详情";
-"topic.detailLoading" = "正在加载详情...";
+"topic.detailLoading" = "正在加载详情……";
 "topic.detailLoadFailed" = "详情加载失败";
 "topic.imageCounter" = "第 %d / %d 张";
-"topic.likeProcessing" = "处理中...";
+"topic.likeProcessing" = "处理中……";
 "topic.liked" = "已点赞";
 "topic.like" = "点赞";
 "topic.likeFailed" = "点赞失败";
@@ -328,7 +328,7 @@
 "topic.images" = "图片";
 "topic.notificationLike" = "来自互动消息：有人点赞了这条话题";
 "topic.notificationGeneric" = "来自互动消息";
-"topic.myTopicsLoading" = "正在加载我的话题...";
+"topic.myTopicsLoading" = "正在加载我的话题……";
 "topic.myTopicsTitle" = "我的";
 "topic.myTopicsEmptyTitle" = "还没有发布话题";
 "topic.myTopicsEmptyMessage" = "去发布你的第一条校园话题";
@@ -340,7 +340,7 @@
 "topic.contentSection" = "话题内容";
 "topic.imageSection" = "图片";
 "topic.addImage" = "添加图片";
-"topic.submitting" = "提交中...";
+"topic.submitting" = "提交中……";
 "topic.submitBtn" = "提交";
 
 "homeEntry.grade.subtitle" = "查每学年每学期成绩和绩点";
@@ -510,7 +510,7 @@
 "express.title" = "表白墙";
 "express.mine" = "我的";
 "express.publish" = "发布";
-"express.loading" = "正在加载表白墙...";
+"express.loading" = "正在加载表白墙……";
 "express.emptyTitle" = "暂无内容";
 "express.emptyMessage" = "去发布一条真诚的表白";
 "express.canGuess" = "可猜名";
@@ -533,7 +533,7 @@
 "express.vm.publishSuccess" = "表白已发布";
 "express.vm.publishFailed" = "发布失败";
 "express.detail.title" = "详情";
-"express.detail.loading" = "正在加载详情...";
+"express.detail.loading" = "正在加载详情……";
 "express.detail.loadFailed" = "详情加载失败";
 "express.detail.likes" = "点赞";
 "express.detail.comments" = "评论";
@@ -545,7 +545,7 @@
 "express.detail.guessButton" = "猜一猜";
 "express.detail.bodySection" = "正文";
 "express.detail.commentPlaceholder" = "写下你的留言";
-"express.detail.submitting" = "提交中...";
+"express.detail.submitting" = "提交中……";
 "express.detail.sendComment" = "发送评论";
 "express.detail.interactionSection" = "互动";
 "express.detail.noComments" = "暂无评论";
@@ -561,7 +561,7 @@
 "express.notification.like" = "来自互动消息：有人点赞了这条表白";
 "express.notification.guess" = "来自互动消息：有人参与了猜名字";
 "express.notification.generic" = "来自互动消息";
-"express.myPosts.loading" = "正在加载我的内容...";
+"express.myPosts.loading" = "正在加载我的内容……";
 "express.myPosts.emptyTitle" = "还没有发布内容";
 "express.myPosts.emptyMessage" = "去写下一条想说的话";
 "express.myPosts.loadFailed" = "加载失败";
@@ -574,16 +574,16 @@
 "express.publish.targetGender" = "TA 的性别";
 "express.publish.contentPlaceholder" = "表白内容";
 "express.publish.contentSection" = "内容";
-"express.publish.submitting" = "提交中...";
+"express.publish.submitting" = "提交中……";
 "express.publish.submit" = "提交";
-"express.detailLoading" = "正在加载详情...";
+"express.detailLoading" = "正在加载详情……";
 
 // MARK: - Library
 "library.title" = "图书馆";
 "library.myBorrow" = "我的借阅";
 "library.searchPlaceholder" = "搜索书名 / 作者";
 "library.search" = "搜索";
-"library.loading" = "正在检索图书...";
+"library.loading" = "正在检索图书……";
 "library.emptyTitle" = "暂无匹配图书";
 "library.emptyMessage" = "换个关键词试试";
 "library.availableCount" = "可借数量：";
@@ -591,7 +591,7 @@
 "library.nextPage" = "下一页";
 "library.pageIndicator" = "第 ";
 "library.detail.title" = "图书详情";
-"library.detailLoading" = "正在加载详情...";
+"library.detailLoading" = "正在加载详情……";
 "library.detail.author" = "作者：";
 "library.detail.publisher" = "出版社：";
 "library.detail.isbn" = "ISBN：";
@@ -601,7 +601,7 @@
 "library.borrow.refresh" = "刷新借阅记录";
 "library.borrow.query" = "查询借阅记录";
 "library.borrow.hint" = "我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。";
-"library.borrow.loading" = "正在加载借阅记录...";
+"library.borrow.loading" = "正在加载借阅记录……";
 "library.borrow.notQueried" = "还没有开始查询";
 "library.borrow.notQueriedMessage" = "输入图书馆密码后即可查看当前借阅记录";
 "library.borrow.emptyTitle" = "暂无借阅记录";
@@ -649,22 +649,22 @@
 "community.sort.latest" = "最新";
 "community.anonymousStudent" = "匿名同学";
 "community.anonymousUser" = "匿名用户";
-"community.feed.loading" = "正在加载发现页内容...";
+"community.feed.loading" = "正在加载发现页内容……";
 "community.feed.emptyTitle" = "暂无帖子";
 "community.feed.emptyMessage" = "试试切换排序或稍后刷新";
 "community.vm.feedLoadFailed" = "加载发现页内容失败";
 "community.topicFeed.defaultTitle" = "话题";
-"community.topicFeed.loading" = "正在加载话题内容...";
+"community.topicFeed.loading" = "正在加载话题内容……";
 "community.topicFeed.emptyTitle" = "暂无相关帖子";
 "community.topicFeed.emptyMessage" = "换个排序试试";
 "community.vm.topicLoadFailed" = "话题加载失败";
 "community.postDetail.title" = "帖子详情";
-"community.postDetail.loading" = "正在加载帖子详情...";
+"community.postDetail.loading" = "正在加载帖子详情……";
 "community.postDetail.emptyTitle" = "暂无帖子详情";
 "community.postDetail.emptyMessage" = "请稍后重试";
 "community.postDetail.commentsSection" = "评论区";
 "community.postDetail.noComments" = "还没有评论，欢迎抢先发言。";
-"community.postDetail.commentPlaceholder" = "写下你的评论...";
+"community.postDetail.commentPlaceholder" = "写下你的评论……";
 "community.postDetail.send" = "发送";
 "community.vm.postDetailLoadFailed" = "帖子详情加载失败";
 "community.vm.enterComment" = "请输入评论内容";
@@ -797,8 +797,8 @@
 "mock.community.content.latest3" = "前几天很多同学反馈 3 楼插座接触不良，现在馆内维护已经完成。如果后续还有新问题，可以继续在本帖留言，方便集中反馈给图书馆老师。";
 "mock.community.content.default" = "这是一条来自校园社区的帖子详情内容，用于展示评论、标签和互动能力。";
 
-"delivery.title" = "全民快递";
-"delivery.loading" = "正在加载跑腿订单...";
+"delivery.title" = "快递代取";
+"delivery.loading" = "正在加载跑腿订单……";
 "delivery.noOrders" = "暂无订单";
 "delivery.noOrdersMessage" = "暂时没有可接的跑腿任务";
 "delivery.hall" = "跑腿大厅";
@@ -808,7 +808,7 @@
 "delivery.pickup" = "取";
 "delivery.deliver" = "送";
 "delivery.pickupSuffix" = "取件";
-"delivery.detailLoading" = "正在加载任务详情...";
+"delivery.detailLoading" = "正在加载任务详情……";
 "delivery.detailLoadFailed" = "详情加载失败";
 "delivery.statusHeader" = "状态";
 "delivery.orderInfo" = "订单信息";
@@ -825,9 +825,9 @@
 "delivery.acceptor" = "接单者";
 "delivery.acceptTime" = "接单时间";
 "delivery.actions" = "操作";
-"delivery.accepting" = "接单中...";
+"delivery.accepting" = "接单中……";
 "delivery.acceptNow" = "立即抢单";
-"delivery.processing" = "处理中...";
+"delivery.processing" = "处理中……";
 "delivery.confirmComplete" = "确认订单完成";
 "delivery.confirmCompleteDialog" = "确认订单已经完成交付？";
 "delivery.confirmCompleteButton" = "确认订单完成";
@@ -840,7 +840,7 @@
 "delivery.operationFailed" = "操作失败";
 "delivery.listLoadFailed" = "跑腿列表加载失败";
 "delivery.mineRefreshFailed" = "我的跑腿刷新失败";
-"delivery.publishTitle" = "发布全民快递";
+"delivery.publishTitle" = "发布快递代取";
 "delivery.pickupPlacePlaceholder" = "取件地点";
 "delivery.pickupCodePlaceholder" = "取件码 / 凭证（选填）";
 "delivery.phonePlaceholder" = "联系电话";
@@ -848,7 +848,7 @@
 "delivery.remarksPlaceholder" = "备注（选填）";
 "delivery.rewardPlaceholder" = "跑腿费";
 "delivery.publishFooter" = "与 Web 当前提交流程一致，取件码或凭证可不填写；未填写时会按前端默认值提交。";
-"delivery.submitting" = "提交中...";
+"delivery.submitting" = "提交中……";
 "delivery.pickupPlaceRequired" = "请输入取件地点";
 "delivery.pickupPlaceTooLong" = "取件地点不能超过 10 个字";
 "delivery.phoneRequired" = "请输入联系电话";
@@ -877,7 +877,7 @@
 
 "dating.title" = "卖室友";
 "dating.areaFilter" = "展示分区";
-"dating.loading" = "正在加载卖室友资料...";
+"dating.loading" = "正在加载卖室友资料……";
 "dating.noProfiles" = "暂无资料";
 "dating.noProfilesMessage" = "当前分区还没有新的卖室友资料";
 "dating.from" = "来自%@";
@@ -886,7 +886,7 @@
 "dating.publish" = "发布";
 "dating.confirmHide" = "确定要隐藏这条发布吗？隐藏后他人将无法在大厅看到。";
 "dating.confirmHideButton" = "确认隐藏";
-"dating.loadingGeneric" = "正在加载...";
+"dating.loadingGeneric" = "正在加载……";
 "dating.noReceived" = "暂无收到的请求";
 "dating.noReceivedMessage" = "有人给你留言时会显示在这里";
 "dating.receivedHeader" = "收到的撩";
@@ -901,7 +901,7 @@
 "dating.noPostsMessage" = "当前没有可处理的卖室友发布";
 "dating.hideButton" = "隐藏";
 "dating.myPostsHeader" = "我的发布";
-"dating.detailLoading" = "正在加载资料详情...";
+"dating.detailLoading" = "正在加载资料详情……";
 "dating.detailLoadFailed" = "卖室友详情加载失败";
 "dating.contactSection" = "联系方式";
 "dating.noContact" = "对方暂未填写 QQ 或微信";
@@ -952,7 +952,7 @@
 "dating.grade4" = "大四";
 
 "messages.title" = "资讯信息";
-"messages.loading" = "正在加载资讯信息...";
+"messages.loading" = "正在加载资讯信息……";
 "messages.newsSection" = "新闻";
 "messages.noNews" = "暂无新闻";
 "messages.systemNoticeSection" = "系统公告";
@@ -963,10 +963,10 @@
 "messages.markAllRead" = "全部已读";
 "messages.more" = "更多";
 "messages.tapRetry" = "点击重试";
-"messages.systemNoticeLoading" = "正在加载系统公告...";
+"messages.systemNoticeLoading" = "正在加载系统公告……";
 "messages.noSystemNoticeEmpty" = "暂无系统公告";
 "messages.noSystemNoticeMessage" = "稍后再来查看最新公告";
-"messages.interactionLoading" = "正在加载互动消息...";
+"messages.interactionLoading" = "正在加载互动消息……";
 "messages.noInteractionEmpty" = "暂无互动消息";
 "messages.noInteractionMessage" = "新的互动消息会显示在这里";
 "messages.interactionTitle" = "互动消息";
@@ -979,14 +979,14 @@
 
 // MARK: - Marketplace
 "marketplace.search" = "搜索二手交易";
-"marketplace.loading" = "正在加载二手交易...";
+"marketplace.loading" = "正在加载二手交易……";
 "marketplace.emptyTitle" = "暂无二手交易信息";
 "marketplace.emptyMessage" = "当前分类下还没有内容";
 "marketplace.mine" = "我的";
 "marketplace.publish" = "发布";
 "marketplace.all" = "全部";
 "marketplace.profileCenter" = "个人中心";
-"marketplace.profileLoading" = "正在加载个人中心...";
+"marketplace.profileLoading" = "正在加载个人中心……";
 "marketplace.profileLoadFailed" = "个人中心加载失败";
 "marketplace.confirmUpdateState" = "确认更新商品状态？";
 "marketplace.tabSelling" = "正在出售";
@@ -1011,7 +1011,7 @@
 "marketplace.stateUpdated" = "状态已更新";
 "marketplace.actionFailed" = "操作失败";
 "marketplace.detailTitle" = "商品详情";
-"marketplace.detailLoading" = "正在加载商品详情...";
+"marketplace.detailLoading" = "正在加载商品详情……";
 "marketplace.detailLoadFailed" = "商品详情加载失败";
 "marketplace.seller" = "卖家";
 "marketplace.status" = "状态";
@@ -1020,7 +1020,7 @@
 "marketplace.contactHint" = "联系说明";
 "marketplace.editItemInfo" = "编辑商品信息";
 "marketplace.markSold" = "标记已出售";
-"marketplace.processing" = "处理中...";
+"marketplace.processing" = "处理中……";
 "marketplace.removeItem" = "下架商品";
 "marketplace.itemNotInHall" = "当前商品已不在大厅展示。若需重新发布，请按 Web 现有能力走发布流程。";
 "marketplace.itemStatusUpdated" = "商品状态已更新";
@@ -1046,29 +1046,29 @@
 "marketplace.publishFailed" = "发布失败";
 "marketplace.editTitle" = "编辑商品";
 "marketplace.save" = "保存";
-"marketplace.saving" = "保存中...";
+"marketplace.saving" = "保存中……";
 "marketplace.saveFailed" = "保存失败";
 "marketplace.itemUpdated" = "商品信息已更新";
 "marketplace.listLoadFailed" = "二手列表加载失败";
 
 // MARK: - Secret
-"secret.title" = "校园树洞";
+"secret.title" = "树洞";
 "secret.mine" = "我的";
 "secret.publish" = "发布";
-"secret.loading" = "正在加载树洞内容...";
+"secret.loading" = "正在加载树洞内容……";
 "secret.emptyTitle" = "树洞还很安静";
 "secret.emptyMessage" = "来写下今天的心情";
 "secret.noMore" = "没有更多了";
-"secret.loadingMore" = "加载中...";
+"secret.loadingMore" = "加载中……";
 "secret.comment" = "评论";
-"secret.commentPlaceholder" = "写下你的回应...";
+"secret.commentPlaceholder" = "写下你的回应……";
 "secret.send" = "发送";
 "secret.emptyComments" = "还没有评论，欢迎留下第一条回应。";
 "secret.likeFailed" = "点赞操作失败";
 "secret.commentFailed" = "评论发送失败";
 "secret.commentEmpty" = "请输入评论内容";
 "secret.commentTooLong" = "评论内容不能超过 50 个字";
-"secret.detailLoading" = "正在加载详情...";
+"secret.detailLoading" = "正在加载详情……";
 "secret.detailLoadFailed" = "详情加载失败";
 "secret.anonymousDetail" = "匿名详情";
 "secret.fromInteraction" = "来自互动消息";
@@ -1111,7 +1111,7 @@
 "photograph.title" = "拍好校园";
 "photograph.mine" = "我的";
 "photograph.publish" = "发布";
-"photograph.loading" = "正在加载摄影作品...";
+"photograph.loading" = "正在加载摄影作品……";
 "photograph.all" = "全部";
 "photograph.filterCategory" = "分类筛选";
 "photograph.emptyTitle" = "当前分类下还没有发布作品";
@@ -1123,7 +1123,7 @@
 "photograph.likeItem" = "点赞作品";
 "photograph.likeFailed" = "点赞失败";
 "photograph.detailTitle" = "作品详情";
-"photograph.detailLoading" = "正在加载作品详情...";
+"photograph.detailLoading" = "正在加载作品详情……";
 "photograph.detailLoadFailed" = "详情加载失败";
 "photograph.infoSection" = "作品信息";
 "photograph.category" = "分类";
@@ -1142,7 +1142,7 @@
 "photograph.categoryLabel" = "分类：";
 "photograph.publishedAt" = "发布时间：";
 "photograph.myTitle" = "我的作品";
-"photograph.myLoading" = "正在加载我的作品...";
+"photograph.myLoading" = "正在加载我的作品……";
 "photograph.myEmpty" = "还没有发布作品";
 "photograph.myEmptyMsg" = "去上传第一张校园照片";
 "photograph.noWorks" = "暂无作品";
@@ -1153,7 +1153,7 @@
 "photograph.titleField" = "标题";
 "photograph.descriptionField" = "想说的话（选填）";
 "photograph.submit" = "提交";
-"photograph.submitting" = "提交中...";
+"photograph.submitting" = "提交中……";
 
 // MARK: - Datacenter
 "dataCenter.electricQuery" = "电费查询";
@@ -1163,7 +1163,7 @@
 "dataCenter.studentId" = "学号";
 "dataCenter.queryElec" = "查询电费";
 "dataCenter.queryCondition" = "查询条件";
-"dataCenter.queryingElec" = "正在查询电费...";
+"dataCenter.queryingElec" = "正在查询电费……";
 "dataCenter.dorm" = "宿舍";
 "dataCenter.occupants" = "入住人数";
 "dataCenter.college" = "学院";
@@ -1174,7 +1174,7 @@
 "dataCenter.totalFee" = "总电费";
 "dataCenter.avgFee" = "平均电费";
 "dataCenter.queryResult" = "查询结果";
-"dataCenter.ypLoading" = "正在加载校园黄页...";
+"dataCenter.ypLoading" = "正在加载校园黄页……";
 "dataCenter.department" = "部门单位";
 "dataCenter.campus" = "校区";
 "dataCenter.address" = "地址";
@@ -1196,7 +1196,7 @@
 "graduateExam.idNumber" = "证件号码";
 "graduateExam.query" = "查询成绩";
 "graduateExam.queryInfo" = "查询信息";
-"graduateExam.querying" = "正在查询考研成绩...";
+"graduateExam.querying" = "正在查询考研成绩……";
 "graduateExam.result" = "查询结果";
 "graduateExam.regNumber" = "报名号";
 "graduateExam.politics" = "思想政治理论";
@@ -1213,18 +1213,18 @@
 "collection.catalogSearch" = "馆藏检索";
 "collection.myBorrow" = "我的借阅";
 "collection.borrowService" = "借阅服务";
-"collection.searching" = "正在查询馆藏...";
+"collection.searching" = "正在查询馆藏……";
 "collection.noResult" = "暂无检索结果";
 "collection.searchHint" = "输入书名、作者后开始查询";
 "collection.searchResult" = "检索结果";
 "collection.library" = "图书馆";
-"collection.detailLoading" = "正在加载详情...";
+"collection.detailLoading" = "正在加载详情……";
 "collection.libPassword" = "图书馆密码";
 "collection.enterPassword" = "请输入图书馆密码";
 "collection.refreshBorrow" = "刷新借阅记录";
 "collection.queryBorrow" = "查询借阅记录";
 "collection.borrowHint" = "我的借阅需要先输入图书馆密码查询，续借时会再次校验密码。";
-"collection.borrowLoading" = "正在加载借阅记录...";
+"collection.borrowLoading" = "正在加载借阅记录……";
 "collection.notQueried" = "还没有开始查询";
 "collection.borrowEmptyHint" = "输入图书馆密码后即可查看当前借阅记录";
 "collection.noBorrow" = "暂无借阅记录";
@@ -1244,7 +1244,7 @@
 "collection.renewCount" = "续借：";
 
 // MARK: - Grade
-"grade.loading" = "正在加载成绩...";
+"grade.loading" = "正在加载成绩……";
 "grade.emptyTitle" = "暂无成绩数据";
 "grade.emptyMsg" = "请稍后重试";
 "grade.title" = "我的成绩单";
@@ -1269,7 +1269,7 @@
 "graduateExam.totalScore" = "总分：";
 
 // MARK: - Profile
-"profile.loading" = "正在加载个人信息...";
+"profile.loading" = "正在加载个人信息……";
 "profile.emptyTitle" = "暂无个人资料";
 "profile.emptyMsg" = "请稍后重试";
 "profile.center" = "个人中心";
@@ -1294,7 +1294,7 @@
 "profile.notSelected" = "未选择";
 "profile.goWrite" = "去填写";
 "profile.nicknamePlaceholder" = "请输入昵称";
-"profile.bioPlaceholder" = "一句话介绍自己...";
+"profile.bioPlaceholder" = "一句话介绍自己……";
 "profile.clearBirthday" = "清空生日";
 "profile.selectFacultyFirst" = "请先选择院系";
 "profile.selectCountry" = "选择国家 / 地区";
@@ -1307,11 +1307,11 @@
 "profile.confirm" = "确定";
 
 // MARK: - Common
-"common.saving" = "保存中...";
+"common.saving" = "保存中……";
 "common.saveFailed" = "保存失败";
 
 // MARK: - News
-"news.loading" = "正在加载新闻...";
+"news.loading" = "正在加载新闻……";
 "news.emptyTitle" = "暂无新闻";
 "news.emptyMsg" = "当前没有可展示的资讯内容";
 "news.title" = "新闻";
@@ -1392,7 +1392,7 @@
 
 // MARK: - Login Record
 "loginRecord.title" = "登录记录";
-"loginRecord.loading" = "正在加载登录记录...";
+"loginRecord.loading" = "正在加载登录记录……";
 "loginRecord.emptyTitle" = "暂无登录记录";
 "loginRecord.emptyMsg" = "近期没有可展示的登录记录";
 
@@ -1407,7 +1407,7 @@
 "privacy.age" = "公开我的年龄";
 "privacy.cache" = "缓存我的教务数据";
 "privacy.robotsIndex" = "允许搜索引擎收录个人页";
-"privacy.loading" = "正在加载...";
+"privacy.loading" = "正在加载……";
 
 // MARK: - Common
 "common.notice" = "提示";
@@ -1523,7 +1523,7 @@
 "common.hidePassword" = "隐藏密码";
 "common.retryAfterSeconds" = "%d秒后重试";
 "passwordSheet.verificationTitle" = "安全验证";
-"login.mockCredentialsHint" = "本地示例数据模式账号：gdeiassistant  密码：gdeiassistant";
+"login.mockCredentialsHint" = "演示模式账号：gdeiassistant，密码：gdeiassistant";
 "photograph.emptyCategoryMessage" = "当前分类下还没有内容，去发布第一张校园照片";
 "photograph.myEmptyFilteredMessage" = "当前分类下还没有发布作品";
 "auth.repositoryNotConfigured" = "认证仓储未配置";
@@ -1588,7 +1588,7 @@
 "messages.mapper.expressInteraction" = "表白墙互动";
 "messages.mapper.topicInteraction" = "话题互动";
 "messages.mapper.photographInteraction" = "拍好校园互动";
-"messages.mapper.deliveryInteraction" = "全民快递提醒";
+"messages.mapper.deliveryInteraction" = "快递代取提醒";
 "messages.mapper.marketplaceInteraction" = "二手交易提醒";
 "messages.mapper.lostFoundInteraction" = "失物招领提醒";
 "messages.category.all" = "全部";
@@ -1601,7 +1601,7 @@
 "messages.badge.news" = "新闻";
 "messages.badge.marketplace" = "二手";
 "messages.badge.lostFound" = "失物招领";
-"messages.badge.delivery" = "全民快递";
+"messages.badge.delivery" = "快递代取";
 "messages.badge.secret" = "树洞";
 "messages.badge.express" = "表白墙";
 "messages.badge.topic" = "话题";
@@ -1781,7 +1781,7 @@
 "social.search.emptyHint" = "换个关键词试试";
 "social.search.failed" = "搜索用户失败";
 "social.profile.title" = "用户主页";
-"social.profile.loading" = "正在加载主页...";
+"social.profile.loading" = "正在加载主页……";
 "social.profile.loadFailed" = "加载用户主页失败";
 "social.stats.title" = "关注与好友";
 "social.relationship.following" = "关注";
@@ -1822,7 +1822,7 @@
 "social.conversations.loadFailed" = "加载私信会话失败";
 "social.conversations.unreadTotal" = "未读私信 %d";
 "social.chat.title" = "聊天";
-"social.chat.loading" = "正在加载聊天...";
+"social.chat.loading" = "正在加载聊天……";
 "social.chat.loadFailed" = "加载聊天失败";
 "social.chat.placeholder" = "输入消息";
 "social.chat.sendFailed" = "发送失败";
@@ -1851,5 +1851,3 @@
 "social.error.clientMessageConflict" = "消息冲突，请刷新后重试";
 "social.error.rateLimited" = "操作过于频繁，请稍后再试";
 
-"app.debug.mockCredentialsHint" = "Mock 账号：gdeiassistant  密码：gdeiassistant";
-"app.debug.bootstrapTimeoutMessage" = "启动超时，请重试或重新登录";
