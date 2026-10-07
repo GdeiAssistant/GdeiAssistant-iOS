@@ -16,7 +16,6 @@ struct GdeiAssistant_iOSApp: App {
         _container = StateObject(
             wrappedValue: AppRuntime.isRunningTests ? AppContainer.testing : AppContainer()
         )
-        DSAppearance.configure()
     }
 
     var body: some Scene {

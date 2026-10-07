@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -64,6 +65,7 @@ struct HomeView: View {
         }
         .listStyle(.insetGrouped)
         .dsListBackground()
+        .frame(maxWidth: horizontalSizeClass == .regular ? 680 : .infinity)
     }
 
     @ViewBuilder
