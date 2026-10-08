@@ -131,7 +131,11 @@ struct ProfileView: View {
                         SocialUserSearchView(viewModel: container.makeSocialUserSearchViewModel())
                     }
                     rowDivider
-                    profileMenuLink(title: localizedString("social.conversations.title"), systemImage: "bubble.left.and.bubble.right") {
+                    profileMenuLink(
+                        title: localizedString("social.conversations.title"),
+                        systemImage: "bubble.left.and.bubble.right",
+                        accessibilityIdentifier: "profile.entry.conversations"
+                    ) {
                         ConversationListView(viewModel: container.makeConversationListViewModel())
                     }
                     rowDivider
@@ -200,6 +204,7 @@ struct ProfileView: View {
                 }
                 .buttonStyle(DSPressableButtonStyle())
                 .dsSurface()
+                .accessibilityIdentifier("profile.logout")
             }
             .padding(.horizontal, DSSpacing.md)
             .padding(.top, DSSpacing.xs)

@@ -55,8 +55,8 @@ struct SocialAssembly {
         DirectMessagePrivacyViewModel(repository: socialRepository)
     }
 
-    func makeConversationListViewModel() -> ConversationListViewModel {
-        ConversationListViewModel(repository: socialRepository, realtimeManager: realtimeManager)
+    func makeConversationListViewModel(unreadBadgeStore: UnreadBadgeStore? = nil) -> ConversationListViewModel {
+        ConversationListViewModel(repository: socialRepository, realtimeManager: realtimeManager, unreadBadgeStore: unreadBadgeStore)
     }
 
     func makeChatThreadViewModel(conversationID: String) -> ChatThreadViewModel {

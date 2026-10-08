@@ -216,8 +216,9 @@ final class MockUISmokeTests: XCTestCase {
 
     func testChatLogoutClearsPickerDraftAndFailedLocalImage() throws {
         let app = launchApp(
-            authenticated: true, initialScreen: .conversations, failFirstImageSend: true
+            authenticated: true, initialScreen: .home, failFirstImageSend: true
         )
+        openProfileConversations(app)
         openMockChat(app)
         selectPhotoUsingSystemPicker(app)
         sendImageExpectingFailure(app)
@@ -226,10 +227,15 @@ final class MockUISmokeTests: XCTestCase {
         selectPhotoUsingSystemPicker(app)
         attachScreenshot(app, name: "chat-failed-message-and-unsent-draft-before-logout")
 
-        // This test-only shortcut calls the normal AuthManager.logout/session cleanup.
-        app.buttons["social.chat.testLogout"].tap()
+        // Follow the same navigation and logout entry as a regular user.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["social.conversation.1"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        scrollToVisible(app.buttons["profile.logout"], in: app)
+        app.buttons["profile.logout"].tap()
         XCTAssertTrue(app.textFields["login.username"].waitForExistence(timeout: 10))
-        loginAsMockUser(app, expectedEntry: "social.conversation.1")
+        loginAsMockUser(app)
+        openProfileConversations(app)
         openMockChat(app)
         XCTAssertFalse(app.images["social.chat.draftImage"].exists)
         XCTAssertEqual(ownImageButtons(app).count, 0)
@@ -243,6 +249,18 @@ final class MockUISmokeTests: XCTestCase {
         XCTAssertTrue(conversation.waitForExistence(timeout: 10))
         conversation.tap()
         XCTAssertTrue(app.buttons["social.chat.pickImage"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["social.chat.testLogout"].exists)
+        XCTAssertFalse(app.navigationBars.buttons["退出登录"].exists, "Logout belongs in Profile, not the chat header")
+    }
+
+    private func openProfileConversations(_ app: XCUIApplication) {
+        let profileTab = app.tabBars.buttons.element(boundBy: 2)
+        XCTAssertTrue(profileTab.waitForExistence(timeout: 10))
+        profileTab.tap()
+        let conversations = app.buttons["profile.entry.conversations"]
+        scrollToVisible(conversations, in: app)
+        conversations.tap()
+        XCTAssertTrue(app.buttons["social.conversation.1"].waitForExistence(timeout: 10))
     }
 
     private func selectPhotoUsingSystemPicker(_ app: XCUIApplication) {
