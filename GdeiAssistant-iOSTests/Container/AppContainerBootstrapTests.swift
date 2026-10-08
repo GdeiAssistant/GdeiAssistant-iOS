@@ -4,7 +4,9 @@ import XCTest
 @MainActor
 final class AppContainerBootstrapTests: XCTestCase {
 
-    func testOldMessagesViewModelCannotRestoreBadgeAfterSessionReset() {
+    // Async XCTest provides the task context required by isolated deinit on iOS 26.2
+    // (swiftlang/swift#87316), while preserving the same regression assertions.
+    func testOldMessagesViewModelCannotRestoreBadgeAfterSessionReset() async {
         let container = AppContainer.testing
         let oldViewModel = container.makeMessagesViewModel()
         oldViewModel.interactionUnreadCount = 7
@@ -16,7 +18,7 @@ final class AppContainerBootstrapTests: XCTestCase {
         XCTAssertNil(container.unreadBadgeStore.badgeText)
     }
 
-    func testNewMessagesViewModelCanUpdateBadgeAfterSessionReset() {
+    func testNewMessagesViewModelCanUpdateBadgeAfterSessionReset() async {
         let container = AppContainer.testing
         let oldViewModel = container.makeMessagesViewModel()
         container.unreadBadgeStore.reset()
@@ -28,7 +30,7 @@ final class AppContainerBootstrapTests: XCTestCase {
         XCTAssertEqual(container.unreadBadgeStore.totalUnread, 3)
     }
 
-    func testUnreadBadgeAggregatesClampsAndResetsCounts() {
+    func testUnreadBadgeAggregatesClampsAndResetsCounts() async {
         let store = UnreadBadgeStore()
         store.updateInteractionUnread(7)
         store.updateDirectMessageUnread(5)
