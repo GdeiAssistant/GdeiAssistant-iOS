@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 enum DSSpacing {
     static let xxs: CGFloat = 4
@@ -45,18 +44,6 @@ extension View {
 
     func dsFieldBackground() -> some View {
         background(DSColor.fieldBackground, in: DSRadius.controlShape)
-    }
-}
-
-/// Native navigation and tab chrome, tinted with the brand accent only.
-enum DSAppearance {
-    @MainActor
-    static func configure() {
-        UINavigationBar.appearance().tintColor = DSUIColor.primary
-        UIToolbar.appearance().tintColor = DSUIColor.primary
-        UITabBar.appearance().tintColor = DSUIColor.primary
-        UITableView.appearance().backgroundColor = DSUIColor.background
-        UICollectionView.appearance().backgroundColor = DSUIColor.background
     }
 }
 

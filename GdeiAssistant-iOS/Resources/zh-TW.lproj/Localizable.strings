@@ -1,11 +1,11 @@
 "tab.home" = "首頁";
-"tab.info" = "資訊";
+"tab.info" = "訊息";
 "tab.profile" = "我的";
 
 "feature.community" = "發現";
 "feature.topic" = "話題";
 "feature.express" = "表白牆";
-"feature.delivery" = "全民快遞";
+"feature.delivery" = "快遞代取";
 "feature.photograph" = "拍好校園";
 "feature.schedule" = "課表查詢";
 "feature.grade" = "成績查詢";
@@ -19,7 +19,7 @@
 "feature.dataCenter" = "資料查詢";
 "feature.marketplace" = "二手交易";
 "feature.lostFound" = "失物招領";
-"feature.secret" = "校園樹洞";
+"feature.secret" = "樹洞";
 "feature.dating" = "賣室友";
 
 "home.campusServices" = "校園服務";
@@ -27,7 +27,7 @@
 "home.campusServicesSubtitle" = "查成績、課表、四六級、圖書館、校園卡和常用查詢工具";
 "home.campusLifeSubtitle" = "二手交易、快遞代取、失物招領、樹洞、賣室友、表白牆、話題和校園攝影";
 
-"common.loading" = "載入中...";
+"common.loading" = "載入中……";
 "common.retry" = "重試";
 "common.error" = "載入失敗";
 "common.noData" = "暫無資料";
@@ -70,7 +70,7 @@
 "appearance.font.preview" = "預覽：廣東第二師範學院校園助手";
 "appearance.language.label" = "語言";
 
-"startup.restoringSession" = "正在恢復登入狀態...";
+"startup.restoringSession" = "正在恢復登入狀態……";
 "startup.alert.title" = "提示";
 "startup.alert.dismiss" = "知道了";
 "startup.dataSource.mock" = "目前使用本地示例資料";
@@ -103,17 +103,17 @@
 "spare.classGroup" = "課節組：%d";
 "spare.search" = "查詢空教室";
 "spare.queryConditions" = "查詢條件";
-"spare.searching" = "正在查詢空教室...";
+"spare.searching" = "正在查詢空教室……";
 "spare.emptyTitle" = "暫無空教室結果";
 "spare.emptyMessage" = "設定條件後開始查詢";
 "spare.results" = "查詢結果";
 "spare.sectionSeating" = "節次：%@  座位：%@";
 
-"home.loading" = "正在載入首頁...";
+"home.loading" = "正在載入首頁……";
 "home.title" = "首頁";
 
 "card.title" = "校園卡";
-"card.loading" = "正在載入校園卡...";
+"card.loading" = "正在載入校園卡……";
 "card.emptyTitle" = "暫無校園卡資訊";
 "card.emptyMessage" = "請稍後重試";
 "card.balance" = "校園卡餘額";
@@ -155,10 +155,10 @@
 "charge.amountRange" = "儲值金額需在 1 到 500 元之間";
 "charge.submit" = "提交儲值";
 "charge.submitFailed" = "儲值請求提交失敗，請稍後重試";
-"charge.processing" = "正在提交儲值請求…";
+"charge.processing" = "正在提交儲值請求……";
 "charge.paymentTitle" = "支付寶付款";
 "charge.backToForm" = "返回填寫頁";
-"charge.loading" = "載入中…";
+"charge.loading" = "載入中……";
 "charge.errorNoPayment" = "伺服器未返回付款資訊";
 "charge.fallbackUser" = "校園卡使用者";
 "charge.order.statusTitle" = "儲值訂單狀態";
@@ -186,7 +186,7 @@
 "charge.order.statusLabel.manualReview" = "核實中";
 
 "schedule.title" = "我的課程表";
-"schedule.loading" = "正在載入課表...";
+"schedule.loading" = "正在載入課表……";
 "schedule.emptyTitle" = "暫無課表資料";
 "schedule.emptyMessage" = "請稍後重試";
 "schedule.weekLabel" = "第 %d 週";
@@ -250,11 +250,11 @@
 "lostFound.title" = "失物招領";
 "lostFound.mine" = "我的";
 "lostFound.publish" = "發布";
-"lostFound.loading" = "正在載入失物招領...";
+"lostFound.loading" = "正在載入失物招領……";
 "lostFound.emptyTitle" = "暫無失物招領資訊";
 "lostFound.emptyMessage" = "可以先發布一則資訊";
 "lostFound.profileCenter" = "個人中心";
-"lostFound.profileLoading" = "正在載入個人中心...";
+"lostFound.profileLoading" = "正在載入個人中心……";
 "lostFound.confirmMarkFound" = "確認標記為已找回？";
 "lostFound.confirmFound" = "確認尋回";
 "lostFound.statusUpdated" = "狀態已更新";
@@ -271,7 +271,7 @@
 "lostFound.emptyLostMessage" = "遺失資訊會展示在這裡";
 "lostFound.emptyFoundMessage" = "拾到並發布的資訊會展示在這裡";
 "lostFound.emptyDidFoundMessage" = "確認尋回後的內容會保留在這裡";
-"lostFound.detailLoading" = "正在載入詳情...";
+"lostFound.detailLoading" = "正在載入詳情……";
 "lostFound.detail" = "詳情";
 "lostFound.publisher" = "發布者";
 "lostFound.type" = "類型";
@@ -279,7 +279,7 @@
 "lostFound.contactHint" = "聯繫說明";
 "lostFound.status" = "狀態";
 "lostFound.editInfo" = "編輯資訊";
-"lostFound.processing" = "處理中...";
+"lostFound.processing" = "處理中……";
 "lostFound.markFound" = "標記已找回";
 "lostFound.confirmMarkFoundBtn" = "確認已找回";
 "lostFound.itemCompleted" = "該資訊已完成找回，不再展示在大廳列表。";
@@ -305,7 +305,7 @@
 "lostFound.publishSuccess" = "資訊已發布，稍後會出現在列表中";
 "lostFound.publishFailed" = "發布失敗";
 "lostFound.editTitle" = "編輯資訊";
-"lostFound.saving" = "儲存中...";
+"lostFound.saving" = "儲存中……";
 "lostFound.updateSuccess" = "資訊已更新";
 "lostFound.saveFailed" = "儲存失敗";
 
@@ -313,14 +313,14 @@
 "topic.mine" = "我的";
 "topic.publish" = "發布";
 "topic.searchPlaceholder" = "搜尋話題";
-"topic.loading" = "正在載入話題...";
+"topic.loading" = "正在載入話題……";
 "topic.emptyTitle" = "暫無話題";
 "topic.emptyMessage" = "去發布第一則校園話題";
 "topic.detailTitle" = "話題詳情";
-"topic.detailLoading" = "正在載入詳情...";
+"topic.detailLoading" = "正在載入詳情……";
 "topic.detailLoadFailed" = "詳情載入失敗";
 "topic.imageCounter" = "第 %d / %d 張";
-"topic.likeProcessing" = "處理中...";
+"topic.likeProcessing" = "處理中……";
 "topic.liked" = "已按讚";
 "topic.like" = "按讚";
 "topic.likeFailed" = "按讚失敗";
@@ -328,7 +328,7 @@
 "topic.images" = "圖片";
 "topic.notificationLike" = "來自互動訊息：有人對這則話題按讚";
 "topic.notificationGeneric" = "來自互動訊息";
-"topic.myTopicsLoading" = "正在載入我的話題...";
+"topic.myTopicsLoading" = "正在載入我的話題……";
 "topic.myTopicsTitle" = "我的";
 "topic.myTopicsEmptyTitle" = "還沒有發布話題";
 "topic.myTopicsEmptyMessage" = "去發布你的第一則校園話題";
@@ -340,7 +340,7 @@
 "topic.contentSection" = "話題內容";
 "topic.imageSection" = "圖片";
 "topic.addImage" = "新增圖片";
-"topic.submitting" = "送出中...";
+"topic.submitting" = "送出中……";
 "topic.submitBtn" = "送出";
 
 "homeEntry.grade.subtitle" = "查每學年每學期成績和績點";
@@ -510,7 +510,7 @@
 "express.title" = "表白牆";
 "express.mine" = "我的";
 "express.publish" = "發布";
-"express.loading" = "正在載入表白牆...";
+"express.loading" = "正在載入表白牆……";
 "express.emptyTitle" = "暫無內容";
 "express.emptyMessage" = "去發布一則真誠的表白";
 "express.canGuess" = "可猜名";
@@ -533,7 +533,7 @@
 "express.vm.publishSuccess" = "表白已發布";
 "express.vm.publishFailed" = "發布失敗";
 "express.detail.title" = "詳情";
-"express.detail.loading" = "正在載入詳情...";
+"express.detail.loading" = "正在載入詳情……";
 "express.detail.loadFailed" = "詳情載入失敗";
 "express.detail.likes" = "按讚";
 "express.detail.comments" = "留言";
@@ -545,7 +545,7 @@
 "express.detail.guessButton" = "猜一猜";
 "express.detail.bodySection" = "正文";
 "express.detail.commentPlaceholder" = "寫下你的留言";
-"express.detail.submitting" = "送出中...";
+"express.detail.submitting" = "送出中……";
 "express.detail.sendComment" = "傳送留言";
 "express.detail.interactionSection" = "互動";
 "express.detail.noComments" = "暫無留言";
@@ -561,7 +561,7 @@
 "express.notification.like" = "來自互動訊息：有人對這則表白按讚";
 "express.notification.guess" = "來自互動訊息：有人參與了猜名字";
 "express.notification.generic" = "來自互動訊息";
-"express.myPosts.loading" = "正在載入我的內容...";
+"express.myPosts.loading" = "正在載入我的內容……";
 "express.myPosts.emptyTitle" = "還沒有發布內容";
 "express.myPosts.emptyMessage" = "去寫下一則想說的話";
 "express.myPosts.loadFailed" = "載入失敗";
@@ -574,16 +574,16 @@
 "express.publish.targetGender" = "TA 的性別";
 "express.publish.contentPlaceholder" = "表白內容";
 "express.publish.contentSection" = "內容";
-"express.publish.submitting" = "送出中...";
+"express.publish.submitting" = "送出中……";
 "express.publish.submit" = "送出";
-"express.detailLoading" = "正在載入詳情...";
+"express.detailLoading" = "正在載入詳情……";
 
 // MARK: - Library
 "library.title" = "圖書館";
 "library.myBorrow" = "我的借閱";
 "library.searchPlaceholder" = "搜尋書名 / 作者";
 "library.search" = "搜尋";
-"library.loading" = "正在檢索圖書...";
+"library.loading" = "正在檢索圖書……";
 "library.emptyTitle" = "暫無符合圖書";
 "library.emptyMessage" = "換個關鍵字試試";
 "library.availableCount" = "可借數量：";
@@ -591,7 +591,7 @@
 "library.nextPage" = "下一頁";
 "library.pageIndicator" = "第 ";
 "library.detail.title" = "圖書詳情";
-"library.detailLoading" = "正在載入詳情...";
+"library.detailLoading" = "正在載入詳情……";
 "library.detail.author" = "作者：";
 "library.detail.publisher" = "出版社：";
 "library.detail.isbn" = "ISBN：";
@@ -601,7 +601,7 @@
 "library.borrow.refresh" = "重新整理借閱記錄";
 "library.borrow.query" = "查詢借閱記錄";
 "library.borrow.hint" = "我的借閱需要先輸入圖書館密碼查詢，續借時會再次驗證密碼。";
-"library.borrow.loading" = "正在載入借閱記錄...";
+"library.borrow.loading" = "正在載入借閱記錄……";
 "library.borrow.notQueried" = "還沒有開始查詢";
 "library.borrow.notQueriedMessage" = "輸入圖書館密碼後即可查看當前借閱記錄";
 "library.borrow.emptyTitle" = "暫無借閱記錄";
@@ -649,22 +649,22 @@
 "community.sort.latest" = "最新";
 "community.anonymousStudent" = "匿名同學";
 "community.anonymousUser" = "匿名使用者";
-"community.feed.loading" = "正在載入發現頁內容...";
+"community.feed.loading" = "正在載入發現頁內容……";
 "community.feed.emptyTitle" = "暫無貼文";
 "community.feed.emptyMessage" = "試試切換排序或稍後重新整理";
 "community.vm.feedLoadFailed" = "載入發現頁內容失敗";
 "community.topicFeed.defaultTitle" = "話題";
-"community.topicFeed.loading" = "正在載入話題內容...";
+"community.topicFeed.loading" = "正在載入話題內容……";
 "community.topicFeed.emptyTitle" = "暫無相關貼文";
 "community.topicFeed.emptyMessage" = "換個排序試試";
 "community.vm.topicLoadFailed" = "話題載入失敗";
 "community.postDetail.title" = "貼文詳情";
-"community.postDetail.loading" = "正在載入貼文詳情...";
+"community.postDetail.loading" = "正在載入貼文詳情……";
 "community.postDetail.emptyTitle" = "暫無貼文詳情";
 "community.postDetail.emptyMessage" = "請稍後重試";
 "community.postDetail.commentsSection" = "留言區";
 "community.postDetail.noComments" = "還沒有留言，歡迎搶先發言。";
-"community.postDetail.commentPlaceholder" = "寫下你的留言...";
+"community.postDetail.commentPlaceholder" = "寫下你的留言……";
 "community.postDetail.send" = "傳送";
 "community.vm.postDetailLoadFailed" = "貼文詳情載入失敗";
 "community.vm.enterComment" = "請輸入留言內容";
@@ -797,8 +797,8 @@
 "mock.community.content.latest3" = "前幾天很多同學反映 3 樓插座接觸不良，現在館內維修已經完成。如果後續還有新問題，可以繼續在本帖留言，方便集中反映給圖書館老師。";
 "mock.community.content.default" = "這是一條來自校園社區的帖子詳情內容，用於展示評論、標籤和互動能力。";
 
-"delivery.title" = "全民快遞";
-"delivery.loading" = "正在載入跑腿訂單...";
+"delivery.title" = "快遞代取";
+"delivery.loading" = "正在載入跑腿訂單……";
 "delivery.noOrders" = "暫無訂單";
 "delivery.noOrdersMessage" = "暫時沒有可接的跑腿任務";
 "delivery.hall" = "跑腿大廳";
@@ -808,7 +808,7 @@
 "delivery.pickup" = "取";
 "delivery.deliver" = "送";
 "delivery.pickupSuffix" = "取件";
-"delivery.detailLoading" = "正在載入任務詳情...";
+"delivery.detailLoading" = "正在載入任務詳情……";
 "delivery.detailLoadFailed" = "詳情載入失敗";
 "delivery.statusHeader" = "狀態";
 "delivery.orderInfo" = "訂單資訊";
@@ -825,9 +825,9 @@
 "delivery.acceptor" = "接單者";
 "delivery.acceptTime" = "接單時間";
 "delivery.actions" = "操作";
-"delivery.accepting" = "接單中...";
+"delivery.accepting" = "接單中……";
 "delivery.acceptNow" = "立即搶單";
-"delivery.processing" = "處理中...";
+"delivery.processing" = "處理中……";
 "delivery.confirmComplete" = "確認訂單完成";
 "delivery.confirmCompleteDialog" = "確認訂單已經完成交付？";
 "delivery.confirmCompleteButton" = "確認訂單完成";
@@ -840,7 +840,7 @@
 "delivery.operationFailed" = "操作失敗";
 "delivery.listLoadFailed" = "跑腿列表載入失敗";
 "delivery.mineRefreshFailed" = "我的跑腿重新整理失敗";
-"delivery.publishTitle" = "發佈全民快遞";
+"delivery.publishTitle" = "發佈快遞代取";
 "delivery.pickupPlacePlaceholder" = "取件地點";
 "delivery.pickupCodePlaceholder" = "取件碼 / 憑證（選填）";
 "delivery.phonePlaceholder" = "聯絡電話";
@@ -848,7 +848,7 @@
 "delivery.remarksPlaceholder" = "備註（選填）";
 "delivery.rewardPlaceholder" = "跑腿費";
 "delivery.publishFooter" = "取件碼或憑證可不填寫；未填寫時會按前端預設值送出。";
-"delivery.submitting" = "送出中...";
+"delivery.submitting" = "送出中……";
 "delivery.pickupPlaceRequired" = "請輸入取件地點";
 "delivery.pickupPlaceTooLong" = "取件地點不能超過 10 個字";
 "delivery.phoneRequired" = "請輸入聯絡電話";
@@ -877,7 +877,7 @@
 
 "dating.title" = "賣室友";
 "dating.areaFilter" = "展示分區";
-"dating.loading" = "正在載入賣室友資料...";
+"dating.loading" = "正在載入賣室友資料……";
 "dating.noProfiles" = "暫無資料";
 "dating.noProfilesMessage" = "目前分區還沒有新的賣室友資料";
 "dating.from" = "來自%@";
@@ -886,7 +886,7 @@
 "dating.publish" = "發佈";
 "dating.confirmHide" = "確定要隱藏這條發佈嗎？隱藏後他人將無法在大廳看到。";
 "dating.confirmHideButton" = "確認隱藏";
-"dating.loadingGeneric" = "正在載入...";
+"dating.loadingGeneric" = "正在載入……";
 "dating.noReceived" = "暫無收到的請求";
 "dating.noReceivedMessage" = "有人給你留言時會顯示在這裡";
 "dating.receivedHeader" = "收到的撩";
@@ -901,7 +901,7 @@
 "dating.noPostsMessage" = "目前沒有可處理的賣室友發佈";
 "dating.hideButton" = "隱藏";
 "dating.myPostsHeader" = "我的發佈";
-"dating.detailLoading" = "正在載入資料詳情...";
+"dating.detailLoading" = "正在載入資料詳情……";
 "dating.detailLoadFailed" = "賣室友詳情載入失敗";
 "dating.contactSection" = "聯絡方式";
 "dating.noContact" = "對方暫未填寫 QQ 或微信";
@@ -952,7 +952,7 @@
 "dating.grade4" = "大四";
 
 "messages.title" = "資訊訊息";
-"messages.loading" = "正在載入資訊訊息...";
+"messages.loading" = "正在載入資訊訊息……";
 "messages.newsSection" = "新聞";
 "messages.noNews" = "暫無新聞";
 "messages.systemNoticeSection" = "系統公告";
@@ -963,10 +963,10 @@
 "messages.markAllRead" = "全部已讀";
 "messages.more" = "更多";
 "messages.tapRetry" = "點擊重試";
-"messages.systemNoticeLoading" = "正在載入系統公告...";
+"messages.systemNoticeLoading" = "正在載入系統公告……";
 "messages.noSystemNoticeEmpty" = "暫無系統公告";
 "messages.noSystemNoticeMessage" = "稍後再來查看最新公告";
-"messages.interactionLoading" = "正在載入互動訊息...";
+"messages.interactionLoading" = "正在載入互動訊息……";
 "messages.noInteractionEmpty" = "暫無互動訊息";
 "messages.noInteractionMessage" = "新的互動訊息會顯示在這裡";
 "messages.interactionTitle" = "互動訊息";
@@ -979,14 +979,14 @@
 
 // MARK: - Marketplace
 "marketplace.search" = "搜尋二手交易";
-"marketplace.loading" = "正在載入二手交易...";
+"marketplace.loading" = "正在載入二手交易……";
 "marketplace.emptyTitle" = "暫無二手交易資訊";
 "marketplace.emptyMessage" = "目前分類下還沒有內容";
 "marketplace.mine" = "我的";
 "marketplace.publish" = "發布";
 "marketplace.all" = "全部";
 "marketplace.profileCenter" = "個人中心";
-"marketplace.profileLoading" = "正在載入個人中心...";
+"marketplace.profileLoading" = "正在載入個人中心……";
 "marketplace.profileLoadFailed" = "個人中心載入失敗";
 "marketplace.confirmUpdateState" = "確認更新商品狀態？";
 "marketplace.tabSelling" = "正在出售";
@@ -1011,7 +1011,7 @@
 "marketplace.stateUpdated" = "狀態已更新";
 "marketplace.actionFailed" = "操作失敗";
 "marketplace.detailTitle" = "商品詳情";
-"marketplace.detailLoading" = "正在載入商品詳情...";
+"marketplace.detailLoading" = "正在載入商品詳情……";
 "marketplace.detailLoadFailed" = "商品詳情載入失敗";
 "marketplace.seller" = "賣家";
 "marketplace.status" = "狀態";
@@ -1020,7 +1020,7 @@
 "marketplace.contactHint" = "聯繫說明";
 "marketplace.editItemInfo" = "編輯商品資訊";
 "marketplace.markSold" = "標記已售出";
-"marketplace.processing" = "處理中...";
+"marketplace.processing" = "處理中……";
 "marketplace.removeItem" = "下架商品";
 "marketplace.itemNotInHall" = "目前商品已不在大廳展示。若需重新發布，請按 Web 現有功能走發布流程。";
 "marketplace.itemStatusUpdated" = "商品狀態已更新";
@@ -1046,29 +1046,29 @@
 "marketplace.publishFailed" = "發布失敗";
 "marketplace.editTitle" = "編輯商品";
 "marketplace.save" = "儲存";
-"marketplace.saving" = "儲存中...";
+"marketplace.saving" = "儲存中……";
 "marketplace.saveFailed" = "儲存失敗";
 "marketplace.itemUpdated" = "商品資訊已更新";
 "marketplace.listLoadFailed" = "二手列表載入失敗";
 
 // MARK: - Secret
-"secret.title" = "校園樹洞";
+"secret.title" = "樹洞";
 "secret.mine" = "我的";
 "secret.publish" = "發布";
-"secret.loading" = "正在載入樹洞內容...";
+"secret.loading" = "正在載入樹洞內容……";
 "secret.emptyTitle" = "樹洞還很安靜";
 "secret.emptyMessage" = "來寫下今天的心情";
 "secret.noMore" = "沒有更多了";
-"secret.loadingMore" = "載入中...";
+"secret.loadingMore" = "載入中……";
 "secret.comment" = "評論";
-"secret.commentPlaceholder" = "寫下你的回應...";
+"secret.commentPlaceholder" = "寫下你的回應……";
 "secret.send" = "傳送";
 "secret.emptyComments" = "還沒有評論，歡迎留下第一條回應。";
 "secret.likeFailed" = "點讚操作失敗";
 "secret.commentFailed" = "評論傳送失敗";
 "secret.commentEmpty" = "請輸入評論內容";
 "secret.commentTooLong" = "評論內容不能超過 50 個字";
-"secret.detailLoading" = "正在載入詳情...";
+"secret.detailLoading" = "正在載入詳情……";
 "secret.detailLoadFailed" = "詳情載入失敗";
 "secret.anonymousDetail" = "匿名詳情";
 "secret.fromInteraction" = "來自互動訊息";
@@ -1111,7 +1111,7 @@
 "photograph.title" = "拍好校園";
 "photograph.mine" = "我的";
 "photograph.publish" = "發布";
-"photograph.loading" = "正在載入攝影作品...";
+"photograph.loading" = "正在載入攝影作品……";
 "photograph.all" = "全部";
 "photograph.filterCategory" = "分類篩選";
 "photograph.emptyTitle" = "目前分類下還沒有發布作品";
@@ -1123,7 +1123,7 @@
 "photograph.likeItem" = "點讚作品";
 "photograph.likeFailed" = "點讚失敗";
 "photograph.detailTitle" = "作品詳情";
-"photograph.detailLoading" = "正在載入作品詳情...";
+"photograph.detailLoading" = "正在載入作品詳情……";
 "photograph.detailLoadFailed" = "詳情載入失敗";
 "photograph.infoSection" = "作品資訊";
 "photograph.category" = "分類";
@@ -1142,7 +1142,7 @@
 "photograph.categoryLabel" = "分類：";
 "photograph.publishedAt" = "發布時間：";
 "photograph.myTitle" = "我的作品";
-"photograph.myLoading" = "正在載入我的作品...";
+"photograph.myLoading" = "正在載入我的作品……";
 "photograph.myEmpty" = "還沒有發布作品";
 "photograph.myEmptyMsg" = "去上傳第一張校園照片";
 "photograph.noWorks" = "暫無作品";
@@ -1153,7 +1153,7 @@
 "photograph.titleField" = "標題";
 "photograph.descriptionField" = "想說的話（選填）";
 "photograph.submit" = "提交";
-"photograph.submitting" = "提交中...";
+"photograph.submitting" = "提交中……";
 
 // MARK: - Datacenter
 "dataCenter.electricQuery" = "電費查詢";
@@ -1163,7 +1163,7 @@
 "dataCenter.studentId" = "學號";
 "dataCenter.queryElec" = "查詢電費";
 "dataCenter.queryCondition" = "查詢條件";
-"dataCenter.queryingElec" = "正在查詢電費...";
+"dataCenter.queryingElec" = "正在查詢電費……";
 "dataCenter.dorm" = "宿舍";
 "dataCenter.occupants" = "入住人數";
 "dataCenter.college" = "學院";
@@ -1174,7 +1174,7 @@
 "dataCenter.totalFee" = "總電費";
 "dataCenter.avgFee" = "平均電費";
 "dataCenter.queryResult" = "查詢結果";
-"dataCenter.ypLoading" = "正在載入校園黃頁...";
+"dataCenter.ypLoading" = "正在載入校園黃頁……";
 "dataCenter.department" = "部門單位";
 "dataCenter.campus" = "校區";
 "dataCenter.address" = "地址";
@@ -1196,7 +1196,7 @@
 "graduateExam.idNumber" = "證件號碼";
 "graduateExam.query" = "查詢成績";
 "graduateExam.queryInfo" = "查詢資訊";
-"graduateExam.querying" = "正在查詢考研成績...";
+"graduateExam.querying" = "正在查詢考研成績……";
 "graduateExam.result" = "查詢結果";
 "graduateExam.regNumber" = "報名號";
 "graduateExam.politics" = "思想政治理論";
@@ -1213,18 +1213,18 @@
 "collection.catalogSearch" = "館藏檢索";
 "collection.myBorrow" = "我的借閱";
 "collection.borrowService" = "借閱服務";
-"collection.searching" = "正在查詢館藏...";
+"collection.searching" = "正在查詢館藏……";
 "collection.noResult" = "暫無檢索結果";
 "collection.searchHint" = "輸入書名、作者後開始查詢";
 "collection.searchResult" = "檢索結果";
 "collection.library" = "圖書館";
-"collection.detailLoading" = "正在載入詳情...";
+"collection.detailLoading" = "正在載入詳情……";
 "collection.libPassword" = "圖書館密碼";
 "collection.enterPassword" = "請輸入圖書館密碼";
 "collection.refreshBorrow" = "重新整理借閱記錄";
 "collection.queryBorrow" = "查詢借閱記錄";
 "collection.borrowHint" = "我的借閱需要先輸入圖書館密碼查詢，續借時會再次校驗密碼。";
-"collection.borrowLoading" = "正在載入借閱記錄...";
+"collection.borrowLoading" = "正在載入借閱記錄……";
 "collection.notQueried" = "還沒有開始查詢";
 "collection.borrowEmptyHint" = "輸入圖書館密碼後即可查看目前借閱記錄";
 "collection.noBorrow" = "暫無借閱記錄";
@@ -1244,7 +1244,7 @@
 "collection.renewCount" = "續借：";
 
 // MARK: - Grade
-"grade.loading" = "正在載入成績...";
+"grade.loading" = "正在載入成績……";
 "grade.emptyTitle" = "暫無成績資料";
 "grade.emptyMsg" = "請稍後重試";
 "grade.title" = "我的成績單";
@@ -1269,7 +1269,7 @@
 "graduateExam.totalScore" = "總分：";
 
 // MARK: - Profile
-"profile.loading" = "正在載入個人資訊...";
+"profile.loading" = "正在載入個人資訊……";
 "profile.emptyTitle" = "暫無個人資料";
 "profile.emptyMsg" = "請稍後重試";
 "profile.center" = "個人中心";
@@ -1294,7 +1294,7 @@
 "profile.notSelected" = "未選擇";
 "profile.goWrite" = "去填寫";
 "profile.nicknamePlaceholder" = "請輸入暱稱";
-"profile.bioPlaceholder" = "一句話介紹自己...";
+"profile.bioPlaceholder" = "一句話介紹自己……";
 "profile.clearBirthday" = "清空生日";
 "profile.selectFacultyFirst" = "請先選擇院系";
 "profile.selectCountry" = "選擇國家 / 地區";
@@ -1307,11 +1307,11 @@
 "profile.confirm" = "確定";
 
 // MARK: - Common
-"common.saving" = "儲存中...";
+"common.saving" = "儲存中……";
 "common.saveFailed" = "儲存失敗";
 
 // MARK: - News
-"news.loading" = "正在載入新聞...";
+"news.loading" = "正在載入新聞……";
 "news.emptyTitle" = "暫無新聞";
 "news.emptyMsg" = "目前沒有可展示的資訊內容";
 "news.title" = "新聞";
@@ -1392,7 +1392,7 @@
 
 // MARK: - Login Record
 "loginRecord.title" = "登入記錄";
-"loginRecord.loading" = "正在載入登入記錄...";
+"loginRecord.loading" = "正在載入登入記錄……";
 "loginRecord.emptyTitle" = "暫無登入記錄";
 "loginRecord.emptyMsg" = "近期沒有可展示的登入記錄";
 
@@ -1407,7 +1407,7 @@
 "privacy.age" = "公開我的年齡";
 "privacy.cache" = "快取我的教務資料";
 "privacy.robotsIndex" = "允許搜尋引擎收錄個人頁";
-"privacy.loading" = "正在載入...";
+"privacy.loading" = "正在載入……";
 
 // MARK: - Common
 "common.notice" = "提示";
@@ -1523,7 +1523,7 @@
 "common.hidePassword" = "隱藏密碼";
 "common.retryAfterSeconds" = "%d 秒後重試";
 "passwordSheet.verificationTitle" = "安全驗證";
-"login.mockCredentialsHint" = "本地示例資料模式帳號：gdeiassistant  密碼：gdeiassistant";
+"login.mockCredentialsHint" = "演示模式帳號：gdeiassistant，密碼：gdeiassistant";
 "photograph.emptyCategoryMessage" = "目前分類下還沒有內容，去發布第一張校園照片";
 "photograph.myEmptyFilteredMessage" = "目前分類下還沒有發布作品";
 "auth.repositoryNotConfigured" = "認證儲存庫未設定";
@@ -1588,7 +1588,7 @@
 "messages.mapper.expressInteraction" = "表白牆互動";
 "messages.mapper.topicInteraction" = "話題互動";
 "messages.mapper.photographInteraction" = "拍好校園互動";
-"messages.mapper.deliveryInteraction" = "全民快遞提醒";
+"messages.mapper.deliveryInteraction" = "快遞代取提醒";
 "messages.mapper.marketplaceInteraction" = "二手交易提醒";
 "messages.mapper.lostFoundInteraction" = "失物招領提醒";
 "messages.category.all" = "全部";
@@ -1601,7 +1601,7 @@
 "messages.badge.news" = "新聞";
 "messages.badge.marketplace" = "二手";
 "messages.badge.lostFound" = "失物招領";
-"messages.badge.delivery" = "全民快遞";
+"messages.badge.delivery" = "快遞代取";
 "messages.badge.secret" = "樹洞";
 "messages.badge.express" = "表白牆";
 "messages.badge.topic" = "話題";
@@ -1781,7 +1781,7 @@
 "social.search.emptyHint" = "換個關鍵字試試";
 "social.search.failed" = "搜尋使用者失敗";
 "social.profile.title" = "使用者頁面";
-"social.profile.loading" = "正在載入主頁...";
+"social.profile.loading" = "正在載入主頁……";
 "social.profile.loadFailed" = "載入使用者頁面失敗";
 "social.stats.title" = "追蹤與好友";
 "social.relationship.following" = "追蹤";
@@ -1822,7 +1822,7 @@
 "social.conversations.loadFailed" = "載入私訊對話失敗";
 "social.conversations.unreadTotal" = "未讀私訊 %d";
 "social.chat.title" = "聊天";
-"social.chat.loading" = "正在載入聊天...";
+"social.chat.loading" = "正在載入聊天……";
 "social.chat.loadFailed" = "載入聊天失敗";
 "social.chat.placeholder" = "輸入訊息";
 "social.chat.sendFailed" = "傳送失敗";
@@ -1851,5 +1851,3 @@
 "social.error.clientMessageConflict" = "訊息衝突，請重新整理後重試";
 "social.error.rateLimited" = "操作過於頻繁，請稍後再試";
 
-"app.debug.mockCredentialsHint" = "Mock 帳號：gdeiassistant  密碼：gdeiassistant";
-"app.debug.bootstrapTimeoutMessage" = "啟動逾時，請重試或重新登入";

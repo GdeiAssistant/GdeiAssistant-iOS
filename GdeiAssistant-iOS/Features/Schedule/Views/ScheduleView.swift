@@ -211,11 +211,9 @@ private struct ScheduleGridView: View {
     let backgroundImage: UIImage?
     let onSelectCourse: (CourseItem) -> Void
 
-    @ScaledMetric(relativeTo: .caption2) private var dateTextSize: CGFloat = 9
-    @ScaledMetric(relativeTo: .caption2) private var sectionNumberSize: CGFloat = 10
+    @ScaledMetric(relativeTo: .caption2) private var cellHeight: CGFloat = 38
 
     private let timeColumnWidth: CGFloat = 26
-    private let cellHeight: CGFloat = 38
     private let headerHeight: CGFloat = 42
     private let blockInset: CGFloat = 3
     private let sectionCount = 10
@@ -238,7 +236,7 @@ private struct ScheduleGridView: View {
                                 .foregroundStyle(isToday(day.dayOfWeek) ? DSColor.primary : DSColor.title)
                             if !day.dateText.isEmpty {
                                 Text(day.dateText)
-                                    .font(.system(size: dateTextSize))
+                                    .font(.caption2)
                                     .monospacedDigit()
                                     .foregroundStyle(DSColor.subtitle)
                             }
@@ -253,7 +251,7 @@ private struct ScheduleGridView: View {
                     VStack(spacing: 0) {
                         ForEach(1...sectionCount, id: \.self) { section in
                             Text("\(section)")
-                                .font(.system(size: sectionNumberSize, weight: .medium))
+                                .font(.caption2.weight(.medium))
                                 .foregroundStyle(DSColor.subtitle)
                                 .frame(width: timeColumnWidth, height: cellHeight)
                                 .overlay(alignment: .bottom) {
@@ -350,20 +348,17 @@ private struct ScheduleCourseBlock: View {
     let cellHeight: CGFloat
     let onTap: () -> Void
 
-    @ScaledMetric(relativeTo: .caption2) private var courseNameSize: CGFloat = 10
-    @ScaledMetric(relativeTo: .caption2) private var locationSize: CGFloat = 8
-
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(course.courseName)
-                    .font(.system(size: courseNameSize, weight: .semibold))
+                    .font(.caption2.weight(.semibold))
                     .foregroundStyle(DSColor.title)
                     .lineLimit(3)
                     .minimumScaleFactor(0.8)
 
                 Text(course.location)
-                    .font(.system(size: locationSize))
+                    .font(.caption2)
                     .foregroundStyle(DSColor.subtitle)
                     .lineLimit(2)
                     .minimumScaleFactor(0.85)

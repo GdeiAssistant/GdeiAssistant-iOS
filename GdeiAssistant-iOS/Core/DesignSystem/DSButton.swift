@@ -52,7 +52,7 @@ struct DSButton: View {
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
             }
-            .frame(maxWidth: .infinity, minHeight: 22)
+            .frame(maxWidth: .infinity, minHeight: 44)
         }
     }
 }

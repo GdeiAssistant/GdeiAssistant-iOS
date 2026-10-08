@@ -42,8 +42,3 @@ enum DSColor {
     static let danger = Color(dsLight: 0xD14343, dark: 0xF07171)
     static let warning = Color(dsLight: 0xB7791F, dark: 0xE0A54A)
 }
-
-enum DSUIColor {
-    static let primary = UIColor(dsLight: 0x0E8F6E, dark: 0x34C79A)
-    static let background = UIColor(dsLight: 0xF4F7F6, dark: 0x0E1513)
-}

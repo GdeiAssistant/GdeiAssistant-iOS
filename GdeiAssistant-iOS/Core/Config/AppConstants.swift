@@ -92,11 +92,6 @@ enum AppConstants {
         nonisolated static let shortDisplayName = "校园助手系统"
     }
 
-    enum Debug {
-        nonisolated static var mockCredentialsHint: String { localizedString("app.debug.mockCredentialsHint") }
-        nonisolated static var bootstrapTimeoutMessage: String { localizedString("app.debug.bootstrapTimeoutMessage") }
-    }
-
     enum Delivery {
         nonisolated static var defaultTaskName: String { localizedString("delivery.fallback.taskName") }
         nonisolated static let defaultPickupCode = "00000000000"

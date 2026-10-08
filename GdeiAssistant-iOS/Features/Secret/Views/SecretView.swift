@@ -122,8 +122,8 @@ private struct SecretPostCard: View {
         .background(theme.background, in: DSRadius.cardShape)
     }
 
-    private var theme: SecretThemeStyle.Palette {
-        SecretThemeStyle.palette(for: post.themeID)
+    private var theme: DSSecretPalette.Palette {
+        DSSecretPalette.palette(for: post.themeID)
     }
 }
 
@@ -235,7 +235,7 @@ struct SecretDetailView: View {
 
     @ViewBuilder
     private func themedDetailCard(_ detail: SecretPostDetail) -> some View {
-        let theme = SecretThemeStyle.palette(for: detail.post.themeID)
+        let theme = DSSecretPalette.palette(for: detail.post.themeID)
         VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
@@ -751,60 +751,18 @@ private struct SecretThemePalette: View {
                     selectedThemeID = themeID
                 } label: {
                     Circle()
-                        .fill(SecretThemeStyle.palette(for: themeID).background)
+                        .fill(DSSecretPalette.palette(for: themeID).background)
                         .frame(width: 42, height: 42)
                         .overlay {
                             if selectedThemeID == themeID {
                                 Image(systemName: "checkmark")
                                     .font(.caption.weight(.bold))
-                                    .foregroundStyle(SecretThemeStyle.palette(for: themeID).textColor)
+                                    .foregroundStyle(DSSecretPalette.palette(for: themeID).textColor)
                             }
                         }
                 }
                 .buttonStyle(.plain)
             }
-        }
-    }
-}
-
-private enum SecretThemeStyle {
-    struct Palette {
-        let background: Color
-        let textColor: Color
-    }
-
-    /// Fixed dark ink for the light post themes; every theme keeps WCAG AA
-    /// contrast in both appearances because the theme colors are content.
-    private static let ink = Color(red: 0x11 / 255, green: 0x20 / 255, blue: 0x1C / 255)
-
-    static func palette(for themeID: Int) -> Palette {
-        switch themeID {
-        case 1:
-            return Palette(background: Color(red: 0.96, green: 0.94, blue: 0.87), textColor: ink)
-        case 2:
-            return Palette(background: Color(red: 0.84, green: 0.52, blue: 0.56), textColor: ink)
-        case 3:
-            return Palette(background: Color(red: 0.56, green: 0.68, blue: 0.79), textColor: ink)
-        case 4:
-            return Palette(background: Color(red: 0.91, green: 0.67, blue: 0.49), textColor: ink)
-        case 5:
-            return Palette(background: Color(red: 0.54, green: 0.74, blue: 0.63), textColor: ink)
-        case 6:
-            return Palette(background: Color(red: 0.64, green: 0.54, blue: 0.77), textColor: ink)
-        case 7:
-            return Palette(background: Color(red: 0.37, green: 0.63, blue: 0.73), textColor: ink)
-        case 8:
-            return Palette(background: Color(red: 0.93, green: 0.52, blue: 0.44), textColor: ink)
-        case 9:
-            return Palette(background: Color(red: 0.95, green: 0.73, blue: 0.39), textColor: ink)
-        case 10:
-            return Palette(background: Color(red: 0.33, green: 0.42, blue: 0.62), textColor: .white)
-        case 11:
-            return Palette(background: Color(red: 0.26, green: 0.48, blue: 0.45), textColor: .white)
-        case 12:
-            return Palette(background: Color(red: 0.52, green: 0.38, blue: 0.28), textColor: .white)
-        default:
-            return Palette(background: DSColor.surface, textColor: DSColor.title)
         }
     }
 }

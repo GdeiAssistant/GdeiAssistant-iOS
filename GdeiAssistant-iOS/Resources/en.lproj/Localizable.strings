@@ -1,12 +1,12 @@
 "tab.home" = "Home";
-"tab.info" = "News";
+"tab.info" = "Messages";
 "tab.profile" = "Me";
 
 "feature.community" = "Discover";
 "feature.topic" = "Topics";
 "feature.express" = "Confession";
-"feature.delivery" = "Delivery";
-"feature.photograph" = "Photo Wall";
+"feature.delivery" = "Express Pickup";
+"feature.photograph" = "Campus Photos";
 "feature.schedule" = "Schedule";
 "feature.grade" = "Grades";
 "feature.card" = "Campus Card";
@@ -19,7 +19,7 @@
 "feature.dataCenter" = "Data Center";
 "feature.marketplace" = "Marketplace";
 "feature.lostFound" = "Lost & Found";
-"feature.secret" = "Secret";
+"feature.secret" = "Secret Wall";
 "feature.dating" = "Roommate";
 
 "home.campusServices" = "Campus Services";
@@ -27,7 +27,7 @@
 "home.campusServicesSubtitle" = "Grades, schedule, CET, library, campus card and more";
 "home.campusLifeSubtitle" = "Marketplace, delivery, lost & found, secret, roommate, confession, topics and photography";
 
-"common.loading" = "Loading...";
+"common.loading" = "Loading……";
 "common.retry" = "Retry";
 "common.error" = "Failed to load";
 "common.noData" = "No data";
@@ -70,7 +70,7 @@
 "appearance.font.preview" = "Preview: GdeiAssistant Campus Helper";
 "appearance.language.label" = "Language";
 
-"startup.restoringSession" = "Restoring session...";
+"startup.restoringSession" = "Restoring session……";
 "startup.alert.title" = "Notice";
 "startup.alert.dismiss" = "OK";
 "startup.dataSource.mock" = "Using local sample data";
@@ -103,17 +103,17 @@
 "spare.classGroup" = "Class Group: %d";
 "spare.search" = "Search Spare Rooms";
 "spare.queryConditions" = "Query Conditions";
-"spare.searching" = "Searching spare rooms...";
+"spare.searching" = "Searching spare rooms……";
 "spare.emptyTitle" = "No Spare Rooms Found";
 "spare.emptyMessage" = "Set conditions and start searching";
 "spare.results" = "Results";
 "spare.sectionSeating" = "Section: %@  Seats: %@";
 
-"home.loading" = "Loading home...";
+"home.loading" = "Loading home……";
 "home.title" = "Home";
 
 "card.title" = "Campus Card";
-"card.loading" = "Loading campus card...";
+"card.loading" = "Loading campus card……";
 "card.emptyTitle" = "No Campus Card Info";
 "card.emptyMessage" = "Please try again later";
 "card.balance" = "Campus Card Balance";
@@ -155,10 +155,10 @@
 "charge.amountRange" = "Amount must be between ¥1 and ¥500";
 "charge.submit" = "Submit Top-Up";
 "charge.submitFailed" = "Failed to submit the charge request. Please try again later.";
-"charge.processing" = "Submitting…";
+"charge.processing" = "Submitting……";
 "charge.paymentTitle" = "Alipay Payment";
 "charge.backToForm" = "Back to Form";
-"charge.loading" = "Loading…";
+"charge.loading" = "Loading……";
 "charge.errorNoPayment" = "No payment information received";
 "charge.fallbackUser" = "Card Holder";
 "charge.order.statusTitle" = "Charge Order Status";
@@ -186,7 +186,7 @@
 "charge.order.statusLabel.manualReview" = "Reviewing";
 
 "schedule.title" = "My Schedule";
-"schedule.loading" = "Loading schedule...";
+"schedule.loading" = "Loading schedule……";
 "schedule.emptyTitle" = "No Schedule Data";
 "schedule.emptyMessage" = "Please try again later";
 "schedule.weekLabel" = "Week %d";
@@ -250,11 +250,11 @@
 "lostFound.title" = "Lost & Found";
 "lostFound.mine" = "Mine";
 "lostFound.publish" = "Post";
-"lostFound.loading" = "Loading lost & found...";
+"lostFound.loading" = "Loading lost & found……";
 "lostFound.emptyTitle" = "No Lost & Found Items";
 "lostFound.emptyMessage" = "Post one to get started";
 "lostFound.profileCenter" = "My Profile";
-"lostFound.profileLoading" = "Loading profile...";
+"lostFound.profileLoading" = "Loading profile……";
 "lostFound.confirmMarkFound" = "Mark as found?";
 "lostFound.confirmFound" = "Confirm Found";
 "lostFound.statusUpdated" = "Status updated";
@@ -271,7 +271,7 @@
 "lostFound.emptyLostMessage" = "Lost items will appear here";
 "lostFound.emptyFoundMessage" = "Items you found and posted will appear here";
 "lostFound.emptyDidFoundMessage" = "Recovered items will be kept here";
-"lostFound.detailLoading" = "Loading details...";
+"lostFound.detailLoading" = "Loading details……";
 "lostFound.detail" = "Details";
 "lostFound.publisher" = "Publisher";
 "lostFound.type" = "Type";
@@ -279,7 +279,7 @@
 "lostFound.contactHint" = "Contact Info";
 "lostFound.status" = "Status";
 "lostFound.editInfo" = "Edit Info";
-"lostFound.processing" = "Processing...";
+"lostFound.processing" = "Processing……";
 "lostFound.markFound" = "Mark as Found";
 "lostFound.confirmMarkFoundBtn" = "Confirm Found";
 "lostFound.itemCompleted" = "This item has been recovered and is no longer shown in the main list.";
@@ -305,7 +305,7 @@
 "lostFound.publishSuccess" = "Posted successfully. It will appear in the list shortly.";
 "lostFound.publishFailed" = "Failed to post";
 "lostFound.editTitle" = "Edit Item";
-"lostFound.saving" = "Saving...";
+"lostFound.saving" = "Saving……";
 "lostFound.updateSuccess" = "Item updated";
 "lostFound.saveFailed" = "Failed to save";
 
@@ -313,14 +313,14 @@
 "topic.mine" = "Mine";
 "topic.publish" = "Post";
 "topic.searchPlaceholder" = "Search topics";
-"topic.loading" = "Loading topics...";
+"topic.loading" = "Loading topics……";
 "topic.emptyTitle" = "No Topics";
 "topic.emptyMessage" = "Post the first campus topic";
 "topic.detailTitle" = "Topic Details";
-"topic.detailLoading" = "Loading details...";
+"topic.detailLoading" = "Loading details……";
 "topic.detailLoadFailed" = "Failed to load details";
 "topic.imageCounter" = "%d / %d";
-"topic.likeProcessing" = "Processing...";
+"topic.likeProcessing" = "Processing……";
 "topic.liked" = "Liked";
 "topic.like" = "Like";
 "topic.likeFailed" = "Failed to like";
@@ -328,7 +328,7 @@
 "topic.images" = "Images";
 "topic.notificationLike" = "From notifications: Someone liked this topic";
 "topic.notificationGeneric" = "From notifications";
-"topic.myTopicsLoading" = "Loading my topics...";
+"topic.myTopicsLoading" = "Loading my topics……";
 "topic.myTopicsTitle" = "Mine";
 "topic.myTopicsEmptyTitle" = "No Topics Yet";
 "topic.myTopicsEmptyMessage" = "Post your first campus topic";
@@ -340,7 +340,7 @@
 "topic.contentSection" = "Topic Content";
 "topic.imageSection" = "Images";
 "topic.addImage" = "Add Image";
-"topic.submitting" = "Submitting...";
+"topic.submitting" = "Submitting……";
 "topic.submitBtn" = "Submit";
 
 "homeEntry.grade.subtitle" = "Check grades and GPA for each semester";
@@ -510,7 +510,7 @@
 "express.title" = "Confession Wall";
 "express.mine" = "Mine";
 "express.publish" = "Post";
-"express.loading" = "Loading confessions...";
+"express.loading" = "Loading confessions……";
 "express.emptyTitle" = "No Confessions";
 "express.emptyMessage" = "Post a sincere confession";
 "express.canGuess" = "Guess allowed";
@@ -533,7 +533,7 @@
 "express.vm.publishSuccess" = "Confession published";
 "express.vm.publishFailed" = "Failed to publish";
 "express.detail.title" = "Details";
-"express.detail.loading" = "Loading details...";
+"express.detail.loading" = "Loading details……";
 "express.detail.loadFailed" = "Failed to load details";
 "express.detail.likes" = "Likes";
 "express.detail.comments" = "Comments";
@@ -545,7 +545,7 @@
 "express.detail.guessButton" = "Guess";
 "express.detail.bodySection" = "Content";
 "express.detail.commentPlaceholder" = "Leave a message";
-"express.detail.submitting" = "Submitting...";
+"express.detail.submitting" = "Submitting……";
 "express.detail.sendComment" = "Send Comment";
 "express.detail.interactionSection" = "Interaction";
 "express.detail.noComments" = "No Comments";
@@ -561,7 +561,7 @@
 "express.notification.like" = "Notification: Someone liked this confession";
 "express.notification.guess" = "Notification: Someone participated in name guessing";
 "express.notification.generic" = "From notifications";
-"express.myPosts.loading" = "Loading my posts...";
+"express.myPosts.loading" = "Loading my posts……";
 "express.myPosts.emptyTitle" = "No Posts Yet";
 "express.myPosts.emptyMessage" = "Write something you want to say";
 "express.myPosts.loadFailed" = "Failed to load";
@@ -574,16 +574,16 @@
 "express.publish.targetGender" = "Their gender";
 "express.publish.contentPlaceholder" = "Confession content";
 "express.publish.contentSection" = "Content";
-"express.publish.submitting" = "Submitting...";
+"express.publish.submitting" = "Submitting……";
 "express.publish.submit" = "Submit";
-"express.detailLoading" = "Loading details...";
+"express.detailLoading" = "Loading details……";
 
 // MARK: - Library
 "library.title" = "Library";
 "library.myBorrow" = "My Loans";
 "library.searchPlaceholder" = "Search title / author";
 "library.search" = "Search";
-"library.loading" = "Searching books...";
+"library.loading" = "Searching books……";
 "library.emptyTitle" = "No Matching Books";
 "library.emptyMessage" = "Try a different keyword";
 "library.availableCount" = "Available: ";
@@ -591,7 +591,7 @@
 "library.nextPage" = "Next";
 "library.pageIndicator" = "Page ";
 "library.detail.title" = "Book Details";
-"library.detailLoading" = "Loading details...";
+"library.detailLoading" = "Loading details……";
 "library.detail.author" = "Author: ";
 "library.detail.publisher" = "Publisher: ";
 "library.detail.isbn" = "ISBN: ";
@@ -601,7 +601,7 @@
 "library.borrow.refresh" = "Refresh Loan Records";
 "library.borrow.query" = "Query Loan Records";
 "library.borrow.hint" = "Querying loans requires your library password. Password will be verified again when renewing.";
-"library.borrow.loading" = "Loading loan records...";
+"library.borrow.loading" = "Loading loan records……";
 "library.borrow.notQueried" = "Not Queried Yet";
 "library.borrow.notQueriedMessage" = "Enter your library password to view current loan records";
 "library.borrow.emptyTitle" = "No Loan Records";
@@ -649,22 +649,22 @@
 "community.sort.latest" = "Latest";
 "community.anonymousStudent" = "Anonymous";
 "community.anonymousUser" = "Anonymous User";
-"community.feed.loading" = "Loading discover feed...";
+"community.feed.loading" = "Loading discover feed……";
 "community.feed.emptyTitle" = "No Posts";
 "community.feed.emptyMessage" = "Try switching the sort or refresh later";
 "community.vm.feedLoadFailed" = "Failed to load discover feed";
 "community.topicFeed.defaultTitle" = "Topic";
-"community.topicFeed.loading" = "Loading topic posts...";
+"community.topicFeed.loading" = "Loading topic posts……";
 "community.topicFeed.emptyTitle" = "No Related Posts";
 "community.topicFeed.emptyMessage" = "Try a different sort order";
 "community.vm.topicLoadFailed" = "Failed to load topic";
 "community.postDetail.title" = "Post Details";
-"community.postDetail.loading" = "Loading post details...";
+"community.postDetail.loading" = "Loading post details……";
 "community.postDetail.emptyTitle" = "No Post Details";
 "community.postDetail.emptyMessage" = "Please try again later";
 "community.postDetail.commentsSection" = "Comments";
 "community.postDetail.noComments" = "No comments yet. Be the first to comment.";
-"community.postDetail.commentPlaceholder" = "Write a comment...";
+"community.postDetail.commentPlaceholder" = "Write a comment……";
 "community.postDetail.send" = "Send";
 "community.vm.postDetailLoadFailed" = "Failed to load post details";
 "community.vm.enterComment" = "Please enter comment content";
@@ -797,8 +797,8 @@
 "mock.community.content.latest3" = "Many students reported 3F outlet contact issues recently. Library maintenance is now complete. If new issues arise, please comment here so we can relay feedback to library staff.";
 "mock.community.content.default" = "This is a campus community post detail, demonstrating comments, tags, and interaction capabilities.";
 
-"delivery.title" = "Delivery";
-"delivery.loading" = "Loading delivery orders...";
+"delivery.title" = "Express Pickup";
+"delivery.loading" = "Loading delivery orders……";
 "delivery.noOrders" = "No Orders";
 "delivery.noOrdersMessage" = "No delivery tasks available";
 "delivery.hall" = "Delivery Hall";
@@ -808,7 +808,7 @@
 "delivery.pickup" = "From";
 "delivery.deliver" = "To";
 "delivery.pickupSuffix" = "Pickup";
-"delivery.detailLoading" = "Loading task details...";
+"delivery.detailLoading" = "Loading task details……";
 "delivery.detailLoadFailed" = "Failed to load details";
 "delivery.statusHeader" = "Status";
 "delivery.orderInfo" = "Order Info";
@@ -825,9 +825,9 @@
 "delivery.acceptor" = "Accepted By";
 "delivery.acceptTime" = "Accepted At";
 "delivery.actions" = "Actions";
-"delivery.accepting" = "Accepting...";
+"delivery.accepting" = "Accepting……";
 "delivery.acceptNow" = "Accept Now";
-"delivery.processing" = "Processing...";
+"delivery.processing" = "Processing……";
 "delivery.confirmComplete" = "Confirm Completion";
 "delivery.confirmCompleteDialog" = "Confirm the order has been delivered?";
 "delivery.confirmCompleteButton" = "Confirm Completion";
@@ -840,7 +840,7 @@
 "delivery.operationFailed" = "Operation failed";
 "delivery.listLoadFailed" = "Failed to load delivery list";
 "delivery.mineRefreshFailed" = "Failed to refresh my deliveries";
-"delivery.publishTitle" = "Post Delivery Task";
+"delivery.publishTitle" = "Post Express Pickup";
 "delivery.pickupPlacePlaceholder" = "Pickup location";
 "delivery.pickupCodePlaceholder" = "Pickup code (optional)";
 "delivery.phonePlaceholder" = "Phone number";
@@ -848,7 +848,7 @@
 "delivery.remarksPlaceholder" = "Remarks (optional)";
 "delivery.rewardPlaceholder" = "Errand fee";
 "delivery.publishFooter" = "Pickup code is optional; if not provided, a default value will be used.";
-"delivery.submitting" = "Submitting...";
+"delivery.submitting" = "Submitting……";
 "delivery.pickupPlaceRequired" = "Please enter pickup location";
 "delivery.pickupPlaceTooLong" = "Pickup location max 10 characters";
 "delivery.phoneRequired" = "Please enter phone number";
@@ -877,7 +877,7 @@
 
 "dating.title" = "Roommate";
 "dating.areaFilter" = "Area";
-"dating.loading" = "Loading profiles...";
+"dating.loading" = "Loading profiles……";
 "dating.noProfiles" = "No Profiles";
 "dating.noProfilesMessage" = "No new profiles in this area yet";
 "dating.from" = "From %@";
@@ -886,7 +886,7 @@
 "dating.publish" = "Post";
 "dating.confirmHide" = "Hide this post? Others won't see it in the hall.";
 "dating.confirmHideButton" = "Confirm Hide";
-"dating.loadingGeneric" = "Loading...";
+"dating.loadingGeneric" = "Loading……";
 "dating.noReceived" = "No Requests Received";
 "dating.noReceivedMessage" = "Messages will appear here";
 "dating.receivedHeader" = "Received";
@@ -901,7 +901,7 @@
 "dating.noPostsMessage" = "No posts to manage";
 "dating.hideButton" = "Hide";
 "dating.myPostsHeader" = "My Posts";
-"dating.detailLoading" = "Loading profile...";
+"dating.detailLoading" = "Loading profile……";
 "dating.detailLoadFailed" = "Failed to load profile";
 "dating.contactSection" = "Contact";
 "dating.noContact" = "No QQ or WeChat provided";
@@ -952,7 +952,7 @@
 "dating.grade4" = "Senior";
 
 "messages.title" = "Messages";
-"messages.loading" = "Loading messages...";
+"messages.loading" = "Loading messages……";
 "messages.newsSection" = "News";
 "messages.noNews" = "No news";
 "messages.systemNoticeSection" = "Announcements";
@@ -963,10 +963,10 @@
 "messages.markAllRead" = "Mark all read";
 "messages.more" = "More";
 "messages.tapRetry" = "Tap to retry";
-"messages.systemNoticeLoading" = "Loading announcements...";
+"messages.systemNoticeLoading" = "Loading announcements……";
 "messages.noSystemNoticeEmpty" = "No announcements";
 "messages.noSystemNoticeMessage" = "Check back later for new announcements";
-"messages.interactionLoading" = "Loading interactions...";
+"messages.interactionLoading" = "Loading interactions……";
 "messages.noInteractionEmpty" = "No interactions";
 "messages.noInteractionMessage" = "New interactions will appear here";
 "messages.interactionTitle" = "Interactions";
@@ -979,14 +979,14 @@
 
 // MARK: - Marketplace
 "marketplace.search" = "Search marketplace";
-"marketplace.loading" = "Loading marketplace...";
+"marketplace.loading" = "Loading marketplace……";
 "marketplace.emptyTitle" = "No marketplace items";
 "marketplace.emptyMessage" = "No items in this category";
 "marketplace.mine" = "Mine";
 "marketplace.publish" = "Publish";
 "marketplace.all" = "All";
 "marketplace.profileCenter" = "My Profile";
-"marketplace.profileLoading" = "Loading profile...";
+"marketplace.profileLoading" = "Loading profile……";
 "marketplace.profileLoadFailed" = "Failed to load profile";
 "marketplace.confirmUpdateState" = "Update item state?";
 "marketplace.tabSelling" = "Selling";
@@ -1011,7 +1011,7 @@
 "marketplace.stateUpdated" = "Status updated";
 "marketplace.actionFailed" = "Operation failed";
 "marketplace.detailTitle" = "Item Details";
-"marketplace.detailLoading" = "Loading item details...";
+"marketplace.detailLoading" = "Loading item details……";
 "marketplace.detailLoadFailed" = "Failed to load item details";
 "marketplace.seller" = "Seller";
 "marketplace.status" = "Status";
@@ -1020,7 +1020,7 @@
 "marketplace.contactHint" = "Contact info";
 "marketplace.editItemInfo" = "Edit item info";
 "marketplace.markSold" = "Mark as sold";
-"marketplace.processing" = "Processing...";
+"marketplace.processing" = "Processing……";
 "marketplace.removeItem" = "Remove item";
 "marketplace.itemNotInHall" = "This item is no longer listed. To relist, please use the web publish flow.";
 "marketplace.itemStatusUpdated" = "Item status updated";
@@ -1046,7 +1046,7 @@
 "marketplace.publishFailed" = "Failed to publish";
 "marketplace.editTitle" = "Edit Item";
 "marketplace.save" = "Save";
-"marketplace.saving" = "Saving...";
+"marketplace.saving" = "Saving……";
 "marketplace.saveFailed" = "Failed to save";
 "marketplace.itemUpdated" = "Item info updated";
 "marketplace.listLoadFailed" = "Failed to load marketplace";
@@ -1055,20 +1055,20 @@
 "secret.title" = "Secret Wall";
 "secret.mine" = "Mine";
 "secret.publish" = "Publish";
-"secret.loading" = "Loading secrets...";
+"secret.loading" = "Loading secrets……";
 "secret.emptyTitle" = "It's quiet here";
 "secret.emptyMessage" = "Share how you feel today";
 "secret.noMore" = "No more";
-"secret.loadingMore" = "Loading...";
+"secret.loadingMore" = "Loading……";
 "secret.comment" = "Comments";
-"secret.commentPlaceholder" = "Write a response...";
+"secret.commentPlaceholder" = "Write a response……";
 "secret.send" = "Send";
 "secret.emptyComments" = "No comments yet. Be the first to respond.";
 "secret.likeFailed" = "Like operation failed";
 "secret.commentFailed" = "Failed to send comment";
 "secret.commentEmpty" = "Please enter a comment";
 "secret.commentTooLong" = "Comment must be under 50 characters";
-"secret.detailLoading" = "Loading details...";
+"secret.detailLoading" = "Loading details……";
 "secret.detailLoadFailed" = "Failed to load details";
 "secret.anonymousDetail" = "Anonymous Post";
 "secret.fromInteraction" = "From notifications";
@@ -1111,7 +1111,7 @@
 "photograph.title" = "Campus Photos";
 "photograph.mine" = "Mine";
 "photograph.publish" = "Publish";
-"photograph.loading" = "Loading photos...";
+"photograph.loading" = "Loading photos……";
 "photograph.all" = "All";
 "photograph.filterCategory" = "Filter by category";
 "photograph.emptyTitle" = "No photos in this category";
@@ -1123,7 +1123,7 @@
 "photograph.likeItem" = "Like this photo";
 "photograph.likeFailed" = "Like failed";
 "photograph.detailTitle" = "Photo Details";
-"photograph.detailLoading" = "Loading photo details...";
+"photograph.detailLoading" = "Loading photo details……";
 "photograph.detailLoadFailed" = "Failed to load details";
 "photograph.infoSection" = "Photo Info";
 "photograph.category" = "Category";
@@ -1142,7 +1142,7 @@
 "photograph.categoryLabel" = "Category: ";
 "photograph.publishedAt" = "Published: ";
 "photograph.myTitle" = "My Photos";
-"photograph.myLoading" = "Loading my photos...";
+"photograph.myLoading" = "Loading my photos……";
 "photograph.myEmpty" = "No photos published";
 "photograph.myEmptyMsg" = "Upload your first campus photo";
 "photograph.noWorks" = "No photos";
@@ -1153,7 +1153,7 @@
 "photograph.titleField" = "Title";
 "photograph.descriptionField" = "Caption (optional)";
 "photograph.submit" = "Submit";
-"photograph.submitting" = "Submitting...";
+"photograph.submitting" = "Submitting……";
 
 // MARK: - Datacenter
 "dataCenter.electricQuery" = "Electricity Bill";
@@ -1163,7 +1163,7 @@
 "dataCenter.studentId" = "Student ID";
 "dataCenter.queryElec" = "Query";
 "dataCenter.queryCondition" = "Query Criteria";
-"dataCenter.queryingElec" = "Querying electricity bill...";
+"dataCenter.queryingElec" = "Querying electricity bill……";
 "dataCenter.dorm" = "Dormitory";
 "dataCenter.occupants" = "Occupants";
 "dataCenter.college" = "College";
@@ -1174,7 +1174,7 @@
 "dataCenter.totalFee" = "Total Fee";
 "dataCenter.avgFee" = "Avg. Fee";
 "dataCenter.queryResult" = "Results";
-"dataCenter.ypLoading" = "Loading yellow pages...";
+"dataCenter.ypLoading" = "Loading yellow pages……";
 "dataCenter.department" = "Department";
 "dataCenter.campus" = "Campus";
 "dataCenter.address" = "Address";
@@ -1196,7 +1196,7 @@
 "graduateExam.idNumber" = "ID Number";
 "graduateExam.query" = "Query Score";
 "graduateExam.queryInfo" = "Query Info";
-"graduateExam.querying" = "Querying exam scores...";
+"graduateExam.querying" = "Querying exam scores……";
 "graduateExam.result" = "Results";
 "graduateExam.regNumber" = "Registration No.";
 "graduateExam.politics" = "Politics";
@@ -1213,18 +1213,18 @@
 "collection.catalogSearch" = "Catalog Search";
 "collection.myBorrow" = "My Borrows";
 "collection.borrowService" = "Borrow Service";
-"collection.searching" = "Searching catalog...";
+"collection.searching" = "Searching catalog……";
 "collection.noResult" = "No results";
 "collection.searchHint" = "Enter title or author to search";
 "collection.searchResult" = "Search Results";
 "collection.library" = "Library";
-"collection.detailLoading" = "Loading details...";
+"collection.detailLoading" = "Loading details……";
 "collection.libPassword" = "Library Password";
 "collection.enterPassword" = "Enter library password";
 "collection.refreshBorrow" = "Refresh borrows";
 "collection.queryBorrow" = "Query borrows";
 "collection.borrowHint" = "Enter library password to view borrows. Password is re-verified on renewal.";
-"collection.borrowLoading" = "Loading borrow records...";
+"collection.borrowLoading" = "Loading borrow records……";
 "collection.notQueried" = "Not queried yet";
 "collection.borrowEmptyHint" = "Enter password to view borrow records";
 "collection.noBorrow" = "No borrow records";
@@ -1244,7 +1244,7 @@
 "collection.renewCount" = "Renewals: ";
 
 // MARK: - Grade
-"grade.loading" = "Loading grades...";
+"grade.loading" = "Loading grades……";
 "grade.emptyTitle" = "No grade data";
 "grade.emptyMsg" = "Please try again later";
 "grade.title" = "My Grades";
@@ -1269,7 +1269,7 @@
 "graduateExam.totalScore" = "Total: ";
 
 // MARK: - Profile
-"profile.loading" = "Loading profile...";
+"profile.loading" = "Loading profile……";
 "profile.emptyTitle" = "No profile data";
 "profile.emptyMsg" = "Please try again later";
 "profile.center" = "Profile";
@@ -1294,7 +1294,7 @@
 "profile.notSelected" = "Not selected";
 "profile.goWrite" = "Add";
 "profile.nicknamePlaceholder" = "Enter nickname";
-"profile.bioPlaceholder" = "Introduce yourself...";
+"profile.bioPlaceholder" = "Introduce yourself……";
 "profile.clearBirthday" = "Clear birthday";
 "profile.selectFacultyFirst" = "Select faculty first";
 "profile.selectCountry" = "Select Country / Region";
@@ -1307,11 +1307,11 @@
 "profile.confirm" = "Confirm";
 
 // MARK: - Common
-"common.saving" = "Saving...";
+"common.saving" = "Saving……";
 "common.saveFailed" = "Save failed";
 
 // MARK: - News
-"news.loading" = "Loading news...";
+"news.loading" = "Loading news……";
 "news.emptyTitle" = "No news";
 "news.emptyMsg" = "No news to display";
 "news.title" = "News";
@@ -1392,7 +1392,7 @@
 
 // MARK: - Login Record
 "loginRecord.title" = "Login Records";
-"loginRecord.loading" = "Loading login records...";
+"loginRecord.loading" = "Loading login records……";
 "loginRecord.emptyTitle" = "No login records";
 "loginRecord.emptyMsg" = "No recent login records";
 
@@ -1407,7 +1407,7 @@
 "privacy.age" = "Show age";
 "privacy.cache" = "Cache academic data";
 "privacy.robotsIndex" = "Allow search engine indexing";
-"privacy.loading" = "Loading...";
+"privacy.loading" = "Loading……";
 
 // MARK: - Common
 "common.notice" = "Notice";
@@ -1523,7 +1523,7 @@
 "common.hidePassword" = "Hide password";
 "common.retryAfterSeconds" = "Retry in %d s";
 "passwordSheet.verificationTitle" = "Security Verification";
-"login.mockCredentialsHint" = "Local sample account: gdeiassistant  Password: gdeiassistant";
+"login.mockCredentialsHint" = "Demo account: gdeiassistant, password: gdeiassistant";
 "photograph.emptyCategoryMessage" = "There is no content in this category yet. Publish the first campus photo.";
 "photograph.myEmptyFilteredMessage" = "No posts yet in the current category.";
 "auth.repositoryNotConfigured" = "Authentication repository is not configured";
@@ -1588,7 +1588,7 @@
 "messages.mapper.expressInteraction" = "Confession Wall interactions";
 "messages.mapper.topicInteraction" = "Topic interactions";
 "messages.mapper.photographInteraction" = "Campus Photos interactions";
-"messages.mapper.deliveryInteraction" = "Delivery updates";
+"messages.mapper.deliveryInteraction" = "Express Pickup updates";
 "messages.mapper.marketplaceInteraction" = "Marketplace updates";
 "messages.mapper.lostFoundInteraction" = "Lost & Found updates";
 "messages.category.all" = "All";
@@ -1601,7 +1601,7 @@
 "messages.badge.news" = "News";
 "messages.badge.marketplace" = "Market";
 "messages.badge.lostFound" = "Lost & Found";
-"messages.badge.delivery" = "Delivery";
+"messages.badge.delivery" = "Express Pickup";
 "messages.badge.secret" = "Secret";
 "messages.badge.express" = "Confession";
 "messages.badge.topic" = "Topic";
@@ -1781,7 +1781,7 @@
 "social.search.emptyHint" = "Try a different keyword";
 "social.search.failed" = "Failed to search users";
 "social.profile.title" = "Profile";
-"social.profile.loading" = "Loading profile...";
+"social.profile.loading" = "Loading profile……";
 "social.profile.loadFailed" = "Failed to load profile";
 "social.stats.title" = "Following & friends";
 "social.relationship.following" = "Following";
@@ -1822,7 +1822,7 @@
 "social.conversations.loadFailed" = "Failed to load conversations";
 "social.conversations.unreadTotal" = "%d unread messages";
 "social.chat.title" = "Chat";
-"social.chat.loading" = "Loading chat...";
+"social.chat.loading" = "Loading chat……";
 "social.chat.loadFailed" = "Failed to load chat";
 "social.chat.placeholder" = "Type a message";
 "social.chat.sendFailed" = "Failed to send";
@@ -1851,5 +1851,3 @@
 "social.error.clientMessageConflict" = "Message conflict. Refresh and try again";
 "social.error.rateLimited" = "Too many requests. Please try later";
 
-"app.debug.mockCredentialsHint" = "Mock account: gdeiassistant  password: gdeiassistant";
-"app.debug.bootstrapTimeoutMessage" = "Startup timed out. Please retry or sign in again";
