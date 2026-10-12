@@ -199,6 +199,12 @@ private struct HomeTodayCoursesCard: View {
     let loadFailed: Bool
     private var tokens = HomeDesignTokens()
 
+    init(courses: [CourseItem], isLoading: Bool, loadFailed: Bool) {
+        self.courses = courses
+        self.isLoading = isLoading
+        self.loadFailed = loadFailed
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DSSpacing.lg) {
             if isLoading {
@@ -246,6 +252,11 @@ private struct HomeServiceRow: View {
     let showsSubtitle: Bool
     private var tokens = HomeDesignTokens()
 
+    init(entry: HomeEntryConfig, showsSubtitle: Bool) {
+        self.entry = entry
+        self.showsSubtitle = showsSubtitle
+    }
+
     var body: some View {
         HStack(spacing: DSSpacing.sm) {
             DSIconTile(
@@ -279,6 +290,10 @@ private struct HomeAllFunctionsView<Destination: View>: View {
     let destination: (AppDestination) -> Destination
     @State private var selectedDestination: AppDestination?
     private var tokens = HomeDesignTokens()
+
+    init(@ViewBuilder destination: @escaping (AppDestination) -> Destination) {
+        self.destination = destination
+    }
 
     var body: some View {
         List {
