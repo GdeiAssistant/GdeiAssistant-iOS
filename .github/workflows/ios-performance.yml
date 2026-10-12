@@ -1,0 +1,99 @@
+name: iOS Runtime Performance Baseline
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'GdeiAssistant-iOSUITests/MockRuntimePerformanceTests.swift'
+      - 'GdeiAssistant-iOS.xcodeproj/project.pbxproj'
+      - '.github/workflows/ios-performance.yml'
+
+jobs:
+  baseline:
+    name: Capture Simulator launch and scrolling metrics
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Record the actual build and Simulator environment
+        run: |
+          test -d "$DEVELOPER_DIR"
+          mkdir -p PerformanceEvidence
+          xcodebuild -version | tee PerformanceEvidence/xcode-version.txt
+          xcrun swift --version > PerformanceEvidence/swift-version.txt
+          sw_vers > PerformanceEvidence/macos-version.txt
+          uname -m > PerformanceEvidence/architecture.txt
+          xcrun simctl list devices available iPhone -j > PerformanceEvidence/simulators.json
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          root = pathlib.Path('PerformanceEvidence')
+          data = json.loads((root / 'simulators.json').read_text())
+          runtime = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'
+          devices = [d for d in data.get('devices', {}).get(runtime, []) if d.get('isAvailable') and d['name'] == 'iPhone 17 Pro']
+          if len(devices) != 1:
+              raise SystemExit('Expected one available iPhone 17 Pro with iOS 26.2')
+          device = devices[0]
+          (root / 'simulator-udid.txt').write_text(device['udid'])
+          metadata = {
+              'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              'workflowHead': os.environ['GITHUB_SHA'],
+              'runId': os.environ['GITHUB_RUN_ID'],
+              'runtime': runtime,
+              'device': device,
+              'configuration': 'Debug',
+              'fixture': 'existing authenticated mock home and all-functions list, zh-Hans/light/default font',
+              'iterationsPerTest': 5,
+              'thresholds': 'none configured; initial lab baseline only',
+              'launch': 'XCTest responsive process-launch samples; not a cleared-cache physical-device cold launch',
+              'scroll': 'native scroll/deceleration signposts; clock also includes UI automation gesture latency',
+              'publication': 'none'
+          }
+          (root / 'environment.json').write_text(json.dumps(metadata, indent=2))
+          PY
+
+      - name: Measure the existing mock app on Simulator
+        run: |
+          set -o pipefail
+          SIMULATOR_UDID=$(cat PerformanceEvidence/simulator-udid.txt)
+          xcodebuild test \
+            -project GdeiAssistant-iOS.xcodeproj \
+            -scheme GdeiAssistant-iOS \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath "$RUNNER_TEMP/gdei-performance-derived-data" \
+            -parallel-testing-enabled NO \
+            -only-testing:GdeiAssistant-iOSUITests/MockRuntimePerformanceTests \
+            CODE_SIGNING_ALLOWED=NO \
+            -resultBundlePath PerformanceResults.xcresult \
+            2>&1 | tee PerformanceEvidence/xcodebuild-performance.log
+
+      - name: Export the raw XCTest metrics and screenshots
+        if: always()
+        run: |
+          test -d PerformanceResults.xcresult
+          xcrun xcresulttool get test-results metrics \
+            --path PerformanceResults.xcresult --compact > PerformanceEvidence/raw-metrics.json
+          xcrun xcresulttool get test-results summary \
+            --path PerformanceResults.xcresult --compact > PerformanceEvidence/test-summary.json
+          xcrun xcresulttool export attachments \
+            --path PerformanceResults.xcresult --output-path PerformanceEvidence/attachments
+
+      - name: Preserve the unmodified performance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-runtime-performance-${{ github.sha }}
+          path: |
+            PerformanceEvidence/
+            PerformanceResults.xcresult/
+          if-no-files-found: error
+          retention-days: 7
