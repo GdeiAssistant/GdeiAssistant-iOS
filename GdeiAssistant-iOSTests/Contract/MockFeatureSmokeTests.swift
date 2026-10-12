@@ -3,6 +3,14 @@ import XCTest
 
 @MainActor
 final class MockFeatureSmokeTests: XCTestCase {
+    func testHomeDateLabelUsesCampusDayAndWeekdayWithoutYear() throws {
+        let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-12T19:35:00Z"))
+        let label = HomeViewModel.campusDateDescription(on: date, locale: Locale(identifier: "en_US"))
+        XCTAssertTrue(label.contains("Tuesday"), label)
+        XCTAssertTrue(label.contains("13"), label)
+        XCTAssertFalse(label.contains("2026"), label)
+    }
+
     func testHomeTodayCoursesUsesCampusDayCurrentWeekAndSectionOrder() throws {
         let mondayInShanghai = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
         let courses = [

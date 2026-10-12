@@ -36,6 +36,14 @@ final class HomeViewModel: ObservableObject {
 
     var todayDate: Date { now() }
 
+    static func campusDateDescription(on date: Date, locale: Locale) -> String {
+        date.formatted(Date.FormatStyle(
+            locale: locale,
+            calendar: campusCalendar,
+            timeZone: campusCalendar.timeZone
+        ).weekday(.wide).month(.wide).day())
+    }
+
     static var campusCalendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Asia/Shanghai")!

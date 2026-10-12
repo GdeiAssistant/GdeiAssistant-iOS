@@ -30,23 +30,7 @@ struct HomeView: View {
     private var contentView: some View {
         List {
             Section {
-                HomeTodayCoursesCard(
-                    courses: viewModel.todayCourses,
-                    isLoading: viewModel.isScheduleLoading || (viewModel.currentSchedule == nil && !viewModel.scheduleLoadFailed),
-                    loadFailed: viewModel.scheduleLoadFailed
-                )
-            } header: {
-                VStack(alignment: .leading, spacing: DSSpacing.xs) {
-                    Text(viewModel.todayDate, format: Date.FormatStyle(
-                        date: .abbreviated,
-                        time: .omitted,
-                        locale: locale,
-                        calendar: HomeViewModel.campusCalendar,
-                        timeZone: HomeViewModel.campusCalendar.timeZone
-                    ))
-                    .font(.caption)
-                    .foregroundStyle(DSColor.subtitle)
-
+                VStack(alignment: .leading, spacing: DSSpacing.lg) {
                     HStack {
                         Label(localizedString("schedule.todayCourses"), systemImage: "clock")
                             .font(.headline)
@@ -64,10 +48,26 @@ struct HomeView: View {
                             Text(LocalizedStringKey("schedule.title"))
                                 .font(.subheadline)
                         }
+                        .buttonStyle(.plain)
                         .accessibilityIdentifier("home.todayCourses.schedule")
                     }
                     .foregroundStyle(DSColor.primary)
+
+                    HomeTodayCoursesCard(
+                        courses: viewModel.todayCourses,
+                        isLoading: viewModel.isScheduleLoading || (viewModel.currentSchedule == nil && !viewModel.scheduleLoadFailed),
+                        loadFailed: viewModel.scheduleLoadFailed
+                    )
                 }
+                .padding(DSSpacing.md)
+                .dsSurface()
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            } header: {
+                // Format before creating Text so the device environment cannot replace campus time.
+                Text(HomeViewModel.campusDateDescription(on: viewModel.todayDate, locale: locale))
+                    .font(.caption)
+                    .foregroundStyle(DSColor.subtitle)
             }
 
             if viewModel.dashboard == nil, let error = viewModel.errorMessage {
