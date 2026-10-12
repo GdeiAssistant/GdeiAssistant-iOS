@@ -3,6 +3,7 @@ import Foundation
 @MainActor
 protocol ScheduleRepository {
     func fetchWeeklySchedule(weekIndex: Int) async throws -> WeeklySchedule
+    func fetchCurrentWeeklySchedule() async throws -> WeeklySchedule
 }
 
 @MainActor
@@ -23,6 +24,10 @@ final class SwitchingScheduleRepository: ScheduleRepository {
 
     func fetchWeeklySchedule(weekIndex: Int) async throws -> WeeklySchedule {
         try await currentRepository.fetchWeeklySchedule(weekIndex: weekIndex)
+    }
+
+    func fetchCurrentWeeklySchedule() async throws -> WeeklySchedule {
+        try await currentRepository.fetchCurrentWeeklySchedule()
     }
 
     private var currentRepository: any ScheduleRepository {

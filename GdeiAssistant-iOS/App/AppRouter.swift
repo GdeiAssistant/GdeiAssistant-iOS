@@ -287,7 +287,7 @@ final class AppContainer: ObservableObject {
     }
 
     func makeHomeViewModel() -> HomeViewModel {
-        coreAssembly.makeHomeViewModel()
+        coreAssembly.makeHomeViewModel(scheduleRepository: scheduleRepository)
     }
 
     // Campus services

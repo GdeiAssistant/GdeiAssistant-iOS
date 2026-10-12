@@ -1851,3 +1851,7 @@
 "social.error.clientMessageConflict" = "メッセージが競合しました。更新して再試行してください";
 "social.error.rateLimited" = "操作が多すぎます。しばらくしてから再試行してください";
 
+"home.commonServices" = "よく使う機能";
+"home.allFunctions" = "すべての機能";
+"home.scheduleAction" = "時間割";
+

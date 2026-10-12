@@ -30,7 +30,7 @@ struct CoreAssembly {
         LoginViewModel(authManager: authManager)
     }
 
-    func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(repository: homeRepository)
+    func makeHomeViewModel(scheduleRepository: any ScheduleRepository) -> HomeViewModel {
+        HomeViewModel(repository: homeRepository, scheduleRepository: scheduleRepository)
     }
 }

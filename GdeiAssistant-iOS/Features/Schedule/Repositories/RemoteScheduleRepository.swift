@@ -13,4 +13,10 @@ final class RemoteScheduleRepository: ScheduleRepository {
         let responseDTO: ScheduleQueryResultDTO = try await apiClient.get("/schedule", queryItems: query, requiresAuth: true)
         return ScheduleRemoteMapper.mapSchedule(responseDTO, requestedWeekIndex: weekIndex)
     }
+
+    func fetchCurrentWeeklySchedule() async throws -> WeeklySchedule {
+        // The backend resolves the current academic week when `week` is omitted.
+        let responseDTO: ScheduleQueryResultDTO = try await apiClient.get("/schedule", requiresAuth: true)
+        return try ScheduleRemoteMapper.mapCurrentSchedule(responseDTO)
+    }
 }

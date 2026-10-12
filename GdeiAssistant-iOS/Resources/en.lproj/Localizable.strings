@@ -1851,3 +1851,7 @@
 "social.error.clientMessageConflict" = "Message conflict. Refresh and try again";
 "social.error.rateLimited" = "Too many requests. Please try later";
 
+"home.commonServices" = "Frequent";
+"home.allFunctions" = "All Functions";
+"home.scheduleAction" = "Schedule";
+

@@ -10,6 +10,44 @@ enum ScheduleRemoteMapper {
             mapCourse(entry, fallbackWeekIndex: resolvedWeekIndex)
         }
 
+        return makeSchedule(courseItems: courseItems, weekIndex: resolvedWeekIndex)
+    }
+
+    static func mapCurrentSchedule(_ dto: ScheduleQueryResultDTO) throws -> WeeklySchedule {
+        guard let week = dto.week, (1...20).contains(week) else {
+            throw CurrentScheduleMappingError.invalidCurrentWeek
+        }
+        let courseItems = try dto.scheduleList.map { entry in
+            if let position = entry.position, !(0...69).contains(position) {
+                throw CurrentScheduleMappingError.incompleteCourse
+            }
+            let column = entry.column ?? entry.position.map { $0 % 7 }
+            let row = entry.row ?? entry.position.map { $0 / 7 }
+            let name = entry.scheduleName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            guard let column, (0...6).contains(column),
+                  let row, (0...9).contains(row),
+                  let length = entry.scheduleLength, (1...5).contains(length), row + length <= 10,
+                  let minWeek = entry.minScheduleWeek, let maxWeek = entry.maxScheduleWeek,
+                  minWeek >= 1, maxWeek <= 20, minWeek <= maxWeek, !name.isEmpty else {
+                throw CurrentScheduleMappingError.incompleteCourse
+            }
+            // Backend row is zero-based; length is the real grid span in sections.
+            // Numeric week bounds also cover its "第1周至第16周" display label.
+            return CourseItem(
+                id: entry.id ?? "\(column)-\(row)-\(name)",
+                courseName: name,
+                teacherName: entry.scheduleTeacher?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                location: entry.scheduleLocation?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                dayOfWeek: column + 1,
+                startSection: row + 1,
+                endSection: row + length,
+                weekIndices: Array(minWeek...maxWeek)
+            )
+        }
+        return makeSchedule(courseItems: courseItems, weekIndex: week)
+    }
+
+    private static func makeSchedule(courseItems: [CourseItem], weekIndex: Int) -> WeeklySchedule {
         let groupedCourses = Dictionary(grouping: courseItems, by: \.dayOfWeek)
         let daySymbols = [
             localizedString("schedule.weekday.mon"),
@@ -39,7 +77,7 @@ enum ScheduleRemoteMapper {
         }
 
         return WeeklySchedule(
-            weekIndex: resolvedWeekIndex,
+            weekIndex: weekIndex,
             termName: currentAcademicTermText(),
             days: days
         )
@@ -155,4 +193,9 @@ enum ScheduleRemoteMapper {
         let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return trimmed.isEmpty ? fallback : trimmed
     }
+}
+
+private enum CurrentScheduleMappingError: Error {
+    case invalidCurrentWeek
+    case incompleteCourse
 }
