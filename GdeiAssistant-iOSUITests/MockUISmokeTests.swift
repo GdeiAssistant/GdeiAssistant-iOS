@@ -58,6 +58,8 @@ final class MockUISmokeTests: XCTestCase {
         loginAsMockUser(app)
 
         XCTAssertTrue(app.buttons["home.entry.grade"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["home.allFunctions"].waitForExistence(timeout: 5))
+        app.buttons["home.allFunctions"].tap()
         scrollToVisible(app.buttons["home.entry.marketplace"], in: app)
         XCTAssertTrue(app.buttons["home.entry.marketplace"].exists)
     }

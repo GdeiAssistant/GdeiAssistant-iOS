@@ -78,4 +78,12 @@ extension HomeEntryConfig {
     ]
 
     static let allEntries: [HomeEntryConfig] = campusServices + campusLife
+
+    /// Page 4's common services; all existing destinations remain in All Functions.
+    static var commonEntries: [HomeEntryConfig] {
+        let destinations: [AppDestination] = [.card, .grade, .library, .delivery]
+        return destinations.compactMap { destination in
+            allEntries.first { $0.destination == destination }
+        }
+    }
 }
