@@ -61,6 +61,23 @@ final class MockUISmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["home.entry.marketplace"].exists)
     }
 
+    func testHomeTodayCoursesPrecedesServicesAndOpensSchedule() throws {
+        let app = launchApp(authenticated: true, initialScreen: .home)
+        let today = app.otherElements["home.todayCourses"]
+        let schedule = app.buttons["home.todayCourses.schedule"]
+        let grade = app.buttons["home.entry.grade"]
+        XCTAssertTrue(today.waitForExistence(timeout: 10))
+        XCTAssertTrue(schedule.waitForExistence(timeout: 10))
+        XCTAssertTrue(grade.waitForExistence(timeout: 10))
+        XCTAssertLessThan(today.frame.minY, grade.frame.minY)
+        waitForIdleContent()
+        attachScreenshot(app, name: "home-today-courses-before-services")
+        schedule.tap()
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["home.todayCourses.schedule"].exists)
+        attachScreenshot(app, name: "home-today-courses-open-schedule")
+    }
+
     func testMockMessagesTabShowsAnnouncementsAndInteractions() throws {
         let app = launchApp(authenticated: true, initialScreen: .messages)
 

@@ -3,6 +3,137 @@ import XCTest
 
 @MainActor
 final class MockFeatureSmokeTests: XCTestCase {
+    func testHomeTodayCoursesUsesCampusDayCurrentWeekAndSectionOrder() throws {
+        let mondayInShanghai = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
+        let courses = [
+            homeCourse("later", day: 1, section: 5, weeks: [8]),
+            homeCourse("wrong-week", day: 1, section: 1, weeks: [7]),
+            homeCourse("early", day: 1, section: 1, weeks: [8]),
+            homeCourse("all-weeks", day: 1, section: 3, weeks: []),
+            homeCourse("sunday", day: 7, section: 1, weeks: [8])
+        ]
+        let schedule = homeSchedule(courses)
+        XCTAssertEqual(HomeViewModel.todayCourses(in: schedule, on: mondayInShanghai).map(\.id), ["early", "all-weeks", "later"])
+
+        let sundayInShanghai = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-10T16:30:00Z"))
+        XCTAssertEqual(HomeViewModel.todayCourses(in: schedule, on: sundayInShanghai).map(\.id), ["sunday"])
+    }
+
+    func testHomeTodayScheduleFailureIsSeparateFromEmptyAndCanRecover() async throws {
+        let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
+        let repository = HomeScheduleStub(schedule: homeSchedule([]))
+        repository.shouldFail = true
+        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository, now: { date })
+        await model.loadTodaySchedule()
+        XCTAssertTrue(model.scheduleLoadFailed)
+        XCTAssertNil(model.currentSchedule)
+        XCTAssertFalse(model.isScheduleLoading)
+
+        repository.shouldFail = false
+        await model.loadTodaySchedule()
+        XCTAssertFalse(model.scheduleLoadFailed)
+        XCTAssertNotNil(model.currentSchedule)
+        XCTAssertTrue(model.todayCourses.isEmpty)
+        XCTAssertEqual(repository.currentRequests, 2)
+        XCTAssertEqual(repository.requestedWeeks, [])
+    }
+
+    func testHomeDashboardFailureKeepsLoadedTodayCoursesAndUsesCurrentWeekRequest() async throws {
+        let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
+        let repository = HomeScheduleStub(schedule: homeSchedule([homeCourse("today", day: 1, section: 1, weeks: [8])]))
+        let model = HomeViewModel(repository: HomeDashboardStub(shouldFail: true), scheduleRepository: repository, now: { date })
+        await model.loadIfNeeded()
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertNil(model.dashboard)
+        XCTAssertEqual(model.todayCourses.map(\.id), ["today"])
+        XCTAssertFalse(model.scheduleLoadFailed)
+        XCTAssertEqual(repository.currentRequests, 1)
+        XCTAssertEqual(repository.requestedWeeks, [])
+    }
+
+    func testHomeDropsOutdatedScheduleResponseAfterRefresh() async {
+        let old = homeSchedule([homeCourse("old", day: 1, section: 1, weeks: [8])])
+        let new = homeSchedule([homeCourse("new", day: 1, section: 1, weeks: [8])])
+        let repository = HomeScheduleStub(schedule: new)
+        repository.suspendRequestAt = 1
+        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository)
+        let first = Task { await model.loadTodaySchedule() }
+        await repository.waitForFirstRequest()
+        await model.loadTodaySchedule()
+        repository.suspendedFirstRequest?.resume(returning: old)
+        await first.value
+        XCTAssertEqual(model.currentSchedule?.days.flatMap(\.courses).map(\.id), ["new"])
+        XCTAssertFalse(model.isScheduleLoading)
+    }
+
+    func testHomeRefetchesWhenResponseCrossesCampusMidnight() async throws {
+        let sunday = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T15:59:59Z"))
+        let monday = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:00:01Z"))
+        let clock = HomeClock(date: sunday)
+        let repository = HomeScheduleStub(schedule: homeSchedule([homeCourse("monday", day: 1, section: 1, weeks: [8])]))
+        repository.onFirstCurrentRequest = { clock.date = monday }
+        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository, now: { clock.date })
+        await model.loadTodaySchedule()
+        XCTAssertEqual(repository.currentRequests, 2)
+        XCTAssertEqual(model.todayCourses.map(\.id), ["monday"])
+        XCTAssertFalse(model.isScheduleLoading)
+        XCTAssertFalse(model.scheduleLoadFailed)
+    }
+
+    func testHomeCancelledScheduleCanReloadWithoutShowingFailure() async {
+        let repository = HomeScheduleStub(schedule: homeSchedule([]))
+        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository)
+        await model.loadTodaySchedule()
+        repository.suspendRequestAt = 2
+        let first = Task { await model.loadTodaySchedule() }
+        await repository.waitForFirstRequest()
+        first.cancel()
+        repository.suspendedFirstRequest?.resume(returning: homeSchedule([]))
+        await first.value
+        XCTAssertFalse(model.scheduleLoadFailed)
+        XCTAssertNil(model.currentSchedule)
+        XCTAssertFalse(model.isScheduleLoading)
+        await model.loadIfNeeded()
+        XCTAssertNotNil(model.currentSchedule)
+        XCTAssertEqual(repository.currentRequests, 3)
+    }
+
+    func testRemoteCurrentScheduleOmitsWeekQueryAndRejectsUnknownWeek() async throws {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [HomeScheduleURLProtocol.self]
+        let session = URLSession(configuration: configuration)
+        defer { session.invalidateAndCancel() }
+        let environment = AppEnvironment(networkEnvironment: .prod, dataSourceMode: .remote, isDebug: false, clientType: "IOS")
+        environment.baseURL = try XCTUnwrap(URL(string: "https://synthetic.example"))
+        let apiClient = APIClient(environment: environment, session: session, tokenProvider: { nil }, onUnauthorized: {})
+        let repository = RemoteScheduleRepository(apiClient: apiClient)
+        HomeScheduleURLProtocol.body = #"{"success":true,"data":{"week":8,"scheduleList":[]}}"#
+        HomeScheduleURLProtocol.requestedURL = nil
+        let schedule = try await repository.fetchCurrentWeeklySchedule()
+        XCTAssertEqual(schedule.weekIndex, 8)
+        let url = try XCTUnwrap(HomeScheduleURLProtocol.requestedURL)
+        XCTAssertEqual(url.path, "/schedule")
+        XCTAssertFalse(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.contains(where: { $0.name == "week" }) ?? false)
+
+        HomeScheduleURLProtocol.body = #"{"success":true,"data":{"scheduleList":[]}}"#
+        do {
+            _ = try await repository.fetchCurrentWeeklySchedule()
+            XCTFail("Missing current week must not become a fabricated current-week schedule")
+        } catch {
+            // Expected: the home card must show unavailable, not an empty guessed week.
+        }
+        HomeScheduleURLProtocol.body = ""
+        HomeScheduleURLProtocol.requestedURL = nil
+    }
+
+    private func homeCourse(_ id: String, day: Int, section: Int, weeks: [Int]) -> CourseItem {
+        CourseItem(id: id, courseName: id, teacherName: "Synthetic", location: "Synthetic", dayOfWeek: day, startSection: section, endSection: section + 1, weekIndices: weeks)
+    }
+
+    private func homeSchedule(_ courses: [CourseItem]) -> WeeklySchedule {
+        WeeklySchedule(weekIndex: 8, termName: "Synthetic", days: [CourseDaySection(dayOfWeek: 1, dayTitle: "Synthetic", dateText: "", courses: courses)])
+    }
+
     func testGradeYearIsAnIndexAndCourseKeepsActualAcademicYear() throws {
         let json = #"{"year":2,"firstTermGradeList":[{"gradeId":"synthetic","gradeYear":"2023-2024","gradeTerm":"1","gradeName":"Synthetic course","gradeScore":"90","gradeCredit":"2"}]}"#
         let dto = try JSONDecoder().decode(GradeQueryResultDTO.self, from: Data(json.utf8))
@@ -264,4 +395,85 @@ final class MockFeatureSmokeTests: XCTestCase {
         let unread = try await socialRepository.fetchUnreadCount()
         XCTAssertGreaterThanOrEqual(unread.total, 0)
     }
+}
+
+@MainActor
+private final class HomeClock {
+    var date: Date
+    init(date: Date) { self.date = date }
+}
+
+private enum HomeTestError: Error { case unavailable }
+
+@MainActor
+private final class HomeDashboardStub: HomeRepository {
+    let shouldFail: Bool
+    init(shouldFail: Bool = false) { self.shouldFail = shouldFail }
+
+    func fetchDashboard() async throws -> HomeDashboard {
+        if shouldFail { throw HomeTestError.unavailable }
+        return HomeDashboard(greeting: "", reminderText: "", quickActions: [], recentItems: [], campusBannerTitle: "", trendingTopics: [])
+    }
+}
+
+@MainActor
+private final class HomeScheduleStub: ScheduleRepository {
+    let schedule: WeeklySchedule
+    var shouldFail = false
+    var currentRequests = 0
+    var requestedWeeks: [Int] = []
+    var onFirstCurrentRequest: (() -> Void)?
+    var suspendRequestAt: Int?
+    var suspendedFirstRequest: CheckedContinuation<WeeklySchedule, Error>?
+    private var requestStarted: CheckedContinuation<Void, Never>?
+
+    init(schedule: WeeklySchedule) { self.schedule = schedule }
+
+    func fetchWeeklySchedule(weekIndex: Int) async throws -> WeeklySchedule {
+        requestedWeeks.append(weekIndex)
+        return schedule
+    }
+
+    func fetchCurrentWeeklySchedule() async throws -> WeeklySchedule {
+        currentRequests += 1
+        if shouldFail { throw HomeTestError.unavailable }
+        if currentRequests == 1 {
+            onFirstCurrentRequest?()
+        }
+        if currentRequests == suspendRequestAt {
+            return try await withCheckedThrowingContinuation { continuation in
+                suspendedFirstRequest = continuation
+                requestStarted?.resume()
+                requestStarted = nil
+            }
+        }
+        return schedule
+    }
+
+    func waitForFirstRequest() async {
+        if suspendedFirstRequest != nil { return }
+        await withCheckedContinuation { requestStarted = $0 }
+    }
+}
+
+private final class HomeScheduleURLProtocol: URLProtocol {
+    static var body = ""
+    static var requestedURL: URL?
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        guard let url = request.url,
+              let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil) else {
+            client?.urlProtocol(self, didFailWithError: URLError(.badURL))
+            return
+        }
+        Self.requestedURL = url
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Data(Self.body.utf8))
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
 }
