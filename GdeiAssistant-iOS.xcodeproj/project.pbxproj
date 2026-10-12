@@ -20,6 +20,7 @@
 		C8F4A2B6D9E14035A7C2F912 /* ChargeRemoteMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F4A2B6D9E14035A7C2F911 /* ChargeRemoteMapperTests.swift */; };
 		A2B3C4D5E6F708192A3B4C5D /* TestLifetimeRetainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* TestLifetimeRetainer.swift */; };
 		A7F100000000000000000001 /* MockUISmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F100000000000000000003 /* MockUISmokeTests.swift */; };
+		A7F100000000000000000010 /* MockRuntimePerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F100000000000000000011 /* MockRuntimePerformanceTests.swift */; };
 		8219886478DFDC9042AE3AA9 /* RequestBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63BDDF16EB5C5E56111AC4 /* RequestBuilderTests.swift */; };
 		A1B2C3D4E5F60718A9B0D1E1 /* SecretDetailNoDuplicateFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */; };
 		B15D1954479F46BEB294065B /* RequestIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359A61E15F1A4C11A7429225 /* RequestIDTests.swift */; };
@@ -74,6 +75,7 @@
 		98C5CC023B26463B8EAE2B9A /* APIClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIClientTests.swift; path = "GdeiAssistant-iOSTests/Networking/APIClientTests.swift"; sourceTree = "<group>"; };
 		9C0D1E2F30415263748596A7 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsViewModelTests.swift; path = "GdeiAssistant-iOSTests/Profile/SettingsViewModelTests.swift"; sourceTree = "<group>"; };
 		A7F100000000000000000003 /* MockUISmokeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockUISmokeTests.swift; path = "GdeiAssistant-iOSUITests/MockUISmokeTests.swift"; sourceTree = "<group>"; };
+		A7F100000000000000000011 /* MockRuntimePerformanceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MockRuntimePerformanceTests.swift; path = "GdeiAssistant-iOSUITests/MockRuntimePerformanceTests.swift"; sourceTree = "<group>"; };
 		A7F100000000000000000004 /* GdeiAssistant-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GdeiAssistant-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A17F3CF56F76606E1257E386 /* LibraryRemoteMapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LibraryRemoteMapperTests.swift; path = "GdeiAssistant-iOSTests/Library/LibraryRemoteMapperTests.swift"; sourceTree = "<group>"; };
 		A1B2C3D4E5F60718A9B0D1E2 /* SecretDetailNoDuplicateFetchTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SecretDetailNoDuplicateFetchTests.swift; path = "GdeiAssistant-iOSTests/Contract/SecretDetailNoDuplicateFetchTests.swift"; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				A7F100000000000000000003 /* MockUISmokeTests.swift */,
+				A7F100000000000000000011 /* MockRuntimePerformanceTests.swift */,
 			);
 			name = "GdeiAssistant-iOSUITests";
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7F100000000000000000001 /* MockUISmokeTests.swift in Sources */,
+				A7F100000000000000000010 /* MockRuntimePerformanceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
