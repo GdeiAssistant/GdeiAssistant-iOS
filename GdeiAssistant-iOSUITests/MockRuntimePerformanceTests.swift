@@ -26,6 +26,10 @@ final class MockRuntimePerformanceTests: XCTestCase {
     }
 
     func testScrollAllFunctionsBaseline() throws {
+        guard #available(iOS 26.0, *) else {
+            XCTFail("The runtime baseline requires the pinned iOS 26 Simulator hitch metric")
+            return
+        }
         let app = makeMockHomeApp()
         app.launch()
         XCTAssertTrue(app.buttons["home.entry.grade"].waitForExistence(timeout: 10))
@@ -39,9 +43,9 @@ final class MockRuntimePerformanceTests: XCTestCase {
 
         let options = XCTMeasureOptions()
         options.iterationCount = 5
-        options.invocationOptions = [.manuallyStart]
+        options.invocationOptions = [.manuallyStart, .manuallyStop]
         let firstEntry = app.buttons["home.entry.grade"]
-        measure(metrics: [XCTOSSignpostMetric.scrollingAndDecelerationMetric, XCTClockMetric()], options: options) {
+        measure(metrics: [XCTHitchMetric(application: app), XCTClockMetric()], options: options) {
             // Reset outside the measured interval so every sample scrolls the same existing list.
             for _ in 0..<4 where !firstEntry.isHittable {
                 app.swipeDown(velocity: .fast)

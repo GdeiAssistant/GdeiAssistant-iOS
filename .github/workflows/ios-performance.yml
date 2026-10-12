@@ -54,7 +54,8 @@ jobs:
               'iterationsPerTest': 5,
               'thresholds': 'none configured; initial lab baseline only',
               'launch': 'XCTest responsive process-launch samples; not a cleared-cache physical-device cold launch',
-              'scroll': 'native scroll/deceleration signposts; clock also includes UI automation gesture latency',
+              'scroll': 'target-app rendering hitches during measured gestures; clock includes UI automation gesture latency',
+              'legacyScrollSignpost': 'unavailable on this baseline: original run failed during XCTest harvestData with no signpost metric samples',
               'publication': 'none'
           }
           (root / 'environment.json').write_text(json.dumps(metadata, indent=2))
