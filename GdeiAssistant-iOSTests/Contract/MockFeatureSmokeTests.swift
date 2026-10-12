@@ -3,6 +3,22 @@ import XCTest
 
 @MainActor
 final class MockFeatureSmokeTests: XCTestCase {
+    func testHomeCommonServicesKeepAuditedOrderAndPickupDestination() {
+        XCTAssertEqual(HomeEntryConfig.commonEntries.map(\.destination), [.card, .grade, .library, .delivery])
+        XCTAssertFalse(HomeEntryConfig.commonEntries.contains { $0.destination == .express })
+    }
+
+    func testHomeAllFunctionsRetainsOriginalSeventeenDestinationsAndGroups() {
+        XCTAssertEqual(HomeEntryConfig.allSections.map(\.section), [.campusServices, .campusLife])
+        XCTAssertEqual(HomeEntryConfig.campusServices.map(\.destination), [
+            .grade, .schedule, .cet, .graduateExam, .spare, .library, .card, .dataCenter, .evaluate
+        ])
+        XCTAssertEqual(HomeEntryConfig.campusLife.map(\.destination), [
+            .marketplace, .delivery, .lostFound, .secret, .dating, .express, .topic, .photograph
+        ])
+        XCTAssertEqual(Set(HomeEntryConfig.allEntries.map(\.destination)).count, 17)
+    }
+
     func testHomeDateLabelUsesCampusDayAndWeekdayWithoutYear() throws {
         let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-12T19:35:00Z"))
         let label = HomeViewModel.campusDateDescription(on: date, locale: Locale(identifier: "en_US"))
@@ -132,6 +148,63 @@ final class MockFeatureSmokeTests: XCTestCase {
         }
         HomeScheduleURLProtocol.body = ""
         HomeScheduleURLProtocol.requestedURL = nil
+    }
+
+    func testRemoteCurrentScheduleRejectsIncompleteCourseMetadata() async throws {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [HomeScheduleURLProtocol.self]
+        let session = URLSession(configuration: configuration)
+        defer {
+            session.invalidateAndCancel()
+            HomeScheduleURLProtocol.body = ""
+            HomeScheduleURLProtocol.requestedURL = nil
+        }
+        let environment = AppEnvironment(networkEnvironment: .prod, dataSourceMode: .remote, isDebug: false, clientType: "IOS")
+        environment.baseURL = try XCTUnwrap(URL(string: "https://synthetic.example"))
+        let apiClient = APIClient(environment: environment, session: session, tokenProvider: { nil }, onUnauthorized: {})
+        let repository = RemoteScheduleRepository(apiClient: apiClient)
+        let complete: [String: Any] = [
+            "scheduleName": "Synthetic", "column": 0, "row": 2, "scheduleLength": 2,
+            "minScheduleWeek": 1, "maxScheduleWeek": 16, "scheduleWeek": "第1周至第16周"
+        ]
+        for missingKey in ["column", "row", "scheduleLength", "minScheduleWeek", "maxScheduleWeek", "scheduleName"] {
+            var incomplete = complete
+            incomplete.removeValue(forKey: missingKey)
+            HomeScheduleURLProtocol.body = String(decoding: try JSONSerialization.data(withJSONObject: [
+                "success": true, "data": ["week": 8, "scheduleList": [incomplete]]
+            ]), as: UTF8.self)
+            do {
+                _ = try await repository.fetchCurrentWeeklySchedule()
+                XCTFail("Missing \(missingKey) must be unavailable rather than a fabricated course")
+            } catch {
+                // Expected: current-home mapping needs actual day, sections and week bounds.
+            }
+        }
+    }
+
+    func testRemoteCurrentScheduleUsesActualGridSectionsAndWeekBoundsWithoutLocationFallback() async throws {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [HomeScheduleURLProtocol.self]
+        let session = URLSession(configuration: configuration)
+        defer {
+            session.invalidateAndCancel()
+            HomeScheduleURLProtocol.body = ""
+            HomeScheduleURLProtocol.requestedURL = nil
+        }
+        let environment = AppEnvironment(networkEnvironment: .prod, dataSourceMode: .remote, isDebug: false, clientType: "IOS")
+        environment.baseURL = try XCTUnwrap(URL(string: "https://synthetic.example"))
+        let apiClient = APIClient(environment: environment, session: session, tokenProvider: { nil }, onUnauthorized: {})
+        let repository = RemoteScheduleRepository(apiClient: apiClient)
+        HomeScheduleURLProtocol.body = #"{"success":true,"data":{"week":8,"scheduleList":[{"id":"synthetic","scheduleName":"Synthetic","column":0,"row":2,"scheduleLength":2,"scheduleLesson":"周一第3,4节","minScheduleWeek":1,"maxScheduleWeek":16,"scheduleWeek":"第1周至第16周"}]}}"#
+        let schedule = try await repository.fetchCurrentWeeklySchedule()
+        let course = try XCTUnwrap(schedule.days.flatMap(\.courses).first)
+        XCTAssertEqual(course.dayOfWeek, 1)
+        XCTAssertEqual(course.startSection, 3)
+        XCTAssertEqual(course.endSection, 4)
+        XCTAssertEqual(course.weekIndices, Array(1...16))
+        XCTAssertEqual(course.location, "")
+        let monday = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
+        XCTAssertEqual(HomeViewModel.todayCourses(in: schedule, on: monday).map(\.id), ["synthetic"])
     }
 
     private func homeCourse(_ id: String, day: Int, section: Int, weeks: [Int]) -> CourseItem {

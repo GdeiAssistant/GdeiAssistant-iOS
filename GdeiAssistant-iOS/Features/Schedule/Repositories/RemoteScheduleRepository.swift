@@ -17,13 +17,6 @@ final class RemoteScheduleRepository: ScheduleRepository {
     func fetchCurrentWeeklySchedule() async throws -> WeeklySchedule {
         // The backend resolves the current academic week when `week` is omitted.
         let responseDTO: ScheduleQueryResultDTO = try await apiClient.get("/schedule", requiresAuth: true)
-        guard let week = responseDTO.week, week > 0 else {
-            throw CurrentScheduleError.missingCurrentWeek
-        }
-        return ScheduleRemoteMapper.mapSchedule(responseDTO, requestedWeekIndex: week)
+        return try ScheduleRemoteMapper.mapCurrentSchedule(responseDTO)
     }
-}
-
-private enum CurrentScheduleError: Error {
-    case missingCurrentWeek
 }

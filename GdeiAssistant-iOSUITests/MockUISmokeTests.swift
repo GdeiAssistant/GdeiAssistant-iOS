@@ -76,9 +76,65 @@ final class MockUISmokeTests: XCTestCase {
         waitForIdleContent()
         attachScreenshot(app, name: "home-today-courses-before-services")
         schedule.tap()
-        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["我的课程表"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["第 6 周"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["home.todayCourses.schedule"].exists)
         attachScreenshot(app, name: "home-today-courses-open-schedule")
+    }
+
+    func testHomeCommonServicesOrderAndPickupRouting() throws {
+        let app = launchApp(authenticated: true, initialScreen: .home)
+        let commonIDs = ["card", "grade", "library", "delivery"]
+        var previousY: CGFloat?
+        for id in commonIDs {
+            let entry = app.buttons["home.entry.\(id)"]
+            XCTAssertTrue(entry.waitForExistence(timeout: 10), id)
+            if let previousY {
+                XCTAssertLessThan(previousY, entry.frame.minY, id)
+            }
+            previousY = entry.frame.minY
+        }
+        XCTAssertFalse(app.buttons["home.entry.express"].exists)
+        scrollToVisible(app.buttons["home.entry.delivery"], in: app)
+        attachScreenshot(app, name: "home-common-services-order")
+        app.buttons["home.entry.delivery"].tap()
+        XCTAssertTrue(app.navigationBars["快递代取"].waitForExistence(timeout: 10))
+        attachScreenshot(app, name: "home-common-delivery-destination")
+    }
+
+    func testHomeAllFunctionsExposesEveryOriginalEntry() throws {
+        let app = launchApp(authenticated: true, initialScreen: .home)
+        let allFunctions = app.buttons["home.allFunctions"]
+        scrollToVisible(allFunctions, in: app)
+        allFunctions.tap()
+        XCTAssertTrue(app.navigationBars["全部功能"].waitForExistence(timeout: 10))
+        let entryIDs = [
+            "grade", "schedule", "cet", "graduateExam", "spare", "library", "card", "data_center", "evaluate",
+            "marketplace", "delivery", "lost_found", "secret", "dating", "express", "topic", "photograph"
+        ]
+        for id in entryIDs {
+            let entry = app.buttons["home.entry.\(id)"]
+            scrollToVisible(entry, in: app)
+            XCTAssertTrue(entry.isHittable, id)
+        }
+        attachScreenshot(app, name: "home-all-functions-final-entries")
+    }
+
+    func testHomeLargeTypeInLightAndDarkKeepsScheduleAndServicesReachable() throws {
+        for appearance in ["light", "dark"] {
+            let app = launchApp(authenticated: true, initialScreen: .home, appearance: appearance, fontScaleStep: 3)
+            let schedule = app.buttons["home.todayCourses.schedule"]
+            XCTAssertTrue(schedule.waitForExistence(timeout: 10))
+            XCTAssertTrue(schedule.isHittable)
+            waitForIdleContent()
+            attachScreenshot(app, name: "design-preview-home-\(appearance)-large-type")
+            for id in ["card", "grade", "library", "delivery"] {
+                scrollToVisible(app.buttons["home.entry.\(id)"], in: app)
+            }
+            scrollToVisible(app.buttons["home.allFunctions"], in: app)
+            attachScreenshot(app, name: "home-common-services-\(appearance)-large-type")
+            app.terminate()
+        }
     }
 
     func testMockMessagesTabShowsAnnouncementsAndInteractions() throws {
@@ -371,7 +427,8 @@ final class MockUISmokeTests: XCTestCase {
         initialScreen: InitialScreen? = nil,
         failFirstImageSend: Bool = false,
         locale: String = "zh-Hans",
-        appearance: String? = nil
+        appearance: String? = nil,
+        fontScaleStep: Int = 1
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["GDEIASSISTANT_RUNNING_TESTS"] = "1"
@@ -391,7 +448,8 @@ final class MockUISmokeTests: XCTestCase {
         }
         app.launchArguments += [
             "-AppleLanguages", "(\(locale))",
-            "-AppleLocale", locale
+            "-AppleLocale", locale,
+            "-font_scale_step", String(fontScaleStep)
         ]
         appUnderTest = app
         app.launch()
