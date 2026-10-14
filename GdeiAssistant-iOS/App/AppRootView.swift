@@ -168,4 +168,5 @@ struct AppRootView: View {
         .environmentObject(container.userPreferences)
         .environmentObject(container.sessionState)
         .environmentObject(container.router)
+        .environmentObject(container.unreadBadgeStore)
 }
