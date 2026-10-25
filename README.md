@@ -1,65 +1,103 @@
-# 广东二师助手 iOS 客户端
+# 广东二师助手 · iOS 客户端
 
-广东二师助手 iOS 客户端，基于 SwiftUI 构建，面向广东第二师范学院校园场景，覆盖教务查询、校园生活与信息通知等核心能力。
+广东第二师范学院校园助手的 iOS 客户端，SwiftUI 编写，支持 iOS 17 及以上。
 
-## 维护状态
+这个仓库只有客户端。成绩、课表、校园卡这些数据来自 [GdeiAssistant 后端](https://github.com/GdeiAssistant/GdeiAssistant)，本仓库不包含服务端代码和部署配置。项目由学生维护，不是学校官方服务。
 
-**活跃开发中** — 最近更新：2026 年 6 月。与后端 [GdeiAssistant](https://github.com/GdeiAssistant/GdeiAssistant) 主仓同步迭代。
+- [功能](#功能)
+- [技术栈](#技术栈)
+- [快速开始](#快速开始)
+- [接口环境](#接口环境)
+- [工程结构](#工程结构)
+- [架构说明](#架构说明)
+- [参与贡献](#参与贡献)
 
-## 功能概览
+## 功能
 
-### 校园服务
+| 模块 | 内容 |
+| --- | --- |
+| 教务 | 成绩、课表、四六级、考研、教室、图书馆、教学评价、数据中心 |
+| 校园生活 | 二手交易、全民快递、失物招领、校园树洞、卖室友、表白墙、校园话题、拍好校园 |
+| 资讯 | 新闻通知、系统公告、互动消息、私信会话 |
+| 个人中心 | 资料与头像、绑定手机/邮箱、隐私设置、登录记录、数据下载、主题与字体、反馈、设置 |
 
-- 成绩查询
-- 课表查询
-- 四六级查询
-- 考研查询
-- 教室查询
-- 图书馆
-- 校园卡
-- 数据查询
-- 教学评价
-
-### 校园生活
-
-- 二手交易
-- 全民快递
-- 失物招领
-- 校园树洞
-- 卖室友
-- 表白墙
-- 校园话题
-- 拍好校园
-
-### 资讯信息
-
-- 新闻通知
-- 系统通知公告
-- 互动消息
-
-### 个人中心
-
-- 资料展示与编辑
-- 头像管理
-- 绑定手机
-- 绑定邮箱
-- 隐私设置
-- 登录记录
-- 下载个人数据
-- 界面和外观（主题切换、字体大小、语言）
-- 反馈
-- 设置
-- 退出登录
+社交实时通道走 WebSocket（`/api/social/realtime`），由 `SocialRealtimeManager` 管认证、重连和登出清理。
 
 ## 技术栈
 
-- Swift
-- SwiftUI
-- MVVM
-- Repository Pattern
-- URLSession
-- Keychain
-- JWT 前后端分离登录态
+Swift · SwiftUI · MVVM · Repository Pattern · URLSession · Keychain · JWT
+
+## 快速开始
+
+### 环境要求
+
+- Xcode 26.3 及以上
+- iOS 17 SDK
+- 完整的 Xcode，不是只有 Command Line Tools
+
+如果 `xcode-select` 指向的不是完整 Xcode：
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+```
+
+### 打开工程
+
+```bash
+open GdeiAssistant-iOS.xcodeproj
+```
+
+### 命令行构建
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+xcodebuild -project GdeiAssistant-iOS.xcodeproj \
+  -scheme GdeiAssistant-iOS \
+  -destination 'generic/platform=iOS' \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
+
+### 发布 TestFlight
+
+仓库提供 `iOS TestFlight Release` 手动工作流：签名归档、导出 IPA，按需上传 TestFlight。即使跳过上传，也会保留导出的 IPA artifact，方便排查签名问题。
+
+发布前在仓库或 `ios-production` environment 配置：
+
+| 名称 | 内容 |
+| --- | --- |
+| `IOS_CERTIFICATE_P12_BASE64` | Apple Distribution 证书 p12 的 base64 |
+| `IOS_CERTIFICATE_PASSWORD` | p12 密码 |
+| `IOS_PROVISIONING_PROFILE_BASE64` | App Store provisioning profile 的 base64 |
+| `IOS_DEVELOPMENT_TEAM` | Apple Developer Team ID |
+| `APP_STORE_CONNECT_API_KEY_ID` | App Store Connect API Key ID |
+| `APP_STORE_CONNECT_ISSUER_ID` | App Store Connect Issuer ID |
+| `APP_STORE_CONNECT_API_KEY_BASE64` | App Store Connect `.p8` 私钥的 base64 |
+
+可选：`IOS_APP_BUNDLE_ID` 覆盖默认 Bundle ID（默认 `cn.gdeiassistant.GdeiAssistant-iOS`）。工作流输入为 `version`、`build_number` 和是否上传 TestFlight，执行前会先跑 Swift 样式检查。
+
+## 接口环境
+
+通过 `Configs/*.xcconfig` 管理三套环境：
+
+| 配置文件 | 环境 | 地址 |
+| --- | --- | --- |
+| `Configs/Debug.xcconfig` | `dev` | `http://localhost:8080/api` |
+| `Configs/Staging.xcconfig` | `staging` | `https://gdeiassistant.azurewebsites.net/api` |
+| `Configs/Release.xcconfig` | `prod` | `https://gdeiassistant.cn/api` |
+
+Debug 构建可以在设置页切换 `dev / staging / prod` 和 `mock / remote`；Staging / Release 构建固定走远程接口，不读 debug 期间留下的覆盖值。
+
+命令行打测试环境包：
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+xcodebuild -project GdeiAssistant-iOS.xcodeproj \
+  -scheme GdeiAssistant-iOS \
+  -configuration Release \
+  -xcconfig Configs/Staging.xcconfig \
+  -destination 'generic/platform=iOS' \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+```
 
 ## 工程结构
 
@@ -67,217 +105,48 @@
 GdeiAssistant-iOS/
 ├── App/
 ├── Core/
-│   ├── Auth/
-│   ├── Config/
-│   ├── DesignSystem/
-│   ├── Networking/
-│   ├── Storage/
+│   ├── Auth/           登录态与 Token
+│   ├── Config/         环境配置
+│   ├── DesignSystem/   颜色、字号、组件
+│   ├── Networking/     请求构建与错误归一化
+│   ├── Storage/        Keychain、UserDefaults
 │   └── Utils/
-├── Features/
-│   ├── Auth/
-│   ├── Home/
-│   ├── Messages/
-│   ├── Profile/
-│   ├── Schedule/
-│   ├── Grade/
-│   ├── Card/
-│   ├── Library/
-│   ├── CET/
-│   ├── Marketplace/
-│   ├── LostFound/
-│   ├── Secret/
-│   ├── Dating/
-│   ├── Delivery/
-│   ├── Express/
-│   ├── Topic/
-│   ├── Photograph/
-│   ├── DataCenter/
-│   ├── GraduateExam/
-│   ├── Spare/
-│   ├── Evaluate/
-│   └── News/
+├── Features/           按业务域拆分，每个域含 Models/DTOs/Mappers/Repositories/ViewModels/Views
 └── Mock/
 ```
 
-每个业务模块默认按以下层次拆分：
-
-- `Models`
-- `DTOs`
-- `Mappers`
-- `Repositories`
-- `ViewModels`
-- `Views`
-
 ## 架构说明
 
-### 1. 数据源模式
+### 数据源
 
-项目支持两种数据源：
+`remote` 请求真实接口，`mock` 使用本地模拟数据。Debug 构建在设置页切换，即时生效；Staging / Release 固定远程。
 
-- `remote`：请求真实后端接口
-- `mock`：使用本地模拟数据
+mock 数据只用于界面联调和主链路验证，不是真实校园业务数据。测试账号密码不要写进公开发行说明。
 
-切换入口位于设置页，调试阶段可直接切换并即时生效。
+### 登录态
 
-### 2. 登录态管理
+`AuthManager` 负责登录、登出、恢复登录态和 401 失效处理；`SessionState` 持有全局登录状态和当前用户；`KeychainTokenStorage` 存 JWT；`AuthRepository` 按环境在 mock 和 remote 之间切换。
 
-登录链路由以下组件协作完成：
+### 网络层
 
-- `AuthManager`：登录、登出、恢复登录态、401 失效处理
-- `SessionState`：全局登录状态和当前用户
-- `KeychainTokenStorage`：JWT 本地安全存储
-- `AuthRepository`：按环境切换 `mock` / `remote`
+`URLSession` 统一处理请求构建（GET/POST/PUT/DELETE）、Header 与 `X-Client-Type: IOS` 注入、Bearer Token 注入、JSON 解码、错误归一化（契约 `errorCode` 映射到 `NetworkError.contract`），以及 401 与登录失效。
 
-### 3. 网络层
+### DTO / Domain 分层
 
-网络层基于 `URLSession`，统一负责：
+远端数据不直接进 View。`DTO` 承接后端结构，`Mapper` 转成领域模型，`Repository` 对 ViewModel 暴露稳定的数据接口。社交模块在 `Features/Social`，通过 `SocialAssembly` 注入，实现细节见 [`docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md`](docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md)。
 
-- 请求构建（GET/POST/PUT/DELETE）
-- Header 注入
-- Bearer Token 注入
-- `X-Client-Type: IOS` 注入
-- JSON 解码
-- 错误归一化（含契约 `errorCode` → `NetworkError.contract`）
-- 401 与登录失效处理
+### 主题
 
-社交实时通道使用全局单连接 `URLSessionWebSocket`（`/api/social/realtime`），由 `SocialRealtimeManager` 管理认证、重连与登出清理。
+固定 Campus Green 品牌色（亮色 `#0E8F6E`，暗色 `#34C79A`），与 Web / Android / 小程序四端一致。用户可选浅色/深色/跟随系统，字体四档可调，偏好存 UserDefaults。
 
-### 4. DTO / Domain 分层
+## 参与贡献
 
-业务模块中的远端数据不直接进入 View。当前工程统一采用：
+见 [CONTRIBUTING.md](CONTRIBUTING.md)。安全问题请按 [SECURITY.md](SECURITY.md) 处理，不要在公开 Issue 里贴真实账号、验证码或密钥。
 
-- `DTO`：承接后端返回结构
-- `Mapper`：完成 DTO -> Domain Model 映射
-- `Repository`：对 ViewModel 暴露稳定的数据访问接口
+## 许可
 
-社交模块位于 `Features/Social`，并通过 `SocialAssembly` 注入。实现细节见 `docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md`。
-### 5. 主题系统
+[Apache License 2.0](LICENSE)。
 
-应用支持亮色/暗色主题切换，默认跟随系统：
+## 免责声明
 
-- 固定 Campus Green 品牌色（亮色 `#0E8F6E` / 暗色 `#34C79A`）
-- 用户可在"界面和外观"页面手动选择浅色/深色/跟随系统
-- 字体大小四档可调（小/标准/大/超大）
-- 主题与字体偏好通过 UserDefaults 持久化
-
-## 运行环境
-
-- Xcode 26.3 及以上
-- iOS 17 SDK（建议）
-- macOS 环境已安装完整 Xcode，而非仅 Command Line Tools
-
-若本机 `xcode-select` 未指向完整 Xcode，请先执行：
-
-```bash
-sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-```
-
-## 快速开始
-
-### 1. 打开工程
-
-```bash
-open GdeiAssistant-iOS.xcodeproj
-```
-
-### 2. 命令行构建
-
-```bash
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-xcodebuild -project GdeiAssistant-iOS.xcodeproj \
--scheme GdeiAssistant-iOS \
--destination 'generic/platform=iOS' \
-CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-```
-
-### 2.1 环境配置
-
-仓库现在通过 `Configs/*.xcconfig` 管理三套接口环境：
-
-- `Configs/Debug.xcconfig`：本地开发，默认 `dev`
-- `Configs/Staging.xcconfig`：测试环境，默认 `staging`
-- `Configs/Release.xcconfig`：生产环境，默认 `prod`
-
-对应接口地址：
-
-- `dev`：`http://localhost:8080/api`
-- `staging`：`https://gdeiassistant.azurewebsites.net/api`
-- `prod`：`https://gdeiassistant.cn/api`
-
-Debug 构建允许在应用设置页切换 `dev / staging / prod` 和 `mock / remote`；  
-Release / Staging 构建固定走远程接口，不读取历史 debug 覆盖值。
-
-如需命令行打测试环境包，可以直接覆盖 xcconfig：
-
-```bash
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-xcodebuild -project GdeiAssistant-iOS.xcodeproj \
--scheme GdeiAssistant-iOS \
--configuration Release \
--xcconfig Configs/Staging.xcconfig \
--destination 'generic/platform=iOS' \
-CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
-```
-
-### 3. 发布 TestFlight
-
-仓库提供 `iOS TestFlight Release` GitHub Actions 手动工作流，用于签名归档、
-导出 IPA，并按需上传到 TestFlight。发布前需要在仓库或 `ios-production`
-环境中配置：
-
-- `IOS_CERTIFICATE_P12_BASE64`：Apple Distribution 证书 p12 的 base64 内容
-- `IOS_CERTIFICATE_PASSWORD`：p12 密码
-- `IOS_PROVISIONING_PROFILE_BASE64`：App Store provisioning profile 的 base64 内容
-- `IOS_DEVELOPMENT_TEAM`：Apple Developer Team ID
-- `APP_STORE_CONNECT_API_KEY_ID`：App Store Connect API Key ID
-- `APP_STORE_CONNECT_ISSUER_ID`：App Store Connect Issuer ID
-- `APP_STORE_CONNECT_API_KEY_BASE64`：App Store Connect `.p8` 私钥的 base64 内容
-
-可选变量：
-
-- `IOS_APP_BUNDLE_ID`：覆盖默认 Bundle ID，默认 `cn.gdeiassistant.GdeiAssistant-iOS`
-
-工作流输入包括 `version`、`build_number` 和是否上传到 TestFlight。工作流会先运行
-Swift 样式检查，再执行 Release archive/export；即使跳过 TestFlight 上传，也会保留
-导出的 IPA artifact 便于排查签名问题。
-
-### 4. 运行方式
-
-- `mock` 模式：适合本地联调 UI 和主链路验证
-- `remote` 模式：适合接入真实后端接口
-
-## 本地示例数据模式
-
-调试环境默认支持本地示例数据模式，适合在未连接真实后端时预览界面与主链路。
-
-当设置页启用本地示例数据后：
-
-- 登录页会提示当前使用本地示例数据模式
-- 登录链路会使用 `MockAuthRepository`
-- 不会发起真实 `/auth/login` 请求
-
-
-## 后端接口位置
-
-本项目对应的后端仓库为：
-
-- GitHub：`https://github.com/GdeiAssistant/GdeiAssistant`
-
-## 开源协议
-
-本项目采用 [Apache License 2.0](LICENSE) 开源协议。
-
-你可以在遵守协议条款的前提下使用、修改和分发本项目代码。
-
-## 法律、隐私与安全提示
-
-- 本项目是校园助手类 iOS 客户端，不代表学校官方服务。
-- 面向用户的正式协议、隐私政策、授权说明和功能限制，以 App 内对应页面展示内容为准。
-- 生产发布前应确认隐私处理、校园凭证管理、iOS 权限说明、第三方服务、日志脱敏、密钥管理、Keychain 使用、签名配置以及商标/名称使用边界。
-- 本地示例数据仅用于开发和界面联调，不代表真实校园业务数据。
-- 本 README 只保留维护和部署层面的提示，不替代用户协议或隐私政策正文。
-
-
-## 2026-10-07 演示环境架构升级
-
-默认远端 API 使用现有 Azure 演示服务 `https://gdeiassistant.azurewebsites.net/`，可通过本仓配置入口调整。公共商品/跑腿信息使用展示名称及不透明作者 ID，不再返回校园账号；市场路由统一 `/api/marketplace`。跑腿发布使用 JSON 与明确的 taskName、pickupCode、contactPhone、pickupLocation、deliveryAddress 字段；图书借阅与账号注销密码放入 JSON 请求体。旧请求的认证失败不能清除换号后的新会话，缺失关键标识/状态不推造正常值。
+本项目不代表学校官方服务。面向用户的协议、隐私政策、授权说明和功能限制，以 App 内对应页面展示的内容为准，本 README 不替代这些正文。发布衍生版本前，请自行确认隐私处理、校园凭证管理、iOS 权限说明、日志脱敏、密钥管理、Keychain 使用、签名配置和商标使用边界。
