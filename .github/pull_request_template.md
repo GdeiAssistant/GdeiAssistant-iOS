@@ -9,8 +9,9 @@
 ## 怎么验证的
 
 ```bash
-./scripts/check_style.sh
-./scripts/build_simulator.sh
+./Tools/check_style.sh
+python3 Tools/check_localization.py
+./Tools/build_simulator.sh
 ```
 
 跑不了的项请说明原因，不要勾上了事。

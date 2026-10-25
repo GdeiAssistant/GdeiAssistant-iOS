@@ -133,7 +133,7 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ### DTO / Domain 分层
 
-远端数据不直接进 View。`DTO` 承接后端结构，`Mapper` 转成领域模型，`Repository` 对 ViewModel 暴露稳定的数据接口。社交模块在 `Features/Social`，通过 `SocialAssembly` 注入，实现细节见 [`docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md`](docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md)。
+远端数据不直接进 View。`DTO` 承接后端结构，`Mapper` 转成领域模型，`Repository` 对 ViewModel 暴露稳定的数据接口。社交模块在 `Features/Social`，通过 `SocialAssembly` 注入，实现细节见 [`docs/social-messaging-implementation.zh-CN.md`](docs/social-messaging-implementation.zh-CN.md)。
 
 ### 主题
 
