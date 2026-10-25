@@ -12,6 +12,9 @@ on:
       - master
       - 'release/**'
 
+permissions:
+  contents: read
+
 jobs:
   style-check:
     name: Style Check
@@ -19,7 +22,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Run Swift style checks
         run: |
@@ -36,7 +41,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Select pinned Xcode
         run: |
@@ -54,7 +61,7 @@ jobs:
 
       - name: Upload build log
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ios-build-log
           path: build-simulator.log
@@ -72,7 +79,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Select pinned Xcode and list simulators
         run: |
@@ -122,7 +131,7 @@ jobs:
 
       - name: Upload Simulator demo
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ios-simulator-demo-${{ github.sha }}
           path: ${{ runner.temp }}/GdeiAssistant-iOS-Simulator.app.zip
@@ -146,7 +155,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ios-test-results
           path: |
