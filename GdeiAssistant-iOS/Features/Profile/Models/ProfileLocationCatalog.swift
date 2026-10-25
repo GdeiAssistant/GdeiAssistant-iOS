@@ -1,7 +1,7 @@
 import Foundation
 
 // Generated from the shared location catalog; names and codes preserve the source data.
-// GeoNames attribution and unmatched-name fallback details: docs/LOCATION_NAMES.md.
+// GeoNames attribution and unmatched-name fallback details: docs/location-names.md.
 enum ProfileLocationCatalog {
     static var regions: [ProfileLocationRegion] {
         regions(for: AppLanguage.currentIdentifier())

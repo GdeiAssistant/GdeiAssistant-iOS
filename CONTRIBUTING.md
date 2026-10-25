@@ -35,7 +35,7 @@ xcodebuild test -project GdeiAssistant-iOS.xcodeproj \
   -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
-改动了多语言文案，必须同时更新 `Localizable.strings` 和 `docs/LOCATION_NAMES.md` 里对应的条目，否则 `check_localization.py` 会报错。
+改动了多语言文案，必须同时更新 `Localizable.strings` 和 `docs/location-names.md` 里对应的条目，否则 `check_localization.py` 会报错。
 
 ## 代码风格
 
