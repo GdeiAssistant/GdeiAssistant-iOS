@@ -9,6 +9,9 @@ on:
       - 'GdeiAssistant-iOS.xcodeproj/project.pbxproj'
       - '.github/workflows/ios-performance.yml'
 
+permissions:
+  contents: read
+
 jobs:
   baseline:
     name: Capture Simulator launch and scrolling metrics
@@ -21,7 +24,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Record the actual build and Simulator environment
         run: |
@@ -90,7 +95,7 @@ jobs:
 
       - name: Preserve the unmodified performance evidence
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ios-runtime-performance-${{ github.sha }}
           path: |
