@@ -87,6 +87,7 @@ final class AppContainer: ObservableObject {
     let environment: AppEnvironment
     let sessionState: SessionState
     let authManager: AuthManager
+    let unreadBadgeStore: UnreadBadgeStore
 
     // MARK: - Assemblies
 
@@ -145,6 +146,7 @@ final class AppContainer: ObservableObject {
             dataSourceMode: userPreferences.currentDataSourceMode
         )
         self.sessionState = SessionState()
+        self.unreadBadgeStore = UnreadBadgeStore()
         self.shouldSkipBootstrap = shouldSkipBootstrap
 
         let authManager = AuthManager(tokenStorage: tokenStorage, sessionState: sessionState)
@@ -201,14 +203,16 @@ final class AppContainer: ObservableObject {
 
         let realtimeManager = socialAssembly.realtimeManager
         let imageLoader = authenticatedImageLoader
+        let badgeStore = unreadBadgeStore
         authManager.configure(
             repository: coreAssembly.authRepository,
             dataSourceModeProvider: { [weak environment] in
                 environment?.dataSourceMode ?? .remote
             },
-            onSessionEnded: { [weak realtimeManager, weak imageLoader] in
+            onSessionEnded: { [weak realtimeManager, weak imageLoader, weak badgeStore] in
                 realtimeManager?.stop(clearState: true)
                 imageLoader?.clearCache()
+                badgeStore?.reset()
             }
         )
     }
@@ -336,7 +340,13 @@ final class AppContainer: ObservableObject {
     func makeAvatarEditViewModel() -> AvatarEditViewModel { profileAssembly.makeAvatarEditViewModel(sessionState: sessionState) }
     func makeDeleteAccountViewModel() -> DeleteAccountViewModel { profileAssembly.makeDeleteAccountViewModel() }
     func makeCampusCredentialViewModel() -> CampusCredentialViewModel { profileAssembly.makeCampusCredentialViewModel() }
-    func makeMessagesViewModel() -> MessagesViewModel { profileAssembly.makeMessagesViewModel(newsRepository: campusServicesAssembly.newsRepository) }
+    func makeMessagesViewModel() -> MessagesViewModel {
+        profileAssembly.makeMessagesViewModel(
+            newsRepository: campusServicesAssembly.newsRepository,
+            socialRepository: socialAssembly.socialRepository,
+            unreadBadgeStore: unreadBadgeStore
+        )
+    }
     func makeSystemNoticeListViewModel() -> SystemNoticeListViewModel { profileAssembly.makeSystemNoticeListViewModel() }
     func makeInteractionMessageListViewModel() -> InteractionMessageListViewModel { profileAssembly.makeInteractionMessageListViewModel() }
 
@@ -348,7 +358,7 @@ final class AppContainer: ObservableObject {
     }
     func makeSocialBlockListViewModel() -> SocialBlockListViewModel { socialAssembly.makeSocialBlockListViewModel() }
     func makeDirectMessagePrivacyViewModel() -> DirectMessagePrivacyViewModel { socialAssembly.makeDirectMessagePrivacyViewModel() }
-    func makeConversationListViewModel() -> ConversationListViewModel { socialAssembly.makeConversationListViewModel() }
+    func makeConversationListViewModel() -> ConversationListViewModel { socialAssembly.makeConversationListViewModel(unreadBadgeStore: unreadBadgeStore) }
     func makeChatThreadViewModel(conversationID: String) -> ChatThreadViewModel { socialAssembly.makeChatThreadViewModel(conversationID: conversationID) }
     func makeSocialMeSummaryViewModel() -> SocialMeSummaryViewModel { socialAssembly.makeSocialMeSummaryViewModel() }
 }

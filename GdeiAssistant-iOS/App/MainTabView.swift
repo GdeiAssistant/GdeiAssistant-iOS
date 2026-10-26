@@ -3,6 +3,7 @@ import SwiftUI
 struct MainTabView: View {
     @EnvironmentObject private var container: AppContainer
     @EnvironmentObject private var router: AppRouter
+    @EnvironmentObject private var unreadBadgeStore: UnreadBadgeStore
 
     var body: some View {
         TabView(selection: $router.selectedTab) {
@@ -17,6 +18,7 @@ struct MainTabView: View {
                     Label("tab.info", systemImage: "bell.badge")
                 }
                 .tag(AppTab.messages)
+                .badge(unreadBadgeStore.badgeText.map { Text($0) })
 
             ProfileView(viewModel: container.makeProfileViewModel())
                 .tabItem {
@@ -25,6 +27,9 @@ struct MainTabView: View {
                 .tag(AppTab.profile)
         }
         .tint(DSColor.primary)
+        .task {
+            await container.makeMessagesViewModel().refreshUnreadBadge()
+        }
     }
 }
 
@@ -33,4 +38,5 @@ struct MainTabView: View {
     return MainTabView()
         .environmentObject(container)
         .environmentObject(container.router)
+        .environmentObject(container.unreadBadgeStore)
 }
