@@ -58,6 +58,8 @@ python3 Tools/check_localization.py
 
 ## 不要做
 
+- 只有所有者或经所有者明确授权的审查者可以添加 `owner-approved` 标签；编码智能体绝不能给自己的 PR 添加该标签。
+
 - 不要跳过 `check_localization.py`。新增文案必须同时进本地化文件。
 - 不要改 `Tools/` 下的检查脚本让它们通过，改被检查的代码。
 - 不要单方面改接口契约。服务端、Android、微信小程序共用同一套。
