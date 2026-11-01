@@ -1,6 +1,6 @@
 # iOS 社交与私信实现说明
 
-日期：2026-10-05。对应共享契约：`GdeiAssistant/docs/SOCIAL_MESSAGING_DESIGN.zh-CN.md`。
+日期：2026-10-05。对应共享契约：`GdeiAssistant/docs/social-messaging-design.zh-CN.md`。
 
 ## 范围
 
