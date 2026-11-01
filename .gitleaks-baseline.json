@@ -1,0 +1,11 @@
+[
+  {
+    "RuleID": "generic-api-key",
+    "File": "GdeiAssistant-iOS/Features/Charge/Mappers/ChargeRemoteMapper.swift",
+    "Commit": "8fcd6c6bbb8cf277d0d003ad1b83e7a7b7f1d165",
+    "StartLine": 6,
+    "Fingerprint": "8fcd6c6bbb8cf277d0d003ad1b83e7a7b7f1d165:GdeiAssistant-iOS/Features/Charge/Mappers/ChargeRemoteMapper.swift:generic-api-key:6",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  }
+]
