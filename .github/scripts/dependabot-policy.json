@@ -1,0 +1,18 @@
+{
+  "repo": "GdeiAssistant/GdeiAssistant-iOS",
+  "branch": "main",
+  "files": [],
+  "directories": [],
+  "required_checks": ["Style Check","Build Smoke","Unit Tests","Repository hygiene","Safe dependency update"],
+  "action_files": [
+    ".github/workflows/codeql.yml",
+    ".github/workflows/dependabot-auto-merge.yml",
+    ".github/workflows/dependabot-policy.yml",
+    ".github/workflows/engineering-governance.yml",
+    ".github/workflows/ios-ci.yml",
+    ".github/workflows/ios-performance.yml",
+    ".github/workflows/ios-release.yml",
+    ".github/workflows/repository-hygiene.yml",
+    ".github/workflows/risk-gate.yml"
+  ]
+}

@@ -10,3 +10,15 @@
 /.github/CODEOWNERS @Pigbibi
 /.github/workflows/ @Pigbibi
 /GdeiAssistant-iOS/Features/Secret/ @Pigbibi
+
+# Dependency-only files do not automatically request a human review.
+# CODEOWNERS is path-based: these exceptions also apply to human PRs.
+/.github/workflows/codeql.yml
+/.github/workflows/dependabot-auto-merge.yml
+/.github/workflows/dependabot-policy.yml
+/.github/workflows/engineering-governance.yml
+/.github/workflows/ios-ci.yml
+/.github/workflows/ios-performance.yml
+/.github/workflows/ios-release.yml
+/.github/workflows/repository-hygiene.yml
+/.github/workflows/risk-gate.yml
