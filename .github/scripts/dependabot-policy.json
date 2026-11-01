@@ -1,0 +1,10 @@
+{
+  "repo": "GdeiAssistant/GdeiAssistant-iOS",
+  "branch": "main",
+  "files": [],
+  "directories": [],
+  "required_checks": ["Style Check","Build Smoke","Unit Tests","Repository hygiene","Safe dependency update"],
+  "action_files": [
+    ".github/workflows/ios-ci.yml"
+  ]
+}

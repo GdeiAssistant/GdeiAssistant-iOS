@@ -10,3 +10,9 @@
 /.github/CODEOWNERS @Pigbibi
 /.github/workflows/ @Pigbibi
 /GdeiAssistant-iOS/Features/Secret/ @Pigbibi
+
+# Dependency-only files do not automatically request a human review.
+# CODEOWNERS is path-based: these exceptions also apply to human PRs.
+# Only plain build/test CI workflows without secrets or write permissions are listed. Deploy, release,
+# governance and policy workflows keep their @Pigbibi owner and never auto-merge.
+/.github/workflows/ios-ci.yml
