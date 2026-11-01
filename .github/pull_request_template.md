@@ -37,7 +37,7 @@ python3 Tools/check_localization.py
 
 ## AI 辅助
 
-<!-- 请填写使用的 AI 工具和模型；未使用 AI 时写「未使用」。 -->
+<!-- 请填写使用的 AI 工具和模型；未使用 AI 时写「未使用 AI」。 -->
 
 ## 风险
 
