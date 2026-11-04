@@ -33,7 +33,7 @@ final class RemotePhotographRepository: PhotographRepository {
 
     func fetchDetail(postID: String) async throws -> PhotographPostDetail {
         let dto: PhotographRemoteDTO = try await apiClient.get(
-            "/photograph/id/\(postID)",
+            "/photograph/\(postID)",
             requiresAuth: true
         )
         let detail = PhotographRemoteMapper.mapDetail(dto)
@@ -69,7 +69,7 @@ final class RemotePhotographRepository: PhotographRepository {
 
     func fetchComments(postID: String) async throws -> [PhotographCommentItem] {
         let dtos: [PhotographCommentRemoteDTO] = try await apiClient.get(
-            "/photograph/id/\(postID)/comment",
+            "/photograph/\(postID)/comment",
             requiresAuth: true
         )
         return dtos.map(PhotographRemoteMapper.mapComment)
@@ -91,14 +91,14 @@ final class RemotePhotographRepository: PhotographRepository {
 
     func like(postID: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/photograph/id/\(postID)/like",
+            "/photograph/\(postID)/like",
             requiresAuth: true
         )
     }
 
     func submitComment(postID: String, content: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/photograph/id/\(postID)/comment",
+            "/photograph/\(postID)/comment",
             queryItems: [URLQueryItem(name: "comment", value: content)],
             requiresAuth: true
         )
@@ -110,7 +110,7 @@ final class RemotePhotographRepository: PhotographRepository {
         var urls = [String]()
         for index in 1...count {
             let imageURL: String = try await apiClient.get(
-                "/photograph/id/\(postID)/index/\(index)/image",
+                "/photograph/\(postID)/index/\(index)/image",
                 requiresAuth: true
             )
             if let sanitized = RemoteMapperSupport.sanitizedText(imageURL) {

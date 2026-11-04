@@ -18,7 +18,7 @@ final class RemoteDatingRepository: DatingRepository {
 
     func fetchProfileDetail(profileID: String) async throws -> DatingProfileDetail {
         let dto: DatingProfileDetailDTO = try await apiClient.get(
-            "/dating/profile/id/\(profileID)",
+            "/dating/profile/\(profileID)",
             requiresAuth: true
         )
         return DatingRemoteMapper.mapProfileDetail(dto)
@@ -82,7 +82,7 @@ final class RemoteDatingRepository: DatingRepository {
 
     func updatePickState(pickID: String, state: DatingPickStatus) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/dating/pick/id/\(pickID)",
+            "/dating/pick/\(pickID)",
             queryItems: [URLQueryItem(name: "state", value: String(state.rawValue))],
             requiresAuth: true
         )
@@ -90,7 +90,7 @@ final class RemoteDatingRepository: DatingRepository {
 
     func hideProfile(profileID: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/dating/profile/id/\(profileID)/state",
+            "/dating/profile/\(profileID)/state",
             queryItems: [URLQueryItem(name: "state", value: "0")],
             requiresAuth: true
         )

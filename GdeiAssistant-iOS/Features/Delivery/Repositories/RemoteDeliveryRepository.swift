@@ -23,7 +23,7 @@ final class RemoteDeliveryRepository: DeliveryRepository {
 
     func fetchDetail(orderID: String) async throws -> DeliveryOrderDetail {
         let dto: DeliveryDetailRemoteDTO = try await apiClient.get(
-            "/delivery/order/id/\(orderID)",
+            "/delivery/order/\(orderID)",
             requiresAuth: true
         )
         return try DeliveryRemoteMapper.mapDetail(dto)
@@ -47,7 +47,7 @@ final class RemoteDeliveryRepository: DeliveryRepository {
 
     func finishTrade(tradeID: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/delivery/trade/id/\(tradeID)/finishtrade",
+            "/delivery/trade/\(tradeID)/finishtrade",
             requiresAuth: true
         )
     }

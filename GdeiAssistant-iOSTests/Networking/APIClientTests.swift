@@ -142,7 +142,7 @@ final class APIClientTests: XCTestCase {
         stub(statusCode: 200, body: #"{"code":10001,"message":"商品已下架","success":false}"#)
 
         do {
-            let _: EmptyPayload = try await client.get("/marketplace/item/id/1")
+            let _: EmptyPayload = try await client.get("/marketplace/item/1")
             XCTFail("Expected NetworkError.server")
         } catch NetworkError.server(let code, let message) {
             XCTAssertEqual(code, 10001)

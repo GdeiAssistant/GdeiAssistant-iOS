@@ -14,25 +14,25 @@ final class RemoteCommunityRepository: CommunityRepository {
     }
 
     func fetchPostDetail(postID: String) async throws -> CommunityPostDetail {
-        let dto: ExpressPostDTO = try await apiClient.get("/express/id/\(postID)", requiresAuth: true)
+        let dto: ExpressPostDTO = try await apiClient.get("/express/\(postID)", requiresAuth: true)
         return CommunityRemoteMapper.mapPostDetail(dto)
     }
 
     func fetchComments(postID: String) async throws -> [CommunityComment] {
-        let dtos: [ExpressCommentDTO] = try await apiClient.get("/express/id/\(postID)/comment", requiresAuth: true)
+        let dtos: [ExpressCommentDTO] = try await apiClient.get("/express/\(postID)/comment", requiresAuth: true)
         return CommunityRemoteMapper.mapComments(dtos)
     }
 
     func submitComment(postID: String, content: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/express/id/\(postID)/comment",
+            "/express/\(postID)/comment",
             queryItems: [URLQueryItem(name: "comment", value: content)],
             requiresAuth: true
         )
     }
 
     func toggleLike(postID: String) async throws {
-        let _: EmptyPayload = try await apiClient.post("/express/id/\(postID)/like", requiresAuth: true)
+        let _: EmptyPayload = try await apiClient.post("/express/\(postID)/like", requiresAuth: true)
     }
 
     func fetchTopic(topicID: String) async throws -> CommunityTopic {
