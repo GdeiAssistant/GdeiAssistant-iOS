@@ -27,7 +27,7 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
     }
 
     func fetchItemDetail(itemID: String) async throws -> MarketplaceDetail {
-        let dto: MarketplaceDetailDTO = try await apiClient.get("/marketplace/item/id/\(itemID)", requiresAuth: true)
+        let dto: MarketplaceDetailDTO = try await apiClient.get("/marketplace/item/\(itemID)", requiresAuth: true)
         let detail = try MarketplaceRemoteMapper.mapDetail(dto)
         guard detail.imageURLs.isEmpty else {
             return detail
@@ -102,7 +102,7 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         let dto = MarketplaceRemoteMapper.mapUpdateDTO(draft)
         let fields = MarketplaceRemoteMapper.mapPublishFields(dto)
         let _: EmptyPayload = try await apiClient.postForm(
-            "/marketplace/item/id/\(itemID)",
+            "/marketplace/item/\(itemID)",
             fields: fields,
             requiresAuth: true
         )
@@ -110,14 +110,14 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
 
     func updateItemState(itemID: String, state: MarketplaceItemState) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/marketplace/item/state/id/\(itemID)",
+            "/marketplace/item/state/\(itemID)",
             queryItems: [URLQueryItem(name: "state", value: String(state.rawValue))],
             requiresAuth: true
         )
     }
 
     private func fetchPreviewURL(itemID: String) async throws -> String? {
-        let preview: String = try await apiClient.get("/marketplace/item/id/\(itemID)/preview", requiresAuth: true)
+        let preview: String = try await apiClient.get("/marketplace/item/\(itemID)/preview", requiresAuth: true)
         return RemoteMapperSupport.sanitizedText(preview)
     }
 }

@@ -17,7 +17,7 @@ final class RemoteLostFoundRepository: LostFoundRepository {
     }
 
     func fetchDetail(itemID: String) async throws -> LostFoundDetail {
-        let dto: LostFoundDetailDTO = try await apiClient.get("/lostandfound/item/id/\(itemID)", requiresAuth: true)
+        let dto: LostFoundDetailDTO = try await apiClient.get("/lostandfound/item/\(itemID)", requiresAuth: true)
         let detail = try LostFoundRemoteMapper.mapDetail(dto)
         guard detail.imageURLs.isEmpty else {
             return detail
@@ -86,7 +86,7 @@ final class RemoteLostFoundRepository: LostFoundRepository {
         let dto = LostFoundRemoteMapper.mapUpdateDTO(draft)
         let fields = LostFoundRemoteMapper.mapPublishFields(dto)
         let _: EmptyPayload = try await apiClient.postForm(
-            "/lostandfound/item/id/\(itemID)",
+            "/lostandfound/item/\(itemID)",
             fields: fields,
             requiresAuth: true
         )
@@ -94,13 +94,13 @@ final class RemoteLostFoundRepository: LostFoundRepository {
 
     func markDidFound(itemID: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/lostandfound/item/id/\(itemID)/didfound",
+            "/lostandfound/item/\(itemID)/didfound",
             requiresAuth: true
         )
     }
 
     private func fetchPreviewURL(itemID: String) async throws -> String? {
-        let preview: String = try await apiClient.get("/lostandfound/item/id/\(itemID)/preview", requiresAuth: true)
+        let preview: String = try await apiClient.get("/lostandfound/item/\(itemID)/preview", requiresAuth: true)
         return RemoteMapperSupport.sanitizedText(preview)
     }
 }

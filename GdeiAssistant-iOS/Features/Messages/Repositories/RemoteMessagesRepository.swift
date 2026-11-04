@@ -30,7 +30,7 @@ final class RemoteMessagesRepository: MessagesRepository {
     }
 
     func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
-        let dto: AnnouncementRemoteDTO = try await apiClient.get("/information/announcement/id/\(id)", requiresAuth: true)
+        let dto: AnnouncementRemoteDTO = try await apiClient.get("/information/announcement/\(id)", requiresAuth: true)
         return MessagesRemoteMapper.mapAnnouncementDetail(dto)
     }
 
@@ -40,7 +40,7 @@ final class RemoteMessagesRepository: MessagesRepository {
     }
 
     func markNotificationRead(notificationID: String) async throws {
-        let _: EmptyPayload = try await apiClient.post("/information/message/id/\(notificationID)/read", requiresAuth: true)
+        let _: EmptyPayload = try await apiClient.post("/information/message/\(notificationID)/read", requiresAuth: true)
     }
 
     func markAllNotificationsRead() async throws {

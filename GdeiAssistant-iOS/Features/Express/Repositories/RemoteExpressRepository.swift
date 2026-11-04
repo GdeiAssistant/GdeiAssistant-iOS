@@ -34,13 +34,13 @@ final class RemoteExpressRepository: ExpressRepository {
     }
 
     func fetchDetail(postID: String) async throws -> ExpressPostDetail {
-        let dto: ExpressRemoteDTO = try await apiClient.get("/express/id/\(postID)", requiresAuth: true)
+        let dto: ExpressRemoteDTO = try await apiClient.get("/express/\(postID)", requiresAuth: true)
         return ExpressRemoteMapper.mapDetail(dto)
     }
 
     func fetchComments(postID: String) async throws -> [ExpressCommentItem] {
         let dtos: [ExpressCommentRemoteDTO] = try await apiClient.get(
-            "/express/id/\(postID)/comment",
+            "/express/\(postID)/comment",
             requiresAuth: true
         )
         return dtos.map(ExpressRemoteMapper.mapComment)
@@ -56,19 +56,19 @@ final class RemoteExpressRepository: ExpressRepository {
 
     func submitComment(postID: String, content: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/express/id/\(postID)/comment",
+            "/express/\(postID)/comment",
             queryItems: [URLQueryItem(name: "comment", value: content)],
             requiresAuth: true
         )
     }
 
     func like(postID: String) async throws {
-        let _: EmptyPayload = try await apiClient.post("/express/id/\(postID)/like", requiresAuth: true)
+        let _: EmptyPayload = try await apiClient.post("/express/\(postID)/like", requiresAuth: true)
     }
 
     func guess(postID: String, name: String) async throws -> Bool {
         let result: Bool = try await apiClient.post(
-            "/express/id/\(postID)/guess",
+            "/express/\(postID)/guess",
             queryItems: [URLQueryItem(name: "name", value: name)],
             requiresAuth: true
         )

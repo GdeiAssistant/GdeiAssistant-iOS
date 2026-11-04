@@ -34,7 +34,7 @@ final class RemoteTopicRepository: TopicRepository {
     }
 
     func fetchDetail(postID: String) async throws -> TopicPostDetail {
-        let dto: TopicRemoteDTO = try await apiClient.get("/topic/id/\(postID)", requiresAuth: true)
+        let dto: TopicRemoteDTO = try await apiClient.get("/topic/\(postID)", requiresAuth: true)
         let detail = TopicRemoteMapper.mapDetail(dto)
         guard detail.imageURLs.isEmpty, detail.post.imageCount > 0 else {
             return detail
@@ -78,7 +78,7 @@ final class RemoteTopicRepository: TopicRepository {
     }
 
     func like(postID: String) async throws {
-        let _: EmptyPayload = try await apiClient.post("/topic/id/\(postID)/like", requiresAuth: true)
+        let _: EmptyPayload = try await apiClient.post("/topic/\(postID)/like", requiresAuth: true)
     }
 
     private func mapPostsResolvingImages(_ dtos: [TopicRemoteDTO]) async throws -> [TopicPost] {
@@ -125,7 +125,7 @@ final class RemoteTopicRepository: TopicRepository {
     }
 
     private func fetchImageURL(postID: String, index: Int) async throws -> String? {
-        let imageURL: String = try await apiClient.get("/topic/id/\(postID)/index/\(index)/image", requiresAuth: true)
+        let imageURL: String = try await apiClient.get("/topic/\(postID)/index/\(index)/image", requiresAuth: true)
         return RemoteMapperSupport.sanitizedText(imageURL)
     }
 }

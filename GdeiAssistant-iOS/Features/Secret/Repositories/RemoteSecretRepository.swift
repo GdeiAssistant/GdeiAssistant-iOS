@@ -19,8 +19,8 @@ final class RemoteSecretRepository: SecretRepository {
     }
 
     func fetchDetail(postID: String) async throws -> SecretPostDetail {
-        let detailDTO: SecretPostDTO = try await apiClient.get("/secret/id/\(postID)", requiresAuth: true)
-        let comments: [SecretCommentDTO] = (try? await apiClient.get("/secret/id/\(postID)/comments", requiresAuth: true)) ?? []
+        let detailDTO: SecretPostDTO = try await apiClient.get("/secret/\(postID)", requiresAuth: true)
+        let comments: [SecretCommentDTO] = (try? await apiClient.get("/secret/\(postID)/comments", requiresAuth: true)) ?? []
         return SecretRemoteMapper.mapDetail(detailDTO, comments: comments.isEmpty ? detailDTO.secretCommentList ?? [] : comments)
     }
 
@@ -56,7 +56,7 @@ final class RemoteSecretRepository: SecretRepository {
 
     func submitComment(postID: String, content: String) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/secret/id/\(postID)/comment",
+            "/secret/\(postID)/comment",
             queryItems: [URLQueryItem(name: "comment", value: content)],
             requiresAuth: true
         )
@@ -64,7 +64,7 @@ final class RemoteSecretRepository: SecretRepository {
 
     func setLike(postID: String, liked: Bool) async throws {
         let _: EmptyPayload = try await apiClient.post(
-            "/secret/id/\(postID)/like",
+            "/secret/\(postID)/like",
             queryItems: [URLQueryItem(name: "like", value: liked ? "1" : "0")],
             requiresAuth: true
         )

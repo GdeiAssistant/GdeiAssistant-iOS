@@ -39,7 +39,7 @@ final class RemoteNewsRepository: NewsRepository {
 
     func fetchNewsDetail(id: String) async throws -> NewsItem {
         let dto: NewsRemoteDTO = try await apiClient.get(
-            "/information/news/id/\(id)",
+            "/information/news/\(id)",
             requiresAuth: true
         )
         let items = NewsRemoteMapper.mapItems([dto])
