@@ -60,12 +60,20 @@ class SecretScanTests(unittest.TestCase):
 
     def test_clean_placeholders_pass(self):
         self.assertEqual(self.detect('jwt.secret=${JWT_SECRET}\npassword=\n'
-                                     'token=${LONG_TOKEN_VARIABLE:?must be supplied}\n'
+                                     'token=${LONG_TOKEN_VARIABLE}\ntoken=${_TOKEN_1}\n'
                                      'token=your-token-placeholder\npassword=xxxxxxxxxxxxxxxx\n'), [])
 
     def test_punctuation_in_password_is_detected(self):
         findings = self.detect('password=' + fake_value(16) + '&$*()!')
         self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
+
+    def test_placeholder_with_literal_text_is_detected(self):
+        for value in ('${X}' + fake_value(), fake_value() + '${X}',
+                      '${LONG_TOKEN_VARIABLE}' + fake_value(),
+                      '${LONG_TOKEN_VARIABLE:-' + fake_value() + '}',
+                      '${LONG_TOKEN_VARIABLE}${OTHER_VARIABLE}'):
+            findings = self.detect('token=' + value)
+            self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
 
     def test_clean_directory_passes(self):
         self.assertEqual(SCANNER.scan(BINARY, 'dir', self.source, self.output), [])
