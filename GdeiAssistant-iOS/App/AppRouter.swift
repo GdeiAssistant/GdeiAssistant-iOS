@@ -100,7 +100,6 @@ final class AppContainer: ObservableObject {
     // MARK: - Repository accessors (forwarded from assemblies)
 
     var authRepository: any AuthRepository { coreAssembly.authRepository }
-    var homeRepository: any HomeRepository { coreAssembly.homeRepository }
 
     var scheduleRepository: any ScheduleRepository { campusServicesAssembly.scheduleRepository }
     var gradeRepository: any GradeRepository { campusServicesAssembly.gradeRepository }

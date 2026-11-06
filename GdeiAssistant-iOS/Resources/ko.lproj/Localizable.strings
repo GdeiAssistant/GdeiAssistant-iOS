@@ -850,7 +850,7 @@
 "delivery.publishFooter" = "수거 코드는 선택 사항입니다. 미입력 시 기본값으로 제출됩니다.";
 "delivery.submitting" = "제출 중……";
 "delivery.pickupPlaceRequired" = "수거 장소를 입력하세요";
-"delivery.pickupPlaceTooLong" = "수거 장소는 10자 이내";
+"delivery.pickupPlaceTooLong" = "수거 장소는 100자 이내";
 "delivery.phoneRequired" = "연락처를 입력하세요";
 "delivery.phoneTooLong" = "연락처는 11자리 이내";
 "delivery.addressRequired" = "배달 주소를 입력하세요";
@@ -1413,7 +1413,6 @@
 "common.notice" = "알림";
 "common.understood" = "확인";
 
-"home.loadFailed" = "홈 로드 실패";
 "schedule.loadFailed" = "시간표 로드 실패";
 "card.loadFailed" = "캠퍼스 카드 로드 실패";
 "card.lostSuccess" = "분실 신고 완료. 빠른 시일 내에 서비스 센터를 방문하세요.";

@@ -850,7 +850,7 @@
 "delivery.publishFooter" = "受取コードは任意です。未入力の場合はデフォルト値で送信されます。";
 "delivery.submitting" = "送信中……";
 "delivery.pickupPlaceRequired" = "受取場所を入力してください";
-"delivery.pickupPlaceTooLong" = "受取場所は10文字以内です";
+"delivery.pickupPlaceTooLong" = "受取場所は100文字以内です";
 "delivery.phoneRequired" = "電話番号を入力してください";
 "delivery.phoneTooLong" = "電話番号は11桁以内です";
 "delivery.addressRequired" = "届け先を入力してください";
@@ -1413,7 +1413,6 @@
 "common.notice" = "お知らせ";
 "common.understood" = "了解";
 
-"home.loadFailed" = "ホームの読み込みに失敗しました";
 "schedule.loadFailed" = "時間割の読み込みに失敗しました";
 "card.loadFailed" = "学生証データの読み込みに失敗しました";
 "card.lostSuccess" = "学生証の紛失届を提出しました。早めにサービスセンターへ。";

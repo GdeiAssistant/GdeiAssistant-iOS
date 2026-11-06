@@ -47,7 +47,7 @@ final class MockFeatureSmokeTests: XCTestCase {
         let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
         let repository = HomeScheduleStub(schedule: homeSchedule([]))
         repository.shouldFail = true
-        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository, now: { date })
+        let model = HomeViewModel(scheduleRepository: repository, now: { date })
         await model.loadTodaySchedule()
         XCTAssertTrue(model.scheduleLoadFailed)
         XCTAssertNil(model.currentSchedule)
@@ -62,25 +62,12 @@ final class MockFeatureSmokeTests: XCTestCase {
         XCTAssertEqual(repository.requestedWeeks, [])
     }
 
-    func testHomeDashboardFailureKeepsLoadedTodayCoursesAndUsesCurrentWeekRequest() async throws {
-        let date = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-11T16:30:00Z"))
-        let repository = HomeScheduleStub(schedule: homeSchedule([homeCourse("today", day: 1, section: 1, weeks: [8])]))
-        let model = HomeViewModel(repository: HomeDashboardStub(shouldFail: true), scheduleRepository: repository, now: { date })
-        await model.loadIfNeeded()
-        XCTAssertNotNil(model.errorMessage)
-        XCTAssertNil(model.dashboard)
-        XCTAssertEqual(model.todayCourses.map(\.id), ["today"])
-        XCTAssertFalse(model.scheduleLoadFailed)
-        XCTAssertEqual(repository.currentRequests, 1)
-        XCTAssertEqual(repository.requestedWeeks, [])
-    }
-
     func testHomeDropsOutdatedScheduleResponseAfterRefresh() async {
         let old = homeSchedule([homeCourse("old", day: 1, section: 1, weeks: [8])])
         let new = homeSchedule([homeCourse("new", day: 1, section: 1, weeks: [8])])
         let repository = HomeScheduleStub(schedule: new)
         repository.suspendRequestAt = 1
-        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository)
+        let model = HomeViewModel(scheduleRepository: repository)
         let first = Task { await model.loadTodaySchedule() }
         await repository.waitForFirstRequest()
         await model.loadTodaySchedule()
@@ -96,7 +83,7 @@ final class MockFeatureSmokeTests: XCTestCase {
         let clock = HomeClock(date: sunday)
         let repository = HomeScheduleStub(schedule: homeSchedule([homeCourse("monday", day: 1, section: 1, weeks: [8])]))
         repository.onFirstCurrentRequest = { clock.date = monday }
-        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository, now: { clock.date })
+        let model = HomeViewModel(scheduleRepository: repository, now: { clock.date })
         await model.loadTodaySchedule()
         XCTAssertEqual(repository.currentRequests, 2)
         XCTAssertEqual(model.todayCourses.map(\.id), ["monday"])
@@ -106,7 +93,7 @@ final class MockFeatureSmokeTests: XCTestCase {
 
     func testHomeCancelledScheduleCanReloadWithoutShowingFailure() async {
         let repository = HomeScheduleStub(schedule: homeSchedule([]))
-        let model = HomeViewModel(repository: HomeDashboardStub(), scheduleRepository: repository)
+        let model = HomeViewModel(scheduleRepository: repository)
         await model.loadTodaySchedule()
         repository.suspendRequestAt = 2
         let first = Task { await model.loadTodaySchedule() }
@@ -251,9 +238,6 @@ final class MockFeatureSmokeTests: XCTestCase {
 
         let profile = try await authRepository.fetchProfile()
         XCTAssertFalse(profile.username.isEmpty)
-
-        let home = try await MockHomeRepository().fetchDashboard()
-        XCTAssertFalse(home.quickActions.isEmpty)
 
         let profileRepository = MockProfileRepository()
         let currentProfile = try await profileRepository.fetchProfile()
@@ -485,17 +469,6 @@ private final class HomeClock {
 }
 
 private enum HomeTestError: Error { case unavailable }
-
-@MainActor
-private final class HomeDashboardStub: HomeRepository {
-    let shouldFail: Bool
-    init(shouldFail: Bool = false) { self.shouldFail = shouldFail }
-
-    func fetchDashboard() async throws -> HomeDashboard {
-        if shouldFail { throw HomeTestError.unavailable }
-        return HomeDashboard(greeting: "", reminderText: "", quickActions: [], recentItems: [], campusBannerTitle: "", trendingTopics: [])
-    }
-}
 
 @MainActor
 private final class HomeScheduleStub: ScheduleRepository {

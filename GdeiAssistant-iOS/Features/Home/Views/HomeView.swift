@@ -86,14 +86,6 @@ struct HomeView: View {
                     .foregroundStyle(tokens.text2)
             }
 
-            if viewModel.dashboard == nil, let error = viewModel.errorMessage {
-                Section {
-                    DSErrorStateView(message: error) {
-                        Task { await viewModel.loadDashboard() }
-                    }
-                }
-            }
-
             Section {
                 VStack(spacing: 0) {
                     ForEach(HomeEntryConfig.commonEntries) { entry in
@@ -361,6 +353,6 @@ private struct HomeDesignTokens: DynamicProperty {
 
 #Preview {
     let container = AppContainer.preview
-    return HomeView(viewModel: HomeViewModel(repository: MockHomeRepository(), scheduleRepository: MockScheduleRepository()))
+    return HomeView(viewModel: HomeViewModel(scheduleRepository: MockScheduleRepository()))
         .environmentObject(container)
 }

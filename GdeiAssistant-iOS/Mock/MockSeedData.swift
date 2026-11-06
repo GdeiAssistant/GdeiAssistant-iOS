@@ -50,53 +50,6 @@ enum MockSeedData {
         )
     }
 
-    static var dashboard: HomeDashboard {
-        let localeIdentifier = AppLanguage.currentIdentifier()
-
-        return HomeDashboard(
-            greeting: mockLocalizedText(
-                simplifiedChinese: "早上好，林知远",
-                traditionalChinese: "早上好，林知遠",
-                english: "Good morning, Lin Zhiyuan",
-                japanese: "おはよう、リン・ジーユエン",
-                korean: "좋은 아침이에요, 린즈위안",
-                localeIdentifier: localeIdentifier
-            ),
-            reminderText: mockLocalizedText(
-                simplifiedChinese: "今天 14:00 在教学楼 A201 有《移动应用开发》实验课，记得提前 10 分钟到教室。",
-                traditionalChinese: "今天 14:00 在教學樓 A201 有《移動應用開發》實驗課，記得提前 10 分鐘到教室。",
-                english: "You have a Mobile App Development lab at 14:00 in Teaching Building A201 today. Remember to get there 10 minutes early.",
-                japanese: "今日は 14:00 から A201 教室で「モバイルアプリ開発」の実験があります。10 分前には教室に着いておきましょう。",
-                korean: "오늘 14:00에 A201 강의실에서 모바일 앱 개발 실습이 있어요. 10분 전에 도착하는 걸 잊지 마세요.",
-                localeIdentifier: localeIdentifier
-            ),
-            quickActions: [
-                HomeQuickAction(id: "schedule", title: mockLocalizedText(simplifiedChinese: "课表", traditionalChinese: "課表", english: "Schedule", japanese: "時間割", korean: "수업표", localeIdentifier: localeIdentifier), icon: "calendar"),
-                HomeQuickAction(id: "score", title: mockLocalizedText(simplifiedChinese: "成绩", traditionalChinese: "成績", english: "Grades", japanese: "成績", korean: "성적", localeIdentifier: localeIdentifier), icon: "chart.bar"),
-                HomeQuickAction(id: "campus_card", title: mockLocalizedText(simplifiedChinese: "校园卡", traditionalChinese: "校園卡", english: "Campus Card", japanese: "学生証", korean: "캠퍼스 카드", localeIdentifier: localeIdentifier), icon: "creditcard"),
-                HomeQuickAction(id: "library", title: mockLocalizedText(simplifiedChinese: "图书馆", traditionalChinese: "圖書館", english: "Library", japanese: "図書館", korean: "도서관", localeIdentifier: localeIdentifier), icon: "books.vertical"),
-                HomeQuickAction(id: "cet", title: mockLocalizedText(simplifiedChinese: "四六级", traditionalChinese: "四六級", english: "CET", japanese: "CET", korean: "CET", localeIdentifier: localeIdentifier), icon: "doc.text.magnifyingglass")
-            ],
-            recentItems: [
-                mockLocalizedText(simplifiedChinese: "图书馆座位预约", traditionalChinese: "圖書館座位預約", english: "Library seat reservation", japanese: "図書館座席予約", korean: "도서관 좌석 예약", localeIdentifier: localeIdentifier),
-                mockLocalizedText(simplifiedChinese: "教学楼空教室查询", traditionalChinese: "教學樓空教室查詢", english: "Empty classroom lookup", japanese: "空き教室検索", korean: "빈 강의실 조회", localeIdentifier: localeIdentifier),
-                mockLocalizedText(simplifiedChinese: "校园网套餐续费", traditionalChinese: "校園網套餐續費", english: "Campus network renewal", japanese: "学内ネット更新", korean: "캠퍼스 네트워크 갱신", localeIdentifier: localeIdentifier)
-            ],
-            campusBannerTitle: mockLocalizedText(
-                simplifiedChinese: "本周校园资讯：春季招聘双选会将于周三在体育馆举办",
-                traditionalChinese: "本週校園資訊：春季招聘雙選會將於週三在體育館舉辦",
-                english: "Campus update this week: the spring job fair will be held in the gym on Wednesday.",
-                japanese: "今週の学内ニュース: 春の就職フェアが水曜日に体育館で開催されます。",
-                korean: "이번 주 캠퍼스 소식: 봄 채용 박람회가 수요일 체육관에서 열립니다.",
-                localeIdentifier: localeIdentifier
-            ),
-            trendingTopics: [
-                "# " + mockLocalizedText(simplifiedChinese: "期中复习资料互助", traditionalChinese: "期中複習資料互助", english: "Midterm study materials swap", japanese: "中間試験資料シェア", korean: "중간고사 자료 공유", localeIdentifier: localeIdentifier),
-                "# " + mockLocalizedText(simplifiedChinese: "校园跑步打卡", traditionalChinese: "校園跑步打卡", english: "Campus running check-in", japanese: "学内ランニング記録", korean: "캠퍼스 러닝 체크인", localeIdentifier: localeIdentifier),
-                "# " + mockLocalizedText(simplifiedChinese: "图书馆闭馆时间调整", traditionalChinese: "圖書館閉館時間調整", english: "Library closing hour update", japanese: "図書館閉館時間変更", korean: "도서관 마감 시간 변경", localeIdentifier: localeIdentifier)
-            ]
-        )
-    }
 
     static var communityHotPosts: [CommunityPost] { [
         CommunityPost(

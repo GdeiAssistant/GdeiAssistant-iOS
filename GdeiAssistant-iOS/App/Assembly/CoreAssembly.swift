@@ -4,7 +4,6 @@ import Foundation
 @MainActor
 struct CoreAssembly {
     let authRepository: any AuthRepository
-    let homeRepository: any HomeRepository
 
     init(apiClient: APIClient, environment: AppEnvironment) {
         let remoteAuthRepository = RemoteAuthRepository(apiClient: apiClient)
@@ -13,14 +12,6 @@ struct CoreAssembly {
             environment: environment,
             remoteRepository: remoteAuthRepository,
             mockRepository: mockAuthRepository
-        )
-
-        let remoteHomeRepository = RemoteHomeRepository(apiClient: apiClient)
-        let mockHomeRepository = MockHomeRepository()
-        self.homeRepository = SwitchingHomeRepository(
-            environment: environment,
-            remoteRepository: remoteHomeRepository,
-            mockRepository: mockHomeRepository
         )
     }
 
@@ -31,6 +22,6 @@ struct CoreAssembly {
     }
 
     func makeHomeViewModel(scheduleRepository: any ScheduleRepository) -> HomeViewModel {
-        HomeViewModel(repository: homeRepository, scheduleRepository: scheduleRepository)
+        HomeViewModel(scheduleRepository: scheduleRepository)
     }
 }

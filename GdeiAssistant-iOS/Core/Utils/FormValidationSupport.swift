@@ -19,14 +19,6 @@ enum FormValidationSupport {
         hasText(value) ? nil : message
     }
 
-    nonisolated static func requireLength(
-        _ value: String,
-        max: Int,
-        message: String
-    ) -> String? {
-        trimmed(value).count <= max ? nil : message
-    }
-
     nonisolated static func parsePositiveAmount(
         _ value: String,
         max: Double,

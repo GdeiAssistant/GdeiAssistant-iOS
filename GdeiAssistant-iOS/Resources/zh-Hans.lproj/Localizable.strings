@@ -850,7 +850,7 @@
 "delivery.publishFooter" = "与 Web 当前提交流程一致，取件码或凭证可不填写；未填写时会按前端默认值提交。";
 "delivery.submitting" = "提交中……";
 "delivery.pickupPlaceRequired" = "请输入取件地点";
-"delivery.pickupPlaceTooLong" = "取件地点不能超过 10 个字";
+"delivery.pickupPlaceTooLong" = "取件地点不能超过 100 个字";
 "delivery.phoneRequired" = "请输入联系电话";
 "delivery.phoneTooLong" = "联系电话不能超过 11 位";
 "delivery.addressRequired" = "请输入送达地址";
@@ -1413,7 +1413,6 @@
 "common.notice" = "提示";
 "common.understood" = "知道了";
 
-"home.loadFailed" = "加载功能主页失败";
 "schedule.loadFailed" = "课表加载失败";
 "card.loadFailed" = "校园卡数据加载失败";
 "card.lostSuccess" = "校园卡已挂失，请尽快前往服务中心处理";

@@ -850,7 +850,7 @@
 "delivery.publishFooter" = "Pickup code is optional; if not provided, a default value will be used.";
 "delivery.submitting" = "Submitting……";
 "delivery.pickupPlaceRequired" = "Please enter pickup location";
-"delivery.pickupPlaceTooLong" = "Pickup location max 10 characters";
+"delivery.pickupPlaceTooLong" = "Pickup location max 100 characters";
 "delivery.phoneRequired" = "Please enter phone number";
 "delivery.phoneTooLong" = "Phone number max 11 digits";
 "delivery.addressRequired" = "Please enter delivery address";
@@ -1413,7 +1413,6 @@
 "common.notice" = "Notice";
 "common.understood" = "Got it";
 
-"home.loadFailed" = "Failed to load home";
 "schedule.loadFailed" = "Failed to load schedule";
 "card.loadFailed" = "Failed to load campus card";
 "card.lostSuccess" = "Card reported lost. Please visit the service center soon.";
