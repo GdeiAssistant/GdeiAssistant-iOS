@@ -3,21 +3,16 @@ import Combine
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    @Published var dashboard: HomeDashboard?
-    @Published var isLoading = false
-    @Published var errorMessage: String?
     @Published private(set) var currentSchedule: WeeklySchedule?
     @Published private(set) var isScheduleLoading = false
     @Published private(set) var scheduleLoadFailed = false
 
-    private let repository: any HomeRepository
     private let scheduleRepository: any ScheduleRepository
     private let now: () -> Date
     private var scheduleLoadGeneration = 0
     private var loadedScheduleDay: Date?
 
-    init(repository: any HomeRepository, scheduleRepository: any ScheduleRepository, now: @escaping () -> Date = Date.init) {
-        self.repository = repository
+    init(scheduleRepository: any ScheduleRepository, now: @escaping () -> Date = Date.init) {
         self.scheduleRepository = scheduleRepository
         self.now = now
     }
@@ -26,7 +21,6 @@ final class HomeViewModel: ObservableObject {
         if loadedScheduleDay != Self.campusCalendar.startOfDay(for: now()) {
             await loadTodaySchedule()
         }
-        if dashboard == nil { await loadDashboard() }
     }
 
     var todayCourses: [CourseItem] {
@@ -93,22 +87,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    func loadDashboard() async {
-        isLoading = true
-        errorMessage = nil
-
-        defer { isLoading = false }
-
-        do {
-            dashboard = try await repository.fetchDashboard()
-        } catch {
-            dashboard = nil
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("home.loadFailed")
-        }
-    }
-
     func refresh() async {
         await loadTodaySchedule()
-        await loadDashboard()
     }
 }

@@ -12,7 +12,6 @@ struct AppearanceView: View {
 
     var body: some View {
         List {
-            // Theme
             Section {
                 ForEach(UserPreferences.ThemeMode.allCases, id: \.self) { mode in
                     Button {
@@ -36,7 +35,6 @@ struct AppearanceView: View {
                 Text(LocalizedStringKey("appearance.theme.label"))
             }
 
-            // Font Size
             Section {
                 VStack(spacing: 12) {
                     Slider(
@@ -67,7 +65,6 @@ struct AppearanceView: View {
                 Text(LocalizedStringKey("appearance.font.label"))
             }
 
-            // Language
             Section {
                 ForEach(AppLanguage.allCases) { option in
                     Button {

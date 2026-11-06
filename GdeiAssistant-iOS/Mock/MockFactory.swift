@@ -9,9 +9,6 @@ enum MockFactory {
         MockSeedData.demoProfile
     }
 
-    static func makeHomeDashboard() -> HomeDashboard {
-        MockSeedData.dashboard
-    }
 
     static func makeCommunityPosts(sort: CommunityFeedSort) -> [CommunityPost] {
         switch sort {

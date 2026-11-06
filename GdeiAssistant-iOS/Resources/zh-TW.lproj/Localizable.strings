@@ -850,7 +850,7 @@
 "delivery.publishFooter" = "取件碼或憑證可不填寫；未填寫時會按前端預設值送出。";
 "delivery.submitting" = "送出中……";
 "delivery.pickupPlaceRequired" = "請輸入取件地點";
-"delivery.pickupPlaceTooLong" = "取件地點不能超過 10 個字";
+"delivery.pickupPlaceTooLong" = "取件地點不能超過 100 個字";
 "delivery.phoneRequired" = "請輸入聯絡電話";
 "delivery.phoneTooLong" = "聯絡電話不能超過 11 位";
 "delivery.addressRequired" = "請輸入送達地址";
@@ -1413,7 +1413,6 @@
 "common.notice" = "提示";
 "common.understood" = "知道了";
 
-"home.loadFailed" = "載入功能主頁失敗";
 "schedule.loadFailed" = "課表載入失敗";
 "card.loadFailed" = "校園卡資料載入失敗";
 "card.lostSuccess" = "校園卡已掛失，請盡快前往服務中心處理";

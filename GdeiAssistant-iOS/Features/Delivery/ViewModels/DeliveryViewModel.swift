@@ -72,6 +72,7 @@ final class PublishDeliveryViewModel: ObservableObject {
     @Published var submitState: SubmitState = .idle
 
     private let repository: any DeliveryRepository
+    private static let maximumReward = 9999.99
 
     init(repository: any DeliveryRepository) {
         self.repository = repository
@@ -81,7 +82,7 @@ final class PublishDeliveryViewModel: ObservableObject {
         FormValidationSupport.hasText(pickupPlace) &&
         FormValidationSupport.hasText(phone) &&
         FormValidationSupport.hasText(address) &&
-        FormValidationSupport.parsePositiveAmount(rewardText, max: 99, message: "") != nil
+        FormValidationSupport.parsePositiveAmount(rewardText, max: Self.maximumReward, message: "") != nil
     }
 
     func submit() async -> Bool {
@@ -95,7 +96,7 @@ final class PublishDeliveryViewModel: ObservableObject {
             submitState = .failure(message)
             return false
         }
-        if trimmedPickupPlace.count > 10 {
+        if trimmedPickupPlace.count > 100 {
             submitState = .failure(localizedString("delivery.pickupPlaceTooLong"))
             return false
         }
@@ -115,7 +116,7 @@ final class PublishDeliveryViewModel: ObservableObject {
             submitState = .failure(localizedString("delivery.addressTooLong"))
             return false
         }
-        guard let reward = FormValidationSupport.parsePositiveAmount(rewardText, max: 99, message: "") else {
+        guard let reward = FormValidationSupport.parsePositiveAmount(rewardText, max: Self.maximumReward, message: "") else {
             submitState = .failure(localizedString("delivery.rewardInvalid"))
             return false
         }

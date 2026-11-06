@@ -35,7 +35,7 @@ final class RemoteMessagesRepository: MessagesRepository {
     }
 
     func fetchFestival() async throws -> Festival? {
-        let info: InformationRemoteDTO = try await apiClient.get("/information/all", requiresAuth: true)
+        let info: InformationRemoteDTO = try await apiClient.get("/information/overview", requiresAuth: true)
         return MessagesRemoteMapper.mapFestival(info.festival)
     }
 
