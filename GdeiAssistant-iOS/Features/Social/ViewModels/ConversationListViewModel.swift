@@ -4,20 +4,30 @@ import Combine
 @MainActor
 final class ConversationListViewModel: ObservableObject {
     @Published private(set) var conversations: [ConversationSummary] = []
-    @Published private(set) var unreadTotal = 0
+    @Published private(set) var unreadTotal = 0 {
+        didSet {
+            if unreadBadgeStore?.sessionRevision == badgeSessionRevision {
+                unreadBadgeStore?.updateDirectMessageUnread(unreadTotal)
+            }
+        }
+    }
     @Published private(set) var isLoading = false
     @Published private(set) var hasMore = false
     @Published var errorMessage: String?
 
     private let repository: any SocialRepository
     private let realtimeManager: any SocialRealtimeManaging
+    private let unreadBadgeStore: UnreadBadgeStore?
+    private let badgeSessionRevision: Int?
     private var nextCursor: String?
     private var pollTask: Task<Void, Never>?
     private var eventTask: Task<Void, Never>?
 
-    init(repository: any SocialRepository, realtimeManager: any SocialRealtimeManaging) {
+    init(repository: any SocialRepository, realtimeManager: any SocialRealtimeManaging, unreadBadgeStore: UnreadBadgeStore? = nil) {
         self.repository = repository
         self.realtimeManager = realtimeManager
+        self.unreadBadgeStore = unreadBadgeStore
+        self.badgeSessionRevision = unreadBadgeStore?.sessionRevision
     }
 
     func start() async {

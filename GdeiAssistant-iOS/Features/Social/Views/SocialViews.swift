@@ -530,14 +530,6 @@ struct ChatThreadView: View {
                 }
                 .accessibilityElement(children: .combine)
             }
-            if AppRuntime.isRunningTests && UITestRuntimeOverrides.useMockData {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(localizedString("profile.logout")) {
-                        Task { await container.authManager.logout() }
-                    }
-                    .accessibilityIdentifier("social.chat.testLogout")
-                }
-            }
         }
         .task {
             await viewModel.start()

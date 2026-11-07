@@ -26,6 +26,7 @@ struct GdeiAssistant_iOSApp: App {
                 .environmentObject(container.userPreferences)
                 .environmentObject(container.sessionState)
                 .environmentObject(container.router)
+                .environmentObject(container.unreadBadgeStore)
                 .environment(\.locale, Locale(identifier: container.userPreferences.selectedLocale))
                 .environment(\.sizeCategory, container.userPreferences.sizeCategory)
                 .preferredColorScheme(UITestRuntimeOverrides.colorScheme ?? colorSchemeFor(container.userPreferences.selectedTheme))

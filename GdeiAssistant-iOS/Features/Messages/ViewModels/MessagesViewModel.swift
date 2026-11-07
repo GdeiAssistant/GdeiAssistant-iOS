@@ -15,19 +15,33 @@ final class MessagesViewModel: ObservableObject {
     @Published var systemErrorMessage: String?
     @Published var interactionErrorMessage: String?
 
-    @Published var interactionUnreadCount = 0
+    @Published var interactionUnreadCount = 0 {
+        didSet {
+            if unreadBadgeStore.sessionRevision == badgeSessionRevision {
+                unreadBadgeStore.updateInteractionUnread(interactionUnreadCount)
+            }
+        }
+    }
     @Published var festival: Festival?
 
     private let newsRepository: any NewsRepository
     private let messagesRepository: any MessagesRepository
+    private let socialRepository: any SocialRepository
+    private let unreadBadgeStore: UnreadBadgeStore
+    private let badgeSessionRevision: Int
     private let overviewLimit = 3
 
     init(
         newsRepository: any NewsRepository,
-        messagesRepository: any MessagesRepository
+        messagesRepository: any MessagesRepository,
+        socialRepository: any SocialRepository,
+        unreadBadgeStore: UnreadBadgeStore
     ) {
         self.newsRepository = newsRepository
         self.messagesRepository = messagesRepository
+        self.socialRepository = socialRepository
+        self.unreadBadgeStore = unreadBadgeStore
+        self.badgeSessionRevision = unreadBadgeStore.sessionRevision
     }
 
     var isInitialLoading: Bool {
@@ -103,16 +117,31 @@ final class MessagesViewModel: ObservableObject {
 
             let items = try await itemsTask
             interactionNoticeItems = items
-            interactionUnreadCount = (try? await unreadTask) ?? items.filter { !$0.isRead }.count
+            do { interactionUnreadCount = try await unreadTask }
+            catch { interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed") }
         } catch {
+            // A failed refresh keeps the last known unread total.
             interactionNoticeItems = []
-            interactionUnreadCount = 0
             interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
         }
     }
 
     func refreshFestival() async {
         festival = try? await messagesRepository.fetchFestival()
+    }
+
+    /// Refreshes both unread counters feeding the tab badge without touching list content.
+    func refreshUnreadBadge() async {
+        async let interactionTask = messagesRepository.fetchInteractionUnreadCount()
+        async let directMessageTask = socialRepository.fetchUnreadCount()
+
+        if let count = try? await interactionTask {
+            interactionUnreadCount = count
+        }
+        if let unread = try? await directMessageTask,
+           unreadBadgeStore.sessionRevision == badgeSessionRevision {
+            unreadBadgeStore.updateDirectMessageUnread(unread.total)
+        }
     }
 
     func markNotificationRead(notificationID: String) async {
