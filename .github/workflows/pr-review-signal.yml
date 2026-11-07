@@ -1,0 +1,22 @@
+# Shared governance action: GdeiAssistant/.github/pr-governance@b25f3dd3e5c78905c2302b342af984f6ef186466.
+# Keep the job names; they are required status check contexts.
+
+name: PR review signal
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+
+permissions:
+  contents: read
+
+jobs:
+  signal:
+    name: Signal review change
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Signal
+        run: echo "review event recorded"
