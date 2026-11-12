@@ -102,63 +102,22 @@ final class MockExpressRepository: ExpressRepository {
         comments[postID, default: []].insert(item, at: 0)
         if let index = posts.firstIndex(where: { $0.id == postID }) {
             let post = posts[index]
-            posts[index] = ExpressPost(
-                id: post.id,
-                nickname: post.nickname,
-                targetName: post.targetName,
-                contentPreview: post.contentPreview,
-                publishTime: post.publishTime,
-                likeCount: post.likeCount,
-                commentCount: post.commentCount + 1,
-                guessCount: post.guessCount,
-                correctGuessCount: post.correctGuessCount,
-                isLiked: post.isLiked,
-                canGuess: post.canGuess,
-                selfGender: post.selfGender,
-                targetGender: post.targetGender
-            )
+            posts[index] = post.with(commentCount: post.commentCount + 1)
         }
     }
 
     func like(postID: String) async throws {
         guard let index = posts.firstIndex(where: { $0.id == postID }) else { return }
         let post = posts[index]
-        posts[index] = ExpressPost(
-            id: post.id,
-            nickname: post.nickname,
-            targetName: post.targetName,
-            contentPreview: post.contentPreview,
-            publishTime: post.publishTime,
-            likeCount: post.likeCount + (post.isLiked ? 0 : 1),
-            commentCount: post.commentCount,
-            guessCount: post.guessCount,
-            correctGuessCount: post.correctGuessCount,
-            isLiked: true,
-            canGuess: post.canGuess,
-            selfGender: post.selfGender,
-            targetGender: post.targetGender
-        )
+        posts[index] = post.with(likeCount: post.likeCount + (post.isLiked ? 0 : 1), isLiked: true)
     }
 
     func guess(postID: String, name: String) async throws -> Bool {
         let matched = name.trimmingCharacters(in: .whitespacesAndNewlines) == localizedString("mock.express.detail.realName")
         if let index = posts.firstIndex(where: { $0.id == postID }) {
             let post = posts[index]
-            posts[index] = ExpressPost(
-                id: post.id,
-                nickname: post.nickname,
-                targetName: post.targetName,
-                contentPreview: post.contentPreview,
-                publishTime: post.publishTime,
-                likeCount: post.likeCount,
-                commentCount: post.commentCount,
-                guessCount: post.guessCount + 1,
-                correctGuessCount: post.correctGuessCount + (matched ? 1 : 0),
-                isLiked: post.isLiked,
-                canGuess: post.canGuess,
-                selfGender: post.selfGender,
-                targetGender: post.targetGender
-            )
+            posts[index] = post.with(guessCount: post.guessCount + 1,
+                correctGuessCount: post.correctGuessCount + (matched ? 1 : 0))
         }
         return matched
     }

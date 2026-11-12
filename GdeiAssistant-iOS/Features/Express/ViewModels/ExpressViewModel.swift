@@ -46,21 +46,7 @@ final class ExpressViewModel: ObservableObject {
     func submitComment(postID: String, content: String) async throws {
         try await repository.submitComment(postID: postID, content: content)
         updatePost(postID: postID) { post in
-            ExpressPost(
-                id: post.id,
-                nickname: post.nickname,
-                targetName: post.targetName,
-                contentPreview: post.contentPreview,
-                publishTime: post.publishTime,
-                likeCount: post.likeCount,
-                commentCount: post.commentCount + 1,
-                guessCount: post.guessCount,
-                correctGuessCount: post.correctGuessCount,
-                isLiked: post.isLiked,
-                canGuess: post.canGuess,
-                selfGender: post.selfGender,
-                targetGender: post.targetGender
-            )
+            post.with(commentCount: post.commentCount + 1)
         }
     }
 
@@ -68,42 +54,15 @@ final class ExpressViewModel: ObservableObject {
         try await repository.like(postID: postID)
         if let index = posts.firstIndex(where: { $0.id == postID }) {
             let post = posts[index]
-            posts[index] = ExpressPost(
-                id: post.id,
-                nickname: post.nickname,
-                targetName: post.targetName,
-                contentPreview: post.contentPreview,
-                publishTime: post.publishTime,
-                likeCount: post.likeCount + (post.isLiked ? 0 : 1),
-                commentCount: post.commentCount,
-                guessCount: post.guessCount,
-                correctGuessCount: post.correctGuessCount,
-                isLiked: true,
-                canGuess: post.canGuess,
-                selfGender: post.selfGender,
-                targetGender: post.targetGender
-            )
+            posts[index] = post.with(likeCount: post.likeCount + (post.isLiked ? 0 : 1), isLiked: true)
         }
     }
 
     func guess(postID: String, name: String) async throws -> Bool {
         let matched = try await repository.guess(postID: postID, name: name)
         updatePost(postID: postID) { post in
-            ExpressPost(
-                id: post.id,
-                nickname: post.nickname,
-                targetName: post.targetName,
-                contentPreview: post.contentPreview,
-                publishTime: post.publishTime,
-                likeCount: post.likeCount,
-                commentCount: post.commentCount,
-                guessCount: post.guessCount + 1,
-                correctGuessCount: post.correctGuessCount + (matched ? 1 : 0),
-                isLiked: post.isLiked,
-                canGuess: post.canGuess,
-                selfGender: post.selfGender,
-                targetGender: post.targetGender
-            )
+            post.with(guessCount: post.guessCount + 1,
+                correctGuessCount: post.correctGuessCount + (matched ? 1 : 0))
         }
         return matched
     }

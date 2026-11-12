@@ -107,67 +107,32 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
         let contactHintParts = contactHintParts(qq: draft.qq, phone: draft.phone)
-        let updatedItem = MarketplaceItem(
-            id: detail.item.id,
+        let category = MarketplaceRemoteMapper.displayName(forType: draft.typeID)
+        let updatedItem = detail.item.with(
             title: draft.title,
             price: draft.price,
             summary: RemoteMapperSupport.truncated(draft.description, limit: 28),
-            sellerName: detail.item.sellerName,
-            sellerAvatarURL: detail.item.sellerAvatarURL,
-            authorId: detail.item.authorId,
             postedAt: "刚刚修改",
             location: draft.location,
-            state: detail.item.state,
-            tags: [MarketplaceRemoteMapper.displayName(forType: draft.typeID)],
-            previewImageURL: detail.item.previewImageURL
+            tags: [category],
+            typeID: draft.typeID
         )
-        detailsByID[itemID] = MarketplaceDetail(
+        detailsByID[itemID] = detail.with(
             item: updatedItem,
-            condition: MarketplaceRemoteMapper.displayName(forType: draft.typeID),
+            condition: category,
             description: draft.description,
-            contactHint: contactHintParts.joined(separator: " / "),
-            sellerUsername: detail.sellerUsername,
-            sellerNickname: detail.sellerNickname,
-            sellerCollege: detail.sellerCollege,
-            sellerMajor: detail.sellerMajor,
-            sellerGrade: detail.sellerGrade,
-            imageURLs: detail.imageURLs
+            contactHint: contactHintParts.joined(separator: " / ")
         )
         syncItem(updatedItem)
     }
 
     func updateItemState(itemID: String, state: MarketplaceItemState) async throws {
-        guard var detail = detailsByID[itemID] else {
+        guard let detail = detailsByID[itemID] else {
             throw NetworkError.server(code: 404, message: localizedString("marketplace.itemNotFound"))
         }
 
-        let updatedItem = MarketplaceItem(
-            id: detail.item.id,
-            title: detail.item.title,
-            price: detail.item.price,
-            summary: detail.item.summary,
-            sellerName: detail.item.sellerName,
-            sellerAvatarURL: detail.item.sellerAvatarURL,
-            authorId: detail.item.authorId,
-            postedAt: detail.item.postedAt,
-            location: detail.item.location,
-            state: state,
-            tags: detail.item.tags,
-            previewImageURL: detail.item.previewImageURL
-        )
-        detail = MarketplaceDetail(
-            item: updatedItem,
-            condition: detail.condition,
-            description: detail.description,
-            contactHint: detail.contactHint,
-            sellerUsername: detail.sellerUsername,
-            sellerNickname: detail.sellerNickname,
-            sellerCollege: detail.sellerCollege,
-            sellerMajor: detail.sellerMajor,
-            sellerGrade: detail.sellerGrade,
-            imageURLs: detail.imageURLs
-        )
-        detailsByID[itemID] = detail
+        let updatedItem = detail.item.with(state: state)
+        detailsByID[itemID] = detail.with(item: updatedItem)
         syncItem(updatedItem)
     }
 
