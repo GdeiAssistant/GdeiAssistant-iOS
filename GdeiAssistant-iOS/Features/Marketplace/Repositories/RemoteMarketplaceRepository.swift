@@ -38,32 +38,9 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
             return detail
         }
 
-        return MarketplaceDetail(
-            item: MarketplaceItem(
-                id: detail.item.id,
-                title: detail.item.title,
-                price: detail.item.price,
-                summary: detail.item.summary,
-                sellerName: detail.item.sellerName,
-                sellerAvatarURL: detail.item.sellerAvatarURL,
-                authorId: detail.item.authorId,
-                postedAt: detail.item.postedAt,
-                location: detail.item.location,
-                state: detail.item.state,
-                tags: detail.item.tags,
-                previewImageURL: detail.item.previewImageURL ?? previewURL,
-                typeID: detail.item.typeID
-            ),
-            condition: detail.condition,
-            description: detail.description,
-            contactHint: detail.contactHint,
-            sellerUsername: detail.sellerUsername,
-            sellerNickname: detail.sellerNickname,
-            sellerCollege: detail.sellerCollege,
-            sellerMajor: detail.sellerMajor,
-            sellerGrade: detail.sellerGrade,
-            imageURLs: [previewURL],
-            ownedByCurrentUser: detail.ownedByCurrentUser
+        return detail.with(
+            item: detail.item.with(previewImageURL: detail.item.previewImageURL ?? previewURL),
+            imageURLs: [previewURL]
         )
     }
 

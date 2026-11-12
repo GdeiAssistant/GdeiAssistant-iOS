@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class MarketplaceViewModelTests: XCTestCase {
 
-    func testInitialStateIsEmpty() {
+    func testInitialStateIsEmpty() async {
         let vm = MarketplaceViewModel(repository: MockMarketplaceRepository())
 
         XCTAssertTrue(vm.items.isEmpty)

@@ -101,3 +101,68 @@ struct MarketplaceUpdateDraft: Codable {
     let qq: String
     let phone: String?
 }
+
+extension MarketplaceItem {
+    /// The single place that enumerates every stored field when copying an item.
+    /// `nil` means "keep the current value"; optional fields can only be replaced with a
+    /// non-nil value here. Reconstructing the struct by hand silently dropped `typeID`,
+    /// so an edited item kept showing its old category.
+    func with(
+        title: String? = nil,
+        price: Double? = nil,
+        summary: String? = nil,
+        sellerName: String? = nil,
+        sellerAvatarURL: String? = nil,
+        authorId: String? = nil,
+        postedAt: String? = nil,
+        location: String? = nil,
+        state: MarketplaceItemState? = nil,
+        tags: [String]? = nil,
+        previewImageURL: String? = nil,
+        typeID: Int? = nil
+    ) -> MarketplaceItem {
+        MarketplaceItem(
+            id: id,
+            title: title ?? self.title,
+            price: price ?? self.price,
+            summary: summary ?? self.summary,
+            sellerName: sellerName ?? self.sellerName,
+            sellerAvatarURL: sellerAvatarURL ?? self.sellerAvatarURL,
+            authorId: authorId ?? self.authorId,
+            postedAt: postedAt ?? self.postedAt,
+            location: location ?? self.location,
+            state: state ?? self.state,
+            tags: tags ?? self.tags,
+            previewImageURL: previewImageURL ?? self.previewImageURL,
+            typeID: typeID ?? self.typeID
+        )
+    }
+}
+
+extension MarketplaceDetail {
+    /// The single place that enumerates every stored field when copying a detail.
+    /// `nil` means "keep the current value". Reconstructing by hand silently reset
+    /// `ownedByCurrentUser`, which controls whether the owner sees the edit actions.
+    func with(
+        item: MarketplaceItem? = nil,
+        condition: String? = nil,
+        description: String? = nil,
+        contactHint: String? = nil,
+        imageURLs: [String]? = nil,
+        ownedByCurrentUser: Bool? = nil
+    ) -> MarketplaceDetail {
+        MarketplaceDetail(
+            item: item ?? self.item,
+            condition: condition ?? self.condition,
+            description: description ?? self.description,
+            contactHint: contactHint ?? self.contactHint,
+            sellerUsername: sellerUsername,
+            sellerNickname: sellerNickname,
+            sellerCollege: sellerCollege,
+            sellerMajor: sellerMajor,
+            sellerGrade: sellerGrade,
+            imageURLs: imageURLs ?? self.imageURLs,
+            ownedByCurrentUser: ownedByCurrentUser ?? self.ownedByCurrentUser
+        )
+    }
+}

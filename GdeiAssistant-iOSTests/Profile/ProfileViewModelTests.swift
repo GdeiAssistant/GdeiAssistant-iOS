@@ -277,7 +277,8 @@ final class ProfileViewModelTests: XCTestCase {
 
         XCTAssertEqual(viewModel.major, "软件工程")
         XCTAssertEqual(viewModel.location, "中国 广东 广州")
-        XCTAssertTrue(await viewModel.saveProfile())
+        let saved = await viewModel.saveProfile()
+        XCTAssertTrue(saved)
         XCTAssertEqual(repository.updateRequests.last?.location?.cityCode, "1")
         XCTAssertEqual(repository.updateRequests.last?.hometown?.cityCode, "5")
     }

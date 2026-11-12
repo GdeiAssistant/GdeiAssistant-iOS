@@ -58,3 +58,32 @@ struct ExpressDraft: Codable {
     let content: String
     let targetGender: ExpressGender
 }
+
+extension ExpressPost {
+    /// A copy with only the given counters changed. Both the mock repository and the view
+    /// model apply the same optimistic updates, so adding a field must not require editing
+    /// six full memberwise constructions.
+    func with(
+        likeCount: Int? = nil,
+        commentCount: Int? = nil,
+        guessCount: Int? = nil,
+        correctGuessCount: Int? = nil,
+        isLiked: Bool? = nil
+    ) -> ExpressPost {
+        ExpressPost(
+            id: id,
+            nickname: nickname,
+            targetName: targetName,
+            contentPreview: contentPreview,
+            publishTime: publishTime,
+            likeCount: likeCount ?? self.likeCount,
+            commentCount: commentCount ?? self.commentCount,
+            guessCount: guessCount ?? self.guessCount,
+            correctGuessCount: correctGuessCount ?? self.correctGuessCount,
+            isLiked: isLiked ?? self.isLiked,
+            canGuess: canGuess,
+            selfGender: selfGender,
+            targetGender: targetGender
+        )
+    }
+}
