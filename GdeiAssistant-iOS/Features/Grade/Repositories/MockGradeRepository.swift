@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockGradeRepository: GradeRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchGrades(yearIndex: Int?) async throws -> GradeReport {
         try await Task.sleep(nanoseconds: 280_000_000)
         let index = yearIndex ?? 3

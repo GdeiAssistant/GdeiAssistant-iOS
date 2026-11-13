@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockTopicRepository: TopicRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var posts: [TopicPost] = [
         TopicPost(
             id: "topic_001",

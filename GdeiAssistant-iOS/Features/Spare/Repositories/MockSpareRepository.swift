@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockSpareRepository: SpareRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func queryRooms(_ query: SpareQuery) async throws -> [SpareRoomItem] {
         try await Task.sleep(nanoseconds: 180_000_000)
         _ = query

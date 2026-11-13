@@ -15,6 +15,10 @@ final class CampusCredentialViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var canRunAction: Bool {
         !isLoading && !isActionRunning
     }

@@ -19,6 +19,10 @@ final class PhotographViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func loadIfNeeded() async {
         guard posts.isEmpty else { return }
         await refresh()
@@ -112,6 +116,10 @@ final class PublishPhotographViewModel: ObservableObject {
     init(repository: any PhotographRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var isFormValid: Bool {
         FormValidationSupport.hasText(title) && !images.isEmpty && images.count <= 4

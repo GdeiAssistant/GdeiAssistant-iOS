@@ -30,6 +30,10 @@ final class MessagesViewModel: ObservableObject {
         self.messagesRepository = messagesRepository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var isInitialLoading: Bool {
         if hasAnyContent {
             return false

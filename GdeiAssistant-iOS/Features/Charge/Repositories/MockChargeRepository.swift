@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockChargeRepository: ChargeRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchCardInfo() async throws -> CampusCardDashboard {
         try await Task.sleep(for: .milliseconds(250))
         return CampusCardDashboard(

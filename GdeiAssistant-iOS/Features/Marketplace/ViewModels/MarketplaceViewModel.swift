@@ -15,6 +15,10 @@ final class MarketplaceViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var typeOptions: [(id: Int, title: String)] {
         MarketplaceRemoteMapper.itemTypes.enumerated().map { (id: $0.offset, title: $0.element) }
     }

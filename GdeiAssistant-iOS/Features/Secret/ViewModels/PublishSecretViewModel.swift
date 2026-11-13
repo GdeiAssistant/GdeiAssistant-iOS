@@ -3,6 +3,10 @@ import Combine
 
 @MainActor
 final class PublishSecretViewModel: ObservableObject {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     @Published var mode: SecretDraftMode = .text
     @Published var selectedThemeID = Int.random(in: 1...12)
     @Published var content = ""

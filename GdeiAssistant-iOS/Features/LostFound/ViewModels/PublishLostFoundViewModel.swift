@@ -3,6 +3,10 @@ import Combine
 
 @MainActor
 final class PublishLostFoundViewModel: ObservableObject {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     @Published var title = ""
     @Published var selectedType: LostFoundType = .lost
     @Published var selectedItemTypeID = 0
@@ -149,6 +153,10 @@ final class EditLostFoundViewModel: ObservableObject {
         wechat = Self.extractContactValue(from: detail.contactHint, prefix: localizedString("lostFound.mapper.contactWechat")) ?? ""
         phone = Self.extractContactValue(from: detail.contactHint, prefix: localizedString("lostFound.mapper.contactPhone")) ?? ""
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var itemTypeOptions: [String] {
         LostFoundRemoteMapper.itemTypes

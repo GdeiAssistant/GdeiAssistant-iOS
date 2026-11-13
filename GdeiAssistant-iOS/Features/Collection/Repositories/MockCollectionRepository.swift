@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockCollectionRepository: CollectionRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var borrowedBooks: [CollectionBorrowItem] = [
         CollectionBorrowItem(id: "c_borrow_1", sn: "sn_1001", code: "code_1001", title: "iOS 架构设计实践", author: "王磊", borrowDate: "2026-03-01", returnDate: "2026-03-22", renewCount: 0),
         CollectionBorrowItem(id: "c_borrow_2", sn: "sn_1002", code: "code_1002", title: "数据库系统概论", author: "陈小华", borrowDate: "2026-02-24", returnDate: "2026-03-17", renewCount: 1)

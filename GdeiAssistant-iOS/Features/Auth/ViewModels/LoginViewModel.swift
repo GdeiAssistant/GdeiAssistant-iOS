@@ -16,6 +16,10 @@ final class LoginViewModel: ObservableObject {
         self.authManager = authManager
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var currentDataSourceMode: DataSourceMode {
         authManager.currentDataSourceMode
     }

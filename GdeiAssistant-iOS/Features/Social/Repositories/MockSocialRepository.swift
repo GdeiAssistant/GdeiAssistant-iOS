@@ -189,6 +189,10 @@ final class MockSocialRepository: SocialRepository {
         return page(items, cursor: cursor, limit: limit)
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchConversation(id: String) async throws -> ConversationSummary {
         try await delay()
         guard let conversation = conversations[id] else {

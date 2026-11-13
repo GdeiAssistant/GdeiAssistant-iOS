@@ -16,6 +16,10 @@ final class DeliveryViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func loadIfNeeded() async {
         guard orders.isEmpty else { return }
         await refresh()
@@ -77,6 +81,10 @@ final class PublishDeliveryViewModel: ObservableObject {
     init(repository: any DeliveryRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var isFormValid: Bool {
         FormValidationSupport.hasText(pickupPlace) &&

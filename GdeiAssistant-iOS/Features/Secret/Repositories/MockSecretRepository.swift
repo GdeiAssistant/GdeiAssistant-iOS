@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockSecretRepository: SecretRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var posts = MockFactory.makeSecretPosts()
     private var detailsByID = MockFactory.makeSecretDetailsByID()
 

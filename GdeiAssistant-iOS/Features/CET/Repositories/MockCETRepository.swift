@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockCETRepository: CETRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchCaptchaImageBase64() async throws -> String {
         try await Task.sleep(nanoseconds: 120_000_000)
         return MockSeedData.cetCaptchaBase64

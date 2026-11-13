@@ -14,6 +14,10 @@ final class ExpressViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func loadIfNeeded() async {
         guard posts.isEmpty else { return }
         await refresh()
@@ -92,6 +96,10 @@ final class PublishExpressViewModel: ObservableObject {
     init(repository: any ExpressRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var isFormValid: Bool {
         FormValidationSupport.hasText(nickname) &&

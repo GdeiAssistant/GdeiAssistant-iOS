@@ -9,6 +9,10 @@ final class MockLostFoundRepository: LostFoundRepository {
         seedPersonalItemsIfNeeded()
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchItems() async throws -> [LostFoundItem] {
         try await Task.sleep(nanoseconds: 200_000_000)
         return items

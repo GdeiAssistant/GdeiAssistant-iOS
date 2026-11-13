@@ -14,6 +14,10 @@ final class DatingHallViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func loadIfNeeded() async {
         guard profiles.isEmpty else { return }
         await refresh()
@@ -65,6 +69,10 @@ final class DatingCenterViewModel: ObservableObject {
     init(repository: any DatingRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     func loadData() async {
         isLoading = true
@@ -125,6 +133,10 @@ final class PublishDatingViewModel: ObservableObject {
     init(profileRepository: any ProfileRepository) {
         self.profileRepository = profileRepository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var isFormValid: Bool {
         !nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&

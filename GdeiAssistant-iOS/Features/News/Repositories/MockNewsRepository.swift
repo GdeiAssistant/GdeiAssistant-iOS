@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockNewsRepository: NewsRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private let items = [
         NewsItem(id: "news_1", type: 1, title: "学校高质量发展大会暨 2026 年工作会议召开", publishDate: "2026-03-03", content: "学校召开高质量发展大会，系统总结上一阶段重点工作，并部署年度改革发展任务。", sourceURL: "https://www.gdei.edu.cn/1324/1001.htm"),
         NewsItem(id: "news_2", type: 2, title: "管理学院召开教职工思想教育会议", publishDate: "2026-03-19", content: "管理学院围绕师德师风建设与年度重点工作召开专题会议。", sourceURL: "https://www.gdei.edu.cn/1325/2001.htm"),

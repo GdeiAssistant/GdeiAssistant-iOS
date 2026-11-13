@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockCommunityRepository: CommunityRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var likeCountOverrides: [String: Int] = [:]
     private var commentCountOverrides: [String: Int] = [:]
     private var addedComments: [String: [CommunityComment]] = [:]

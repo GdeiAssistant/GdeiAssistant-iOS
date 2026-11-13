@@ -16,6 +16,10 @@ final class ScheduleViewModel: ObservableObject {
         self.selectedWeekIndex = initialWeekIndex
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var todayCourses: [CourseItem] {
         guard let schedule else { return [] }
         let weekday = Calendar.current.component(.weekday, from: Date())
