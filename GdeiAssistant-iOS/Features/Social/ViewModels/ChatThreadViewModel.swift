@@ -36,17 +36,16 @@ final class ChatThreadViewModel: ObservableObject {
         repository: any SocialRepository,
         realtimeManager: any SocialRealtimeManaging,
         tokenProvider: @escaping @MainActor () -> String? = { nil }
-
-    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
-    // back-deployment crash on synchronous release (swiftlang/swift#87316).
-    nonisolated deinit {}
-
     ) {
         self.conversationID = conversationID
         self.repository = repository
         self.realtimeManager = realtimeManager
         self.tokenProvider = tokenProvider
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var currentUserID: String? {
         resolvedCurrentUserID
