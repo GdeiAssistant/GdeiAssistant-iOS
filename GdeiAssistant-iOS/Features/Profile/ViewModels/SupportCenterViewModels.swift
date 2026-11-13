@@ -23,6 +23,10 @@ final class FeedbackViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var isFormValid: Bool {
         FormValidationSupport.hasText(content)
     }
@@ -60,6 +64,10 @@ final class DownloadDataViewModel: ObservableObject {
     init(repository: any AccountCenterRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     func load() async {
         isLoading = true
@@ -108,6 +116,10 @@ final class AvatarEditViewModel: ObservableObject {
         self.repository = repository
         self.sessionState = sessionState
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     func load() async {
         isLoading = true
@@ -172,6 +184,10 @@ final class DeleteAccountViewModel: ObservableObject {
     init(repository: any AccountCenterRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var canSubmit: Bool {
         agreed && FormValidationSupport.hasText(password)

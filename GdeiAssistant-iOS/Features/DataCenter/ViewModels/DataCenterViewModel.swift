@@ -14,6 +14,10 @@ final class ElectricityFeesViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     var availableYears: [Int] {
         ElectricityQuery.yearOptions
     }
@@ -52,6 +56,10 @@ final class YellowPageViewModel: ObservableObject {
     init(repository: any DataCenterRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     func loadIfNeeded() async {
         guard categories.isEmpty else { return }

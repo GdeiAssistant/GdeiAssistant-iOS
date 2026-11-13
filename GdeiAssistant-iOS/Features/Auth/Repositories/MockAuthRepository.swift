@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockAuthRepository: AuthRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private let validUsername = "gdeiassistant"
     private let validPassword = "gdeiassistant"
 

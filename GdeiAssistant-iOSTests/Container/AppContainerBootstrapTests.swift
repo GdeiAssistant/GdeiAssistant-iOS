@@ -297,6 +297,22 @@ final class AppContainerBootstrapTests: XCTestCase {
         )
     }
 
+    func testMarketplaceTypesDeclareNonisolatedDeinitAgainstMainActorBackDeployCrash() throws {
+        let expectations = [
+            "GdeiAssistant-iOS/Features/Marketplace/ViewModels/MarketplaceViewModel.swift",
+            "GdeiAssistant-iOS/Features/Marketplace/ViewModels/PublishMarketplaceViewModel.swift",
+            "GdeiAssistant-iOS/Features/Marketplace/Repositories/MockMarketplaceRepository.swift"
+        ]
+
+        for path in expectations {
+            let source = try sourceFileContents(at: path)
+            XCTAssertTrue(
+                source.contains("nonisolated deinit"),
+                "\(path) must declare nonisolated deinit to avoid the iOS 26.2 MainActor isolated-deinit crash (swiftlang/swift#87316)."
+            )
+        }
+    }
+
     private func sourceFileContents(at relativePath: String) throws -> String {
         let url = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()

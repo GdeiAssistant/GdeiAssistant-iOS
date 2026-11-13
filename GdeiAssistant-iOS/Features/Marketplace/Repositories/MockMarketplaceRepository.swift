@@ -9,6 +9,10 @@ final class MockMarketplaceRepository: MarketplaceRepository {
         seedPersonalItemsIfNeeded()
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchItems(typeID: Int?) async throws -> [MarketplaceItem] {
         try await Task.sleep(nanoseconds: 220_000_000)
         guard let typeID else {

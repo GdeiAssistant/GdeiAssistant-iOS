@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockDataCenterRepository: DataCenterRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func queryElectricity(_ query: ElectricityQuery) async throws -> ElectricityBill {
         try await Task.sleep(nanoseconds: 180_000_000)
         guard FormValidationSupport.hasText(query.name), FormValidationSupport.hasText(query.studentNumber) else {

@@ -14,6 +14,10 @@ final class MockDatingRepository: DatingRepository {
         myProfiles = Self.makeMyProfiles()
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func fetchProfiles(filter: DatingFilter) async throws -> [DatingProfile] {
         hallProfiles.filter { $0.area == filter.area }
     }

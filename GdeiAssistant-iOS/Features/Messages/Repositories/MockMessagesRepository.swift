@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockMessagesRepository: MessagesRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var announcementItems = MockFactory.makeNotifications().filter { $0.destination == .announcement }
     private var interactionItems = MockFactory.makeNotifications().filter(\.isInteractionItem)
     private let announcementDetailsByID = MockFactory.makeAnnouncementDetailsByID()

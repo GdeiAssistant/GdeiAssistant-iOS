@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockLibraryRepository: LibraryRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private let validPasswords: Set<String> = ["library123", "123456"]
     private var renewedRecordIDs: Set<String> = []
 

@@ -15,6 +15,10 @@ final class TopicViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func loadIfNeeded() async {
         guard posts.isEmpty else { return }
         await refresh()
@@ -86,6 +90,10 @@ final class PublishTopicViewModel: ObservableObject {
     init(repository: any TopicRepository) {
         self.repository = repository
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var isFormValid: Bool {
         FormValidationSupport.hasText(topic) && FormValidationSupport.hasText(content) && content.count <= 250 && images.count <= 9

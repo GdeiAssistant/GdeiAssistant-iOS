@@ -2,6 +2,10 @@ import Foundation
 
 @MainActor
 final class MockPhotographRepository: PhotographRepository {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     private var posts: [PhotographPost] = MockPhotographRepository.makeInitialPosts()
 
     private var comments: [String: [PhotographCommentItem]] = MockPhotographRepository.makeInitialComments()

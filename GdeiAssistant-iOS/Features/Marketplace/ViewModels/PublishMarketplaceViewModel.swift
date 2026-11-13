@@ -3,6 +3,10 @@ import Combine
 
 @MainActor
 final class PublishMarketplaceViewModel: ObservableObject {
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     @Published var title = ""
     @Published var priceText = ""
     @Published var descriptionText = ""
@@ -153,6 +157,10 @@ final class EditMarketplaceViewModel: ObservableObject {
             prefixes: Self.contactPrefixes(for: "marketplace.contactPhonePrefix")
         ) ?? ""
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     var typeOptions: [String] {
         MarketplaceRemoteMapper.itemTypes

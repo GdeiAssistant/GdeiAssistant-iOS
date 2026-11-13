@@ -22,6 +22,10 @@ final class CollectionViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func search() async {
         let trimmed = FormValidationSupport.trimmed(keyword)
         guard !trimmed.isEmpty else {

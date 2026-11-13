@@ -14,6 +14,10 @@ final class GraduateExamViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func submit() async {
         guard FormValidationSupport.hasText(query.name), FormValidationSupport.hasText(query.examNumber), FormValidationSupport.hasText(query.idNumber) else {
             errorMessage = localizedString("graduateExam.formIncomplete")
