@@ -1854,3 +1854,16 @@
 "home.allFunctions" = "All Functions";
 "home.scheduleAction" = "Schedule";
 
+"appearance.accent.label" = "Theme Accent";
+"appearance.accent.banyan" = "Banyan Jade";
+"appearance.accent.banyanSubtitle" = "Lingnan courtyard evergreen";
+"appearance.accent.kapok" = "Kapok Vermilion";
+"appearance.accent.kapokSubtitle" = "Warm southern kapok blossom";
+"appearance.accent.haizhu" = "Haizhu Azure";
+"appearance.accent.haizhuSubtitle" = "Pearl River scholarly cobalt";
+"appearance.accent.bauhinia" = "Bauhinia Violet";
+"appearance.accent.bauhiniaSubtitle" = "Winter bauhinia ink plum";
+"home.greeting.named" = "Hello, %@";
+"home.greeting.default" = "Campus Journal";
+"home.editorial.subtitle" = "Guangdong University of Education";
+"home.footer.colophon" = "Lingnan Academy · Campus Edition";

@@ -18,6 +18,7 @@ struct MessagesView: View {
 
     @StateObject private var viewModel: MessagesViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: MessagesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -288,7 +289,7 @@ struct MessagesView: View {
                             }
 
                         Text(title)
-                            .font(.headline)
+                            .font(DSTypography.headlineSerif)
                             .foregroundStyle(DSColor.title)
                             .applyAccessibilityIdentifier(titleAccessibilityIdentifier)
                     }
@@ -327,7 +328,7 @@ struct MessagesView: View {
                         }
 
                     Text(title)
-                        .font(.headline)
+                        .font(DSTypography.headlineSerif)
                         .foregroundStyle(DSColor.title)
                         .applyAccessibilityIdentifier(titleAccessibilityIdentifier)
                         .padding(.leading, Layout.interactionHeaderIconTitleSpacing)
@@ -368,7 +369,7 @@ struct MessagesView: View {
         VStack(alignment: .leading, spacing: DSSpacing.xs) {
             Text(item.sourceTitle)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(DSColor.primary)
+                .foregroundStyle(campusAccent.primary)
             Text(item.title)
                 .font(.headline)
                 .foregroundStyle(DSColor.title)
@@ -377,7 +378,7 @@ struct MessagesView: View {
                 .foregroundStyle(DSColor.subtitle)
                 .lineLimit(3)
             Text(item.publishDate)
-                .font(.caption)
+                .font(.caption.monospacedDigit())
                 .foregroundStyle(DSColor.subtitle)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -403,7 +404,7 @@ struct MessagesView: View {
                 .foregroundStyle(DSColor.subtitle)
                 .lineLimit(3)
             Text(dateText)
-                .font(.caption)
+                .font(.caption.monospacedDigit())
                 .foregroundStyle(DSColor.subtitle)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -428,7 +429,7 @@ struct MessagesView: View {
                 HStack(alignment: .top, spacing: DSSpacing.xs) {
                     if item.isInteractionItem && !item.isRead {
                         Circle()
-                            .fill(DSColor.primary)
+                            .fill(campusAccent.primary)
                             .frame(width: 8, height: 8)
                             .padding(.top, DSSpacing.xs)
                     }
@@ -439,7 +440,7 @@ struct MessagesView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Text(item.createdAt)
-                        .font(.caption)
+                        .font(.caption.monospacedDigit())
                         .foregroundStyle(DSColor.subtitle)
                         .fixedSize()
                 }
@@ -548,9 +549,7 @@ struct MessagesView: View {
     }
 
     private func cardDivider(leadingInset: CGFloat = Layout.sectionLeading) -> some View {
-        Divider()
-            .padding(.leading, leadingInset)
-            .padding(.trailing, Layout.sectionTrailing)
+        DSHairlineDivider(leadingInset: leadingInset, trailingInset: Layout.sectionTrailing)
     }
 
     private func notificationIconSpec(for item: AppNotificationItem) -> NotificationIconSpec {

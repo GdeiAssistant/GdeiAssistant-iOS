@@ -1854,3 +1854,16 @@
 "home.allFunctions" = "전체 기능";
 "home.scheduleAction" = "시간표";
 
+"appearance.accent.label" = "테마 색상";
+"appearance.accent.banyan" = "반얀 비취";
+"appearance.accent.banyanSubtitle" = "서원 정원의 고요한 비취빛";
+"appearance.accent.kapok" = "목면 주홍";
+"appearance.accent.kapokSubtitle" = "영남 목면화를 닮은 따뜻한 주홍";
+"appearance.accent.haizhu" = "하이주 청람";
+"appearance.accent.haizhuSubtitle" = "주강의 물빛을 담은 청람색";
+"appearance.accent.bauhinia" = "자형 보라";
+"appearance.accent.bauhiniaSubtitle" = "자형꽃의 우아한 보랏빛";
+"home.greeting.named" = "안녕하세요, %@";
+"home.greeting.default" = "오늘의 캠퍼스 수첩";
+"home.editorial.subtitle" = "광둥제이사범학원 · 캠퍼스 저널";
+"home.footer.colophon" = "영남 서원 · 캠퍼스 에디션";

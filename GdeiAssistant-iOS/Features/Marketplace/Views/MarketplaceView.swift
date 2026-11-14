@@ -7,6 +7,7 @@ struct MarketplaceView: View {
     @StateObject private var viewModel: MarketplaceViewModel
     @EnvironmentObject private var container: AppContainer
     @Environment(\.locale) private var locale
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: MarketplaceViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -64,13 +65,12 @@ struct MarketplaceView: View {
                                 VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     HStack {
                                         Text(item.title)
-                                            .font(.headline)
+                                            .font(DSTypography.headlineSerif)
                                             .foregroundStyle(DSColor.title)
                                         Spacer()
                                         Text("¥\(item.price, specifier: "%.2f")")
-                                            .font(.headline)
-                                            .monospacedDigit()
-                                            .foregroundStyle(DSColor.primary)
+                                            .font(DSTypography.headlineSerif.monospacedDigit())
+                                            .foregroundStyle(campusAccent.primary)
                                     }
 
                                     if let category = item.typeDisplayName(localeIdentifier: locale.identifier) {
@@ -89,7 +89,7 @@ struct MarketplaceView: View {
                                                 SocialPublicProfileRoute(userID: authorId)
                                             } label: {
                                                 Text(item.sellerName)
-                                                    .foregroundStyle(DSColor.primary)
+                                                    .foregroundStyle(campusAccent.primary)
                                             }
                                             .buttonStyle(.plain)
                                         } else {
@@ -98,6 +98,7 @@ struct MarketplaceView: View {
                                         Spacer()
                                         Text(item.location)
                                         Text(item.postedAt)
+                                            .monospacedDigit()
                                     }
                                     .font(.caption)
                                     .foregroundStyle(DSColor.subtitle)
@@ -169,11 +170,15 @@ struct MarketplaceView: View {
         Button(action: action) {
             Text(title)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(isSelected ? DSColor.onPrimary : DSColor.primary)
+                .foregroundStyle(isSelected ? campusAccent.onPrimary : DSColor.title)
                 .padding(.horizontal, DSSpacing.sm)
                 .padding(.vertical, DSSpacing.xs)
-                .background(isSelected ? DSColor.primary : DSColor.primarySoft)
+                .background(isSelected ? campusAccent.primary : DSColor.surface)
                 .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(isSelected ? campusAccent.primary : DSColor.border, lineWidth: 1)
+                )
         }
         .buttonStyle(.plain)
     }

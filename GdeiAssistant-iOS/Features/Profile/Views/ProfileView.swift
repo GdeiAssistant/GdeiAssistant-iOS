@@ -4,6 +4,7 @@ struct ProfileView: View {
     @StateObject private var viewModel: ProfileViewModel
     @EnvironmentObject private var container: AppContainer
     @Environment(\.locale) private var locale
+    @Environment(\.dsCampusAccent) private var campusAccent
     @State private var activeEditor: ProfileEditorField?
     @State private var activeLocationPicker: ProfileLocationPickerField?
 
@@ -92,7 +93,7 @@ struct ProfileView: View {
 
                         VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                             Text(viewModel.displayText(profile.nickname, fallback: localizedString("profile.tapToSet")))
-                                .font(.title2.weight(.bold))
+                                .font(DSTypography.title2Serif)
                                 .foregroundStyle(DSColor.title)
                                 .lineLimit(2)
 
@@ -229,16 +230,11 @@ struct ProfileView: View {
     }
 
     private var rowDivider: some View {
-        Rectangle()
-            .fill(DSColor.divider)
-            .frame(height: 0.5)
-            .padding(.leading, 28 + DSSpacing.sm)
+        DSHairlineDivider(leadingInset: 28 + DSSpacing.sm)
     }
 
     private var fieldDivider: some View {
-        Rectangle()
-            .fill(DSColor.divider)
-            .frame(height: 0.5)
+        DSHairlineDivider()
     }
 
     private func profileFields(_ profile: UserProfile) -> some View {
@@ -317,7 +313,11 @@ struct ProfileView: View {
             destination()
         } label: {
             HStack(spacing: DSSpacing.sm) {
-                DSIconTile(systemName: systemImage)
+                DSIconTile(
+                    systemName: systemImage,
+                    tint: campusAccent.primary,
+                    background: campusAccent.primarySoft
+                )
 
                 Text(title)
                     .font(.body)

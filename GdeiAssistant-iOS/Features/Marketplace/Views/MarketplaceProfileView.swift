@@ -204,7 +204,7 @@ struct MarketplaceProfileHeaderView: View {
             DSAvatarView(urlString: summary.avatarURL, size: 64)
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text(summary.nickname)
-                    .font(.title3.weight(.bold))
+                    .font(DSTypography.title3Serif)
                     .foregroundStyle(DSColor.title)
                 Text(summary.introduction)
                     .font(.caption)
@@ -295,10 +295,10 @@ struct MarketplaceProfileItemCard: View {
 
                         VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text(item.title)
-                                .font(.headline)
+                                .font(DSTypography.headlineSerif)
                                 .foregroundStyle(DSColor.title)
                             Text("¥\(item.price, specifier: "%.2f")")
-                                .font(.subheadline.weight(.semibold))
+                                .font(.subheadline.weight(.semibold).monospacedDigit())
                                 .foregroundStyle(DSColor.primary)
                             if let category = item.typeDisplayName(localeIdentifier: locale.identifier) {
                                 Text(category)
@@ -306,7 +306,7 @@ struct MarketplaceProfileItemCard: View {
                                     .foregroundStyle(DSColor.subtitle)
                             }
                             Text(item.postedAt)
-                                .font(.caption)
+                                .font(.caption.monospacedDigit())
                                 .foregroundStyle(DSColor.subtitle)
                         }
 

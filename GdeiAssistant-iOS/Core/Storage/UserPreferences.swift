@@ -27,6 +27,9 @@ final class UserPreferences: ObservableObject {
     @Published var selectedTheme: ThemeMode = .system {
         didSet { persistThemeIfNeeded() }
     }
+    @Published var selectedAccent: DSCampusAccent = .banyan {
+        didSet { persistAccentIfNeeded() }
+    }
     @Published var fontScaleStep: Int = 1 {
         didSet { persistFontScaleStepIfNeeded() }
     }
@@ -78,6 +81,10 @@ final class UserPreferences: ObservableObject {
            let theme = ThemeMode(rawValue: themeRaw) {
             self.selectedTheme = theme
         }
+        if let accentRaw = defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedAccent),
+           let accent = DSCampusAccent(rawValue: accentRaw) {
+            self.selectedAccent = accent
+        }
         if defaults.object(forKey: AppConstants.UserDefaultsKeys.fontScaleStep) != nil {
             self.fontScaleStep = defaults.integer(forKey: AppConstants.UserDefaultsKeys.fontScaleStep).clamped(to: 0...3)
         }
@@ -85,6 +92,7 @@ final class UserPreferences: ObservableObject {
         // Persist system detection once, so helpers and HTTP headers use the
         // same language as SwiftUI even before the user changes a preference.
         persistLocaleIfNeeded()
+        persistAccentIfNeeded()
     }
 
     // Only automatic ARC cleanup is needed. Avoid the iOS 26.2
@@ -143,6 +151,11 @@ final class UserPreferences: ObservableObject {
     private func persistThemeIfNeeded() {
         guard hasInitialized else { return }
         defaults.set(selectedTheme.rawValue, forKey: AppConstants.UserDefaultsKeys.selectedTheme)
+    }
+
+    private func persistAccentIfNeeded() {
+        guard hasInitialized else { return }
+        defaults.set(selectedAccent.rawValue, forKey: AppConstants.UserDefaultsKeys.selectedAccent)
     }
 
     private func persistFontScaleStepIfNeeded() {

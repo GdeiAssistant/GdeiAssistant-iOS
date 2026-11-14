@@ -50,7 +50,7 @@ struct TopicFeedView: View {
                                 } label: {
                                     VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                                         Text(post.title)
-                                            .font(.headline)
+                                            .font(DSTypography.headlineSerif)
                                             .foregroundStyle(DSColor.title)
                                         Text(post.summary)
                                             .font(.subheadline)

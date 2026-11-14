@@ -1854,3 +1854,16 @@
 "home.allFunctions" = "全部功能";
 "home.scheduleAction" = "課表";
 
+"appearance.accent.label" = "主題色";
+"appearance.accent.banyan" = "榕蔭翠";
+"appearance.accent.banyanSubtitle" = "溫潤書院松煙綠";
+"appearance.accent.kapok" = "木棉丹";
+"appearance.accent.kapokSubtitle" = "嶺南花城紅棉暖丹";
+"appearance.accent.haizhu" = "海珠藍";
+"appearance.accent.haizhuSubtitle" = "珠水清輝書卷藍";
+"appearance.accent.bauhinia" = "紫荊紫";
+"appearance.accent.bauhiniaSubtitle" = "羊城冬日紫荊墨紫";
+"home.greeting.named" = "你好，%@";
+"home.greeting.default" = "嶺南書聲，今日開啟";
+"home.editorial.subtitle" = "廣東第二師範學院 · 校園手賬";
+"home.footer.colophon" = "立德樹人 · 格物致知";

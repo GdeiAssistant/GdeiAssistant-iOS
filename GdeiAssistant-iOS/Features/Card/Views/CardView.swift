@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CardView: View {
     @StateObject private var viewModel: CardViewModel
+    @Environment(\.dsCampusAccent) private var campusAccent
     @State private var showLossConfirm = false
     @State private var showPasswordSheet = false
     @State private var cardPassword = ""
@@ -88,14 +89,18 @@ struct CardView: View {
                         .foregroundStyle(DSColor.subtitle)
 
                     Text("\u{00A5}\(dashboard.info.balance, specifier: "%.2f")")
-                        .font(.largeTitle.weight(.bold))
-                        .monospacedDigit()
+                        .font(DSTypography.displaySerif.monospacedDigit())
                         .foregroundStyle(DSColor.title)
 
                     HStack {
                         Text(String(format: localizedString("card.number"), dashboard.info.cardNumber))
+                            .monospacedDigit()
                         Spacer()
-                        DSTag(text: String(format: localizedString("card.status"), dashboard.info.status.displayName))
+                        DSTag(
+                            text: String(format: localizedString("card.status"), dashboard.info.status.displayName),
+                            tint: campusAccent.primary,
+                            background: campusAccent.primarySoft
+                        )
                     }
                     .font(.footnote)
                     .foregroundStyle(DSColor.subtitle)
@@ -112,19 +117,20 @@ struct CardView: View {
                     displayedComponents: .date
                 )
                 .datePickerStyle(.compact)
-                .tint(DSColor.primary)
+                .tint(campusAccent.primary)
 
                 Button {
                     Task { await viewModel.loadDashboard(for: viewModel.selectedDate) }
                 } label: {
                     Label(localizedString("card.queryButton"), systemImage: "calendar")
-                        .foregroundStyle(DSColor.primary)
+                        .foregroundStyle(campusAccent.primary)
                 }
                 .disabled(viewModel.isLoading)
             } header: {
                 Text(LocalizedStringKey("card.transactions"))
             } footer: {
                 Text(String(format: localizedString("card.currentDate"), viewModel.selectedDateText))
+                    .monospacedDigit()
             }
 
             Section {
@@ -141,6 +147,7 @@ struct CardView: View {
                                     .foregroundStyle(DSColor.title)
                                 Text("\(transaction.timeText) \u{00B7} \(transaction.category)")
                                     .font(.footnote)
+                                    .monospacedDigit()
                                     .foregroundStyle(DSColor.subtitle)
                             }
                             Spacer()

@@ -44,10 +44,11 @@ struct DatingView: View {
                             HStack(alignment: .top, spacing: DSSpacing.sm) {
                                 DSRemoteImageView(urlString: profile.imageURL, fallbackSystemImage: "person.crop.rectangle")
                                     .frame(width: 96, height: 120)
+                                    .dsHairlineBorder(DSRadius.card)
 
                                 VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                     Text(profile.nickname)
-                                        .font(.headline)
+                                        .font(DSTypography.headlineSerif)
                                         .foregroundStyle(DSColor.title)
 
                                     Text(profile.headline)

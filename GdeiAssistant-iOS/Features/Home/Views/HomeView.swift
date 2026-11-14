@@ -19,7 +19,7 @@ struct HomeView: View {
         NavigationStack {
             contentView
             .navigationTitle(localizedString("home.title"))
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $isSchedulePresented) {
                 if let currentWeek = viewModel.currentSchedule?.weekIndex {
                     ScheduleView(viewModel: ScheduleViewModel(
@@ -49,92 +49,151 @@ struct HomeView: View {
         }
     }
 
-    private var contentView: some View {
-        List {
-            Section {
-                VStack(alignment: .leading, spacing: DSSpacing.lg) {
-                    HStack {
-                        Label(localizedString("schedule.todayCourses"), systemImage: "clock")
-                            .font(tokens.headline)
-                        Spacer()
-                        Button {
-                            isSchedulePresented = true
-                        } label: {
-                            Text(LocalizedStringKey("home.scheduleAction"))
-                                .font(tokens.body)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("home.todayCourses.schedule")
-                    }
-                    .foregroundStyle(tokens.primary)
-                    .frame(maxWidth: .infinity)
-
-                    HomeTodayCoursesCard(
-                        courses: viewModel.todayCourses,
-                        isLoading: viewModel.isScheduleLoading || (viewModel.currentSchedule == nil && !viewModel.scheduleLoadFailed),
-                        loadFailed: viewModel.scheduleLoadFailed
-                    )
-                }
-                .padding(tokens.pageSpacing)
-                .background(tokens.surface, in: RoundedRectangle(cornerRadius: tokens.cardRadius, style: .continuous))
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-            } header: {
-                // Format before creating Text so the device environment cannot replace campus time.
-                Text(HomeViewModel.campusDateDescription(on: viewModel.todayDate, locale: locale))
-                    .font(tokens.caption)
-                    .foregroundStyle(tokens.text2)
-            }
-
-            Section {
-                VStack(spacing: 0) {
-                    ForEach(HomeEntryConfig.commonEntries) { entry in
-                        Button {
-                            selectedDestination = entry.destination
-                        } label: {
-                            HomeServiceRow(entry: entry, showsSubtitle: false)
-                                .padding(.vertical, DSSpacing.sm)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("home.entry.\(entry.destination.featureID)")
-                        if entry.id != HomeEntryConfig.commonEntries.last?.id {
-                            Divider()
-                                .padding(.leading, tokens.iconSide + DSSpacing.sm)
-                        }
-                    }
-                }
-                .padding(.horizontal, tokens.pageSpacing)
-                .background(tokens.surface, in: RoundedRectangle(cornerRadius: tokens.cardRadius, style: .continuous))
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-            } header: {
-                Text(LocalizedStringKey("home.commonServices"))
-                    .font(tokens.title.weight(.semibold))
-                    .foregroundStyle(tokens.text1)
-            }
-
-            Section {
-                Button {
-                    isAllFunctionsPresented = true
-                } label: {
-                    Text(LocalizedStringKey("home.allFunctions"))
-                        .font(tokens.headline.weight(.semibold))
-                        .foregroundStyle(tokens.primary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, tokens.pageSpacing)
-                        .background(tokens.primarySoft, in: RoundedRectangle(cornerRadius: tokens.cardRadius, style: .continuous))
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("home.allFunctions")
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
+    private var greetingTitle: String {
+        if let user = container.sessionState.currentUser {
+            let trimmedNickname = user.nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+            let name = trimmedNickname.isEmpty ? user.username : trimmedNickname
+            if !name.isEmpty {
+                return String(format: localizedString("home.greeting.named"), name)
             }
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
+        return localizedString("home.greeting.default")
+    }
+
+    private var contentView: some View {
+        ScrollView {
+            HStack(spacing: 0) {
+                Spacer(minLength: 0)
+
+                VStack(alignment: .leading, spacing: DSSpacing.lg) {
+                    // Editorial masthead: campus date eyebrow, week badge, serif greeting, and motto.
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                        HStack(alignment: .center, spacing: DSSpacing.sm) {
+                            Text(HomeViewModel.campusDateDescription(on: viewModel.todayDate, locale: locale))
+                                .font(tokens.caption.monospacedDigit())
+                                .foregroundStyle(tokens.text2)
+
+                            Spacer(minLength: DSSpacing.xs)
+
+                            if let weekIndex = viewModel.currentSchedule?.weekIndex {
+                                DSTag(
+                                    text: String(format: localizedString("schedule.weekLabel"), weekIndex),
+                                    tint: tokens.primary,
+                                    background: tokens.primarySoft
+                                )
+                                .monospacedDigit()
+                            }
+                        }
+
+                        Text(greetingTitle)
+                            .font(DSTypography.displaySerif)
+                            .foregroundStyle(tokens.text1)
+                            .accessibilityAddTraits(.isHeader)
+
+                        Text(LocalizedStringKey("home.editorial.subtitle"))
+                            .font(tokens.callout)
+                            .foregroundStyle(tokens.primary)
+                    }
+                    .padding(.top, DSSpacing.xs)
+
+                    // Single elevated focal card on Warm Paper / Nocturnal Ink canvas.
+                    DSCard(padding: tokens.pageSpacing, surfaceStyle: .elevated) {
+                        HStack(alignment: .center, spacing: DSSpacing.sm) {
+                            Label(localizedString("schedule.todayCourses"), systemImage: "clock")
+                                .font(DSTypography.headlineSerif)
+                                .foregroundStyle(tokens.text1)
+                            Spacer()
+                            Button {
+                                isSchedulePresented = true
+                            } label: {
+                                HStack(spacing: DSSpacing.xxs) {
+                                    Text(LocalizedStringKey("home.scheduleAction"))
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption2.weight(.semibold))
+                                        .accessibilityHidden(true)
+                                }
+                                .font(tokens.callout.weight(.medium))
+                                .foregroundStyle(tokens.primary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("home.todayCourses.schedule")
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        DSHairlineDivider()
+
+                        HomeTodayCoursesCard(
+                            courses: viewModel.todayCourses,
+                            isLoading: viewModel.isScheduleLoading || (viewModel.currentSchedule == nil && !viewModel.scheduleLoadFailed),
+                            loadFailed: viewModel.scheduleLoadFailed
+                        )
+                    }
+
+                    // Borderless Campus Services index directly on canvas with 1pt hairline dividers.
+                    VStack(alignment: .leading, spacing: DSSpacing.xs) {
+                        Text(LocalizedStringKey("home.commonServices"))
+                            .font(DSTypography.title2Serif)
+                            .foregroundStyle(tokens.text1)
+                            .accessibilityAddTraits(.isHeader)
+
+                        DSHairlineDivider(thickness: 1, color: DSColor.border)
+
+                        VStack(spacing: 0) {
+                            ForEach(HomeEntryConfig.commonEntries) { entry in
+                                Button {
+                                    selectedDestination = entry.destination
+                                } label: {
+                                    HomeServiceRow(entry: entry, showsSubtitle: false)
+                                        .padding(.vertical, DSSpacing.sm)
+                                }
+                                .buttonStyle(DSPressableButtonStyle())
+                                .accessibilityIdentifier("home.entry.\(entry.destination.featureID)")
+
+                                if entry.id != HomeEntryConfig.commonEntries.last?.id {
+                                    DSHairlineDivider(leadingInset: tokens.iconSide + DSSpacing.sm)
+                                }
+                            }
+                        }
+                    }
+
+                    Button {
+                        isAllFunctionsPresented = true
+                    } label: {
+                        HStack(spacing: DSSpacing.sm) {
+                            Text(LocalizedStringKey("home.allFunctions"))
+                                .font(DSTypography.headlineSerif)
+                            Spacer()
+                            Image(systemName: "arrow.right")
+                                .font(.subheadline.weight(.semibold))
+                                .accessibilityHidden(true)
+                        }
+                        .foregroundStyle(tokens.primary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, tokens.pageSpacing)
+                        .padding(.vertical, tokens.pageSpacing)
+                        .background(tokens.surface, in: RoundedRectangle(cornerRadius: tokens.cardRadius, style: .continuous))
+                        .dsHairlineBorder(tokens.cardRadius, color: DSColor.border)
+                    }
+                    .buttonStyle(DSPressableButtonStyle())
+                    .accessibilityIdentifier("home.allFunctions")
+
+                    VStack(spacing: DSSpacing.xs) {
+                        DSHairlineDivider()
+                        Text(LocalizedStringKey("home.footer.colophon"))
+                            .font(tokens.caption)
+                            .foregroundStyle(DSColor.tertiaryText)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .padding(.top, DSSpacing.xs)
+                }
+                .padding(.horizontal, tokens.pageSpacing)
+                .padding(.vertical, DSSpacing.sm)
+                .frame(maxWidth: horizontalSizeClass == .regular ? 680 : .infinity, alignment: .leading)
+
+                Spacer(minLength: 0)
+            }
+        }
         .background(tokens.background.ignoresSafeArea())
-        .contentMargins(.horizontal, tokens.pageSpacing, for: .scrollContent)
-        .frame(maxWidth: horizontalSizeClass == .regular ? 680 : .infinity)
         .refreshable {
             await viewModel.refresh()
         }
@@ -221,7 +280,7 @@ private struct HomeTodayCoursesCard: View {
                                 .font(tokens.headline.weight(.semibold))
                                 .foregroundStyle(tokens.text1)
                             Text(String(format: localizedString("schedule.sectionLocation"), course.startSection, course.endSection, course.location))
-                                .font(tokens.body)
+                                .font(tokens.body.monospacedDigit())
                                 .foregroundStyle(tokens.text2)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -254,12 +313,13 @@ private struct HomeServiceRow: View {
             DSIconTile(
                 systemName: entry.icon,
                 size: tokens.iconSide,
-                tint: showsSubtitle ? tokens.primary : tokens.onPrimary,
-                background: showsSubtitle ? tokens.primarySoft : tokens.primary
+                tint: tokens.primary,
+                background: tokens.primarySoft
             )
+            .dsHairlineBorder(7, color: tokens.primary.opacity(0.2))
             VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                 Text(entry.title)
-                    .font(tokens.body)
+                    .font(tokens.body.weight(.medium))
                     .foregroundStyle(tokens.text1)
                 if showsSubtitle {
                     Text(entry.subtitle)
@@ -269,8 +329,8 @@ private struct HomeServiceRow: View {
             }
             Spacer()
             Image(systemName: "chevron.right")
-                .font(tokens.body)
-                .foregroundStyle(tokens.text2)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(DSColor.tertiaryText)
                 .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -303,8 +363,9 @@ private struct HomeAllFunctionsView<Destination: View>: View {
                     }
                 } header: {
                     Text(section.section.title)
-                        .font(tokens.headline)
-                        .foregroundStyle(tokens.text2)
+                        .font(DSTypography.headlineSerif)
+                        .foregroundStyle(tokens.text1)
+                        .textCase(nil)
                 } footer: {
                     Text(section.section.subtitle)
                         .font(tokens.caption)
@@ -321,10 +382,10 @@ private struct HomeAllFunctionsView<Destination: View>: View {
     }
 }
 
-/// Page 6's generated reference sizes, scaled using the matching native text curves.
-/// Kept private to the audited Home screens; other app screens retain their styles.
+/// Page 6's generated reference sizes, scaled using the matching native text curves
+/// and synchronized with the active Lingnan campus accent.
 private struct HomeDesignTokens: DynamicProperty {
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dsCampusAccent) private var campusAccent
     @ScaledMetric(relativeTo: .largeTitle) private var displaySize = GeneratedDesignTokens.displaySize
     @ScaledMetric(relativeTo: .title2) private var titleSize = GeneratedDesignTokens.titleSize
     @ScaledMetric(relativeTo: .headline) private var headlineSize = GeneratedDesignTokens.headlineSize
@@ -342,13 +403,13 @@ private struct HomeDesignTokens: DynamicProperty {
     var pageSpacing: CGFloat { GeneratedDesignTokens.pageSpacing }
     var cardRadius: CGFloat { GeneratedDesignTokens.cardRadius }
 
-    var primary: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.primary : GeneratedDesignTokens.Light.primary }
-    var primarySoft: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.primarySoft : GeneratedDesignTokens.Light.primarySoft }
-    var background: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.bg : GeneratedDesignTokens.Light.bg }
-    var surface: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.surface : GeneratedDesignTokens.Light.surface }
-    var text1: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.text1 : GeneratedDesignTokens.Light.text1 }
-    var text2: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.text2 : GeneratedDesignTokens.Light.text2 }
-    var onPrimary: Color { colorScheme == .dark ? GeneratedDesignTokens.Dark.bg : GeneratedDesignTokens.Light.surface }
+    var primary: Color { campusAccent.primary }
+    var primarySoft: Color { campusAccent.primarySoft }
+    var background: Color { DSColor.background }
+    var surface: Color { DSColor.surface }
+    var text1: Color { DSColor.title }
+    var text2: Color { DSColor.subtitle }
+    var onPrimary: Color { campusAccent.onPrimary }
 }
 
 #Preview {

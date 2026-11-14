@@ -9,6 +9,7 @@ private let fontScaleLabels = [
 
 struct AppearanceView: View {
     @EnvironmentObject private var preferences: UserPreferences
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     var body: some View {
         List {
@@ -23,7 +24,7 @@ struct AppearanceView: View {
                             Spacer()
                             if preferences.selectedTheme == mode {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(DSColor.primary)
+                                    .foregroundStyle(campusAccent.primary)
                                     .fontWeight(.semibold)
                             }
                         }
@@ -36,6 +37,51 @@ struct AppearanceView: View {
             }
 
             Section {
+                ForEach(DSCampusAccent.allCases) { accent in
+                    Button {
+                        preferences.selectedAccent = accent
+                    } label: {
+                        HStack(spacing: DSSpacing.sm) {
+                            ZStack {
+                                Circle()
+                                    .fill(accent.primarySoft)
+                                    .frame(width: 28, height: 28)
+                                Circle()
+                                    .fill(accent.primary)
+                                    .frame(width: 14, height: 14)
+                            }
+                            .overlay(
+                                Circle()
+                                    .stroke(accent.primary.opacity(0.32), lineWidth: 1)
+                            )
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(localizedString(accent.localizationKey))
+                                    .font(.body)
+                                    .foregroundStyle(DSColor.title)
+                                Text(localizedString(accent.subtitleKey))
+                                    .font(.caption)
+                                    .foregroundStyle(DSColor.subtitle)
+                            }
+
+                            Spacer()
+
+                            if preferences.selectedAccent == accent {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(accent.primary)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("appearance.accent.\(accent.rawValue)")
+                }
+            } header: {
+                Text(LocalizedStringKey("appearance.accent.label"))
+            }
+
+            Section {
                 VStack(spacing: 12) {
                     Slider(
                         value: Binding(
@@ -45,7 +91,7 @@ struct AppearanceView: View {
                         in: 0...3,
                         step: 1
                     )
-                    .tint(DSColor.primary)
+                    .tint(campusAccent.primary)
 
                     HStack {
                         ForEach(fontScaleLabels.indices, id: \.self) { i in
@@ -57,7 +103,8 @@ struct AppearanceView: View {
                     .foregroundStyle(DSColor.subtitle)
 
                     Text(LocalizedStringKey("appearance.font.preview"))
-                        .font(.system(size: 16 * preferences.fontScale))
+                        .font(.system(size: 16 * preferences.fontScale, design: .serif))
+                        .foregroundStyle(DSColor.title)
                         .padding(.top, 4)
                 }
                 .padding(.vertical, 8)
@@ -76,7 +123,7 @@ struct AppearanceView: View {
                             Spacer()
                             if preferences.selectedLocale == option.localeIdentifier {
                                 Image(systemName: "checkmark")
-                                    .foregroundStyle(DSColor.primary)
+                                    .foregroundStyle(campusAccent.primary)
                                     .fontWeight(.semibold)
                             }
                         }

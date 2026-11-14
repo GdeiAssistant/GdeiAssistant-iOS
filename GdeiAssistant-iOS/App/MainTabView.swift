@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject private var container: AppContainer
+    @EnvironmentObject private var preferences: UserPreferences
     @EnvironmentObject private var router: AppRouter
 
     var body: some View {
@@ -24,7 +25,10 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.profile)
         }
-        .tint(DSColor.primary)
+        .tint(preferences.selectedAccent.primary)
+        .toolbarBackground(DSColor.surface, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
+        .environment(\.dsCampusAccent, preferences.selectedAccent)
     }
 }
 

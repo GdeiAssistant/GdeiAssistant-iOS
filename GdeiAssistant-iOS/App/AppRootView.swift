@@ -55,6 +55,8 @@ struct AppRootView: View {
         }
         .environment(\.locale, Locale(identifier: preferences.selectedLocale))
         .environment(\.sizeCategory, preferences.sizeCategory)
+        .environment(\.dsCampusAccent, preferences.selectedAccent)
+        .tint(preferences.selectedAccent.primary)
         .alert(Text(LocalizedStringKey("startup.alert.title")), isPresented: $showAuthAlert) {
             Button(localizedString("startup.alert.dismiss")) {
                 sessionState.authErrorMessage = nil

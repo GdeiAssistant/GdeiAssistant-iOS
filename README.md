@@ -57,6 +57,14 @@ xcodebuild -project GdeiAssistant-iOS.xcodeproj \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 ```
 
+### 本地检查
+
+```bash
+./Tools/check_style.sh
+python3 Tools/check_localization.py
+python3 scripts/check_hygiene.py
+```
+
 ### 发布 TestFlight
 
 仓库提供 `iOS TestFlight Release` 手动工作流：签名归档、导出 IPA，按需上传 TestFlight。即使跳过上传，也会保留导出的 IPA artifact，方便排查签名问题。
@@ -137,7 +145,7 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ### 主题
 
-固定 Campus Green 品牌色（亮色 `#0E8F6E`，暗色 `#34C79A`），与 Web / Android / 小程序四端一致。用户可选浅色/深色/跟随系统，字体四档可调，偏好存 UserDefaults。
+采用《岭南书院人文风》（Warm Editorial Lingnan Academy）设计系统，由 `GeneratedDesignTokens.swift` 与 `DSColor.swift` 驱动：支持浅色「岭南晨纸」（`#F7F6F2`）、深色「珠江夜读」（`#0D1311`）和跟随系统，内置 **榕荫翠 / 木棉丹 / 海珠蓝 / 紫荆紫** 四套正交校园主题色、4 档字号及 Dynamic Type 适配，并通过 `Localizable.strings` 支持 6 种语言，偏好持久化在 `UserDefaults`。多端设计规范与界面预览见 [主仓 README 预览](https://github.com/GdeiAssistant/GdeiAssistant#界面预览)。
 
 ## 参与贡献
 

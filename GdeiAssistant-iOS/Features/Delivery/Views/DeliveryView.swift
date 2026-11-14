@@ -75,18 +75,19 @@ struct DeliveryView: View {
 }
 
 private struct DeliveryOrderRow: View {
+    @Environment(\.dsCampusAccent) private var campusAccent
     let order: DeliveryOrder
 
     var body: some View {
         VStack(alignment: .leading, spacing: DSSpacing.sm) {
             HStack {
                 Text(localizedString("delivery.pickupDelivery"))
-                    .font(.subheadline.weight(.semibold))
+                    .font(DSTypography.headlineSerif)
                     .foregroundStyle(DSColor.title)
                 Spacer()
                 Text("¥\(order.price, specifier: "%.2f")")
-                    .font(.headline)
-                    .foregroundStyle(DSColor.primary)
+                    .font(DSTypography.headlineSerif.monospacedDigit())
+                    .foregroundStyle(campusAccent.primary)
             }
 
             routeRow(icon: "tray.and.arrow.down", title: localizedString("delivery.pickup"), value: "\(order.company) \(localizedString("delivery.pickupSuffix"))")
@@ -94,13 +95,14 @@ private struct DeliveryOrderRow: View {
 
             HStack {
                 Text(order.orderTime)
+                    .monospacedDigit()
+                    .foregroundStyle(DSColor.subtitle)
                 Spacer()
-                Text(order.state.title)
-                    .padding(.horizontal, DSSpacing.sm)
-                    .padding(.vertical, DSSpacing.xxs)
-                    .background(statusTint.opacity(0.12))
-                    .foregroundStyle(statusTint)
-                    .clipShape(Capsule())
+                DSTag(
+                    text: order.state.title,
+                    tint: statusTint,
+                    background: statusTint.opacity(0.12)
+                )
             }
             .font(.caption)
         }
@@ -111,9 +113,9 @@ private struct DeliveryOrderRow: View {
         HStack(spacing: DSSpacing.xs) {
             Text(title)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(DSColor.onPrimary)
+                .foregroundStyle(campusAccent.onPrimary)
                 .frame(width: 20, height: 20)
-                .background(title == localizedString("delivery.pickup") ? DSColor.primary : DSColor.subtitle)
+                .background(title == localizedString("delivery.pickup") ? campusAccent.primary : DSColor.subtitle)
                 .clipShape(Circle())
             Image(systemName: icon)
                 .font(.caption)
@@ -129,7 +131,7 @@ private struct DeliveryOrderRow: View {
         case .pending:
             return DSColor.warning
         case .delivering:
-            return DSColor.primary
+            return campusAccent.primary
         case .unknown:
             return DSColor.tertiaryText
         case .completed:

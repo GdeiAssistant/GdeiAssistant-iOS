@@ -4,6 +4,7 @@ struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
     @EnvironmentObject private var preferences: UserPreferences
     @EnvironmentObject private var environment: AppEnvironment
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: LoginViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -16,14 +17,16 @@ struct LoginView: View {
                     EmptyView()
                 } header: {
                     VStack(spacing: DSSpacing.sm) {
-                        Image(systemName: "graduationcap.fill")
-                            .font(.largeTitle)
-                            .foregroundStyle(DSColor.primary)
-                            .symbolRenderingMode(.hierarchical)
-                            .accessibilityHidden(true)
+                        DSIconTile(
+                            systemName: "graduationcap.fill",
+                            size: 52,
+                            tint: campusAccent.primary,
+                            background: campusAccent.primarySoft
+                        )
+                        .dsHairlineBorder(12, color: campusAccent.primary.opacity(0.24))
 
                         Text(AppConstants.Brand.shortDisplayName)
-                            .font(.title2.weight(.semibold))
+                            .dsEditorialTitle()
                             .foregroundStyle(DSColor.title)
                             .accessibilityAddTraits(.isHeader)
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GradeView: View {
     @StateObject private var viewModel: GradeViewModel
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: GradeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -53,9 +54,8 @@ struct GradeView: View {
                 Section {
                     LabeledContent(localizedString("grade.gpa")) {
                         Text(String(format: "%.2f", term.gpa))
-                            .font(.body.weight(.semibold))
-                            .monospacedDigit()
-                            .foregroundStyle(DSColor.primary)
+                            .font(DSTypography.headlineSerif.monospacedDigit())
+                            .foregroundStyle(campusAccent.primary)
                     }
                     LabeledContent(localizedString("grade.courseCount")) {
                         Text("\(term.items.count)")
@@ -64,6 +64,9 @@ struct GradeView: View {
                     }
                 } header: {
                     Text(term.title)
+                        .font(DSTypography.headlineSerif)
+                        .foregroundStyle(DSColor.title)
+                        .textCase(nil)
                         .accessibilityIdentifier("grade.term.title")
                 }
 
@@ -80,6 +83,7 @@ struct GradeView: View {
                                         .accessibilityIdentifier("grade.course.\(item.id)")
                                     Text("\(item.courseType) · \(item.credit, specifier: "%.1f")\(localizedString("grade.credit"))")
                                         .font(.footnote)
+                                        .monospacedDigit()
                                         .foregroundStyle(DSColor.subtitle)
                                 }
                                 Spacer(minLength: DSSpacing.xs)

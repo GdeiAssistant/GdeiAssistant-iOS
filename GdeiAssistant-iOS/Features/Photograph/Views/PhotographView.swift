@@ -98,10 +98,11 @@ private struct PhotographPostRow: View {
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 HStack {
                     Text(post.title)
-                        .font(.headline)
+                        .font(DSTypography.headlineSerif)
+                        .foregroundStyle(DSColor.title)
                     Spacer()
                     Text(post.createdAt)
-                        .font(.caption)
+                        .font(.caption.monospacedDigit())
                         .foregroundStyle(DSColor.subtitle)
                 }
                 Text(post.contentPreview)

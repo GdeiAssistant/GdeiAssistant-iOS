@@ -3,6 +3,7 @@ import SwiftUI
 struct PostDetailView: View {
     @StateObject private var viewModel: PostDetailViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: PostDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -60,7 +61,7 @@ struct PostDetailView: View {
                     }
 
                     Text(detail.post.title)
-                        .font(.title3.weight(.semibold))
+                        .font(DSTypography.title2Serif)
                         .foregroundStyle(DSColor.title)
 
                     Text(detail.content)
@@ -90,7 +91,7 @@ struct PostDetailView: View {
                         systemImage: detail.isLiked ? "hand.thumbsup.fill" : "hand.thumbsup"
                     )
                     .monospacedDigit()
-                    .foregroundStyle(detail.isLiked ? DSColor.primary : DSColor.title)
+                    .foregroundStyle(detail.isLiked ? campusAccent.primary : DSColor.title)
                 }
                 .accessibilityAddTraits(detail.isLiked ? .isSelected : [])
 

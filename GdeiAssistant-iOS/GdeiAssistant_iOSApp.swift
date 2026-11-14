@@ -28,8 +28,9 @@ struct GdeiAssistant_iOSApp: App {
                 .environmentObject(container.router)
                 .environment(\.locale, Locale(identifier: container.userPreferences.selectedLocale))
                 .environment(\.sizeCategory, container.userPreferences.sizeCategory)
+                .environment(\.dsCampusAccent, container.userPreferences.selectedAccent)
                 .preferredColorScheme(UITestRuntimeOverrides.colorScheme ?? colorSchemeFor(container.userPreferences.selectedTheme))
-                .tint(DSColor.primary)
+                .tint(container.userPreferences.selectedAccent.primary)
         }
     }
 

@@ -5,6 +5,7 @@ import UIKit
 struct LostFoundView: View {
     @StateObject private var viewModel: LostFoundViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: LostFoundViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -34,12 +35,14 @@ struct LostFoundView: View {
                             VStack(alignment: .leading, spacing: DSSpacing.xs) {
                                 HStack {
                                     Text(item.title)
-                                        .font(.headline)
+                                        .font(DSTypography.headlineSerif)
                                         .foregroundStyle(DSColor.title)
                                     Spacer()
-                                    Text(item.type.displayName)
-                                        .font(.caption.weight(.semibold))
-                                        .foregroundStyle(item.type == .lost ? DSColor.warning : DSColor.primary)
+                                    DSTag(
+                                        text: item.type.displayName,
+                                        tint: item.type == .lost ? DSColor.warning : campusAccent.primary,
+                                        background: (item.type == .lost ? DSColor.warning : campusAccent.primary).opacity(0.12)
+                                    )
                                 }
 
                                 Text(item.summary)
@@ -51,6 +54,7 @@ struct LostFoundView: View {
                                     Text(item.location)
                                     Spacer()
                                     Text(item.createdAt)
+                                        .monospacedDigit()
                                 }
                                 .font(.caption)
                                 .foregroundStyle(DSColor.subtitle)
