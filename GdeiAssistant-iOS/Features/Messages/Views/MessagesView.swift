@@ -40,6 +40,9 @@ struct MessagesView: View {
             .task {
                 await viewModel.loadIfNeeded()
             }
+            .onAppear {
+                Task { await viewModel.refreshUnreadBadge() }
+            }
         }
     }
 

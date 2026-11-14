@@ -81,10 +81,16 @@ struct ProfileAssembly {
         CampusCredentialViewModel(repository: accountCenterRepository)
     }
 
-    func makeMessagesViewModel(newsRepository: any NewsRepository) -> MessagesViewModel {
+    func makeMessagesViewModel(
+        newsRepository: any NewsRepository,
+        socialRepository: any SocialRepository,
+        unreadBadgeStore: UnreadBadgeStore
+    ) -> MessagesViewModel {
         MessagesViewModel(
             newsRepository: newsRepository,
-            messagesRepository: messagesRepository
+            messagesRepository: messagesRepository,
+            socialRepository: socialRepository,
+            unreadBadgeStore: unreadBadgeStore
         )
     }
 
