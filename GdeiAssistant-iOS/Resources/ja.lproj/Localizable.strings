@@ -1854,3 +1854,16 @@
 "home.allFunctions" = "すべての機能";
 "home.scheduleAction" = "時間割";
 
+"appearance.accent.label" = "テーマカラー";
+"appearance.accent.banyan" = "ガジュマル翠";
+"appearance.accent.banyanSubtitle" = "書院の落ち着いた常盤緑";
+"appearance.accent.kapok" = "キワタ丹";
+"appearance.accent.kapokSubtitle" = "嶺南の木綿花を思わせる朱色";
+"appearance.accent.haizhu" = "海珠藍";
+"appearance.accent.haizhuSubtitle" = "珠江の清流のような藍色";
+"appearance.accent.bauhinia" = "ソシンカ紫";
+"appearance.accent.bauhiniaSubtitle" = "羊城の冬を彩る紫荊の紫";
+"home.greeting.named" = "こんにちは、%@";
+"home.greeting.default" = "今日のキャンパス手帖";
+"home.editorial.subtitle" = "広東第二師範学院 · キャンパスノート";
+"home.footer.colophon" = "嶺南書院 · キャンパス版";

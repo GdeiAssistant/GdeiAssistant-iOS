@@ -81,12 +81,12 @@ private struct SecretPostCard: View {
             HStack {
                 Text(post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(theme.textColor)
+                    .foregroundStyle(theme.textColor.opacity(0.8))
                 Spacer()
                 if let timerText = post.timerText {
                     Text(timerText)
-                        .font(.caption2)
-                        .foregroundStyle(theme.textColor)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(theme.textColor.opacity(0.8))
                 }
             }
 
@@ -96,7 +96,7 @@ private struct SecretPostCard: View {
                         .font(.title2)
                     VStack(alignment: .leading, spacing: DSSpacing.xxs) {
                         Text(post.title)
-                            .font(.headline)
+                            .font(DSTypography.headlineSerif)
                         Text(post.summary)
                             .font(.subheadline)
                     }
@@ -104,22 +104,30 @@ private struct SecretPostCard: View {
                 .foregroundStyle(theme.textColor)
             } else {
                 Text(post.summary)
-                    .font(.subheadline)
+                    .font(DSTypography.pullQuoteSerif)
                     .foregroundStyle(theme.textColor)
-                    .lineLimit(3)
+                    .lineSpacing(4)
+                    .lineLimit(4)
             }
 
-            HStack(spacing: DSSpacing.sm) {
+            DSHairlineDivider(color: theme.borderColor)
+
+            HStack(spacing: DSSpacing.md) {
                 Text(post.createdAt)
+                    .monospacedDigit()
+                Spacer(minLength: 0)
                 Label("\(post.likeCount)", systemImage: post.isLiked ? "heart.fill" : "heart")
+                    .monospacedDigit()
                 Label("\(post.commentCount)", systemImage: "bubble.left")
+                    .monospacedDigit()
             }
             .font(.caption)
-            .foregroundStyle(theme.textColor)
+            .foregroundStyle(theme.textColor.opacity(0.85))
         }
         .padding(DSSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.background, in: DSRadius.cardShape)
+        .dsHairlineBorder(DSRadius.card, color: theme.borderColor)
     }
 
     private var theme: DSSecretPalette.Palette {
@@ -252,19 +260,20 @@ struct SecretDetailView: View {
             }
 
             Text(detail.content)
-                .font(.body)
+                .font(DSTypography.pullQuoteSerif)
                 .foregroundStyle(theme.textColor)
-                .lineSpacing(5)
+                .lineSpacing(6)
 
             VStack(alignment: .leading, spacing: DSSpacing.xs) {
                 Text("\(localizedString("secret.publisher"))\(detail.post.username)")
                 Text("\(localizedString("secret.contentType"))\(detail.post.isVoice ? localizedString("secret.voiceTitle") : localizedString("secret.textTitle"))")
                 if let timerText = detail.post.timerText {
                     Text(timerText)
+                        .monospacedDigit()
                 }
             }
             .font(.caption)
-            .foregroundStyle(theme.textColor)
+            .foregroundStyle(theme.textColor.opacity(0.85))
 
             HStack(spacing: DSSpacing.md) {
                 Button {
@@ -274,12 +283,14 @@ struct SecretDetailView: View {
                         "\(detail.post.likeCount)",
                         systemImage: detail.post.isLiked ? "heart.fill" : "heart"
                     )
+                    .monospacedDigit()
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(theme.textColor)
                 .disabled(isSubmittingLike)
 
                 Label("\(detail.post.commentCount)", systemImage: "bubble.left")
+                    .monospacedDigit()
                     .foregroundStyle(theme.textColor)
             }
             .font(.subheadline)
@@ -290,6 +301,7 @@ struct SecretDetailView: View {
         .padding(DSSpacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.background, in: DSRadius.cardShape)
+        .dsHairlineBorder(DSRadius.card, color: theme.borderColor)
     }
 
     private func loadDetail() async {

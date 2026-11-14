@@ -9,6 +9,7 @@ struct MarketplaceDetailView: View {
     @EnvironmentObject private var container: AppContainer
     @Environment(\.locale) private var locale
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     @State private var detail: MarketplaceDetail?
     @State private var isLoading = true
@@ -44,11 +45,10 @@ struct MarketplaceDetailView: View {
 
                         VStack(alignment: .leading, spacing: DSSpacing.xs) {
                             Text("¥\(detail.item.price, specifier: "%.2f")")
-                                .font(.title.weight(.bold))
-                                .monospacedDigit()
-                                .foregroundStyle(DSColor.primary)
+                                .font(DSTypography.displaySerif.monospacedDigit())
+                                .foregroundStyle(campusAccent.primary)
                             Text(detail.item.title)
-                                .font(.title3.weight(.semibold))
+                                .font(DSTypography.title2Serif)
                                 .foregroundStyle(DSColor.title)
                                 .fixedSize(horizontal: false, vertical: true)
                             DSTag(text: detail.item.state.title)

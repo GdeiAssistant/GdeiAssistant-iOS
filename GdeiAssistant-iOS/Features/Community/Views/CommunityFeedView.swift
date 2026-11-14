@@ -3,6 +3,7 @@ import SwiftUI
 struct CommunityFeedView: View {
     @StateObject private var viewModel: CommunityFeedViewModel
     @EnvironmentObject private var container: AppContainer
+    @Environment(\.dsCampusAccent) private var campusAccent
 
     init(viewModel: CommunityFeedViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -107,7 +108,7 @@ struct CommunityFeedView: View {
             }
 
             Text(post.title)
-                .font(.headline)
+                .font(DSTypography.headlineSerif)
                 .foregroundStyle(DSColor.title)
 
             Text(post.summary)
@@ -126,7 +127,7 @@ struct CommunityFeedView: View {
             if !post.tags.isEmpty {
                 Text(post.tags.joined(separator: " · "))
                     .font(.caption)
-                    .foregroundStyle(DSColor.primary)
+                    .foregroundStyle(campusAccent.primary)
                     .lineLimit(1)
             }
         }

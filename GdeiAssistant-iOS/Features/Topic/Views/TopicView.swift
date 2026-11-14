@@ -90,7 +90,7 @@ private struct TopicPostRow: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: DSSpacing.xs) {
                         Text("#\(post.topic)")
-                            .font(.headline)
+                            .font(DSTypography.headlineSerif)
                             .foregroundStyle(DSColor.primary)
                         if let authorId = post.authorId {
                             NavigationLink {
@@ -109,7 +109,7 @@ private struct TopicPostRow: View {
                     }
                     Spacer()
                     Text(post.publishedAt)
-                        .font(.caption)
+                        .font(.caption.monospacedDigit())
                         .foregroundStyle(DSColor.subtitle)
                 }
 
@@ -124,7 +124,7 @@ private struct TopicPostRow: View {
                         Label("\(post.imageCount)", systemImage: "photo.on.rectangle")
                     }
                 }
-                .font(.caption)
+                .font(.caption.monospacedDigit())
                 .foregroundStyle(DSColor.subtitle)
             }
         }

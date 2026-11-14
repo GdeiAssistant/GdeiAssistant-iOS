@@ -107,6 +107,20 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.showReloadHint)
     }
 
+    func testSelectedAccentDefaultsToBanyanAndPersistsAcrossRestoredPreferences() {
+        let defaults = makeDefaults(testName: #function)
+        let initial = UserPreferences(defaults: defaults)
+        XCTAssertEqual(initial.selectedAccent, .banyan)
+        XCTAssertEqual(defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedAccent), "banyan")
+
+        initial.selectedAccent = .kapok
+        XCTAssertEqual(defaults.string(forKey: AppConstants.UserDefaultsKeys.selectedAccent), "kapok")
+
+        let restored = UserPreferences(defaults: defaults)
+        XCTAssertEqual(restored.selectedAccent, .kapok)
+        XCTAssertEqual(DSCampusAccent.allCases.count, 4)
+    }
+
     private func makeDefaults(testName: String) -> UserDefaults {
         let suiteName = "SettingsViewModelTests.\(testName)"
         let defaults = UserDefaults(suiteName: suiteName)!

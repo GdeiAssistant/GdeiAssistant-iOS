@@ -162,6 +162,7 @@ enum AppConstants {
         nonisolated static let networkEnvironment = "network_environment"
         nonisolated static let selectedLocale = "selected_locale"
         nonisolated static let selectedTheme = "selected_theme"
+        nonisolated static let selectedAccent = "gdei.theme.accent"
         nonisolated static let fontScaleStep = "font_scale_step"
     }
 }

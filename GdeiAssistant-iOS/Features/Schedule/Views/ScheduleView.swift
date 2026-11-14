@@ -4,6 +4,7 @@ import UIKit
 
 struct ScheduleView: View {
     @StateObject private var viewModel: ScheduleViewModel
+    @Environment(\.dsCampusAccent) private var campusAccent
     @State private var selectedBackgroundItem: PhotosPickerItem?
     @State private var backgroundImage: UIImage?
     @State private var selectedCourse: CourseItem?
@@ -77,10 +78,10 @@ struct ScheduleView: View {
                     VStack(spacing: 2) {
                         Text(schedule.termName)
                             .font(.footnote)
+                            .monospacedDigit()
                             .foregroundStyle(DSColor.subtitle)
                         Text(String(format: localizedString("schedule.weekLabel"), schedule.weekIndex))
-                            .font(.headline)
-                            .monospacedDigit()
+                            .font(DSTypography.headlineSerif.monospacedDigit())
                             .foregroundStyle(DSColor.title)
                     }
                     .multilineTextAlignment(.center)
@@ -94,7 +95,7 @@ struct ScheduleView: View {
                             .frame(width: 44, height: 44)
                     }
                     .buttonStyle(.bordered)
-                    .tint(DSColor.primary)
+                    .tint(campusAccent.primary)
                 }
                 .buttonStyle(.plain)
             }
@@ -207,6 +208,7 @@ struct ScheduleView: View {
 }
 
 private struct ScheduleGridView: View {
+    @Environment(\.dsCampusAccent) private var campusAccent
     let schedule: WeeklySchedule
     let backgroundImage: UIImage?
     let onSelectCourse: (CourseItem) -> Void
@@ -233,7 +235,7 @@ private struct ScheduleGridView: View {
                         VStack(spacing: 2) {
                             Text(day.dayTitle)
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(isToday(day.dayOfWeek) ? DSColor.primary : DSColor.title)
+                                .foregroundStyle(isToday(day.dayOfWeek) ? campusAccent.primary : DSColor.title)
                             if !day.dateText.isEmpty {
                                 Text(day.dateText)
                                     .font(.caption2)
@@ -242,7 +244,7 @@ private struct ScheduleGridView: View {
                             }
                         }
                         .frame(width: dayColumnWidth, height: headerHeight)
-                        .background(isToday(day.dayOfWeek) ? DSColor.primarySoft : Color.clear)
+                        .background(isToday(day.dayOfWeek) ? campusAccent.primarySoft : Color.clear)
                         .accessibilityElement(children: .combine)
                     }
                 }
@@ -251,11 +253,11 @@ private struct ScheduleGridView: View {
                     VStack(spacing: 0) {
                         ForEach(1...sectionCount, id: \.self) { section in
                             Text("\(section)")
-                                .font(.caption2.weight(.medium))
+                                .font(.caption2.weight(.medium).monospacedDigit())
                                 .foregroundStyle(DSColor.subtitle)
                                 .frame(width: timeColumnWidth, height: cellHeight)
                                 .overlay(alignment: .bottom) {
-                                    Divider()
+                                    DSHairlineDivider()
                                 }
                         }
                     }
@@ -343,6 +345,7 @@ private struct ScheduleGridView: View {
 }
 
 private struct ScheduleCourseBlock: View {
+    @Environment(\.dsCampusAccent) private var campusAccent
     let course: CourseItem
     let width: CGFloat
     let cellHeight: CGFloat
@@ -367,11 +370,12 @@ private struct ScheduleCourseBlock: View {
             .padding(.trailing, 3)
             .padding(.vertical, 5)
             .frame(width: width, height: height, alignment: .topLeading)
-            .background(DSColor.primarySoft)
+            .background(campusAccent.primarySoft)
             .overlay(alignment: .leading) {
-                DSColor.primary.frame(width: 3)
+                campusAccent.primary.frame(width: 3)
             }
             .clipShape(RoundedRectangle(cornerRadius: DSRadius.compact, style: .continuous))
+            .dsHairlineBorder(DSRadius.compact, color: campusAccent.primary.opacity(0.22))
         }
         .buttonStyle(DSPressableButtonStyle())
     }

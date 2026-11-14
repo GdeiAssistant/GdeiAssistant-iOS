@@ -7,6 +7,7 @@ enum DSButtonVariant {
 }
 
 struct DSButton: View {
+    @Environment(\.dsCampusAccent) private var campusAccent
     let title: String
     var icon: String?
     var variant: DSButtonVariant = .primary
@@ -21,11 +22,13 @@ struct DSButton: View {
             case .primary:
                 rawButton
                     .buttonStyle(.borderedProminent)
-                    .tint(DSColor.primary)
+                    .tint(campusAccent.primary)
+                    .foregroundStyle(campusAccent.onPrimary)
             case .secondary:
                 rawButton
                     .buttonStyle(.bordered)
-                    .tint(DSColor.primary)
+                    .tint(campusAccent.primary)
+                    .foregroundStyle(campusAccent.primary)
             case .destructive:
                 rawButton
                     .buttonStyle(.borderedProminent)

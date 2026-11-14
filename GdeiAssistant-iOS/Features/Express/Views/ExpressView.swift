@@ -58,40 +58,51 @@ struct ExpressView: View {
 }
 
 private struct ExpressPostRow: View {
+    @Environment(\.dsCampusAccent) private var campusAccent
     let post: ExpressPost
 
     var body: some View {
         VStack(alignment: .leading, spacing: DSSpacing.sm) {
-            HStack {
+            HStack(spacing: DSSpacing.xs) {
                 Text(post.nickname)
-                    .font(.headline)
+                    .font(DSTypography.headlineSerif)
                     .foregroundStyle(DSColor.title)
                 Image(systemName: "heart.fill")
                     .font(.caption)
                     .foregroundStyle(DSColor.danger)
                 Text(post.targetName)
-                    .font(.headline)
+                    .font(DSTypography.headlineSerif)
                     .foregroundStyle(DSColor.title)
                 Spacer()
                 Text(post.publishTime)
-                    .font(.caption)
+                    .font(.caption.monospacedDigit())
                     .foregroundStyle(DSColor.subtitle)
             }
 
-            Text(post.contentPreview)
-                .font(.subheadline)
-                .foregroundStyle(DSColor.subtitle)
-                .lineLimit(3)
+            HStack(alignment: .top, spacing: DSSpacing.sm) {
+                RoundedRectangle(cornerRadius: 1.5)
+                    .fill(campusAccent.primary)
+                    .frame(width: 2.5)
 
-            HStack {
+                Text(post.contentPreview)
+                    .font(DSTypography.pullQuoteSerif)
+                    .foregroundStyle(DSColor.subtitle)
+                    .lineSpacing(3)
+                    .lineLimit(3)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: DSSpacing.md) {
                 Label("\(post.likeCount)", systemImage: post.isLiked ? "heart.fill" : "heart")
+                    .monospacedDigit()
                 Label("\(post.commentCount)", systemImage: "bubble.left")
-                Text(post.canGuess ? LocalizedStringKey("express.canGuess") : LocalizedStringKey("express.cannotGuess"))
-                    .padding(.horizontal, DSSpacing.xs)
-                    .padding(.vertical, 3)
-                    .background((post.canGuess ? DSColor.warning : DSColor.subtitle).opacity(0.12))
-                    .foregroundStyle(post.canGuess ? DSColor.warning : DSColor.subtitle)
-                    .clipShape(Capsule())
+                    .monospacedDigit()
+                Spacer(minLength: 0)
+                DSTag(
+                    text: post.canGuess ? localizedString("express.canGuess") : localizedString("express.cannotGuess"),
+                    tint: post.canGuess ? DSColor.warning : DSColor.subtitle,
+                    background: (post.canGuess ? DSColor.warning : DSColor.subtitle).opacity(0.1)
+                )
             }
             .font(.caption)
             .foregroundStyle(DSColor.subtitle)
@@ -153,15 +164,15 @@ struct ExpressDetailView: View {
 
                             HStack {
                                 Text(detail.post.nickname)
-                                    .font(.headline)
+                                    .font(DSTypography.headlineSerif)
                                 Image(systemName: "heart.fill")
                                     .font(.caption)
                                     .foregroundStyle(DSColor.danger)
                                 Text(detail.post.targetName)
-                                    .font(.headline)
+                                    .font(DSTypography.headlineSerif)
                                 Spacer()
                                 Text(detail.post.publishTime)
-                                    .font(.caption)
+                                    .font(.caption.monospacedDigit())
                                     .foregroundStyle(DSColor.subtitle)
                             }
 
@@ -174,8 +185,9 @@ struct ExpressDetailView: View {
                             }
 
                             Text(detail.content)
-                                .font(.body)
+                                .font(DSTypography.pullQuoteSerif)
                                 .foregroundStyle(DSColor.title)
+                                .lineSpacing(5)
 
                             if let realName = detail.realName, detail.post.canGuess {
                                 Text(localizedString("express.detail.realName") + realName)

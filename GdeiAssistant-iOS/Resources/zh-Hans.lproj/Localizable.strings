@@ -1854,3 +1854,16 @@
 "home.allFunctions" = "全部功能";
 "home.scheduleAction" = "课表";
 
+"appearance.accent.label" = "主题色";
+"appearance.accent.banyan" = "榕荫翠";
+"appearance.accent.banyanSubtitle" = "温润书院松烟绿";
+"appearance.accent.kapok" = "木棉丹";
+"appearance.accent.kapokSubtitle" = "岭南花城红棉暖丹";
+"appearance.accent.haizhu" = "海珠蓝";
+"appearance.accent.haizhuSubtitle" = "珠水清辉书卷蓝";
+"appearance.accent.bauhinia" = "紫荆紫";
+"appearance.accent.bauhiniaSubtitle" = "羊城冬日紫荆墨紫";
+"home.greeting.named" = "你好，%@";
+"home.greeting.default" = "岭南书声，今日开启";
+"home.editorial.subtitle" = "广东第二师范学院 · 校园手账";
+"home.footer.colophon" = "立德树人 · 格物致知";
