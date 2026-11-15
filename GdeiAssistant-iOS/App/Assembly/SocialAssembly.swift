@@ -12,7 +12,8 @@ struct SocialAssembly {
         environment: AppEnvironment,
         tokenProvider: @escaping () -> String?,
         isLoggedInProvider: @escaping () -> Bool,
-        onUnauthorized: @escaping () -> Void
+        onUnauthorized: @escaping () -> Void,
+        sessionDelegate: URLSessionDelegate? = nil
     ) {
         self.tokenProvider = tokenProvider
         let remoteSocialRepository = RemoteSocialRepository(apiClient: apiClient)
@@ -28,7 +29,8 @@ struct SocialAssembly {
             environment: environment,
             tokenProvider: tokenProvider,
             isLoggedInProvider: isLoggedInProvider,
-            onUnauthorized: onUnauthorized
+            onUnauthorized: onUnauthorized,
+            sessionDelegate: sessionDelegate
         )
     }
 

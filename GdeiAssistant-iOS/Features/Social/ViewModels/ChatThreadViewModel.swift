@@ -19,7 +19,7 @@ final class ChatThreadViewModel: ObservableObject {
     private let realtimeManager: any SocialRealtimeManaging
     private var earlierCursor: String?
     private var pollTask: Task<Void, Never>?
-    private var eventTask: Task<Void, Never>?
+    private var eventCancellable: AnyCancellable?
     private var lastMarkedReadSeq: String?
     private var resolvedCurrentUserID: String?
     private var isPageVisible = false
@@ -104,8 +104,8 @@ final class ChatThreadViewModel: ObservableObject {
         allowsForegroundWork = false
         pollTask?.cancel()
         pollTask = nil
-        eventTask?.cancel()
-        eventTask = nil
+        eventCancellable?.cancel()
+        eventCancellable = nil
         clearDraftImage()
         localImageDataByClientID.removeAll()
         messages.removeAll()
@@ -130,7 +130,7 @@ final class ChatThreadViewModel: ObservableObject {
             if pollTask == nil {
                 startPolling()
             }
-            if eventTask == nil {
+            if eventCancellable == nil {
                 observeRealtime()
             }
             Task { [weak self] in
@@ -141,8 +141,8 @@ final class ChatThreadViewModel: ObservableObject {
             allowsForegroundWork = false
             pollTask?.cancel()
             pollTask = nil
-            eventTask?.cancel()
-            eventTask = nil
+            eventCancellable?.cancel()
+            eventCancellable = nil
         }
     }
 
@@ -480,28 +480,27 @@ final class ChatThreadViewModel: ObservableObject {
     }
 
     private func observeRealtime() {
-        eventTask?.cancel()
-        eventTask = Task { [weak self] in
+        eventCancellable?.cancel()
+        eventCancellable = realtimeManager.eventPublisher.sink { [weak self] event in
             guard let self else { return }
-            var lastEvent = self.realtimeManager.latestEvent
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 400_000_000)
-                guard self.isPageVisible, self.allowsForegroundWork else { return }
-                let current = self.realtimeManager.latestEvent
-                guard current != lastEvent else { continue }
-                lastEvent = current
-                switch current {
-                case .messageCreated(let conversationId, _, _) where conversationId == self.conversationID:
-                    await self.pullNewerMessages()
-                case .conversationRead(let conversationId, _, _) where conversationId == self.conversationID:
-                    await self.refreshPermissions()
-                case .ready, .socialChanged, .disconnected:
-                    await self.pullNewerMessages()
-                    await self.refreshPermissions()
-                default:
-                    break
-                }
+            Task { @MainActor [weak self] in
+                await self?.handleRealtimeEvent(event)
             }
+        }
+    }
+
+    private func handleRealtimeEvent(_ event: SocialRealtimeEvent) async {
+        guard isPageVisible, allowsForegroundWork else { return }
+        switch event {
+        case .messageCreated(let conversationId, _, _) where conversationId == conversationID:
+            await pullNewerMessages()
+        case .conversationRead(let conversationId, _, _) where conversationId == conversationID:
+            await refreshPermissions()
+        case .ready, .socialChanged, .disconnected:
+            await pullNewerMessages()
+            await refreshPermissions()
+        default:
+            break
         }
     }
 

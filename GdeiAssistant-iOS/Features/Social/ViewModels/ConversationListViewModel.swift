@@ -13,7 +13,7 @@ final class ConversationListViewModel: ObservableObject {
     private let realtimeManager: any SocialRealtimeManaging
     private var nextCursor: String?
     private var pollTask: Task<Void, Never>?
-    private var eventTask: Task<Void, Never>?
+    private var eventCancellable: AnyCancellable?
 
     init(repository: any SocialRepository, realtimeManager: any SocialRealtimeManaging) {
         self.repository = repository
@@ -33,8 +33,8 @@ final class ConversationListViewModel: ObservableObject {
     func stop() {
         pollTask?.cancel()
         pollTask = nil
-        eventTask?.cancel()
-        eventTask = nil
+        eventCancellable?.cancel()
+        eventCancellable = nil
     }
 
     func reload() async {
@@ -83,17 +83,11 @@ final class ConversationListViewModel: ObservableObject {
     }
 
     private func observeRealtime() {
-        eventTask?.cancel()
-        eventTask = Task { [weak self] in
+        eventCancellable?.cancel()
+        eventCancellable = realtimeManager.eventPublisher.sink { [weak self] _ in
             guard let self else { return }
-            var lastEvent = self.realtimeManager.latestEvent
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 500_000_000)
-                let current = self.realtimeManager.latestEvent
-                if current != lastEvent {
-                    lastEvent = current
-                    await self.reloadQuietly()
-                }
+            Task { @MainActor [weak self] in
+                await self?.reloadQuietly()
             }
         }
     }

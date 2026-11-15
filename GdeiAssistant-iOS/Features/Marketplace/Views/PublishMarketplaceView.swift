@@ -159,16 +159,8 @@ struct PublishMarketplaceView: View {
 
         for item in items {
             guard publishViewModel.images.count < 4 else { break }
-            guard let data = try? await item.loadTransferable(type: Data.self), !data.isEmpty else { continue }
-
-            let contentType = item.supportedContentTypes.first
-            let fileExtension = contentType?.preferredFilenameExtension ?? "jpg"
-            let mimeType = contentType?.preferredMIMEType ?? "image/jpeg"
-            let image = UploadImageAsset(
-                fileName: "market-\(UUID().uuidString).\(fileExtension)",
-                mimeType: mimeType,
-                data: data
-            )
+            guard let rawData = try? await item.loadTransferable(type: Data.self),
+                  let image = UploadImageAsset.compressedJPEG(from: rawData, fileNamePrefix: "market") else { continue }
             publishViewModel.addImage(image)
         }
 

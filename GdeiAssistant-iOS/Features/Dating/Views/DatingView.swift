@@ -599,16 +599,9 @@ private struct PublishDatingView: View {
 
     private func loadSelectedImage(from item: PhotosPickerItem?) async {
         guard let item else { return }
-        guard let data = try? await item.loadTransferable(type: Data.self), !data.isEmpty else { return }
-
-        let contentType = item.supportedContentTypes.first
-        let fileExtension = contentType?.preferredFilenameExtension ?? "jpg"
-        let mimeType = contentType?.preferredMIMEType ?? "image/jpeg"
-        viewModel.image = UploadImageAsset(
-            fileName: "dating-\(UUID().uuidString).\(fileExtension)",
-            mimeType: mimeType,
-            data: data
-        )
+        guard let rawData = try? await item.loadTransferable(type: Data.self),
+              let image = UploadImageAsset.compressedJPEG(from: rawData, fileNamePrefix: "dating") else { return }
+        viewModel.image = image
         selectedPhotoItem = nil
     }
 

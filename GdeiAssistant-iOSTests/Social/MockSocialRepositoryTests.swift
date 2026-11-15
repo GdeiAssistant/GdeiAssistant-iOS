@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 import XCTest
 @testable import GdeiAssistant_iOS
@@ -272,5 +273,26 @@ final class MockSocialRepositoryTests: XCTestCase {
         )
         XCTAssertFalse(messages.items.isEmpty)
         XCTAssertEqual(messages.items.map(\.seqValue), messages.items.map(\.seqValue).sorted())
+    }
+
+    func testRealtimeEventPublisherDeliversRapidConsecutiveEvents() {
+        let environment = AppEnvironment(networkEnvironment: .dev, dataSourceMode: .mock, isDebug: true)
+        let realtime = SocialRealtimeManager(
+            environment: environment,
+            tokenProvider: { nil },
+            isLoggedInProvider: { true },
+            onUnauthorized: {}
+        )
+        var received: [SocialRealtimeEvent] = []
+        let cancellable = realtime.eventPublisher.sink { event in
+            received.append(event)
+        }
+        defer { cancellable.cancel() }
+
+        realtime.start()
+        realtime.handleForegroundResume()
+        realtime.stop(clearState: true)
+
+        XCTAssertEqual(received, [.ready, .ready, .disconnected])
     }
 }

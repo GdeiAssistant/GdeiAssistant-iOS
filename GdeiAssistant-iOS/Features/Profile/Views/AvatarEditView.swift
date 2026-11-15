@@ -67,7 +67,12 @@ struct AvatarEditView: View {
         .onChange(of: selectedPhotoItem) { _, newItem in
             guard let newItem else { return }
             Task {
-                selectedImageData = try? await newItem.loadTransferable(type: Data.self)
+                if let rawData = try? await newItem.loadTransferable(type: Data.self),
+                   let asset = UploadImageAsset.compressedJPEG(from: rawData, fileNamePrefix: "avatar") {
+                    selectedImageData = asset.data
+                } else {
+                    selectedImageData = nil
+                }
             }
         }
         .confirmationDialog(localizedString("avatar.confirmDelete"), isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
