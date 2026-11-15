@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 import XCTest
 @testable import GdeiAssistant_iOS
@@ -272,5 +273,140 @@ final class MockSocialRepositoryTests: XCTestCase {
         )
         XCTAssertFalse(messages.items.isEmpty)
         XCTAssertEqual(messages.items.map(\.seqValue), messages.items.map(\.seqValue).sorted())
+    }
+
+    func testRealtimeEventPublisherDeliversRapidConsecutiveEvents() {
+        let environment = AppEnvironment(networkEnvironment: .dev, dataSourceMode: .mock, isDebug: true)
+        let realtime = SocialRealtimeManager(
+            environment: environment,
+            tokenProvider: { nil },
+            isLoggedInProvider: { true },
+            onUnauthorized: {}
+        )
+        var received: [SocialRealtimeEvent] = []
+        let cancellable = realtime.eventPublisher.sink { event in
+            received.append(event)
+        }
+        defer { cancellable.cancel() }
+
+        realtime.start()
+        realtime.handleForegroundResume()
+        realtime.stop(clearState: true)
+
+        XCTAssertEqual(received, [.ready, .ready, .disconnected])
+    }
+
+    func testConversationListViewModelSerializesAndCoalescesRealtimeRefreshes() async throws {
+        let repository = CoalescingSpySocialRepository()
+        let realtime = StubSocialRealtimeManager()
+        let viewModel = ConversationListViewModel(repository: repository, realtimeManager: realtime)
+        defer { viewModel.stop() }
+
+        await viewModel.start()
+        XCTAssertEqual(repository.unreadFetchCount, 1)
+        XCTAssertEqual(viewModel.unreadTotal, 1)
+
+        // Trigger first quiet refresh and wait until it is in-flight
+        realtime.send(.messageCreated(conversationId: "1", messageId: "m0", seq: "0"))
+        for _ in 0..<40 where repository.unreadFetchCount < 2 {
+            try await Task.sleep(nanoseconds: 5_000_000)
+        }
+        XCTAssertEqual(repository.unreadFetchCount, 2)
+
+        // Emit burst of events while the in-flight refresh is suspended
+        for index in 1...5 {
+            realtime.send(.messageCreated(conversationId: "1", messageId: "m\(index)", seq: "\(index)"))
+        }
+
+        // The view model publishes the unread total after both requests finish.
+        for _ in 0..<40 where viewModel.unreadTotal < 3 {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+
+        XCTAssertEqual(repository.maxConcurrentQuietFetches, 1)
+        XCTAssertEqual(repository.unreadFetchCount, 3)
+        XCTAssertEqual(viewModel.unreadTotal, 3)
+    }
+}
+
+@MainActor
+private final class StubSocialRealtimeManager: SocialRealtimeManaging {
+    var isReady = true
+    var latestEvent: SocialRealtimeEvent?
+    private let subject = PassthroughSubject<SocialRealtimeEvent, Never>()
+    var eventPublisher: AnyPublisher<SocialRealtimeEvent, Never> { subject.eraseToAnyPublisher() }
+
+    nonisolated deinit {}
+
+    func send(_ event: SocialRealtimeEvent) {
+        latestEvent = event
+        subject.send(event)
+    }
+
+    func start() {}
+    func stop(clearState: Bool) {}
+    func handleForegroundResume() {}
+    func sendPing() {}
+}
+
+@MainActor
+private final class CoalescingSpySocialRepository: SocialRepository {
+    private let inner = MockSocialRepository()
+    private(set) var unreadFetchCount = 0
+    private(set) var maxConcurrentQuietFetches = 0
+    private var activeQuietFetches = 0
+
+    nonisolated deinit {}
+
+    func fetchMe() async throws -> SocialUser { try await inner.fetchMe() }
+    func searchUsers(query: String, cursor: String?, limit: Int) async throws -> SocialPage<SocialUser> {
+        try await inner.searchUsers(query: query, cursor: cursor, limit: limit)
+    }
+    func fetchUser(id: String) async throws -> SocialUser { try await inner.fetchUser(id: id) }
+    func fetchRelationships(userID: String, kind: SocialRelationshipKind, cursor: String?, limit: Int) async throws -> SocialPage<SocialUser> {
+        try await inner.fetchRelationships(userID: userID, kind: kind, cursor: cursor, limit: limit)
+    }
+    func follow(userID: String) async throws -> SocialUser { try await inner.follow(userID: userID) }
+    func unfollow(userID: String) async throws -> SocialUser { try await inner.unfollow(userID: userID) }
+    func block(userID: String) async throws -> SocialBlockState { try await inner.block(userID: userID) }
+    func unblock(userID: String) async throws -> SocialBlockState { try await inner.unblock(userID: userID) }
+    func fetchBlocks(cursor: String?, limit: Int) async throws -> SocialPage<SocialUser> {
+        try await inner.fetchBlocks(cursor: cursor, limit: limit)
+    }
+    func fetchPrivacy() async throws -> DirectMessagePrivacy { try await inner.fetchPrivacy() }
+    func updatePrivacy(_ policy: DirectMessagePolicy) async throws -> DirectMessagePrivacy {
+        try await inner.updatePrivacy(policy)
+    }
+    func fetchUnreadCount() async throws -> SocialUnreadCount {
+        unreadFetchCount += 1
+        let count = unreadFetchCount
+        if count > 1 {
+            activeQuietFetches += 1
+            maxConcurrentQuietFetches = max(maxConcurrentQuietFetches, activeQuietFetches)
+            try await Task.sleep(nanoseconds: 40_000_000)
+            activeQuietFetches -= 1
+        }
+        return SocialUnreadCount(total: count)
+    }
+    func createConversation(peerID: String) async throws -> ConversationSummary {
+        try await inner.createConversation(peerID: peerID)
+    }
+    func fetchConversations(cursor: String?, limit: Int) async throws -> SocialPage<ConversationSummary> {
+        try await inner.fetchConversations(cursor: cursor, limit: limit)
+    }
+    func fetchConversation(id: String) async throws -> ConversationSummary {
+        try await inner.fetchConversation(id: id)
+    }
+    func fetchMessages(conversationID: String, beforeSeq: String?, afterSeq: String?, limit: Int) async throws -> SocialPage<ChatMessage> {
+        try await inner.fetchMessages(conversationID: conversationID, beforeSeq: beforeSeq, afterSeq: afterSeq, limit: limit)
+    }
+    func sendMessage(conversationID: String, clientMessageID: String, content: String) async throws -> ChatMessage {
+        try await inner.sendMessage(conversationID: conversationID, clientMessageID: clientMessageID, content: content)
+    }
+    func sendImageMessage(conversationID: String, clientMessageID: String, imageData: Data, fileName: String, mimeType: String) async throws -> ChatMessage {
+        try await inner.sendImageMessage(conversationID: conversationID, clientMessageID: clientMessageID, imageData: imageData, fileName: fileName, mimeType: mimeType)
+    }
+    func markRead(conversationID: String, lastReadSeq: String) async throws -> ConversationReadState {
+        try await inner.markRead(conversationID: conversationID, lastReadSeq: lastReadSeq)
     }
 }

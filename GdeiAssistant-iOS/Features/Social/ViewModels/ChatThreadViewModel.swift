@@ -19,7 +19,13 @@ final class ChatThreadViewModel: ObservableObject {
     private let realtimeManager: any SocialRealtimeManaging
     private var earlierCursor: String?
     private var pollTask: Task<Void, Never>?
-    private var eventTask: Task<Void, Never>?
+    private var realtimeSyncTask: Task<Void, Never>?
+    private var eventCancellable: AnyCancellable?
+    private var isSyncingRealtime = false
+    private var pendingRealtimePullMessages = false
+    private var pendingRealtimeRefreshPermissions = false
+    private var realtimeSyncSequence: UInt64 = 0
+    private var permissionRefreshSequence: UInt64 = 0
     private var lastMarkedReadSeq: String?
     private var resolvedCurrentUserID: String?
     private var isPageVisible = false
@@ -100,12 +106,19 @@ final class ChatThreadViewModel: ObservableObject {
 
     func stop() {
         sessionGeneration &+= 1
+        realtimeSyncSequence &+= 1
+        permissionRefreshSequence &+= 1
         isPageVisible = false
         allowsForegroundWork = false
         pollTask?.cancel()
         pollTask = nil
-        eventTask?.cancel()
-        eventTask = nil
+        realtimeSyncTask?.cancel()
+        realtimeSyncTask = nil
+        eventCancellable?.cancel()
+        eventCancellable = nil
+        isSyncingRealtime = false
+        pendingRealtimePullMessages = false
+        pendingRealtimeRefreshPermissions = false
         clearDraftImage()
         localImageDataByClientID.removeAll()
         messages.removeAll()
@@ -130,7 +143,7 @@ final class ChatThreadViewModel: ObservableObject {
             if pollTask == nil {
                 startPolling()
             }
-            if eventTask == nil {
+            if eventCancellable == nil {
                 observeRealtime()
             }
             Task { [weak self] in
@@ -139,16 +152,24 @@ final class ChatThreadViewModel: ObservableObject {
             }
         case .inactive:
             allowsForegroundWork = false
+            realtimeSyncSequence &+= 1
             pollTask?.cancel()
             pollTask = nil
-            eventTask?.cancel()
-            eventTask = nil
+            realtimeSyncTask?.cancel()
+            realtimeSyncTask = nil
+            eventCancellable?.cancel()
+            eventCancellable = nil
+            isSyncingRealtime = false
+            pendingRealtimePullMessages = false
+            pendingRealtimeRefreshPermissions = false
         }
     }
 
     func reload() async {
         let generation = sessionGeneration
         let token = tokenProvider()
+        permissionRefreshSequence &+= 1
+        let refreshSeq = permissionRefreshSequence
         isLoading = true
         errorMessage = nil
         defer { if isCurrentSession(generation, token: token) { isLoading = false } }
@@ -163,7 +184,9 @@ final class ChatThreadViewModel: ObservableObject {
             let summary = try await conversationTask
             let page = try await messagesTask
             guard isCurrentSession(generation, token: token) else { return }
-            conversation = summary
+            if refreshSeq == permissionRefreshSequence {
+                conversation = summary
+            }
             messages = ChatMessageMerge.merge(page.items)
             earlierCursor = page.nextCursor
             hasMoreEarlier = page.hasMore
@@ -462,8 +485,11 @@ final class ChatThreadViewModel: ObservableObject {
     private func refreshPermissions() async {
         let generation = sessionGeneration
         let token = tokenProvider()
+        permissionRefreshSequence &+= 1
+        let refreshSeq = permissionRefreshSequence
         let summary = try? await repository.fetchConversation(id: conversationID)
-        guard isCurrentSession(generation, token: token) else { return }
+        guard isCurrentSession(generation, token: token),
+              refreshSeq == permissionRefreshSequence else { return }
         conversation = summary
     }
 
@@ -480,26 +506,54 @@ final class ChatThreadViewModel: ObservableObject {
     }
 
     private func observeRealtime() {
-        eventTask?.cancel()
-        eventTask = Task { [weak self] in
+        eventCancellable?.cancel()
+        eventCancellable = realtimeManager.eventPublisher.sink { [weak self] event in
+            self?.scheduleRealtimeEvent(event)
+        }
+    }
+
+    private func scheduleRealtimeEvent(_ event: SocialRealtimeEvent) {
+        guard isPageVisible, allowsForegroundWork else { return }
+        switch event {
+        case .messageCreated(let conversationId, _, _) where conversationId == conversationID:
+            pendingRealtimePullMessages = true
+        case .conversationRead(let conversationId, _, _) where conversationId == conversationID:
+            pendingRealtimeRefreshPermissions = true
+        case .ready, .socialChanged, .disconnected:
+            pendingRealtimePullMessages = true
+            pendingRealtimeRefreshPermissions = true
+        default:
+            return
+        }
+
+        guard !isSyncingRealtime else { return }
+        isSyncingRealtime = true
+        realtimeSyncSequence &+= 1
+        let syncSequence = realtimeSyncSequence
+        realtimeSyncTask = Task { @MainActor [weak self] in
             guard let self else { return }
-            var lastEvent = self.realtimeManager.latestEvent
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: 400_000_000)
-                guard self.isPageVisible, self.allowsForegroundWork else { return }
-                let current = self.realtimeManager.latestEvent
-                guard current != lastEvent else { continue }
-                lastEvent = current
-                switch current {
-                case .messageCreated(let conversationId, _, _) where conversationId == self.conversationID:
+            defer {
+                if self.realtimeSyncSequence == syncSequence {
+                    self.isSyncingRealtime = false
+                    self.pendingRealtimePullMessages = false
+                    self.pendingRealtimeRefreshPermissions = false
+                    self.realtimeSyncTask = nil
+                }
+            }
+            while !Task.isCancelled,
+                  self.realtimeSyncSequence == syncSequence,
+                  self.isPageVisible,
+                  self.allowsForegroundWork,
+                  (self.pendingRealtimePullMessages || self.pendingRealtimeRefreshPermissions) {
+                let shouldPullMessages = self.pendingRealtimePullMessages
+                let shouldRefreshPermissions = self.pendingRealtimeRefreshPermissions
+                self.pendingRealtimePullMessages = false
+                self.pendingRealtimeRefreshPermissions = false
+
+                if shouldPullMessages {
                     await self.pullNewerMessages()
-                case .conversationRead(let conversationId, _, _) where conversationId == self.conversationID:
+                } else if shouldRefreshPermissions {
                     await self.refreshPermissions()
-                case .ready, .socialChanged, .disconnected:
-                    await self.pullNewerMessages()
-                    await self.refreshPermissions()
-                default:
-                    break
                 }
             }
         }

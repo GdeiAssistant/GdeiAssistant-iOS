@@ -50,6 +50,13 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
             return
         }
 
+        // Validate the full trust chain before comparing pin hashes
+        var trustError: CFError?
+        guard SecTrustEvaluateWithError(serverTrust, &trustError) else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+            return
+        }
+
         if certificateMatchesPins(serverTrust: serverTrust, pinnedHashes: pinnedHashes) {
             completionHandler(.useCredential, URLCredential(trust: serverTrust))
         } else {
@@ -86,11 +93,92 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
         return false
     }
 
+    // ASN.1 AlgorithmIdentifier for rsaEncryption (1.2.840.113549.1.1.1, NULL params)
+    private static let rsaAlgorithmIdentifier: [UInt8] = [
+        0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
+        0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00
+    ]
+
+    // ASN.1 OID for id-ecPublicKey (1.2.840.10045.2.1)
+    private static let ecPublicKeyOID: [UInt8] = [
+        0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01
+    ]
+
+    // Supported EC curve OIDs keyed by bit length
+    private static let ecCurveOIDByBits: [Int: [UInt8]] = [
+        256: [0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07], // prime256v1 (secp256r1)
+        384: [0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x22],                   // secp384r1
+        521: [0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x23]                    // secp521r1
+    ]
+
     func publicKeyData(for certificate: SecCertificate) -> Data? {
         guard let publicKey = SecCertificateCopyKey(certificate) else { return nil }
+        return publicKeySPKIData(for: publicKey)
+    }
+
+    func publicKeySPKIData(for publicKey: SecKey) -> Data? {
         var error: Unmanaged<CFError>?
-        guard let data = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else { return nil }
-        return data
+        guard let rawKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else { return nil }
+
+        guard let attributes = SecKeyCopyAttributes(publicKey) as? [CFString: Any],
+              let keyType = attributes[kSecAttrKeyType] as? String else {
+            return rawKeyData
+        }
+
+        if keyType == (kSecAttrKeyTypeRSA as String) {
+            return Self.wrapSPKI(algorithmIdentifier: Self.rsaAlgorithmIdentifier, rawKeyData: rawKeyData)
+        }
+
+        if keyType == (kSecAttrKeyTypeECSECPrimeRandom as String) {
+            let keyBits = (attributes[kSecAttrKeySizeInBits] as? Int)
+                ?? Self.inferredECKeyBits(fromRawLength: rawKeyData.count)
+            guard let keyBits, let curveOID = Self.ecCurveOIDByBits[keyBits] else {
+                return rawKeyData
+            }
+            let algContent = Self.ecPublicKeyOID + curveOID
+            var algorithmIdentifier: [UInt8] = [0x30]
+            algorithmIdentifier.append(contentsOf: Self.derLength(algContent.count))
+            algorithmIdentifier.append(contentsOf: algContent)
+            return Self.wrapSPKI(algorithmIdentifier: algorithmIdentifier, rawKeyData: rawKeyData)
+        }
+
+        return rawKeyData
+    }
+
+    private static func inferredECKeyBits(fromRawLength length: Int) -> Int? {
+        switch length {
+        case 65: return 256
+        case 97: return 384
+        case 133: return 521
+        default: return nil
+        }
+    }
+
+    private static func derLength(_ length: Int) -> [UInt8] {
+        if length < 0x80 {
+            return [UInt8(length)]
+        }
+        var bytes: [UInt8] = []
+        var remaining = length
+        while remaining > 0 {
+            bytes.insert(UInt8(remaining & 0xff), at: 0)
+            remaining >>= 8
+        }
+        return [UInt8(0x80 | bytes.count)] + bytes
+    }
+
+    private static func wrapSPKI(algorithmIdentifier: [UInt8], rawKeyData: Data) -> Data {
+        var bitStringPrefix: [UInt8] = [0x03]
+        bitStringPrefix.append(contentsOf: derLength(1 + rawKeyData.count))
+        bitStringPrefix.append(0x00)
+
+        let outerContentLength = algorithmIdentifier.count + bitStringPrefix.count + rawKeyData.count
+        var spki = Data([0x30])
+        spki.append(contentsOf: derLength(outerContentLength))
+        spki.append(contentsOf: algorithmIdentifier)
+        spki.append(contentsOf: bitStringPrefix)
+        spki.append(rawKeyData)
+        return spki
     }
 
     func sha256Base64(_ data: Data) -> String {

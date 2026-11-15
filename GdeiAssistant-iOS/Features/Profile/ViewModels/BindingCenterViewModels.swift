@@ -1,6 +1,25 @@
 import Foundation
 import Combine
 
+private final class CountdownTaskBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var task: Task<Void, Never>?
+
+    func replace(_ newTask: Task<Void, Never>?) {
+        lock.withLock {
+            task?.cancel()
+            task = newTask
+        }
+    }
+
+    func cancel() {
+        lock.withLock {
+            task?.cancel()
+            task = nil
+        }
+    }
+}
+
 @MainActor
 final class BindPhoneViewModel: ObservableObject {
     @Published var attributions: [PhoneAttribution] = []
@@ -14,14 +33,15 @@ final class BindPhoneViewModel: ObservableObject {
     @Published var submitState: SubmitState = .idle
 
     private let repository: any AccountCenterRepository
-    private var countdownTask: Task<Void, Never>?
+    private let countdownTaskBox = CountdownTaskBox()
 
     init(repository: any AccountCenterRepository) {
         self.repository = repository
     }
 
-    deinit {
-        countdownTask?.cancel()
+    // Cancel without isolating deinit to MainActor (swiftlang/swift#87316).
+    nonisolated deinit {
+        countdownTaskBox.cancel()
     }
 
     var canSendCode: Bool {
@@ -110,8 +130,7 @@ final class BindPhoneViewModel: ObservableObject {
 
     private func startCountdown() {
         countdown = 60
-        countdownTask?.cancel()
-        countdownTask = Task { [weak self] in
+        let task = Task { [weak self] in
             guard let self else { return }
             while !Task.isCancelled && self.countdown > 0 {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -121,6 +140,7 @@ final class BindPhoneViewModel: ObservableObject {
                 }
             }
         }
+        countdownTaskBox.replace(task)
     }
 }
 
@@ -135,14 +155,15 @@ final class BindEmailViewModel: ObservableObject {
     @Published var submitState: SubmitState = .idle
 
     private let repository: any AccountCenterRepository
-    private var countdownTask: Task<Void, Never>?
+    private let countdownTaskBox = CountdownTaskBox()
 
     init(repository: any AccountCenterRepository) {
         self.repository = repository
     }
 
-    deinit {
-        countdownTask?.cancel()
+    // Cancel without isolating deinit to MainActor (swiftlang/swift#87316).
+    nonisolated deinit {
+        countdownTaskBox.cancel()
     }
 
     var canSendCode: Bool {
@@ -213,8 +234,7 @@ final class BindEmailViewModel: ObservableObject {
 
     private func startCountdown() {
         countdown = 60
-        countdownTask?.cancel()
-        countdownTask = Task { [weak self] in
+        let task = Task { [weak self] in
             guard let self else { return }
             while !Task.isCancelled && self.countdown > 0 {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -224,5 +244,6 @@ final class BindEmailViewModel: ObservableObject {
                 }
             }
         }
+        countdownTaskBox.replace(task)
     }
 }

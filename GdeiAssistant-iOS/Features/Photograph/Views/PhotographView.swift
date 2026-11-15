@@ -593,11 +593,8 @@ private struct PublishPhotographView: View {
         guard !items.isEmpty else { return }
         for item in items {
             guard viewModel.images.count < 4 else { break }
-            guard let data = try? await item.loadTransferable(type: Data.self), !data.isEmpty else { continue }
-            let contentType = item.supportedContentTypes.first
-            let fileExtension = contentType?.preferredFilenameExtension ?? "jpg"
-            let mimeType = contentType?.preferredMIMEType ?? "image/jpeg"
-            let image = UploadImageAsset(fileName: "photograph-\(UUID().uuidString).\(fileExtension)", mimeType: mimeType, data: data)
+            guard let rawData = try? await item.loadTransferable(type: Data.self),
+                  let image = UploadImageAsset.compressedJPEG(from: rawData, fileNamePrefix: "photograph") else { continue }
             viewModel.addImage(image)
         }
         selectedPhotoItems = []

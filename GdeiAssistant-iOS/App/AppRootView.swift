@@ -26,7 +26,7 @@ struct AppRootView: View {
                 } else if sessionState.isRestoringSession {
                     DSLoadingView(text: localizedString("startup.restoringSession"))
                 } else if sessionState.isLoggedIn {
-                    MainTabView()
+                    MainTabView(container: container)
                 } else {
                     LoginView(viewModel: container.makeLoginViewModel())
                 }
@@ -79,7 +79,7 @@ struct AppRootView: View {
            let initialScreen = UITestRuntimeOverrides.initialScreen {
             switch initialScreen {
             case .home:
-                MainTabView()
+                MainTabView(container: container)
             case .messages:
                 MessagesView(viewModel: container.makeMessagesViewModel())
             case .marketplace:

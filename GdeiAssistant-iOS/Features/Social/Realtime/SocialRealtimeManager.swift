@@ -14,6 +14,7 @@ enum SocialRealtimeEvent: Equatable {
 protocol SocialRealtimeManaging: AnyObject {
     var isReady: Bool { get }
     var latestEvent: SocialRealtimeEvent? { get }
+    var eventPublisher: AnyPublisher<SocialRealtimeEvent, Never> { get }
     func start()
     func stop(clearState: Bool)
     func handleForegroundResume()
@@ -25,6 +26,11 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
     @Published private(set) var isReady = false
     @Published private(set) var latestEvent: SocialRealtimeEvent?
     @Published private(set) var connectionState: ConnectionState = .idle
+
+    private let eventSubject = PassthroughSubject<SocialRealtimeEvent, Never>()
+    var eventPublisher: AnyPublisher<SocialRealtimeEvent, Never> {
+        eventSubject.eraseToAnyPublisher()
+    }
 
     enum ConnectionState: Equatable {
         case idle
@@ -39,6 +45,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
     private let tokenProvider: () -> String?
     private let onUnauthorized: () -> Void
     private let isLoggedInProvider: () -> Bool
+    private let sessionDelegate: URLSessionDelegate
 
     private var webSocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
@@ -55,19 +62,32 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
         environment: AppEnvironment,
         tokenProvider: @escaping () -> String?,
         isLoggedInProvider: @escaping () -> Bool,
-        onUnauthorized: @escaping () -> Void
+        onUnauthorized: @escaping () -> Void,
+        sessionDelegate: URLSessionDelegate? = nil
     ) {
         self.environment = environment
         self.tokenProvider = tokenProvider
         self.isLoggedInProvider = isLoggedInProvider
         self.onUnauthorized = onUnauthorized
+        self.sessionDelegate = sessionDelegate ?? CertificatePinningDelegate(
+            pinnedHashesByHost: AppConstants.API.certificatePinsByHost
+        )
+    }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
+    private func emit(_ event: SocialRealtimeEvent) {
+        latestEvent = event
+        eventSubject.send(event)
     }
 
     func start() {
         guard environment.dataSourceMode != .mock else {
             connectionState = .ready
             isReady = true
-            latestEvent = .ready
+            emit(.ready)
             return
         }
         guard isLoggedInProvider(), let token = tokenProvider(), !token.isEmpty else {
@@ -104,7 +124,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
         isReady = false
         connectionState = .stopped
         if clearState {
-            latestEvent = .disconnected
+            emit(.disconnected)
         }
     }
 
@@ -113,7 +133,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
         guard environment.dataSourceMode != .mock else {
             isReady = true
             connectionState = .ready
-            latestEvent = .ready
+            emit(.ready)
             return
         }
         guard isLoggedInProvider(), let token = tokenProvider(), !token.isEmpty else {
@@ -124,7 +144,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
         if isReady {
             if activeToken == token {
                 sendPing()
-                latestEvent = .ready
+                emit(.ready)
                 return
             }
             shouldRun = true
@@ -167,7 +187,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
 
         let configuration = URLSessionConfiguration.default
         configuration.waitsForConnectivity = true
-        let session = URLSession(configuration: configuration)
+        let session = URLSession(configuration: configuration, delegate: sessionDelegate, delegateQueue: nil)
         self.session = session
         let task = session.webSocketTask(with: url)
         webSocketTask = task
@@ -245,7 +265,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
             connectionState = .ready
             reconnectAttempt = 0
             authTimeoutTask?.cancel()
-            latestEvent = .ready
+            emit(.ready)
         case "pong":
             break
         case "message.created":
@@ -254,21 +274,21 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
                   let conversationId = RemoteMapperSupport.sanitizedText(envelope.conversationId),
                   let messageId = RemoteMapperSupport.sanitizedText(envelope.messageId),
                   let seq = RemoteMapperSupport.sanitizedText(envelope.seq?.rawValue) else { return }
-            latestEvent = .messageCreated(conversationId: conversationId, messageId: messageId, seq: seq)
+            emit(.messageCreated(conversationId: conversationId, messageId: messageId, seq: seq))
         case "conversation.read":
             guard hasAuthenticated,
                   connectionGeneration == generation,
                   let conversationId = RemoteMapperSupport.sanitizedText(envelope.conversationId),
                   let readerId = RemoteMapperSupport.sanitizedText(envelope.readerId),
                   let lastReadSeq = RemoteMapperSupport.sanitizedText(envelope.lastReadSeq?.rawValue) else { return }
-            latestEvent = .conversationRead(
+            emit(.conversationRead(
                 conversationId: conversationId,
                 readerId: readerId,
                 lastReadSeq: lastReadSeq
-            )
+            ))
         case "social.changed":
             guard hasAuthenticated, connectionGeneration == generation else { return }
-            latestEvent = .socialChanged
+            emit(.socialChanged)
         default:
             break
         }
@@ -278,7 +298,7 @@ final class SocialRealtimeManager: ObservableObject, SocialRealtimeManaging {
         guard connectionGeneration == generation else { return }
         isReady = false
         hasAuthenticated = false
-        latestEvent = .disconnected
+        emit(.disconnected)
         scheduleReconnect(generation: generation)
     }
 
@@ -361,6 +381,14 @@ private extension String {
 final class NoopSocialRealtimeManager: SocialRealtimeManaging {
     var isReady = true
     var latestEvent: SocialRealtimeEvent? = .ready
+    private let eventSubject = PassthroughSubject<SocialRealtimeEvent, Never>()
+    var eventPublisher: AnyPublisher<SocialRealtimeEvent, Never> {
+        eventSubject.eraseToAnyPublisher()
+    }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     func start() {}
     func stop(clearState: Bool) {}

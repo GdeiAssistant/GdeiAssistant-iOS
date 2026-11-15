@@ -75,6 +75,10 @@ enum AppTab: Hashable {
 final class AppRouter: ObservableObject {
     @Published var selectedTab: AppTab = .home
 
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
+
     func resetAfterLogout() {
         selectedTab = .home
     }
@@ -195,7 +199,8 @@ final class AppContainer: ObservableObject {
             },
             onUnauthorized: { [weak authManager] in
                 authManager?.handleUnauthorized()
-            }
+            },
+            sessionDelegate: pinningDelegate
         )
 
         let realtimeManager = socialAssembly.realtimeManager
@@ -215,6 +220,10 @@ final class AppContainer: ObservableObject {
     convenience init() {
         self.init(userPreferences: UserPreferences(), tokenStorage: KeychainTokenStorage())
     }
+
+    // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
+    // back-deployment crash on synchronous release (swiftlang/swift#87316).
+    nonisolated deinit {}
 
     @MainActor
     static var preview: AppContainer {

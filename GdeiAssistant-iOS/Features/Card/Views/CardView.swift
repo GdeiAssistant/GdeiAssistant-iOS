@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CardView: View {
     @StateObject private var viewModel: CardViewModel
+    @EnvironmentObject private var container: AppContainer
     @Environment(\.dsCampusAccent) private var campusAccent
     @State private var showLossConfirm = false
     @State private var showPasswordSheet = false
@@ -107,6 +108,12 @@ struct CardView: View {
                 }
                 .padding(.vertical, DSSpacing.xs)
 
+                NavigationLink {
+                    ChargeView(viewModel: container.makeChargeViewModel())
+                } label: {
+                    Label(localizedString("charge.title"), systemImage: "plus.circle.fill")
+                        .foregroundStyle(campusAccent.primary)
+                }
             }
 
             Section {
@@ -204,5 +211,6 @@ struct CardView: View {
 #Preview {
     NavigationStack {
         CardView(viewModel: CardViewModel(repository: MockCardRepository()))
+            .environmentObject(AppContainer.preview)
     }
 }

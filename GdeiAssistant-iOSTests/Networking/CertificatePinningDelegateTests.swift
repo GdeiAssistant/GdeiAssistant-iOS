@@ -63,6 +63,66 @@ final class CertificatePinningDelegateTests: XCTestCase {
         XCTAssertTrue(delegate.hashes(for: "other.example.com").isEmpty)
     }
 
+    func testDynamicSPKIHeadersSupportMultipleRSASizesAndECCurves() throws {
+        let delegate = CertificatePinningDelegate(pinnedHashes: [])
+
+        let rsa2048 = try makePublicKey(type: kSecAttrKeyTypeRSA, sizeInBits: 2048)
+        let rsa2048SPKI = try XCTUnwrap(delegate.publicKeySPKIData(for: rsa2048))
+        XCTAssertTrue(rsa2048SPKI.starts(with: [
+            0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09,
+            0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01,
+            0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0f, 0x00
+        ]))
+
+        let rsa3072 = try makePublicKey(type: kSecAttrKeyTypeRSA, sizeInBits: 3072)
+        let rsa3072SPKI = try XCTUnwrap(delegate.publicKeySPKIData(for: rsa3072))
+        XCTAssertTrue(rsa3072SPKI.starts(with: [
+            0x30, 0x82, 0x01, 0xa2, 0x30, 0x0d, 0x06, 0x09,
+            0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01,
+            0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x8f, 0x00
+        ]))
+
+        let ec256 = try makePublicKey(type: kSecAttrKeyTypeECSECPrimeRandom, sizeInBits: 256)
+        let ec256SPKI = try XCTUnwrap(delegate.publicKeySPKIData(for: ec256))
+        XCTAssertEqual(ec256SPKI.count, 91)
+        XCTAssertTrue(ec256SPKI.starts(with: [
+            0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86,
+            0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x08, 0x2a,
+            0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03,
+            0x42, 0x00
+        ]))
+
+        let ec384 = try makePublicKey(type: kSecAttrKeyTypeECSECPrimeRandom, sizeInBits: 384)
+        let ec384SPKI = try XCTUnwrap(delegate.publicKeySPKIData(for: ec384))
+        XCTAssertEqual(ec384SPKI.count, 120)
+        XCTAssertTrue(ec384SPKI.starts(with: [
+            0x30, 0x76, 0x30, 0x10, 0x06, 0x07, 0x2a, 0x86,
+            0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x05, 0x2b,
+            0x81, 0x04, 0x00, 0x22, 0x03, 0x62, 0x00
+        ]))
+
+        let ec521 = try makePublicKey(type: kSecAttrKeyTypeECSECPrimeRandom, sizeInBits: 521)
+        let ec521SPKI = try XCTUnwrap(delegate.publicKeySPKIData(for: ec521))
+        XCTAssertEqual(ec521SPKI.count, 158)
+        XCTAssertTrue(ec521SPKI.starts(with: [
+            0x30, 0x81, 0x9b, 0x30, 0x10, 0x06, 0x07, 0x2a,
+            0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x05,
+            0x2b, 0x81, 0x04, 0x00, 0x23, 0x03, 0x81, 0x86,
+            0x00
+        ]))
+    }
+
+    private func makePublicKey(type: CFString, sizeInBits: Int) throws -> SecKey {
+        let attributes: [CFString: Any] = [
+            kSecAttrKeyType: type,
+            kSecAttrKeySizeInBits: sizeInBits,
+            kSecAttrIsPermanent: false
+        ]
+        var error: Unmanaged<CFError>?
+        let privateKey = try XCTUnwrap(SecKeyCreateRandomKey(attributes as CFDictionary, &error))
+        return try XCTUnwrap(SecKeyCopyPublicKey(privateKey))
+    }
+
     private func sampleCertificate() throws -> SecCertificate {
         let data = try XCTUnwrap(Data(base64Encoded: sampleCertificateDERBase64))
         return try XCTUnwrap(
