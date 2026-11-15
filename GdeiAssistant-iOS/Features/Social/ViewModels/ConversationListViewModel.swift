@@ -13,7 +13,11 @@ final class ConversationListViewModel: ObservableObject {
     private let realtimeManager: any SocialRealtimeManaging
     private var nextCursor: String?
     private var pollTask: Task<Void, Never>?
+    private var quietReloadTask: Task<Void, Never>?
     private var eventCancellable: AnyCancellable?
+    private var isReloadingQuietly = false
+    private var hasPendingQuietReload = false
+    private var reloadGeneration: UInt64 = 0
 
     init(repository: any SocialRepository, realtimeManager: any SocialRealtimeManaging) {
         self.repository = repository
@@ -31,13 +35,20 @@ final class ConversationListViewModel: ObservableObject {
     }
 
     func stop() {
+        reloadGeneration &+= 1
         pollTask?.cancel()
         pollTask = nil
+        quietReloadTask?.cancel()
+        quietReloadTask = nil
         eventCancellable?.cancel()
         eventCancellable = nil
+        isReloadingQuietly = false
+        hasPendingQuietReload = false
     }
 
     func reload() async {
+        reloadGeneration &+= 1
+        let generation = reloadGeneration
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
@@ -46,6 +57,7 @@ final class ConversationListViewModel: ObservableObject {
             async let unreadTask = repository.fetchUnreadCount()
             let page = try await pageTask
             let unread = try await unreadTask
+            guard generation == reloadGeneration else { return }
             conversations = page.items
             nextCursor = page.nextCursor
             hasMore = page.hasMore
@@ -77,7 +89,7 @@ final class ConversationListViewModel: ObservableObject {
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 30_000_000_000)
                 guard let self, !Task.isCancelled else { return }
-                await self.reloadQuietly()
+                self.scheduleQuietReload()
             }
         }
     }
@@ -85,19 +97,39 @@ final class ConversationListViewModel: ObservableObject {
     private func observeRealtime() {
         eventCancellable?.cancel()
         eventCancellable = realtimeManager.eventPublisher.sink { [weak self] _ in
+            self?.scheduleQuietReload()
+        }
+    }
+
+    private func scheduleQuietReload() {
+        if isReloadingQuietly {
+            hasPendingQuietReload = true
+            return
+        }
+        isReloadingQuietly = true
+        hasPendingQuietReload = false
+        quietReloadTask = Task { [weak self] in
             guard let self else { return }
-            Task { @MainActor [weak self] in
-                await self?.reloadQuietly()
+            defer {
+                self.isReloadingQuietly = false
+                self.hasPendingQuietReload = false
+                self.quietReloadTask = nil
             }
+            repeat {
+                self.hasPendingQuietReload = false
+                await self.reloadQuietly()
+            } while !Task.isCancelled && self.hasPendingQuietReload
         }
     }
 
     private func reloadQuietly() async {
+        let generation = reloadGeneration
         do {
             async let pageTask = repository.fetchConversations(cursor: nil, limit: 20)
             async let unreadTask = repository.fetchUnreadCount()
             let page = try await pageTask
             let unread = try await unreadTask
+            guard !Task.isCancelled, generation == reloadGeneration else { return }
             conversations = page.items
             nextCursor = page.nextCursor
             hasMore = page.hasMore
