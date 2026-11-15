@@ -50,6 +50,13 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
             return
         }
 
+        // Validate the full trust chain before comparing pin hashes
+        var trustError: CFError?
+        guard SecTrustEvaluateWithError(serverTrust, &trustError) else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+            return
+        }
+
         if certificateMatchesPins(serverTrust: serverTrust, pinnedHashes: pinnedHashes) {
             completionHandler(.useCredential, URLCredential(trust: serverTrust))
         } else {
@@ -86,11 +93,46 @@ final class CertificatePinningDelegate: NSObject, URLSessionDelegate {
         return false
     }
 
+    // SPKI DER ASN.1 headers for standard key types.
+    // Prepending these to the raw key bytes produces the SubjectPublicKeyInfo
+    // structure whose SHA-256 hash matches the standard HPKP / RFC 7469 pin.
+    private static let rsa2048SPKIHeader: [UInt8] = [
+        0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09,
+        0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01,
+        0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0f, 0x00
+    ]
+
+    private static let ecdsaSecp256r1SPKIHeader: [UInt8] = [
+        0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86,
+        0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x08, 0x2a,
+        0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03,
+        0x42, 0x00
+    ]
+
     func publicKeyData(for certificate: SecCertificate) -> Data? {
         guard let publicKey = SecCertificateCopyKey(certificate) else { return nil }
         var error: Unmanaged<CFError>?
-        guard let data = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else { return nil }
-        return data
+        guard let rawKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else { return nil }
+
+        // Determine the correct SPKI header based on key type and size
+        let header: [UInt8]
+        if let attributes = SecKeyCopyAttributes(publicKey) as? [CFString: Any],
+           let keyType = attributes[kSecAttrKeyType] as? String {
+            if keyType == (kSecAttrKeyTypeRSA as String) {
+                header = Self.rsa2048SPKIHeader
+            } else if keyType == (kSecAttrKeyTypeECSECPrimeRandom as String) {
+                header = Self.ecdsaSecp256r1SPKIHeader
+            } else {
+                // Unknown key type — return raw bytes as fallback
+                return rawKeyData
+            }
+        } else {
+            return rawKeyData
+        }
+
+        var spkiData = Data(header)
+        spkiData.append(rawKeyData)
+        return spkiData
     }
 
     func sha256Base64(_ data: Data) -> String {
