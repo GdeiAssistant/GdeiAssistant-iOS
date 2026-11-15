@@ -318,11 +318,10 @@ final class MockSocialRepositoryTests: XCTestCase {
             realtime.send(.messageCreated(conversationId: "1", messageId: "m\(index)", seq: "\(index)"))
         }
 
-        // Wait until the single coalesced trailing refresh completes (total = 3 fetches)
-        for _ in 0..<40 where repository.unreadFetchCount < 3 {
+        // The view model publishes the unread total after both requests finish.
+        for _ in 0..<40 where viewModel.unreadTotal < 3 {
             try await Task.sleep(nanoseconds: 20_000_000)
         }
-        try await Task.sleep(nanoseconds: 60_000_000)
 
         XCTAssertEqual(repository.maxConcurrentQuietFetches, 1)
         XCTAssertEqual(repository.unreadFetchCount, 3)
