@@ -19,7 +19,13 @@ final class ChatThreadViewModel: ObservableObject {
     private let realtimeManager: any SocialRealtimeManaging
     private var earlierCursor: String?
     private var pollTask: Task<Void, Never>?
+    private var realtimeSyncTask: Task<Void, Never>?
     private var eventCancellable: AnyCancellable?
+    private var isSyncingRealtime = false
+    private var pendingRealtimePullMessages = false
+    private var pendingRealtimeRefreshPermissions = false
+    private var realtimeSyncSequence: UInt64 = 0
+    private var permissionRefreshSequence: UInt64 = 0
     private var lastMarkedReadSeq: String?
     private var resolvedCurrentUserID: String?
     private var isPageVisible = false
@@ -100,12 +106,19 @@ final class ChatThreadViewModel: ObservableObject {
 
     func stop() {
         sessionGeneration &+= 1
+        realtimeSyncSequence &+= 1
+        permissionRefreshSequence &+= 1
         isPageVisible = false
         allowsForegroundWork = false
         pollTask?.cancel()
         pollTask = nil
+        realtimeSyncTask?.cancel()
+        realtimeSyncTask = nil
         eventCancellable?.cancel()
         eventCancellable = nil
+        isSyncingRealtime = false
+        pendingRealtimePullMessages = false
+        pendingRealtimeRefreshPermissions = false
         clearDraftImage()
         localImageDataByClientID.removeAll()
         messages.removeAll()
@@ -139,16 +152,24 @@ final class ChatThreadViewModel: ObservableObject {
             }
         case .inactive:
             allowsForegroundWork = false
+            realtimeSyncSequence &+= 1
             pollTask?.cancel()
             pollTask = nil
+            realtimeSyncTask?.cancel()
+            realtimeSyncTask = nil
             eventCancellable?.cancel()
             eventCancellable = nil
+            isSyncingRealtime = false
+            pendingRealtimePullMessages = false
+            pendingRealtimeRefreshPermissions = false
         }
     }
 
     func reload() async {
         let generation = sessionGeneration
         let token = tokenProvider()
+        permissionRefreshSequence &+= 1
+        let refreshSeq = permissionRefreshSequence
         isLoading = true
         errorMessage = nil
         defer { if isCurrentSession(generation, token: token) { isLoading = false } }
@@ -163,7 +184,9 @@ final class ChatThreadViewModel: ObservableObject {
             let summary = try await conversationTask
             let page = try await messagesTask
             guard isCurrentSession(generation, token: token) else { return }
-            conversation = summary
+            if refreshSeq == permissionRefreshSequence {
+                conversation = summary
+            }
             messages = ChatMessageMerge.merge(page.items)
             earlierCursor = page.nextCursor
             hasMoreEarlier = page.hasMore
@@ -462,8 +485,11 @@ final class ChatThreadViewModel: ObservableObject {
     private func refreshPermissions() async {
         let generation = sessionGeneration
         let token = tokenProvider()
+        permissionRefreshSequence &+= 1
+        let refreshSeq = permissionRefreshSequence
         let summary = try? await repository.fetchConversation(id: conversationID)
-        guard isCurrentSession(generation, token: token) else { return }
+        guard isCurrentSession(generation, token: token),
+              refreshSeq == permissionRefreshSequence else { return }
         conversation = summary
     }
 
@@ -482,25 +508,54 @@ final class ChatThreadViewModel: ObservableObject {
     private func observeRealtime() {
         eventCancellable?.cancel()
         eventCancellable = realtimeManager.eventPublisher.sink { [weak self] event in
-            guard let self else { return }
-            Task { @MainActor [weak self] in
-                await self?.handleRealtimeEvent(event)
-            }
+            self?.scheduleRealtimeEvent(event)
         }
     }
 
-    private func handleRealtimeEvent(_ event: SocialRealtimeEvent) async {
+    private func scheduleRealtimeEvent(_ event: SocialRealtimeEvent) {
         guard isPageVisible, allowsForegroundWork else { return }
         switch event {
         case .messageCreated(let conversationId, _, _) where conversationId == conversationID:
-            await pullNewerMessages()
+            pendingRealtimePullMessages = true
         case .conversationRead(let conversationId, _, _) where conversationId == conversationID:
-            await refreshPermissions()
+            pendingRealtimeRefreshPermissions = true
         case .ready, .socialChanged, .disconnected:
-            await pullNewerMessages()
-            await refreshPermissions()
+            pendingRealtimePullMessages = true
+            pendingRealtimeRefreshPermissions = true
         default:
-            break
+            return
+        }
+
+        guard !isSyncingRealtime else { return }
+        isSyncingRealtime = true
+        realtimeSyncSequence &+= 1
+        let syncSequence = realtimeSyncSequence
+        realtimeSyncTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                if self.realtimeSyncSequence == syncSequence {
+                    self.isSyncingRealtime = false
+                    self.pendingRealtimePullMessages = false
+                    self.pendingRealtimeRefreshPermissions = false
+                    self.realtimeSyncTask = nil
+                }
+            }
+            while !Task.isCancelled,
+                  self.realtimeSyncSequence == syncSequence,
+                  self.isPageVisible,
+                  self.allowsForegroundWork,
+                  (self.pendingRealtimePullMessages || self.pendingRealtimeRefreshPermissions) {
+                let shouldPullMessages = self.pendingRealtimePullMessages
+                let shouldRefreshPermissions = self.pendingRealtimeRefreshPermissions
+                self.pendingRealtimePullMessages = false
+                self.pendingRealtimeRefreshPermissions = false
+
+                if shouldPullMessages {
+                    await self.pullNewerMessages()
+                } else if shouldRefreshPermissions {
+                    await self.refreshPermissions()
+                }
+            }
         }
     }
 
