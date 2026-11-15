@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+  <defs>
+    <clipPath id="screen-clip">
+      <rect x="0.5" y="0.5" width="389" height="843" rx="22" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#screen-clip)">
+    <rect width="390" height="844" fill="#0D1311" />
+    <rect x="0" y="0" width="390" height="48" fill="transparent" />
+    <text x="30" y="30" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="14" font-weight="700" fill="#F1EFEA" text-anchor="start">21:15</text>
+    <rect x="135" y="11" width="120" height="30" rx="15" fill="#0B0F0E" />
+    <circle cx="235" cy="26" r="4.5" fill="#182320" />
+    <g fill="#F1EFEA">
+      <rect x="304" y="25" width="3" height="5" rx="1" />
+      <rect x="309" y="23" width="3" height="7" rx="1" />
+      <rect x="314" y="20" width="3" height="10" rx="1" />
+      <rect x="319" y="17" width="3" height="13" rx="1" />
+    </g>
+    <g transform="translate(326 16) scale(0.625)" fill="none" stroke="#F1EFEA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01" /><path d="M2 8.82a15 15 0 0 1 20 0" /><path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" /></g>
+    <rect x="346" y="19" width="23" height="11" rx="3" fill="none" stroke="#F1EFEA" stroke-width="1.2" />
+    <rect x="348" y="21" width="17" height="7" rx="1.5" fill="#F1EFEA" />
+    <rect x="370" y="22.5" width="2" height="4" rx="1" fill="#F1EFEA" />
+    <rect x="0" y="48" width="390" height="40" fill="#0D1311" />
+    
+    <text x="195" y="72" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="16" font-weight="600" fill="#F1EFEA" text-anchor="middle">首页</text>
+    
+    <line x1="0" y1="88" x2="390" y2="88" stroke="#1D2925" stroke-width="1" />
+    <text x="18" y="114" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="12" font-weight="400" fill="#8D9B95" text-anchor="start">11月16日 星期一 · 夜读</text>
+    <rect x="304" y="98" width="68" height="22" rx="11" fill="#12332A" />
+    <text x="338" y="113" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="11" font-weight="600" fill="#2DD4BF" text-anchor="middle">第 11 周</text>
+    <text x="18" y="152" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="28" font-weight="700" fill="#F1EFEA" text-anchor="start">晚上好，知远</text>
+    <text x="18" y="174" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#2DD4BF" text-anchor="start">珠江夜读，温习今日课堂所得。</text>
+    <rect x="16" y="192" width="358" height="122" rx="12" fill="#151E1B" stroke="#24322D" />
+    <g transform="translate(32 208) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></g>
+    <text x="54" y="221" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="16" font-weight="700" fill="#F1EFEA" text-anchor="start">明日预告课程</text>
+    <text x="342" y="221" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13" font-weight="600" fill="#2DD4BF" text-anchor="end">完整课表</text>
+    <g transform="translate(345 209) scale(0.5833)" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <line x1="32" y1="236" x2="358" y2="236" stroke="#1D2925" />
+    <text x="32" y="266" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="14" font-weight="600" fill="#F1EFEA" text-anchor="start">周二 10:10 · 数据结构与算法</text>
+    <text x="32" y="288" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#8D9B95" text-anchor="start">实验楼 C104 · 陈老师</text>
+    <text x="18" y="352" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="20" font-weight="700" fill="#F1EFEA" text-anchor="start">校园与生活入口</text>
+    <line x1="18" y1="366" x2="372" y2="366" stroke="#24322D" />
+    
+    <rect x="18" y="386" width="32" height="32" rx="8" fill="#12332A" />
+    <g transform="translate(26 394) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" /><path d="M3 11h3c.8 0 1.6.3 2.1.9l1.1.9c1.6 1.6 4.1 1.6 5.7 0l1.1-.9c.5-.5 1.3-.9 2.1-.9H21" /></g>
+    <text x="62" y="400" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="15" font-weight="600" fill="#F1EFEA" text-anchor="start">校园卡</text>
+    <text x="62" y="419" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#6E7D78" text-anchor="start">余额 ¥128.50 · 正常</text>
+    <g transform="translate(356 394) scale(0.625)" fill="none" stroke="#6E7D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <line x1="62" y1="434" x2="372" y2="434" stroke="#1D2925" />
+    <rect x="18" y="448" width="32" height="32" rx="8" fill="#12332A" />
+    <g transform="translate(26 456) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></g>
+    <text x="62" y="462" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="15" font-weight="600" fill="#F1EFEA" text-anchor="start">二手市场</text>
+    <text x="62" y="481" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#6E7D78" text-anchor="start">海珠 / 花都校内闲置</text>
+    <g transform="translate(356 456) scale(0.625)" fill="none" stroke="#6E7D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <line x1="62" y1="496" x2="372" y2="496" stroke="#1D2925" />
+    <rect x="18" y="510" width="32" height="32" rx="8" fill="#12332A" />
+    <g transform="translate(26 518) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /><path d="M15 18H9" /><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /><circle cx="17" cy="18" r="2" /><circle cx="7" cy="18" r="2" /></g>
+    <text x="62" y="524" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="15" font-weight="600" fill="#F1EFEA" text-anchor="start">全民快递</text>
+    <text x="62" y="543" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#6E7D78" text-anchor="start">校园互助跑腿接单</text>
+    <g transform="translate(356 518) scale(0.625)" fill="none" stroke="#6E7D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <line x1="62" y1="558" x2="372" y2="558" stroke="#1D2925" />
+    <rect x="18" y="572" width="32" height="32" rx="8" fill="#12332A" />
+    <g transform="translate(26 580) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></g>
+    <text x="62" y="586" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="15" font-weight="600" fill="#F1EFEA" text-anchor="start">失物招领</text>
+    <text x="62" y="605" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#6E7D78" text-anchor="start">证件与失物寻回广场</text>
+    <g transform="translate(356 580) scale(0.625)" fill="none" stroke="#6E7D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <line x1="62" y1="620" x2="372" y2="620" stroke="#1D2925" />
+    <rect x="18" y="634" width="32" height="32" rx="8" fill="#12332A" />
+    <g transform="translate(26 642) scale(0.6667)" fill="none" stroke="#2DD4BF" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></g>
+    <text x="62" y="648" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="15" font-weight="600" fill="#F1EFEA" text-anchor="start">校园话题</text>
+    <text x="62" y="667" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="400" fill="#6E7D78" text-anchor="start">今日热议：秋季摄影展</text>
+    <g transform="translate(356 642) scale(0.625)" fill="none" stroke="#6E7D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="18" y="694" width="354" height="44" rx="10" fill="#151E1B" stroke="#24322D" />
+    <text x="195" y="721" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="14" font-weight="600" fill="#2DD4BF" text-anchor="middle">探索更多校园功能 ›</text>
+    <rect x="0" y="762" width="390" height="82" fill="#151E1B" />
+    <line x1="0" y1="762" x2="390" y2="762" stroke="#24322D" stroke-width="1" />
+    <g transform="translate(55 771) scale(0.875)" fill="none" stroke="#2DD4BF" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></g>
+    
+    <text x="65" y="807" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#2DD4BF" text-anchor="middle">首页</text>
+    <g transform="translate(185 771) scale(0.875)" fill="none" stroke="#6E7D78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0" /><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></g>
+    <circle cx="207" cy="773" r="7.5" fill="#F07171" /><text x="207" y="776.5" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">6</text>
+    <text x="195" y="807" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="10.5" font-weight="500" fill="#6E7D78" text-anchor="middle">消息</text>
+    <g transform="translate(315 771) scale(0.875)" fill="none" stroke="#6E7D78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></g>
+    
+    <text x="325" y="807" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="10.5" font-weight="500" fill="#6E7D78" text-anchor="middle">我的</text>
+    <rect x="128" y="830" width="134" height="5" rx="2.5" fill="#F1EFEA" opacity="0.24" />
+  </g>
+  <rect x="0.5" y="0.5" width="389" height="843" rx="22" fill="none" stroke="#283731" stroke-width="1" />
+</svg>

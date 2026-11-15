@@ -10,6 +10,7 @@
 - [接口环境](#接口环境)
 - [工程结构](#工程结构)
 - [架构说明](#架构说明)
+- [界面预览](#界面预览)
 - [参与贡献](#参与贡献)
 
 ## 功能
@@ -145,7 +146,23 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ### 主题
 
-采用《岭南书院人文风》（Warm Editorial Lingnan Academy）设计系统，由 `GeneratedDesignTokens.swift` 与 `DSColor.swift` 驱动：支持浅色「岭南晨纸」（`#F7F6F2`）、深色「珠江夜读」（`#0D1311`）和跟随系统，内置 **榕荫翠 / 木棉丹 / 海珠蓝 / 紫荆紫** 四套正交校园主题色、4 档字号及 Dynamic Type 适配，并通过 `Localizable.strings` 支持 6 种语言，偏好持久化在 `UserDefaults`。多端设计规范与界面预览见 [主仓 README 预览](https://github.com/GdeiAssistant/GdeiAssistant#界面预览)。
+采用《岭南书院人文风》（Warm Editorial Lingnan Academy）设计系统，由 `GeneratedDesignTokens.swift` 与 `DSColor.swift` 驱动：支持浅色「岭南晨纸」（`#F7F6F2`）、深色「珠江夜读」（`#0D1311`）和跟随系统，内置 **榕荫翠 / 木棉丹 / 海珠蓝 / 紫荆紫** 四套正交校园主题色、4 档字号及 Dynamic Type 适配，并通过 `Localizable.strings` 支持 6 种语言，偏好持久化在 `UserDefaults`。多端设计规范见 [主仓说明](https://github.com/GdeiAssistant/GdeiAssistant#设计系统)，本端效果见下方 [界面预览](#界面预览)。
+
+## 界面预览
+
+以下为 iOS 端基于《岭南书院人文风》（Lingnan Editorial）设计系统的 6 张统一尺寸移动端矢量界面预览，展示今日首页、课表、校园消息、校园卡与界面外观，涵盖浅色「岭南晨纸」、深色「珠江夜读」及四套校园主题色：
+
+<p align="center">
+  <img src="assets/screenshots/ios-home-light.svg" alt="iOS 今日首页浅色（榕荫翠）" width="260" />
+  <img src="assets/screenshots/ios-home-dark.svg" alt="iOS 今日首页深色（榕荫翠）" width="260" />
+  <img src="assets/screenshots/ios-schedule-light.svg" alt="iOS 我的课表浅色（木棉丹）" width="260" />
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/ios-messages-dark.svg" alt="iOS 校园消息深色（海珠蓝）" width="260" />
+  <img src="assets/screenshots/ios-card-light.svg" alt="iOS 校园卡浅色（紫荆紫）" width="260" />
+  <img src="assets/screenshots/ios-appearance-dark.svg" alt="iOS 界面与外观深色（木棉丹）" width="260" />
+</p>
 
 ## 参与贡献
 
