@@ -499,6 +499,52 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(reboundRepository.updateRequests.count, 1)
         XCTAssertEqual(reboundRepository.updateRequests.first?.nickname, "Rebound")
     }
+
+    func testMapProfileAndPatchPreserveUnknownLocationCodesAbsentFromCatalog() throws {
+        let dto = UserProfileDTO(
+            username: "demo",
+            nickname: "Demo",
+            avatar: nil,
+            facultyCode: 11,
+            majorCode: "software_engineering",
+            enrollment: "2024",
+            location: ProfileRemoteLocationValueDTO(regionCode: "JP", stateCode: "13", cityCode: "99"),
+            hometown: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: "99", cityCode: "1"),
+            introduction: "bio",
+            birthday: nil,
+            ipArea: nil,
+            age: nil
+        )
+
+        let mapped = ProfileRemoteMapper.mapProfile(dto)
+
+        XCTAssertEqual(mapped.locationSelection?.regionCode, "JP")
+        XCTAssertEqual(mapped.locationSelection?.stateCode, "13")
+        XCTAssertEqual(mapped.locationSelection?.cityCode, "99")
+        XCTAssertEqual(mapped.hometownSelection?.regionCode, "CN")
+        XCTAssertEqual(mapped.hometownSelection?.stateCode, "99")
+        XCTAssertEqual(mapped.hometownSelection?.cityCode, "1")
+
+        let patch = try ProfileRemoteMapper.makePatchDTO(
+            from: ProfileUpdateRequest(
+                nickname: "Demo",
+                facultyCode: 11,
+                majorCode: "software_engineering",
+                enrollment: 2024,
+                bio: "bio",
+                birthday: "",
+                location: mapped.locationSelection,
+                hometown: mapped.hometownSelection
+            )
+        )
+
+        XCTAssertEqual(patch.location?.region, "JP")
+        XCTAssertEqual(patch.location?.state, "13")
+        XCTAssertEqual(patch.location?.city, "99")
+        XCTAssertEqual(patch.hometown?.region, "CN")
+        XCTAssertEqual(patch.hometown?.state, "99")
+        XCTAssertEqual(patch.hometown?.city, "1")
+    }
 }
 
 private nonisolated struct ProfilePatchCapturedRequest {

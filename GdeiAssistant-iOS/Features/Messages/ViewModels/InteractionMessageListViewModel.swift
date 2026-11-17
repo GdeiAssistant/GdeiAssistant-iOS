@@ -54,9 +54,15 @@ final class InteractionMessageListViewModel: ObservableObject {
     }
 
     func loadMoreIfNeeded(currentItem item: AppNotificationItem) async {
-        guard canLoadMore, !isLoadingMore, items.last?.id == item.id else { return }
+        guard items.last?.id == item.id else { return }
+        await loadNextPage()
+    }
+
+    func loadNextPage() async {
+        guard canLoadMore, !isLoading, !isLoadingMore else { return }
 
         isLoadingMore = true
+        errorMessage = nil
         loadMoreErrorMessage = nil
         defer { isLoadingMore = false }
 
@@ -66,7 +72,12 @@ final class InteractionMessageListViewModel: ObservableObject {
             nextStart = page.nextStart
             canLoadMore = page.canLoadMore
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
+            let message = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
+            if items.isEmpty {
+                errorMessage = message
+            } else {
+                loadMoreErrorMessage = message
+            }
         }
     }
 

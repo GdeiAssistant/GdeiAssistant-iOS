@@ -195,7 +195,24 @@ enum ProfileRemoteMapper {
         guard let dto, let regionCode = sanitized(dto.regionCode) else {
             return nil
         }
-        return ProfileLocationCatalog.selection(regionCode: regionCode, stateCode: trimmed(dto.stateCode), cityCode: trimmed(dto.cityCode))
+        let stateCode = trimmed(dto.stateCode)
+        let cityCode = trimmed(dto.cityCode)
+        if let resolved = ProfileLocationCatalog.selection(
+            regionCode: regionCode,
+            stateCode: stateCode,
+            cityCode: cityCode
+        ) {
+            return resolved
+        }
+        let rawDisplay = [regionCode, stateCode, cityCode]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        return ProfileLocationSelection(
+            displayName: rawDisplay,
+            regionCode: regionCode,
+            stateCode: stateCode,
+            cityCode: cityCode
+        )
     }
 
     private static func makeFallbackMajorOptions() -> [ProfileMajorOption] {

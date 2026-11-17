@@ -127,6 +127,65 @@ final class MessagesRemoteMapperTests: XCTestCase {
         XCTAssertEqual(interactionVM.items.map(\.id), ["i1", "i2", "i3", "i4", "i5"])
         XCTAssertFalse(interactionVM.canLoadMore)
     }
+
+    @MainActor
+    func testSystemNoticeListViewModelCanContinueAfterExhaustingEmptyPageBudget() async {
+        let stub = EmptyPrefixMessagesStubRepository()
+        let noticeVM = SystemNoticeListViewModel(repository: stub)
+
+        await noticeVM.refresh()
+        XCTAssertTrue(noticeVM.items.isEmpty)
+        XCTAssertTrue(noticeVM.canLoadMore)
+        XCTAssertEqual(stub.starts, [0, 5, 10, 15, 20])
+
+        await noticeVM.loadNextPage()
+        XCTAssertEqual(stub.starts, [0, 5, 10, 15, 20, 25])
+        XCTAssertEqual(noticeVM.items.map(\.id), ["a26"])
+        XCTAssertFalse(noticeVM.canLoadMore)
+    }
+}
+
+@MainActor
+private final class EmptyPrefixMessagesStubRepository: MessagesRepository {
+    var starts: [Int] = []
+
+    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        try await fetchAnnouncementBatch(start: start, size: size).items
+    }
+
+    func fetchAnnouncementBatch(start: Int, size: Int) async throws -> NotificationPage {
+        starts.append(start)
+        if start < 25 {
+            return NotificationPage(items: [], fetchedCount: size)
+        }
+        return NotificationPage(
+            items: [
+                AppNotificationItem(
+                    id: "a26",
+                    category: .system,
+                    module: nil,
+                    title: "a26",
+                    message: "a26",
+                    createdAt: "now",
+                    isRead: false,
+                    destination: .announcement,
+                    targetType: nil,
+                    targetID: "a26",
+                    targetSubID: nil
+                )
+            ],
+            fetchedCount: 1
+        )
+    }
+
+    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] { [] }
+    func fetchInteractionUnreadCount() async throws -> Int { 0 }
+    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
+        AnnouncementDetailItem(id: id, title: "t", content: "c", createdAt: "now")
+    }
+    func fetchFestival() async throws -> Festival? { nil }
+    func markNotificationRead(notificationID: String) async throws {}
+    func markAllNotificationsRead() async throws {}
 }
 
 @MainActor

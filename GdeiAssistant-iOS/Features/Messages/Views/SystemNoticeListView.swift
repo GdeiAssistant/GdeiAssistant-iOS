@@ -9,14 +9,20 @@ struct SystemNoticeListView: View {
 
     var body: some View {
         Group {
-            if viewModel.isLoading && viewModel.items.isEmpty {
+            if (viewModel.isLoading || viewModel.isLoadingMore) && viewModel.items.isEmpty {
                 DSLoadingView(text: localizedString("messages.systemNoticeLoading"))
             } else if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
                 DSErrorStateView(message: errorMessage) {
                     Task { await viewModel.refresh() }
                 }
             } else if viewModel.items.isEmpty {
-                DSEmptyStateView(icon: "megaphone", title: localizedString("messages.noSystemNoticeEmpty"), message: localizedString("messages.noSystemNoticeMessage"))
+                DSEmptyStateView(
+                    icon: "megaphone",
+                    title: localizedString("messages.noSystemNoticeEmpty"),
+                    message: localizedString("messages.noSystemNoticeMessage"),
+                    actionTitle: viewModel.canLoadMore ? localizedString("common.retry") : nil,
+                    action: viewModel.canLoadMore ? { Task { await viewModel.loadNextPage() } } : nil
+                )
             } else {
                 List {
                     ForEach(viewModel.items) { item in

@@ -48,9 +48,15 @@ final class SystemNoticeListViewModel: ObservableObject {
     }
 
     func loadMoreIfNeeded(currentItem item: AppNotificationItem) async {
-        guard canLoadMore, !isLoadingMore, items.last?.id == item.id else { return }
+        guard items.last?.id == item.id else { return }
+        await loadNextPage()
+    }
+
+    func loadNextPage() async {
+        guard canLoadMore, !isLoading, !isLoadingMore else { return }
 
         isLoadingMore = true
+        errorMessage = nil
         loadMoreErrorMessage = nil
         defer { isLoadingMore = false }
 
@@ -60,7 +66,12 @@ final class SystemNoticeListViewModel: ObservableObject {
             nextStart = page.nextStart
             canLoadMore = page.canLoadMore
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
+            let message = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
+            if items.isEmpty {
+                errorMessage = message
+            } else {
+                loadMoreErrorMessage = message
+            }
         }
     }
 
