@@ -8,6 +8,8 @@ final class RemoteDataCenterRepository: DataCenterRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func queryElectricity(_ query: ElectricityQuery) async throws -> ElectricityBill {
         let fields = DataCenterRemoteMapper.mapElectricityQuery(query)
         let response: ElectricityBillRemoteDTO = try await apiClient.postForm(

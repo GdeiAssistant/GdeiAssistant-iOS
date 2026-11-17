@@ -8,6 +8,8 @@ final class RemoteMessagesRepository: MessagesRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
         try await fetchAnnouncementBatch(start: start, size: size).items
     }

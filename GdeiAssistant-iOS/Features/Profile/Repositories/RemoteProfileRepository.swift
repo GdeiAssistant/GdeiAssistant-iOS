@@ -8,6 +8,8 @@ final class RemoteProfileRepository: ProfileRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchProfile() async throws -> UserProfile {
         let profileDTO: UserProfileDTO = try await apiClient.get("/user/profile", requiresAuth: true)
         return ProfileRemoteMapper.mapProfile(profileDTO)

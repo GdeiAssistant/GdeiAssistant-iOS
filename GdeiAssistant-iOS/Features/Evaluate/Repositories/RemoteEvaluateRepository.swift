@@ -8,6 +8,8 @@ final class RemoteEvaluateRepository: EvaluateRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func submit(_ submission: EvaluateSubmission) async throws {
         let dto = EvaluateRemoteMapper.mapSubmitDTO(submission)
         let _: EmptyPayload = try await apiClient.post("/evaluate/submit", body: dto, requiresAuth: true)

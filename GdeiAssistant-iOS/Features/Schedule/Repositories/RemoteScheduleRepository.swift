@@ -8,6 +8,8 @@ final class RemoteScheduleRepository: ScheduleRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchWeeklySchedule(weekIndex: Int) async throws -> WeeklySchedule {
         let query = [URLQueryItem(name: "week", value: String(weekIndex))]
         let responseDTO: ScheduleQueryResultDTO = try await apiClient.get("/schedule", queryItems: query, requiresAuth: true)

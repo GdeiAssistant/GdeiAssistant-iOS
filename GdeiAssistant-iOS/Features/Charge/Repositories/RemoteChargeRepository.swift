@@ -13,6 +13,8 @@ final class RemoteChargeRepository: ChargeRepository {
         self.idempotencyKeyGenerator = idempotencyKeyGenerator
     }
 
+    nonisolated deinit {}
+
     func fetchCardInfo() async throws -> CampusCardDashboard {
         let infoDTO: CardInfoDTO = try await apiClient.get("/card/info", requiresAuth: true)
         return CardRemoteMapper.mapDashboard(infoDTO: infoDTO, queryDTO: nil)

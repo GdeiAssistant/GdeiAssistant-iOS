@@ -8,6 +8,8 @@ final class RemoteDatingRepository: DatingRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchProfiles(filter: DatingFilter) async throws -> [DatingProfile] {
         let dtos: [DatingProfileDTO] = try await apiClient.get(
             "/dating/profile/area/\(filter.area.rawValue)/start/0",

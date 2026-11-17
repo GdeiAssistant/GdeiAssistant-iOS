@@ -8,6 +8,8 @@ final class RemoteAuthRepository: AuthRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func login(request: LoginRequest) async throws -> LoginResponse {
         let requestDTO = AuthRemoteMapper.mapLoginRequest(request)
         let responseDTO: LoginResponseDTO = try await apiClient.post("/auth/login", body: requestDTO, requiresAuth: false)

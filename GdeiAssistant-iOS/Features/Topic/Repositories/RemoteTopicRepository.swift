@@ -8,6 +8,8 @@ final class RemoteTopicRepository: TopicRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchPosts(start: Int, size: Int) async throws -> [TopicPost] {
         let dtos: [TopicRemoteDTO] = try await apiClient.get(
             "/topic/start/\(max(start, 0))/size/\(max(size, 1))",

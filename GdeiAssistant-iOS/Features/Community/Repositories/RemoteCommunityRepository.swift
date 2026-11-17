@@ -8,6 +8,8 @@ final class RemoteCommunityRepository: CommunityRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchPosts(sort: CommunityFeedSort) async throws -> [CommunityPost] {
         let dtos: [ExpressPostDTO] = try await apiClient.get("/express/start/0/size/20", requiresAuth: true)
         return CommunityRemoteMapper.mapPosts(dtos, sort: sort)

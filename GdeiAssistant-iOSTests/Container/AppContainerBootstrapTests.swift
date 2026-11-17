@@ -49,8 +49,9 @@ final class AppContainerBootstrapTests: XCTestCase {
         )
     }
 
-    func testSwitchingDataSourceModeUpdatesResolvedRepositories() {
+    func testSwitchingDataSourceModeUpdatesResolvedRepositories() async {
         let container = AppContainer.testing
+        TestLifetimeRetainer.retain(container)
         guard container.environment.allowsRuntimeDebugOptions else { return }
 
         container.environment.updateDataSourceMode(.mock)

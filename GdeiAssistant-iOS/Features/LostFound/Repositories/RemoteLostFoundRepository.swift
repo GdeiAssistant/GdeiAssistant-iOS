@@ -8,6 +8,8 @@ final class RemoteLostFoundRepository: LostFoundRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchItems() async throws -> [LostFoundItem] {
         async let lostTask: [LostFoundItemDTO] = apiClient.get("/lostandfound/lostitem/start/0", requiresAuth: true)
         async let foundTask: [LostFoundItemDTO] = apiClient.get("/lostandfound/founditem/start/0", requiresAuth: true)
