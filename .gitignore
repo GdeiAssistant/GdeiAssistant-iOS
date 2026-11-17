@@ -24,10 +24,6 @@ TestAttachments/
 Configs/local.xcconfig
 
 # Local working notes / one-off tools
-Docs/
-!docs/
-!docs/location-names.md
-!docs/social-messaging-implementation.zh-CN.md
 Tools/*
 !Tools/build_simulator.sh
 !Tools/check_style.sh
