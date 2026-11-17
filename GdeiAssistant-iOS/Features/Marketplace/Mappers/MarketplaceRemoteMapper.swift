@@ -83,9 +83,11 @@ enum MarketplaceRemoteMapper {
         )
         let item = mapItem(itemDTO, sellerName: sellerName, sellerAvatarURL: dto.profile?.avatarURL)
         let typeName = displayName(in: itemTypes, index: itemDTO.type, fallback: localizedString("marketplace.mapper.defaultType"))
+        let qq = RemoteMapperSupport.sanitizedText(itemDTO.qq)
+        let phone = RemoteMapperSupport.sanitizedText(itemDTO.phone)
         let contactHint = [
-            itemDTO.qq.flatMap { $0.isEmpty ? nil : localizedString("marketplace.contactQQPrefix") + $0 },
-            itemDTO.phone.flatMap { $0.isEmpty ? nil : localizedString("marketplace.contactPhonePrefix") + $0 }
+            qq.map { localizedString("marketplace.contactQQPrefix") + $0 },
+            phone.map { localizedString("marketplace.contactPhonePrefix") + $0 }
         ].compactMap { $0 }.joined(separator: " / ")
         let imageURLs = RemoteMapperSupport.sanitizedTextList(itemDTO.pictureURL)
 
@@ -94,6 +96,8 @@ enum MarketplaceRemoteMapper {
             condition: typeName,
             description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, localizedString("marketplace.mapper.noDescription")),
             contactHint: contactHint.isEmpty ? localizedString("marketplace.contactUnavailable") : contactHint,
+            qq: qq,
+            phone: phone,
             sellerUsername: dto.profile?.displayName ?? itemDTO.displayName,
             sellerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
             sellerCollege: facultyName(dto.profile?.faculty),

@@ -49,6 +49,26 @@ final class AppContainerBootstrapTests: XCTestCase {
         )
     }
 
+    func testSwitchingDataSourceModeUpdatesResolvedRepositories() {
+        let container = AppContainer.testing
+        guard container.environment.allowsRuntimeDebugOptions else { return }
+
+        container.environment.updateDataSourceMode(.mock)
+        XCTAssertTrue(container.authRepository is MockAuthRepository)
+        XCTAssertTrue(container.profileRepository is MockProfileRepository)
+        XCTAssertTrue(container.socialRepository is MockSocialRepository)
+        XCTAssertTrue(container.marketplaceRepository is MockMarketplaceRepository)
+
+        container.environment.updateDataSourceMode(.remote)
+        XCTAssertTrue(container.authRepository is RemoteAuthRepository)
+        XCTAssertTrue(container.profileRepository is RemoteProfileRepository)
+        XCTAssertTrue(container.socialRepository is RemoteSocialRepository)
+        XCTAssertTrue(container.marketplaceRepository is RemoteMarketplaceRepository)
+
+        container.environment.updateDataSourceMode(.mock)
+        XCTAssertTrue(container.authRepository is MockAuthRepository)
+    }
+
     func testAppearanceEntryLivesInProfileMoreInsteadOfSettings() throws {
         let profileSource = try sourceFileContents(
             at: "GdeiAssistant-iOS/Features/Profile/Views/ProfileView.swift"

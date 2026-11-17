@@ -24,33 +24,8 @@ final class RemoteProfileRepository: ProfileRepository {
     }
 
     func updateProfile(request: ProfileUpdateRequest) async throws -> UserProfile {
-        let updatePlan = try ProfileRemoteMapper.makeUpdatePlan(
-            from: request,
-            options: try await fetchProfileOptions()
-        )
-
-        let _: EmptyPayload = try await apiClient.post("/profile/nickname", body: updatePlan.nickname, requiresAuth: true)
-        let _: EmptyPayload = try await apiClient.post("/profile/faculty", body: updatePlan.faculty, requiresAuth: true)
-
-        if let major = updatePlan.major {
-            let _: EmptyPayload = try await apiClient.post("/profile/major", body: major, requiresAuth: true)
-        }
-
-        let _: EmptyPayload = try await apiClient.post("/profile/enrollment", body: updatePlan.enrollment, requiresAuth: true)
-        let _: EmptyPayload = try await apiClient.post("/introduction", body: updatePlan.introduction, requiresAuth: true)
-
-        if let birthday = updatePlan.birthday {
-            let _: EmptyPayload = try await apiClient.post("/profile/birthday", body: birthday, requiresAuth: true)
-        }
-
-        if let location = updatePlan.location {
-            let _: EmptyPayload = try await apiClient.post("/profile/location", body: location, requiresAuth: true)
-        }
-
-        if let hometown = updatePlan.hometown {
-            let _: EmptyPayload = try await apiClient.post("/profile/hometown", body: hometown, requiresAuth: true)
-        }
-
+        let patchDTO = try ProfileRemoteMapper.makePatchDTO(from: request)
+        let _: EmptyPayload = try await apiClient.post("/profile", body: patchDTO, requiresAuth: true)
         return try await fetchProfile()
     }
 }

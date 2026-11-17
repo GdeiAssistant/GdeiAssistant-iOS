@@ -17,18 +17,9 @@ enum ProfileRemoteMapperError: LocalizedError {
     }
 }
 
-struct ProfileRemoteUpdatePlan {
-    let nickname: NicknameUpdateDTO
-    let faculty: FacultyUpdateDTO
-    let major: MajorUpdateDTO?
-    let enrollment: EnrollmentUpdateDTO
-    let introduction: IntroductionUpdateDTO
-    let birthday: BirthdayUpdateDTO?
-    let location: LocationUpdateDTO?
-    let hometown: LocationUpdateDTO?
-}
-
 enum ProfileRemoteMapper {
+    private static let enrollmentYearRegex = try! NSRegularExpression(pattern: #"\d{4}"#)
+
     static func mapProfile(_ dto: UserProfileDTO) -> UserProfile {
         let locationSelection = selection(from: dto.location)
         let hometownSelection = selection(from: dto.hometown)
@@ -119,20 +110,21 @@ enum ProfileRemoteMapper {
         )
     }
 
-    static func makeUpdatePlan(from request: ProfileUpdateRequest, options: ProfileOptions) throws -> ProfileRemoteUpdatePlan {
-        guard let facultyCode = facultyCode(for: request.college, options: options) else {
-            throw ProfileRemoteMapperError.unsupportedCollege(request.college)
+    static func makePatchDTO(from request: ProfileUpdateRequest) throws -> ProfilePatchDTO {
+        guard request.facultyCode >= 0 else {
+            throw ProfileRemoteMapperError.unsupportedCollege(String(request.facultyCode))
         }
 
-        let normalizedGrade = normalizeOptionalSelection(request.grade)
-        let enrollmentYear = try enrollmentYear(from: normalizedGrade)
+        let normalizedMajor = sanitized(request.majorCode).flatMap { code in
+            code == "unselected" ? nil : code
+        }
 
-        return ProfileRemoteUpdatePlan(
-            nickname: NicknameUpdateDTO(nickname: request.nickname),
-            faculty: FacultyUpdateDTO(faculty: facultyCode),
-            major: try majorDTO(from: request.major, faculty: request.college, options: options),
-            enrollment: EnrollmentUpdateDTO(year: enrollmentYear),
-            introduction: IntroductionUpdateDTO(introduction: request.bio),
+        return ProfilePatchDTO(
+            nickname: request.nickname,
+            faculty: request.facultyCode,
+            major: normalizedMajor,
+            enrollment: request.enrollment,
+            introduction: request.bio,
             birthday: try birthdayDTO(from: request.birthday),
             location: locationDTO(from: request.location),
             hometown: locationDTO(from: request.hometown)
@@ -144,12 +136,10 @@ enum ProfileRemoteMapper {
     }
 
     static func enrollmentYear(from grade: String?) throws -> Int? {
-        guard let grade = grade, !grade.isEmpty else { return nil }
+        guard let grade = sanitized(grade) else { return nil }
 
-        let pattern = #"\d{4}"#
         guard
-            let regex = try? NSRegularExpression(pattern: pattern),
-            let match = regex.firstMatch(
+            let match = enrollmentYearRegex.firstMatch(
                 in: grade,
                 range: NSRange(grade.startIndex..<grade.endIndex, in: grade)
             ),
@@ -159,15 +149,6 @@ enum ProfileRemoteMapper {
         }
 
         return Int(grade[range])
-    }
-
-    private static func majorDTO(from major: String, faculty: String, options: ProfileOptions) throws -> MajorUpdateDTO? {
-        let normalized = normalizeOptionalSelection(major)
-        guard let normalized, !normalized.isEmpty else { return nil }
-        guard let majorCode = options.majorCode(for: faculty, majorLabel: normalized) else {
-            throw ProfileRemoteMapperError.unsupportedCollege(faculty)
-        }
-        return MajorUpdateDTO(major: majorCode)
     }
 
     private static func birthdayDTO(from birthday: String) throws -> BirthdayUpdateDTO? {
@@ -219,21 +200,6 @@ enum ProfileRemoteMapper {
 
     private static func makeFallbackMajorOptions() -> [ProfileMajorOption] {
         [ProfileMajorOption(code: "unselected", label: ProfileFormSupport.unselectedOption)]
-    }
-
-    private static func normalize(_ value: String) -> String {
-        value
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: "\u{3000}", with: "")
-    }
-
-    private static func normalizeOptionalSelection(_ value: String) -> String? {
-        let trimmedValue = trimmed(value)
-        if trimmedValue.isEmpty || trimmedValue == ProfileFormSupport.unselectedOption {
-            return nil
-        }
-        return trimmedValue
     }
 
     nonisolated private static func localizedChineseOrder<T>(_ lhs: T, _ rhs: T) -> Bool {

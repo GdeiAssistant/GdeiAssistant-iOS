@@ -4,7 +4,7 @@ import XCTest
 final class MessagesRemoteMapperTests: XCTestCase {
     func testMapInteractionItemsNormalizesKnownModuleAliasesCaseInsensitively() throws {
         let item = InteractionNotificationRemoteDTO(
-            id: nil,
+            id: " interaction-1 ",
             module: " Roommate ",
             type: " Comment ",
             title: nil,
@@ -18,6 +18,7 @@ final class MessagesRemoteMapperTests: XCTestCase {
 
         let mapped = try XCTUnwrap(MessagesRemoteMapper.mapInteractionItems([item]).first)
 
+        XCTAssertEqual(mapped.id, "interaction-1")
         XCTAssertEqual(mapped.category, .comment)
         XCTAssertEqual(mapped.module, "dating")
         XCTAssertEqual(mapped.title, localizedString("feature.dating"))
@@ -30,21 +31,73 @@ final class MessagesRemoteMapperTests: XCTestCase {
         XCTAssertFalse(mapped.isRead)
     }
 
-    func testMapAnnouncementItemsUsesFallbacksAndDropsDestinationWithoutID() {
-        let item = AnnouncementRemoteDTO(
+    func testMapInteractionItemsFiltersEntriesWithoutValidID() {
+        let missingID = InteractionNotificationRemoteDTO(
+            id: nil,
+            module: "marketplace",
+            type: "like",
+            title: nil,
+            content: nil,
+            createdAt: nil,
+            isRead: nil,
+            targetType: nil,
+            targetId: nil,
+            targetSubId: nil
+        )
+        let blankID = InteractionNotificationRemoteDTO(
+            id: "   ",
+            module: "topic",
+            type: "comment",
+            title: nil,
+            content: nil,
+            createdAt: nil,
+            isRead: nil,
+            targetType: nil,
+            targetId: nil,
+            targetSubId: nil
+        )
+
+        XCTAssertTrue(MessagesRemoteMapper.mapInteractionItems([missingID, blankID]).isEmpty)
+    }
+
+    func testMapAnnouncementItemsFiltersMissingIDsAndKeepsFallbacksForValidID() {
+        let dirtyItem = AnnouncementRemoteDTO(
             id: "  ",
             title: nil,
             content: nil,
             publishTime: nil
         )
+        let validItem = AnnouncementRemoteDTO(
+            id: " notice-42 ",
+            title: nil,
+            content: nil,
+            publishTime: nil
+        )
 
-        let mapped = MessagesRemoteMapper.mapAnnouncementItems([item])
+        let mapped = MessagesRemoteMapper.mapAnnouncementItems([dirtyItem, validItem])
 
         XCTAssertEqual(mapped.count, 1)
+        XCTAssertEqual(mapped[0].id, "notice-42")
         XCTAssertEqual(mapped[0].category, .system)
         XCTAssertEqual(mapped[0].title, localizedString("messages.mapper.announcementTitle"))
         XCTAssertEqual(mapped[0].message, localizedString("messages.mapper.announcementEmptyContent"))
         XCTAssertEqual(mapped[0].createdAt, localizedString("common.justNow"))
-        XCTAssertNil(mapped[0].destination)
+        XCTAssertEqual(mapped[0].destination, .announcement)
+        XCTAssertEqual(mapped[0].targetID, "notice-42")
+    }
+
+    func testMapAnnouncementDetailRequiresValidIDOrFallback() throws {
+        let missingID = AnnouncementRemoteDTO(
+            id: " ",
+            title: "Notice",
+            content: "Body",
+            publishTime: nil
+        )
+
+        XCTAssertThrowsError(try MessagesRemoteMapper.mapAnnouncementDetail(missingID))
+
+        let resolved = try MessagesRemoteMapper.mapAnnouncementDetail(missingID, fallbackID: "notice-9")
+        XCTAssertEqual(resolved.id, "notice-9")
+        XCTAssertEqual(resolved.title, "Notice")
     }
 }

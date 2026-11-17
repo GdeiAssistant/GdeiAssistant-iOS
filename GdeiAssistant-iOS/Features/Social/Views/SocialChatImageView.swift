@@ -63,7 +63,7 @@ struct SocialChatImageView: View {
         }
         if container.environment.dataSourceMode == .mock,
            let remoteURL,
-           let data = (container.socialRepository as? SwitchingSocialRepository)?.demoImageData(for: remoteURL) {
+           let data = (container.socialRepository as? MockSocialRepository)?.imageData(for: remoteURL) {
             image = UIImage(data: data)
             failed = image == nil
             return

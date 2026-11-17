@@ -86,7 +86,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             location: draft.location,
             state: .selling,
             tags: draft.tags,
-            previewImageURL: nil
+            previewImageURL: nil,
+            typeID: draft.typeID
         )
         let contactHintParts = contactHintParts(qq: draft.qq, phone: draft.phone)
         let newDetail = MarketplaceDetail(
@@ -94,6 +95,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             condition: draft.condition,
             description: draft.description,
             contactHint: contactHintParts.joined(separator: " / "),
+            qq: draft.qq,
+            phone: draft.phone,
             sellerUsername: MockSeedData.demoProfile.username,
             sellerNickname: MockSeedData.demoProfile.nickname,
             sellerCollege: MockSeedData.demoProfile.college,
@@ -125,7 +128,9 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             item: updatedItem,
             condition: category,
             description: draft.description,
-            contactHint: contactHintParts.joined(separator: " / ")
+            contactHint: contactHintParts.joined(separator: " / "),
+            qq: .some(draft.qq),
+            phone: .some(draft.phone)
         )
         syncItem(updatedItem)
     }
@@ -171,7 +176,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             location: "海珠校区教学楼",
             state: .offShelf,
             tags: ["图书教材"],
-            previewImageURL: "https://example.com/market/cet-preview.png"
+            previewImageURL: "https://example.com/market/cet-preview.png",
+            typeID: 8
         )
         let soldItem = MarketplaceItem(
             id: "market_personal_sold_001",
@@ -185,7 +191,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             location: "南苑宿舍区",
             state: .sold,
             tags: ["生活娱乐"],
-            previewImageURL: "https://example.com/market/rack-preview.png"
+            previewImageURL: "https://example.com/market/rack-preview.png",
+            typeID: 10
         )
 
         detailsByID[offShelfItem.id] = MarketplaceDetail(
@@ -193,6 +200,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             condition: "图书教材",
             description: "四六级复习资料整理完成后会重新上架，当前先在个人中心保留记录。",
             contactHint: localizedString("marketplace.contactQQPrefix") + "231245678",
+            qq: "231245678",
+            phone: nil,
             sellerUsername: MockSeedData.demoProfile.username,
             sellerNickname: MockSeedData.demoProfile.nickname,
             sellerCollege: MockSeedData.demoProfile.college,
@@ -205,6 +214,8 @@ final class MockMarketplaceRepository: MarketplaceRepository {
             condition: "生活娱乐",
             description: "已与同学完成交易，这里仅保留成交记录。",
             contactHint: localizedString("marketplace.contactQQPrefix") + "231245678",
+            qq: "231245678",
+            phone: nil,
             sellerUsername: MockSeedData.demoProfile.username,
             sellerNickname: MockSeedData.demoProfile.nickname,
             sellerCollege: MockSeedData.demoProfile.college,

@@ -47,4 +47,53 @@ final class MarketplaceViewModelTests: XCTestCase {
         await vm.loadIfNeeded()
         XCTAssertEqual(vm.items.count, countAfterFirst)
     }
+
+    func testEditMarketplaceViewModelReadsRawContactsAndTypeIDWithoutPrefixParsing() throws {
+        let detail = MarketplaceDetail(
+            item: MarketplaceItem(
+                id: "market_edit_1",
+                title: "二手耳机",
+                price: 120,
+                summary: "九成新",
+                sellerName: "小明",
+                sellerAvatarURL: nil,
+                authorId: nil,
+                postedAt: "刚刚",
+                location: "海珠校区",
+                state: .selling,
+                tags: [],
+                previewImageURL: nil,
+                typeID: 4
+            ),
+            condition: "数码",
+            description: "功能正常",
+            contactHint: "已移除前缀解析",
+            qq: "987654",
+            phone: "13900139000",
+            sellerUsername: nil,
+            sellerNickname: nil,
+            sellerCollege: nil,
+            sellerMajor: nil,
+            sellerGrade: nil,
+            imageURLs: [],
+            ownedByCurrentUser: true
+        )
+
+        let editVM = EditMarketplaceViewModel(detail: detail)
+
+        XCTAssertEqual(editVM.selectedTypeID, 4)
+        XCTAssertEqual(editVM.qq, "987654")
+        XCTAssertEqual(editVM.phone, "13900139000")
+        XCTAssertTrue(editVM.isFormValid)
+
+        let draft = try XCTUnwrap(editVM.buildDraft())
+        XCTAssertEqual(draft.typeID, 4)
+        XCTAssertEqual(draft.qq, "987654")
+        XCTAssertEqual(draft.phone, "13900139000")
+
+        editVM.qq = "  "
+        XCTAssertFalse(editVM.isFormValid)
+        XCTAssertNil(editVM.buildDraft())
+        XCTAssertNotNil(editVM.failureMessage)
+    }
 }

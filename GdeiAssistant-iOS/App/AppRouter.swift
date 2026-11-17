@@ -135,6 +135,7 @@ final class AppContainer: ObservableObject {
 
     private var hasBootstrapped = false
     private let shouldSkipBootstrap: Bool
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         userPreferences: UserPreferences,
@@ -203,10 +204,21 @@ final class AppContainer: ObservableObject {
             sessionDelegate: pinningDelegate
         )
 
+        configureAuthManager(for: environment.dataSourceMode)
+        environment.$dataSourceMode
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] mode in
+                self?.configureAuthManager(for: mode)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func configureAuthManager(for mode: DataSourceMode) {
         let realtimeManager = socialAssembly.realtimeManager
         let imageLoader = authenticatedImageLoader
         authManager.configure(
-            repository: coreAssembly.authRepository,
+            repository: coreAssembly.authRepository(for: mode),
             dataSourceModeProvider: { [weak environment] in
                 environment?.dataSourceMode ?? .remote
             },

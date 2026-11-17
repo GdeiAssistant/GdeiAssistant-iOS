@@ -3,9 +3,15 @@ import Foundation
 /// Owns social / direct-message repositories, realtime manager, and related ViewModel factories.
 @MainActor
 struct SocialAssembly {
-    let socialRepository: any SocialRepository
+    private let environment: AppEnvironment
+    private let remoteSocialRepository: RemoteSocialRepository
+    private let mockSocialRepository: MockSocialRepository
     let realtimeManager: SocialRealtimeManager
     private let tokenProvider: @MainActor () -> String?
+
+    var socialRepository: any SocialRepository {
+        environment.dataSourceMode == .mock ? mockSocialRepository : remoteSocialRepository
+    }
 
     init(
         apiClient: APIClient,
@@ -15,15 +21,11 @@ struct SocialAssembly {
         onUnauthorized: @escaping () -> Void,
         sessionDelegate: URLSessionDelegate? = nil
     ) {
+        self.environment = environment
         self.tokenProvider = tokenProvider
-        let remoteSocialRepository = RemoteSocialRepository(apiClient: apiClient)
-        let mockSocialRepository = MockSocialRepository(
+        self.remoteSocialRepository = RemoteSocialRepository(apiClient: apiClient)
+        self.mockSocialRepository = MockSocialRepository(
             failFirstImageSend: UITestRuntimeOverrides.failFirstChatImageSend
-        )
-        self.socialRepository = SwitchingSocialRepository(
-            environment: environment,
-            remoteRepository: remoteSocialRepository,
-            mockRepository: mockSocialRepository
         )
         self.realtimeManager = SocialRealtimeManager(
             environment: environment,

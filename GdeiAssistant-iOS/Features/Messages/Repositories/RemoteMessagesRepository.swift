@@ -31,7 +31,7 @@ final class RemoteMessagesRepository: MessagesRepository {
 
     func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
         let dto: AnnouncementRemoteDTO = try await apiClient.get("/information/announcement/\(id)", requiresAuth: true)
-        return MessagesRemoteMapper.mapAnnouncementDetail(dto)
+        return try MessagesRemoteMapper.mapAnnouncementDetail(dto, fallbackID: id)
     }
 
     func fetchFestival() async throws -> Festival? {

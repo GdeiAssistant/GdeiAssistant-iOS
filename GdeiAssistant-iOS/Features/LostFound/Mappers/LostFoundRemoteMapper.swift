@@ -107,16 +107,22 @@ enum LostFoundRemoteMapper {
 
         let item = mapItem(itemDTO, fallbackType: (itemDTO.lostType ?? 0) == 0 ? .lost : .found)
         let statusText = displayName(in: stateTypes, index: itemDTO.state, fallback: localizedString("lostFound.mapper.statusUnknown"))
+        let qq = RemoteMapperSupport.sanitizedText(itemDTO.qq)
+        let wechat = RemoteMapperSupport.sanitizedText(itemDTO.wechat)
+        let phone = RemoteMapperSupport.sanitizedText(itemDTO.phone)
         let contactHint = [
-            itemDTO.qq.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactQQ"))\($0)" },
-            itemDTO.wechat.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactWechat"))\($0)" },
-            itemDTO.phone.flatMap { $0.isEmpty ? nil : "\(localizedString("lostFound.mapper.contactPhone"))\($0)" }
+            qq.map { "\(localizedString("lostFound.mapper.contactQQ"))\($0)" },
+            wechat.map { "\(localizedString("lostFound.mapper.contactWechat"))\($0)" },
+            phone.map { "\(localizedString("lostFound.mapper.contactPhone"))\($0)" }
         ].compactMap { $0 }.joined(separator: " / ")
 
         return LostFoundDetail(
             item: item,
             description: RemoteMapperSupport.firstNonEmpty(itemDTO.description, localizedString("lostFound.mapper.noDescription")),
             contactHint: contactHint.isEmpty ? localizedString("lostFound.mapper.noContact") : contactHint,
+            qq: qq,
+            wechat: wechat,
+            phone: phone,
             statusText: statusText,
             ownerUsername: dto.profile?.username ?? itemDTO.username,
             ownerNickname: RemoteMapperSupport.sanitizedText(dto.profile?.nickname),
@@ -131,9 +137,9 @@ enum LostFoundRemoteMapper {
             avatarURL: RemoteMapperSupport.sanitizedText(profile.avatar),
             nickname: RemoteMapperSupport.firstNonEmpty(profile.nickname, profile.username, localizedString("lostFound.mapper.defaultUser")),
             introduction: RemoteMapperSupport.firstNonEmpty(profile.introduction, localizedString("lostFound.mapper.defaultIntro")),
-            lost: (dto.lost ?? []).map { mapItem($0, fallbackType: .lost) },
-            found: (dto.found ?? []).map { mapItem($0, fallbackType: .found) },
-            didFound: (dto.didfound ?? []).map { mapItem($0, fallbackType: ($0.lostType ?? 0) == 0 ? .lost : .found) }
+            lost: (dto.lost ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, fallbackType: .lost) },
+            found: (dto.found ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, fallbackType: .found) },
+            didFound: (dto.didfound ?? []).filter { ($0.id ?? 0) > 0 }.map { mapItem($0, fallbackType: ($0.lostType ?? 0) == 0 ? .lost : .found) }
         )
     }
 

@@ -3,16 +3,22 @@ import Foundation
 /// Owns repository construction and ViewModel factories for auth, home, and shared infrastructure.
 @MainActor
 struct CoreAssembly {
-    let authRepository: any AuthRepository
+    private let environment: AppEnvironment
+    private let remoteAuthRepository: RemoteAuthRepository
+    private let mockAuthRepository: MockAuthRepository
+
+    var authRepository: any AuthRepository {
+        authRepository(for: environment.dataSourceMode)
+    }
+
+    func authRepository(for mode: DataSourceMode) -> any AuthRepository {
+        mode == .mock ? mockAuthRepository : remoteAuthRepository
+    }
 
     init(apiClient: APIClient, environment: AppEnvironment) {
-        let remoteAuthRepository = RemoteAuthRepository(apiClient: apiClient)
-        let mockAuthRepository = MockAuthRepository()
-        self.authRepository = SwitchingAuthRepository(
-            environment: environment,
-            remoteRepository: remoteAuthRepository,
-            mockRepository: mockAuthRepository
-        )
+        self.environment = environment
+        self.remoteAuthRepository = RemoteAuthRepository(apiClient: apiClient)
+        self.mockAuthRepository = MockAuthRepository()
     }
 
     // MARK: - ViewModel Factories

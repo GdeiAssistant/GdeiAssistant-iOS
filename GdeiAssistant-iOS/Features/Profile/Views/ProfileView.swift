@@ -396,15 +396,15 @@ private struct ProfileFieldEditorSheet: View {
 
                 case .college:
                     Section {
-                        ForEach(viewModel.facultyOptions, id: \.self) { option in
+                        ForEach(viewModel.facultyOptions) { option in
                             Button {
-                                viewModel.selectCollege(option)
+                                viewModel.selectFaculty(code: option.code)
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.facultyDisplayName(for: option.code, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
-                                    if viewModel.college == option {
+                                    if viewModel.facultyCode == option.code {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
                                     }
                                 }
@@ -421,15 +421,15 @@ private struct ProfileFieldEditorSheet: View {
                             Text(localizedString("profile.selectFacultyFirst"))
                                 .foregroundStyle(DSColor.subtitle)
                         } else {
-                            ForEach(viewModel.majorOptions, id: \.self) { option in
+                            ForEach(viewModel.majorOptions) { option in
                                 Button {
-                                    viewModel.selectMajor(option)
+                                    viewModel.selectMajor(code: option.code)
                                     Task { await save() }
                                 } label: {
                                     HStack {
-                                        Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
+                                        Text(viewModel.majorDisplayName(for: option.code, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                         Spacer()
-                                        if viewModel.major == option {
+                                        if (viewModel.majorCode ?? ProfileViewModel.unselectedMajorCode) == option.code {
                                             Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
                                         }
                                     }
@@ -449,7 +449,7 @@ private struct ProfileFieldEditorSheet: View {
                                 Task { await save() }
                             } label: {
                                 HStack {
-                                    Text(viewModel.displaySelectionOption(option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
+                                    Text(viewModel.enrollmentDisplayName(for: option, localeIdentifier: locale.identifier)).foregroundStyle(DSColor.title)
                                     Spacer()
                                     if viewModel.isEnrollmentOptionSelected(option) {
                                         Image(systemName: "checkmark").foregroundStyle(DSColor.primary)
@@ -763,10 +763,6 @@ private extension ProfileViewModel {
     func displayText(_ value: String, fallback: String) -> String {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty || trimmed == ProfileFormSupport.unselectedOption ? fallback : trimmed
-    }
-
-    func displaySelectionOption(_ value: String, localeIdentifier: String) -> String {
-        selectionOptionDisplayName(value, localeIdentifier: localeIdentifier)
     }
 }
 

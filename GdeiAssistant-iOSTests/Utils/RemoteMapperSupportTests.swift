@@ -5,6 +5,10 @@ private struct FlexibleStringBox: Decodable {
     let value: RemoteFlexibleString
 }
 
+private struct FlexibleDoubleBox: Decodable {
+    let value: RemoteFlexibleDouble
+}
+
 final class RemoteMapperSupportTests: XCTestCase {
     func testRemoteFlexibleStringDecodesPrimitivePayloads() throws {
         let decoder = JSONDecoder()
@@ -28,6 +32,34 @@ final class RemoteMapperSupportTests: XCTestCase {
         XCTAssertEqual(
             try decoder.decode(FlexibleStringBox.self, from: Data(#"{"value":null}"#.utf8)).value.rawValue,
             ""
+        )
+    }
+
+    func testRemoteFlexibleDoubleDecodesNumericAndStringPayloads() throws {
+        let decoder = JSONDecoder()
+
+        XCTAssertEqual(
+            try XCTUnwrap(decoder.decode(FlexibleDoubleBox.self, from: Data(#"{"value":42.5}"#.utf8)).value.rawValue),
+            42.5,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(decoder.decode(FlexibleDoubleBox.self, from: Data(#"{"value":18}"#.utf8)).value.rawValue),
+            18,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(decoder.decode(FlexibleDoubleBox.self, from: Data(#"{"value":" 99.25 "}"#.utf8)).value.rawValue),
+            99.25,
+            accuracy: 0.001
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(decoder.decode(FlexibleDoubleBox.self, from: Data(#"{"value":"约 12.5 元"}"#.utf8)).value.rawValue),
+            12.5,
+            accuracy: 0.001
+        )
+        XCTAssertNil(
+            try decoder.decode(FlexibleDoubleBox.self, from: Data(#"{"value":null}"#.utf8)).value.rawValue
         )
     }
 

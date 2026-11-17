@@ -61,6 +61,9 @@ struct LostFoundDetail: Codable, Identifiable, Hashable {
     let item: LostFoundItem
     let description: String
     let contactHint: String
+    let qq: String?
+    let wechat: String?
+    let phone: String?
     let statusText: String
     let ownerUsername: String?
     let ownerNickname: String?

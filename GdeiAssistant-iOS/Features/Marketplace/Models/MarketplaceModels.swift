@@ -56,6 +56,8 @@ struct MarketplaceDetail: Codable, Identifiable, Hashable {
     let condition: String
     let description: String
     let contactHint: String
+    let qq: String?
+    let phone: String?
     let sellerUsername: String?
     let sellerNickname: String?
     let sellerCollege: String?
@@ -148,6 +150,8 @@ extension MarketplaceDetail {
         condition: String? = nil,
         description: String? = nil,
         contactHint: String? = nil,
+        qq: String?? = nil,
+        phone: String?? = nil,
         imageURLs: [String]? = nil,
         ownedByCurrentUser: Bool? = nil
     ) -> MarketplaceDetail {
@@ -156,6 +160,8 @@ extension MarketplaceDetail {
             condition: condition ?? self.condition,
             description: description ?? self.description,
             contactHint: contactHint ?? self.contactHint,
+            qq: qq ?? self.qq,
+            phone: phone ?? self.phone,
             sellerUsername: sellerUsername,
             sellerNickname: sellerNickname,
             sellerCollege: sellerCollege,

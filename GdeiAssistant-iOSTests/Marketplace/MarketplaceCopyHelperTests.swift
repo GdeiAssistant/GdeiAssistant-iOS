@@ -40,6 +40,8 @@ final class MarketplaceCopyHelperTests: XCTestCase {
             condition: "交通工具",
             description: "描述",
             contactHint: "QQ 123456",
+            qq: "123456",
+            phone: "13800138000",
             sellerUsername: "demo",
             sellerNickname: "小明",
             sellerCollege: "学院",
@@ -79,7 +81,7 @@ final class MarketplaceCopyHelperTests: XCTestCase {
 
     func testDetailHelperNamesEveryStoredField() {
         XCTAssertEqual(labels(makeDetail()), [
-            "item", "condition", "description", "contactHint", "sellerUsername",
+            "item", "condition", "description", "contactHint", "qq", "phone", "sellerUsername",
             "sellerNickname", "sellerCollege", "sellerMajor", "sellerGrade",
             "imageURLs", "ownedByCurrentUser"
         ], "A new stored field must also be added to MarketplaceDetail.with(...)")
@@ -98,11 +100,17 @@ final class MarketplaceCopyHelperTests: XCTestCase {
         XCTAssertEqual(copy.sellerGrade, "2023")
         XCTAssertEqual(copy.description, detail.description)
         XCTAssertEqual(copy.contactHint, detail.contactHint)
+        XCTAssertEqual(copy.qq, detail.qq)
+        XCTAssertEqual(copy.phone, detail.phone)
         XCTAssertEqual(copy.item.typeID, 4)
         XCTAssertEqual(copy.item.state, .sold)
         XCTAssertEqual(copy.condition, "已售出")
         XCTAssertEqual(copy.imageURLs, [])
         XCTAssertTrue(detail.ownedByCurrentUser, "with(...) must not mutate the original")
+
+        let clearedPhone = detail.with(phone: .some(nil))
+        XCTAssertNil(clearedPhone.phone)
+        XCTAssertEqual(clearedPhone.qq, detail.qq)
     }
 }
 

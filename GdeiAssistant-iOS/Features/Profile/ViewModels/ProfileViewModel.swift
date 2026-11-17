@@ -3,6 +3,8 @@ import Combine
 
 @MainActor
 final class ProfileViewModel: ObservableObject {
+    static let unselectedMajorCode = "unselected"
+
     @Published var profile: UserProfile?
     @Published var profileOptions = ProfileFormSupport.defaultOptions
     @Published var locationRegions: [ProfileLocationRegion] = []
@@ -11,9 +13,9 @@ final class ProfileViewModel: ObservableObject {
     @Published var isSaving = false
     @Published var saveErrorMessage: String?
     @Published var nickname = ""
-    @Published var college = ProfileFormSupport.unselectedOption
-    @Published var major = ProfileFormSupport.unselectedOption
-    @Published var grade = ""
+    @Published var facultyCode = 0
+    @Published var majorCode: String?
+    @Published var enrollment: Int?
     @Published var bio = ""
     @Published var birthday = ""
     @Published var location = ""
@@ -30,6 +32,9 @@ final class ProfileViewModel: ObservableObject {
         self.repository = repository
         self.sessionState = sessionState
         self.profile = sessionState.currentUser
+        if let currentUser = sessionState.currentUser {
+            syncDraft(with: currentUser)
+        }
         bindSessionState()
     }
 
@@ -41,39 +46,58 @@ final class ProfileViewModel: ObservableObject {
         sessionState.currentUser ?? profile
     }
 
-    var facultyOptions: [String] {
-        profileOptions.facultyOptions
+    var facultyOptions: [ProfileFacultyOption] {
+        profileOptions.faculties
     }
 
-    var majorOptions: [String] {
-        profileOptions.majorOptions(for: college)
+    var majorOptions: [ProfileMajorOption] {
+        profileOptions.faculties.first(where: { $0.code == facultyCode })?.majors
+            ?? [ProfileMajorOption(code: Self.unselectedMajorCode, label: ProfileFormSupport.unselectedOption)]
     }
 
-    func selectionOptionDisplayName(_ value: String, localeIdentifier: String = AppLanguage.currentIdentifier()) -> String {
+    func facultyDisplayName(
+        for code: Int,
+        localeIdentifier: String = AppLanguage.currentIdentifier()
+    ) -> String {
+        if code == 0 {
+            return localizedString("profile.notSelected", locale: localeIdentifier)
+        }
         let localizedOptions = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
-        if let faculty = profileOptions.faculties.first(where: { $0.label == value }),
-           let localizedFaculty = localizedOptions.faculties.first(where: { $0.code == faculty.code }) {
-            return faculty.code == 0 ? localizedString("profile.notSelected", locale: localeIdentifier) : localizedFaculty.label
-        }
-        if let faculty = profileOptions.faculties.first(where: { $0.label == college }),
-           let option = faculty.majors.first(where: { $0.label == value }),
-           let localizedFaculty = localizedOptions.faculties.first(where: { $0.code == faculty.code }),
-           let localizedMajor = localizedFaculty.majors.first(where: { $0.code == option.code }) {
-            return option.code == "unselected" ? localizedString("profile.notSelected", locale: localeIdentifier) : localizedMajor.label
-        }
-        return value == ProfileFormSupport.unselectedOption ? localizedString("profile.notSelected", locale: localeIdentifier) : value
+        return localizedOptions.faculties.first(where: { $0.code == code })?.label
+            ?? profileOptions.faculties.first(where: { $0.code == code })?.label
+            ?? localizedString("profile.notSelected", locale: localeIdentifier)
     }
 
-    var enrollmentOptions: [String] {
-        [ProfileFormSupport.unselectedOption] + ProfileFormSupport.enrollmentOptions
+    func majorDisplayName(
+        for code: String,
+        localeIdentifier: String = AppLanguage.currentIdentifier()
+    ) -> String {
+        if code == Self.unselectedMajorCode || code.isEmpty {
+            return localizedString("profile.notSelected", locale: localeIdentifier)
+        }
+        let localizedOptions = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
+        return localizedOptions.faculties
+            .first(where: { $0.code == facultyCode })?
+            .majors
+            .first(where: { $0.code == code })?.label
+            ?? majorOptions.first(where: { $0.code == code })?.label
+            ?? code
     }
 
-    var selectedEnrollmentOption: String {
-        grade.isEmpty ? ProfileFormSupport.unselectedOption : grade
+    func enrollmentDisplayName(
+        for year: Int?,
+        localeIdentifier: String = AppLanguage.currentIdentifier()
+    ) -> String {
+        year.map(String.init) ?? localizedString("profile.notSelected", locale: localeIdentifier)
+    }
+
+    var enrollmentOptions: [Int?] {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return [nil] + Array(2014...currentYear)
     }
 
     var canSelectMajor: Bool {
-        profileOptions.canSelectMajor(for: college)
+        facultyCode != 0
     }
 
     var isFormValid: Bool {
@@ -136,28 +160,28 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func selectCollege(_ value: String) {
-        college = value
-        let options = majorOptions
-        if !options.contains(major) {
-            major = ProfileFormSupport.unselectedOption
+    func selectFaculty(code: Int) {
+        facultyCode = code
+        let validCodes = Set(majorOptions.map(\.code))
+        if let majorCode, !validCodes.contains(majorCode) {
+            self.majorCode = nil
         }
     }
 
-    func selectMajor(_ value: String) {
+    func selectMajor(code: String) {
         guard canSelectMajor else {
             saveErrorMessage = localizedString("profile.selectFacultyFirst")
             return
         }
-        major = value
+        majorCode = (code == Self.unselectedMajorCode || code.isEmpty) ? nil : code
     }
 
-    func selectEnrollment(_ value: String) {
-        grade = value == ProfileFormSupport.unselectedOption ? "" : value
+    func selectEnrollment(_ year: Int?) {
+        enrollment = year
     }
 
-    func isEnrollmentOptionSelected(_ value: String) -> Bool {
-        selectedEnrollmentOption == value
+    func isEnrollmentOptionSelected(_ year: Int?) -> Bool {
+        enrollment == year
     }
 
     func updateBirthday(date: Date) {
@@ -208,18 +232,11 @@ final class ProfileViewModel: ObservableObject {
         saveErrorMessage = nil
         defer { isSaving = false }
 
-        // The repository fetches current-language options when saving. Preserve
-        // the cached selection codes while resolving their submission labels.
-        let selectedFaculty = profileOptions.faculties.first(where: { $0.label == college })
-        let selectedMajor = selectedFaculty?.majors.first(where: { $0.label == major })
-        let currentFaculty = LocalizedProfileCatalog.current.defaultOptions.faculties.first(where: { $0.code == selectedFaculty?.code })
-        let submissionCollege = currentFaculty?.label ?? college
-        let submissionMajor = currentFaculty?.majors.first(where: { $0.code == selectedMajor?.code })?.label ?? major
         let request = ProfileUpdateRequest(
             nickname: FormValidationSupport.trimmed(nickname),
-            college: FormValidationSupport.trimmed(submissionCollege).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(submissionCollege),
-            major: FormValidationSupport.trimmed(submissionMajor).isEmpty ? ProfileFormSupport.unselectedOption : FormValidationSupport.trimmed(submissionMajor),
-            grade: FormValidationSupport.trimmed(grade),
+            facultyCode: facultyCode,
+            majorCode: majorCode,
+            enrollment: enrollment,
             bio: FormValidationSupport.trimmed(bio),
             birthday: FormValidationSupport.trimmed(birthday),
             location: locationSelection,
@@ -243,18 +260,33 @@ final class ProfileViewModel: ObservableObject {
 
     private func syncDraft(with profile: UserProfile) {
         nickname = profile.nickname
-        let codedCollege = profileOptions.faculties.first(where: { $0.code == profile.collegeCode })?.label
-        let normalizedCollege = codedCollege ?? (profile.college.isEmpty ? ProfileFormSupport.unselectedOption : profile.college)
-        let validMajors = profileOptions.majorOptions(for: normalizedCollege)
-        college = facultyOptions.contains(normalizedCollege) ? normalizedCollege : ProfileFormSupport.unselectedOption
-        if let majorCode = profile.majorCode,
-           let restoredMajor = profileOptions.majorLabel(for: college, majorCode: majorCode),
-           validMajors.contains(restoredMajor) {
-            major = restoredMajor
+        if let code = profile.collegeCode,
+           profileOptions.faculties.contains(where: { $0.code == code }) {
+            facultyCode = code
+        } else if !profile.college.isEmpty,
+                  let resolvedCode = profileOptions.facultyCode(for: profile.college) {
+            facultyCode = resolvedCode
         } else {
-            major = validMajors.contains(profile.major) ? profile.major : ProfileFormSupport.unselectedOption
+            facultyCode = 0
         }
-        grade = profile.grade
+
+        let selectedFaculty = profileOptions.faculties.first(where: { $0.code == facultyCode })
+        let validMajorCodes = Set((selectedFaculty?.majors ?? []).map(\.code))
+        if let code = profile.majorCode?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !code.isEmpty,
+           code != Self.unselectedMajorCode,
+           validMajorCodes.contains(code) {
+            majorCode = code
+        } else if !profile.major.isEmpty,
+                  let facultyLabel = selectedFaculty?.label,
+                  let resolvedMajorCode = profileOptions.majorCode(for: facultyLabel, majorLabel: profile.major),
+                  resolvedMajorCode != Self.unselectedMajorCode {
+            majorCode = resolvedMajorCode
+        } else {
+            majorCode = nil
+        }
+
+        enrollment = try? ProfileRemoteMapper.enrollmentYear(from: profile.grade)
         bio = profile.bio
         birthday = profile.birthday
         location = profile.location

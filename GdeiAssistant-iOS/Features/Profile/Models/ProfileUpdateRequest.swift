@@ -2,9 +2,9 @@ import Foundation
 
 struct ProfileUpdateRequest: Hashable {
     let nickname: String
-    let college: String
-    let major: String
-    let grade: String
+    let facultyCode: Int
+    let majorCode: String?
+    let enrollment: Int?
     let bio: String
     let birthday: String
     let location: ProfileLocationSelection?
