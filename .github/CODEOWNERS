@@ -9,7 +9,10 @@
 # Risk-sensitive changes require the repository owner.
 /.github/CODEOWNERS @Pigbibi
 /.github/workflows/ @Pigbibi
-/GdeiAssistant-iOS/Features/Secret/ @Pigbibi
+/GdeiAssistant-iOS/Core/Auth/ @Pigbibi
+/GdeiAssistant-iOS/Core/Networking/ @Pigbibi
+/GdeiAssistant-iOS/Core/Storage/ @Pigbibi
+/Configs/ @Pigbibi
 
 # Dependency-only files do not automatically request a human review.
 # CODEOWNERS is path-based: these exceptions also apply to human PRs.

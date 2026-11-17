@@ -21,7 +21,7 @@ python3 Tools/check_localization.py
 - [ ] 上面列出的检查已通过，或有说明为什么没跑
 - [ ] 改动涉及的行为变化，已在同一次 PR 里更新对应文档
 - [ ] 没有提交真实账号、密码、验证码、Token、Cookie 或他人个人信息
-- [ ] 没有提交密钥、证书、`local.properties` 或环境配置文件
+- [ ] 没有提交密钥、证书、`.p12`、`.mobileprovision` 或 `*.local.xcconfig`
 
 ## 涉及隐私、权限或数据流的改动
 

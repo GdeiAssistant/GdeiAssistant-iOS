@@ -63,7 +63,6 @@ xcodebuild -project GdeiAssistant-iOS.xcodeproj \
 ```bash
 ./Tools/check_style.sh
 python3 Tools/check_localization.py
-python3 scripts/check_hygiene.py
 ```
 
 ### 发布 TestFlight
@@ -92,7 +91,7 @@ python3 scripts/check_hygiene.py
 | --- | --- | --- |
 | `Configs/Debug.xcconfig` | `dev` | `http://localhost:8080/api` |
 | `Configs/Staging.xcconfig` | `staging` | `https://gdeiassistant.azurewebsites.net/api` |
-| `Configs/Release.xcconfig` | `prod` | `https://gdeiassistant.cn/api` |
+| `Configs/Release.xcconfig` | `prod` | `https://gdeiassistant.azurewebsites.net/api`（默认）；正式发布可通过 `GDEI_API_BASE_URL_PRODUCTION=https://gdeiassistant.cn/api` 覆盖 |
 
 Debug 构建可以在设置页切换 `dev / staging / prod` 和 `mock / remote`；Staging / Release 构建固定走远程接口，不读 debug 期间留下的覆盖值。
 
@@ -142,7 +141,7 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ### DTO / Domain 分层
 
-远端数据不直接进 View。`DTO` 承接后端结构，`Mapper` 转成领域模型，`Repository` 对 ViewModel 暴露稳定的数据接口。社交模块在 `Features/Social`，通过 `SocialAssembly` 注入，实现细节见 [`docs/social-messaging-implementation.zh-CN.md`](docs/social-messaging-implementation.zh-CN.md)。
+远端数据不直接进 View。`DTO` 承接后端结构，`Mapper` 转成领域模型，`Repository` 对 ViewModel 暴露稳定的数据接口。社交模块在 `Features/Social`，通过 `SocialAssembly` 注入，共享契约见 [GdeiAssistant 社交架构契约](https://github.com/GdeiAssistant/GdeiAssistant/blob/master/docs/social-messaging.md)。
 
 ### 主题
 
@@ -166,12 +165,12 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ## 参与贡献
 
-见 [CONTRIBUTING.md](CONTRIBUTING.md)。安全问题请按 [SECURITY.md](SECURITY.md) 处理，不要在公开 Issue 里贴真实账号、验证码或密钥。
-
-## 许可
-
-[Apache License 2.0](LICENSE)。
+见 [CONTRIBUTING.md](CONTRIBUTING.md) 与组织行为准则 [CODE_OF_CONDUCT.md](https://github.com/GdeiAssistant/.github/blob/main/CODE_OF_CONDUCT.md)。安全问题请按 [SECURITY.md](SECURITY.md) 处理，不要在公开 Issue 里贴真实账号、验证码或密钥。
 
 ## 免责声明
 
 本项目不代表学校官方服务。面向用户的协议、隐私政策、授权说明和功能限制，以 App 内对应页面展示的内容为准，本 README 不替代这些正文。发布衍生版本前，请自行确认隐私处理、校园凭证管理、iOS 权限说明、日志脱敏、密钥管理、Keychain 使用、签名配置和商标使用边界。
+
+## 许可证
+
+[Apache License 2.0](LICENSE) · [NOTICE](NOTICE) · [TRADEMARK.md](TRADEMARK.md)

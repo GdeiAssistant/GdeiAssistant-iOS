@@ -7,8 +7,16 @@
       "@claude review"
     ]
   },
-  "r0_paths": [],
-  "r2_paths": [],
+  "r0_paths": [
+    "README.md",
+    "docs/"
+  ],
+  "r2_paths": [
+    "GdeiAssistant-iOS/Core/Auth/",
+    "GdeiAssistant-iOS/Core/Networking/",
+    "GdeiAssistant-iOS/Core/Storage/",
+    "Configs/"
+  ],
   "dependabot_template_exemption": true,
   "max_evidence_age_hours": 168
 }

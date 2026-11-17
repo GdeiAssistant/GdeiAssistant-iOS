@@ -16,23 +16,23 @@
 ## 提交前检查
 
 ```bash
-./scripts/check_style.sh
-python3 scripts/check_localization.py
+./Tools/check_style.sh
+python3 Tools/check_localization.py
 ```
 
 构建：
 
 ```bash
-./scripts/build_simulator.sh
+./Tools/build_simulator.sh
 ```
 
-跑单元测试：
+跑单元测试（通过 `xcrun simctl list devices available` 选择本机可用模拟器的 `<SIMULATOR_UDID>`）：
 
 ```bash
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 xcodebuild test -project GdeiAssistant-iOS.xcodeproj \
   -scheme GdeiAssistant-iOS \
-  -destination 'platform=iOS Simulator,name=iPhone 16'
+  -destination "platform=iOS Simulator,id=<SIMULATOR_UDID>"
 ```
 
 改动了多语言文案，必须同时更新 `Localizable.strings` 和 `docs/location-names.md` 里对应的条目，否则 `check_localization.py` 会报错。
@@ -57,12 +57,12 @@ xcodebuild test -project GdeiAssistant-iOS.xcodeproj \
 
 ## 提交信息
 
-用能看懂的话写，不要只写「update」：
+标题遵循英文 Conventional Commits（不超过 72 字符），用清晰可追踪的英文说明改动内容：
 
 ```text
-feat: 课表页支持周次切换
-fix: 退出登录后 Keychain 未清理
-docs: 补充 TestFlight 发布步骤
+feat: add week switcher to schedule view
+fix: clear keychain items on logout
+docs: clarify TestFlight signing secrets
 ```
 
 ## 许可
