@@ -11,14 +11,22 @@ struct ProfileAssembly {
     private let remoteMessagesRepository: RemoteMessagesRepository
     private let mockMessagesRepository: MockMessagesRepository
 
+    func profileRepository(for mode: DataSourceMode) -> any ProfileRepository {
+        mode == .mock ? mockProfileRepository : remoteProfileRepository
+    }
+
     var profileRepository: any ProfileRepository {
-        environment.dataSourceMode == .mock ? mockProfileRepository : remoteProfileRepository
+        profileRepository(for: environment.dataSourceMode)
     }
     var accountCenterRepository: any AccountCenterRepository {
         environment.dataSourceMode == .mock ? mockAccountCenterRepository : remoteAccountCenterRepository
     }
+    func messagesRepository(for mode: DataSourceMode) -> any MessagesRepository {
+        mode == .mock ? mockMessagesRepository : remoteMessagesRepository
+    }
+
     var messagesRepository: any MessagesRepository {
-        environment.dataSourceMode == .mock ? mockMessagesRepository : remoteMessagesRepository
+        messagesRepository(for: environment.dataSourceMode)
     }
 
     init(apiClient: APIClient, environment: AppEnvironment) {

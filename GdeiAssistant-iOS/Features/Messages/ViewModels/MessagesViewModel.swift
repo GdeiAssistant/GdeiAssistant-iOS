@@ -18,8 +18,8 @@ final class MessagesViewModel: ObservableObject {
     @Published var interactionUnreadCount = 0
     @Published var festival: Festival?
 
-    private let newsRepository: any NewsRepository
-    private let messagesRepository: any MessagesRepository
+    private var newsRepository: any NewsRepository
+    private var messagesRepository: any MessagesRepository
     private let overviewLimit = 3
 
     init(
@@ -33,6 +33,22 @@ final class MessagesViewModel: ObservableObject {
     // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
     // back-deployment crash on synchronous release (swiftlang/swift#87316).
     nonisolated deinit {}
+
+    func updateRepositories(
+        newsRepository: any NewsRepository,
+        messagesRepository: any MessagesRepository
+    ) {
+        self.newsRepository = newsRepository
+        self.messagesRepository = messagesRepository
+        newsItems = []
+        systemNoticeItems = []
+        interactionNoticeItems = []
+        newsErrorMessage = nil
+        systemErrorMessage = nil
+        interactionErrorMessage = nil
+        interactionUnreadCount = 0
+        festival = nil
+    }
 
     var isInitialLoading: Bool {
         if hasAnyContent {

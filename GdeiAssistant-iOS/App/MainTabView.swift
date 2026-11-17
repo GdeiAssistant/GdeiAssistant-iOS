@@ -8,7 +8,10 @@ struct MainTabView: View {
     @StateObject private var messagesViewModel: MessagesViewModel
     @StateObject private var profileViewModel: ProfileViewModel
 
+    private let container: AppContainer
+
     init(container: AppContainer) {
+        self.container = container
         _homeViewModel = StateObject(wrappedValue: container.makeHomeViewModel())
         _messagesViewModel = StateObject(wrappedValue: container.makeMessagesViewModel())
         _profileViewModel = StateObject(wrappedValue: container.makeProfileViewModel())
@@ -33,6 +36,18 @@ struct MainTabView: View {
                     Label("tab.profile", systemImage: "person.crop.circle")
                 }
                 .tag(AppTab.profile)
+        }
+        .onReceive(container.environment.$dataSourceMode.dropFirst().removeDuplicates()) { mode in
+            homeViewModel.updateRepository(
+                container.campusServicesAssembly.scheduleRepository(for: mode)
+            )
+            messagesViewModel.updateRepositories(
+                newsRepository: container.campusServicesAssembly.newsRepository(for: mode),
+                messagesRepository: container.profileAssembly.messagesRepository(for: mode)
+            )
+            profileViewModel.updateRepository(
+                container.profileAssembly.profileRepository(for: mode)
+            )
         }
         .tint(preferences.selectedAccent.primary)
         .toolbarBackground(DSColor.surface, for: .tabBar)

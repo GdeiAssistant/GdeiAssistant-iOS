@@ -21,7 +21,7 @@ final class ProfileViewModel: ObservableObject {
     @Published var location = ""
     @Published var hometown = ""
 
-    private let repository: any ProfileRepository
+    private var repository: any ProfileRepository
     private let sessionState: SessionState
     private var cancellables = Set<AnyCancellable>()
     private var hasLoadedProfileOptions = false
@@ -42,6 +42,13 @@ final class ProfileViewModel: ObservableObject {
     // No custom actor-bound cleanup requires an isolated deinitializer.
     nonisolated deinit {}
 
+    func updateRepository(_ repository: any ProfileRepository) {
+        self.repository = repository
+        hasLoadedProfileOptions = false
+        errorMessage = nil
+        saveErrorMessage = nil
+    }
+
     var displayProfile: UserProfile? {
         sessionState.currentUser ?? profile
     }
@@ -51,8 +58,16 @@ final class ProfileViewModel: ObservableObject {
     }
 
     var majorOptions: [ProfileMajorOption] {
-        profileOptions.faculties.first(where: { $0.code == facultyCode })?.majors
+        let baseOptions = profileOptions.faculties.first(where: { $0.code == facultyCode })?.majors
             ?? [ProfileMajorOption(code: Self.unselectedMajorCode, label: ProfileFormSupport.unselectedOption)]
+        if let majorCode,
+           !majorCode.isEmpty,
+           majorCode != Self.unselectedMajorCode,
+           !baseOptions.contains(where: { $0.code == majorCode }) {
+            let fallbackLabel = majorDisplayName(for: majorCode)
+            return baseOptions + [ProfileMajorOption(code: majorCode, label: fallbackLabel)]
+        }
+        return baseOptions
     }
 
     func facultyDisplayName(
@@ -63,9 +78,16 @@ final class ProfileViewModel: ObservableObject {
             return localizedString("profile.notSelected", locale: localeIdentifier)
         }
         let localizedOptions = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
-        return localizedOptions.faculties.first(where: { $0.code == code })?.label
-            ?? profileOptions.faculties.first(where: { $0.code == code })?.label
-            ?? localizedString("profile.notSelected", locale: localeIdentifier)
+        if let label = localizedOptions.faculties.first(where: { $0.code == code })?.label
+            ?? profileOptions.faculties.first(where: { $0.code == code })?.label {
+            return label
+        }
+        if displayProfile?.collegeCode == code,
+           let savedLabel = displayProfile?.college,
+           !savedLabel.isEmpty {
+            return savedLabel
+        }
+        return String(code)
     }
 
     func majorDisplayName(
@@ -76,12 +98,22 @@ final class ProfileViewModel: ObservableObject {
             return localizedString("profile.notSelected", locale: localeIdentifier)
         }
         let localizedOptions = LocalizedProfileCatalog.catalog(for: localeIdentifier).defaultOptions
-        return localizedOptions.faculties
+        if let label = localizedOptions.faculties
             .first(where: { $0.code == facultyCode })?
             .majors
             .first(where: { $0.code == code })?.label
-            ?? majorOptions.first(where: { $0.code == code })?.label
-            ?? code
+            ?? profileOptions.faculties
+                .first(where: { $0.code == facultyCode })?
+                .majors
+                .first(where: { $0.code == code })?.label {
+            return label
+        }
+        if displayProfile?.majorCode == code,
+           let savedLabel = displayProfile?.major,
+           !savedLabel.isEmpty {
+            return savedLabel
+        }
+        return code
     }
 
     func enrollmentDisplayName(
@@ -162,7 +194,8 @@ final class ProfileViewModel: ObservableObject {
 
     func selectFaculty(code: Int) {
         facultyCode = code
-        let validCodes = Set(majorOptions.map(\.code))
+        let baseMajors = profileOptions.faculties.first(where: { $0.code == code })?.majors ?? []
+        let validCodes = Set(baseMajors.map(\.code))
         if let majorCode, !validCodes.contains(majorCode) {
             self.majorCode = nil
         }
@@ -260,8 +293,7 @@ final class ProfileViewModel: ObservableObject {
 
     private func syncDraft(with profile: UserProfile) {
         nickname = profile.nickname
-        if let code = profile.collegeCode,
-           profileOptions.faculties.contains(where: { $0.code == code }) {
+        if let code = profile.collegeCode, code != 0 {
             facultyCode = code
         } else if !profile.college.isEmpty,
                   let resolvedCode = profileOptions.facultyCode(for: profile.college) {
@@ -271,11 +303,9 @@ final class ProfileViewModel: ObservableObject {
         }
 
         let selectedFaculty = profileOptions.faculties.first(where: { $0.code == facultyCode })
-        let validMajorCodes = Set((selectedFaculty?.majors ?? []).map(\.code))
         if let code = profile.majorCode?.trimmingCharacters(in: .whitespacesAndNewlines),
            !code.isEmpty,
-           code != Self.unselectedMajorCode,
-           validMajorCodes.contains(code) {
+           code != Self.unselectedMajorCode {
             majorCode = code
         } else if !profile.major.isEmpty,
                   let facultyLabel = selectedFaculty?.label,

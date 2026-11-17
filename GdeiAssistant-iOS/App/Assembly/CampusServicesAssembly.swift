@@ -29,8 +29,12 @@ struct CampusServicesAssembly {
     private let remoteDataCenterRepository: RemoteDataCenterRepository
     private let mockDataCenterRepository: MockDataCenterRepository
 
+    func scheduleRepository(for mode: DataSourceMode) -> any ScheduleRepository {
+        mode == .mock ? mockScheduleRepository : remoteScheduleRepository
+    }
+
     var scheduleRepository: any ScheduleRepository {
-        environment.dataSourceMode == .mock ? mockScheduleRepository : remoteScheduleRepository
+        scheduleRepository(for: environment.dataSourceMode)
     }
     var gradeRepository: any GradeRepository {
         environment.dataSourceMode == .mock ? mockGradeRepository : remoteGradeRepository
@@ -56,8 +60,12 @@ struct CampusServicesAssembly {
     var graduateExamRepository: any GraduateExamRepository {
         environment.dataSourceMode == .mock ? mockGraduateExamRepository : remoteGraduateExamRepository
     }
+    func newsRepository(for mode: DataSourceMode) -> any NewsRepository {
+        mode == .mock ? mockNewsRepository : remoteNewsRepository
+    }
+
     var newsRepository: any NewsRepository {
-        environment.dataSourceMode == .mock ? mockNewsRepository : remoteNewsRepository
+        newsRepository(for: environment.dataSourceMode)
     }
     var dataCenterRepository: any DataCenterRepository {
         environment.dataSourceMode == .mock ? mockDataCenterRepository : remoteDataCenterRepository

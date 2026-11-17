@@ -447,6 +447,58 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(mapped.map(\.id), ["77"])
         XCTAssertEqual(mapped.first?.timeText, "2024-01-01 08:00")
     }
+
+    func testSyncDraftPreservesSavedFacultyAndMajorCodesAbsentFromOptions() async {
+        let repository = RecordingProfileRepository()
+        repository.profile = UserProfile(
+            id: "user-legacy",
+            username: "demo",
+            nickname: "Demo",
+            avatarURL: "",
+            college: "旧学院",
+            collegeCode: 99,
+            major: "旧专业",
+            majorCode: "legacy_major",
+            grade: "2022",
+            bio: "bio"
+        )
+        let viewModel = ProfileViewModel(repository: repository, sessionState: SessionState())
+
+        await viewModel.loadProfileOptions()
+        await viewModel.loadProfile()
+
+        XCTAssertEqual(viewModel.facultyCode, 99)
+        XCTAssertEqual(viewModel.majorCode, "legacy_major")
+        XCTAssertEqual(viewModel.facultyDisplayName(for: 99), "旧学院")
+        XCTAssertEqual(viewModel.majorDisplayName(for: "legacy_major"), "旧专业")
+
+        viewModel.nickname = "Updated Nickname"
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertTrue(didSave)
+        XCTAssertEqual(repository.updateRequests.last?.facultyCode, 99)
+        XCTAssertEqual(repository.updateRequests.last?.majorCode, "legacy_major")
+
+        viewModel.selectFaculty(code: 11)
+        XCTAssertNil(viewModel.majorCode)
+    }
+
+    func testProfileViewModelUpdateRepositoryRoutesSubsequentSavesToNewRepository() async {
+        let initialRepository = RecordingProfileRepository()
+        let reboundRepository = RecordingProfileRepository()
+        let viewModel = ProfileViewModel(repository: initialRepository, sessionState: SessionState())
+
+        await viewModel.loadProfile()
+        viewModel.updateRepository(reboundRepository)
+        viewModel.nickname = "Rebound"
+
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertTrue(didSave)
+        XCTAssertTrue(initialRepository.updateRequests.isEmpty)
+        XCTAssertEqual(reboundRepository.updateRequests.count, 1)
+        XCTAssertEqual(reboundRepository.updateRequests.first?.nickname, "Rebound")
+    }
 }
 
 private nonisolated struct ProfilePatchCapturedRequest {

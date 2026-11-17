@@ -9,19 +9,33 @@ final class RemoteMessagesRepository: MessagesRepository {
     }
 
     func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        try await fetchAnnouncementBatch(start: start, size: size).items
+    }
+
+    func fetchAnnouncementBatch(start: Int, size: Int) async throws -> NotificationPage {
         let announcements: [AnnouncementRemoteDTO] = try await apiClient.get(
             "/information/announcement/start/\(max(start, 0))/size/\(max(size, 1))",
             requiresAuth: true
         )
-        return MessagesRemoteMapper.mapAnnouncementItems(announcements)
+        return NotificationPage(
+            items: MessagesRemoteMapper.mapAnnouncementItems(announcements),
+            fetchedCount: announcements.count
+        )
     }
 
     func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        try await fetchInteractionBatch(start: start, size: size).items
+    }
+
+    func fetchInteractionBatch(start: Int, size: Int) async throws -> NotificationPage {
         let items: [InteractionNotificationRemoteDTO] = try await apiClient.get(
             "/information/message/interaction/start/\(max(start, 0))/size/\(max(size, 1))",
             requiresAuth: true
         )
-        return MessagesRemoteMapper.mapInteractionItems(items)
+        return NotificationPage(
+            items: MessagesRemoteMapper.mapInteractionItems(items),
+            fetchedCount: items.count
+        )
     }
 
     func fetchInteractionUnreadCount() async throws -> Int {

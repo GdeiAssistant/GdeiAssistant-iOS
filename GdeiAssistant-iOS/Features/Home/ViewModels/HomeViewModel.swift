@@ -7,7 +7,7 @@ final class HomeViewModel: ObservableObject {
     @Published private(set) var isScheduleLoading = false
     @Published private(set) var scheduleLoadFailed = false
 
-    private let scheduleRepository: any ScheduleRepository
+    private var scheduleRepository: any ScheduleRepository
     private let now: () -> Date
     private var scheduleLoadGeneration = 0
     private var loadedScheduleDay: Date?
@@ -20,6 +20,15 @@ final class HomeViewModel: ObservableObject {
     // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
     // back-deployment crash on synchronous release (swiftlang/swift#87316).
     nonisolated deinit {}
+
+    func updateRepository(_ scheduleRepository: any ScheduleRepository) {
+        self.scheduleRepository = scheduleRepository
+        scheduleLoadGeneration += 1
+        loadedScheduleDay = nil
+        currentSchedule = nil
+        isScheduleLoading = false
+        scheduleLoadFailed = false
+    }
 
     func loadIfNeeded() async {
         if loadedScheduleDay != Self.campusCalendar.startOfDay(for: now()) {
