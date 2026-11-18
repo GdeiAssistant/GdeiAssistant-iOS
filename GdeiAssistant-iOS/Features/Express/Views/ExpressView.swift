@@ -500,9 +500,11 @@ private struct PublishExpressView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         ExpressView(viewModel: ExpressViewModel(repository: MockExpressRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

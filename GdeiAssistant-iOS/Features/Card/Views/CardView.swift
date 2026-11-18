@@ -208,9 +208,11 @@ struct CardView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         CardView(viewModel: CardViewModel(repository: MockCardRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

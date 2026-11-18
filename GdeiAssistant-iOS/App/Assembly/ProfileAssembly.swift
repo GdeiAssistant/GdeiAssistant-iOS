@@ -5,24 +5,38 @@ import Foundation
 struct ProfileAssembly {
     private let environment: AppEnvironment
     private let remoteProfileRepository: RemoteProfileRepository
-    private let mockProfileRepository: MockProfileRepository
     private let remoteAccountCenterRepository: RemoteAccountCenterRepository
-    private let mockAccountCenterRepository: MockAccountCenterRepository
     private let remoteMessagesRepository: RemoteMessagesRepository
+    #if DEBUG
+    private let mockProfileRepository: MockProfileRepository
+    private let mockAccountCenterRepository: MockAccountCenterRepository
     private let mockMessagesRepository: MockMessagesRepository
+    #endif
 
     func profileRepository(for mode: DataSourceMode) -> any ProfileRepository {
-        mode == .mock ? mockProfileRepository : remoteProfileRepository
+        #if DEBUG
+        return mode == .mock ? mockProfileRepository : remoteProfileRepository
+        #else
+        return remoteProfileRepository
+        #endif
     }
 
     var profileRepository: any ProfileRepository {
         profileRepository(for: environment.dataSourceMode)
     }
     var accountCenterRepository: any AccountCenterRepository {
-        environment.dataSourceMode == .mock ? mockAccountCenterRepository : remoteAccountCenterRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockAccountCenterRepository : remoteAccountCenterRepository
+        #else
+        return remoteAccountCenterRepository
+        #endif
     }
     func messagesRepository(for mode: DataSourceMode) -> any MessagesRepository {
-        mode == .mock ? mockMessagesRepository : remoteMessagesRepository
+        #if DEBUG
+        return mode == .mock ? mockMessagesRepository : remoteMessagesRepository
+        #else
+        return remoteMessagesRepository
+        #endif
     }
 
     var messagesRepository: any MessagesRepository {
@@ -32,11 +46,13 @@ struct ProfileAssembly {
     init(apiClient: APIClient, environment: AppEnvironment) {
         self.environment = environment
         self.remoteProfileRepository = RemoteProfileRepository(apiClient: apiClient)
-        self.mockProfileRepository = MockProfileRepository()
         self.remoteAccountCenterRepository = RemoteAccountCenterRepository(apiClient: apiClient)
-        self.mockAccountCenterRepository = MockAccountCenterRepository()
         self.remoteMessagesRepository = RemoteMessagesRepository(apiClient: apiClient)
+        #if DEBUG
+        self.mockProfileRepository = MockProfileRepository()
+        self.mockAccountCenterRepository = MockAccountCenterRepository()
         self.mockMessagesRepository = MockMessagesRepository()
+        #endif
     }
 
     // MARK: - ViewModel Factories

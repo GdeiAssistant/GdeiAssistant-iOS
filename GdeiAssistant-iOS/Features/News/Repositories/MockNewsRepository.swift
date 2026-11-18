@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -31,3 +32,4 @@ final class MockNewsRepository: NewsRepository {
         throw NetworkError.server(code: 404, message: localizedString("news.notFound"))
     }
 }
+#endif

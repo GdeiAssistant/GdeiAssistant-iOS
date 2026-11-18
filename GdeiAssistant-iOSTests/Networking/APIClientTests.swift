@@ -107,6 +107,15 @@ final class APIClientTests: XCTestCase {
         } catch NetworkError.noData { }
     }
 
+    func testNullDataSucceedsOnlyForEmptyPayload() async throws {
+        stub(statusCode: 200, body: #"{"code":200,"success":true,"message":"","data":null}"#)
+        let _: EmptyPayload = try await client.post("/command")
+        do {
+            let _: String = try await client.get("/required-value")
+            XCTFail("Expected missing payload")
+        } catch NetworkError.noData { }
+    }
+
     func testSuccessResponseDecodesPayload() async throws {
         struct Payload: Codable { let name: String }
         stub(statusCode: 200, body: #"{"code":200,"success":true,"message":"","data":{"name":"张三"}}"#)

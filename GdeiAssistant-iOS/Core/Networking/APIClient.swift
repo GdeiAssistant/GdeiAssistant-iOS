@@ -168,7 +168,7 @@ final class APIClient {
         }
 
         if httpResponse.statusCode == 204 || data.isEmpty {
-            if responseType == EmptyPayload.self { return EmptyPayload() as! T }
+            if let empty = Self.emptyPayload(as: responseType) { return empty }
             throw NetworkError.noData
         }
 
@@ -199,11 +199,16 @@ final class APIClient {
             return payload
         }
 
-        if responseType == EmptyPayload.self {
-            return EmptyPayload() as! T
+        if let empty = Self.emptyPayload(as: responseType) {
+            return empty
         }
 
         throw NetworkError.noData
+    }
+
+    private static func emptyPayload<T>(as responseType: T.Type) -> T? {
+        guard responseType == EmptyPayload.self else { return nil }
+        return EmptyPayload() as? T
     }
 
     private func handleUnauthorized(for request: URLRequest) {

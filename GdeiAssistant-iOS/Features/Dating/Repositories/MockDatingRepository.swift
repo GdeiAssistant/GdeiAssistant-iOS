@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -236,3 +237,4 @@ final class MockDatingRepository: DatingRepository {
         ]
     }
 }
+#endif

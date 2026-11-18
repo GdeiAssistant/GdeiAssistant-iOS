@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -16,3 +17,4 @@ final class MockScheduleRepository: ScheduleRepository {
         try await fetchWeeklySchedule(weekIndex: 6)
     }
 }
+#endif

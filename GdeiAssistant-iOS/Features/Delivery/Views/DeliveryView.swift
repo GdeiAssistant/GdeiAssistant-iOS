@@ -553,9 +553,11 @@ private struct MyDeliveryView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         DeliveryView(viewModel: DeliveryViewModel(repository: MockDeliveryRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

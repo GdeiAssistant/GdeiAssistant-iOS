@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -27,3 +28,4 @@ final class MockCardRepository: CardRepository {
         isReportedLoss = true
     }
 }
+#endif

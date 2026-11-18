@@ -207,8 +207,10 @@ private struct CollectionDetailSheet: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         CollectionView(viewModel: CollectionViewModel(repository: MockCollectionRepository()))
     }
 }
+#endif

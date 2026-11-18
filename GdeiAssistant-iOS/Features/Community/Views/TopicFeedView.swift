@@ -93,6 +93,7 @@ struct TopicFeedView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -100,3 +101,4 @@ struct TopicFeedView: View {
             .environmentObject(container)
     }
 }
+#endif

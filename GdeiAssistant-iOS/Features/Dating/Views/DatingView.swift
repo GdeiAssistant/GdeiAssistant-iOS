@@ -639,6 +639,7 @@ private struct PublishDatingView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     NavigationStack {
@@ -646,3 +647,4 @@ private struct PublishDatingView: View {
     }
     .environmentObject(container)
 }
+#endif

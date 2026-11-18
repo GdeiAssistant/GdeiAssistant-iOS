@@ -180,8 +180,10 @@ struct CommunityFeedView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return CommunityFeedView(viewModel: CommunityFeedViewModel(repository: MockCommunityRepository()))
         .environmentObject(container)
 }
+#endif

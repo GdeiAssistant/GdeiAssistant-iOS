@@ -61,6 +61,7 @@ struct SocialChatImageView: View {
             image = local
             return
         }
+        #if DEBUG
         if container.environment.dataSourceMode == .mock,
            let remoteURL,
            let data = (container.socialRepository as? MockSocialRepository)?.imageData(for: remoteURL) {
@@ -68,6 +69,7 @@ struct SocialChatImageView: View {
             failed = image == nil
             return
         }
+        #endif
         guard container.environment.dataSourceMode != .mock else {
             failed = true
             return

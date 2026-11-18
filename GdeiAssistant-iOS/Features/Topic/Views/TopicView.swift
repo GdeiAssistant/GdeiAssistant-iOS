@@ -487,9 +487,11 @@ private struct PublishTopicView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         TopicView(viewModel: TopicViewModel(repository: MockTopicRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

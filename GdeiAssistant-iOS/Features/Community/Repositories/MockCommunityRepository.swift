@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -129,3 +130,4 @@ final class MockCommunityRepository: CommunityRepository {
         return post
     }
 }
+#endif

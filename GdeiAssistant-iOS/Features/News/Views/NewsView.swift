@@ -104,9 +104,11 @@ struct NewsView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         NewsView(viewModel: NewsViewModel(repository: MockNewsRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

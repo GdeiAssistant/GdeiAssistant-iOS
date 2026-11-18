@@ -192,6 +192,7 @@ struct CampusCredentialView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -199,3 +200,4 @@ struct CampusCredentialView: View {
     }
     .environmentObject(container.environment)
 }
+#endif

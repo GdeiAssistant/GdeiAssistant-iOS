@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -79,3 +80,4 @@ final class MockCollectionRepository: CollectionRepository {
         )
     }
 }
+#endif

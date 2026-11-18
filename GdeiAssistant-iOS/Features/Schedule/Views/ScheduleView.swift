@@ -507,8 +507,10 @@ private extension UIImage {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         ScheduleView(viewModel: ScheduleViewModel(repository: MockScheduleRepository()))
     }
 }
+#endif
