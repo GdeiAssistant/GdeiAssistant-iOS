@@ -15,7 +15,7 @@ jobs:
       eligible: ${{ steps.policy.outputs.eligible }}
     steps:
       # Execute only the protected base revision; never checkout dependency PR code.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
