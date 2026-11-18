@@ -5,20 +5,28 @@ import Foundation
 struct CoreAssembly {
     private let environment: AppEnvironment
     private let remoteAuthRepository: RemoteAuthRepository
+    #if DEBUG
     private let mockAuthRepository: MockAuthRepository
+    #endif
 
     var authRepository: any AuthRepository {
         authRepository(for: environment.dataSourceMode)
     }
 
     func authRepository(for mode: DataSourceMode) -> any AuthRepository {
-        mode == .mock ? mockAuthRepository : remoteAuthRepository
+        #if DEBUG
+        return mode == .mock ? mockAuthRepository : remoteAuthRepository
+        #else
+        return remoteAuthRepository
+        #endif
     }
 
     init(apiClient: APIClient, environment: AppEnvironment) {
         self.environment = environment
         self.remoteAuthRepository = RemoteAuthRepository(apiClient: apiClient)
+        #if DEBUG
         self.mockAuthRepository = MockAuthRepository()
+        #endif
     }
 
     // MARK: - ViewModel Factories

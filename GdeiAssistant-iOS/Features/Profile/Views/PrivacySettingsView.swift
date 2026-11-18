@@ -99,9 +99,11 @@ struct PrivacySettingsView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         PrivacySettingsView(viewModel: PrivacySettingsViewModel(repository: MockAccountCenterRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

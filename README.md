@@ -173,4 +173,4 @@ mock 数据只用于界面联调和主链路验证，不是真实校园业务数
 
 ## 许可证
 
-[Apache License 2.0](LICENSE) · [NOTICE](NOTICE) · [TRADEMARK.md](TRADEMARK.md)
+[Apache License 2.0](LICENSE) · [NOTICE](NOTICE) · [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) · [TRADEMARK.md](TRADEMARK.md)

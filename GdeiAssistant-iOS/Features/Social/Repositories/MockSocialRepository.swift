@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import UIKit
 
@@ -787,3 +788,4 @@ enum MockSocialSeed {
         )
     }
 }
+#endif

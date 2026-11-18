@@ -824,6 +824,7 @@ private struct EditLostFoundView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -831,3 +832,4 @@ private struct EditLostFoundView: View {
             .environmentObject(container)
     }
 }
+#endif

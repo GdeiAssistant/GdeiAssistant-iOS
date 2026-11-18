@@ -412,8 +412,10 @@ private struct HomeDesignTokens: DynamicProperty {
     var onPrimary: Color { campusAccent.onPrimary }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return HomeView(viewModel: HomeViewModel(scheduleRepository: MockScheduleRepository()))
         .environmentObject(container)
 }
+#endif

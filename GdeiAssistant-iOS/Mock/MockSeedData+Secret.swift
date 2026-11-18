@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 extension MockSeedData {
@@ -58,3 +59,4 @@ extension MockSeedData {
         ]
     }
 }
+#endif

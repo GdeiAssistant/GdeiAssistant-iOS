@@ -106,6 +106,7 @@ struct SystemNoticeListView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         SystemNoticeListView(
@@ -114,3 +115,4 @@ struct SystemNoticeListView: View {
         .environmentObject(AppContainer.preview)
     }
 }
+#endif

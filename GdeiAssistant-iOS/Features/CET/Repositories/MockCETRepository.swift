@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -25,3 +26,4 @@ final class MockCETRepository: CETRepository {
         )
     }
 }
+#endif

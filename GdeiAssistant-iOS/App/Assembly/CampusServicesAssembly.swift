@@ -7,94 +7,142 @@ import Foundation
 struct CampusServicesAssembly {
     private let environment: AppEnvironment
     private let remoteScheduleRepository: RemoteScheduleRepository
-    private let mockScheduleRepository: MockScheduleRepository
     private let remoteGradeRepository: RemoteGradeRepository
-    private let mockGradeRepository: MockGradeRepository
     private let remoteCardRepository: RemoteCardRepository
-    private let mockCardRepository: MockCardRepository
     private let remoteChargeRepository: RemoteChargeRepository
-    private let mockChargeRepository: MockChargeRepository
     private let remoteLibraryRepository: RemoteLibraryRepository
-    private let mockLibraryRepository: MockLibraryRepository
     private let remoteCETRepository: RemoteCETRepository
-    private let mockCETRepository: MockCETRepository
     private let remoteEvaluateRepository: RemoteEvaluateRepository
-    private let mockEvaluateRepository: MockEvaluateRepository
     private let remoteSpareRepository: RemoteSpareRepository
-    private let mockSpareRepository: MockSpareRepository
     private let remoteGraduateExamRepository: RemoteGraduateExamRepository
-    private let mockGraduateExamRepository: MockGraduateExamRepository
     private let remoteNewsRepository: RemoteNewsRepository
-    private let mockNewsRepository: MockNewsRepository
     private let remoteDataCenterRepository: RemoteDataCenterRepository
+    #if DEBUG
+    private let mockScheduleRepository: MockScheduleRepository
+    private let mockGradeRepository: MockGradeRepository
+    private let mockCardRepository: MockCardRepository
+    private let mockChargeRepository: MockChargeRepository
+    private let mockLibraryRepository: MockLibraryRepository
+    private let mockCETRepository: MockCETRepository
+    private let mockEvaluateRepository: MockEvaluateRepository
+    private let mockSpareRepository: MockSpareRepository
+    private let mockGraduateExamRepository: MockGraduateExamRepository
+    private let mockNewsRepository: MockNewsRepository
     private let mockDataCenterRepository: MockDataCenterRepository
+    #endif
 
     func scheduleRepository(for mode: DataSourceMode) -> any ScheduleRepository {
-        mode == .mock ? mockScheduleRepository : remoteScheduleRepository
+        #if DEBUG
+        return mode == .mock ? mockScheduleRepository : remoteScheduleRepository
+        #else
+        return remoteScheduleRepository
+        #endif
     }
 
     var scheduleRepository: any ScheduleRepository {
         scheduleRepository(for: environment.dataSourceMode)
     }
     var gradeRepository: any GradeRepository {
-        environment.dataSourceMode == .mock ? mockGradeRepository : remoteGradeRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockGradeRepository : remoteGradeRepository
+        #else
+        return remoteGradeRepository
+        #endif
     }
     var cardRepository: any CardRepository {
-        environment.dataSourceMode == .mock ? mockCardRepository : remoteCardRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockCardRepository : remoteCardRepository
+        #else
+        return remoteCardRepository
+        #endif
     }
     var chargeRepository: any ChargeRepository {
-        environment.dataSourceMode == .mock ? mockChargeRepository : remoteChargeRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockChargeRepository : remoteChargeRepository
+        #else
+        return remoteChargeRepository
+        #endif
     }
     var libraryRepository: any LibraryRepository {
-        environment.dataSourceMode == .mock ? mockLibraryRepository : remoteLibraryRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockLibraryRepository : remoteLibraryRepository
+        #else
+        return remoteLibraryRepository
+        #endif
     }
     var cetRepository: any CETRepository {
-        environment.dataSourceMode == .mock ? mockCETRepository : remoteCETRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockCETRepository : remoteCETRepository
+        #else
+        return remoteCETRepository
+        #endif
     }
     var evaluateRepository: any EvaluateRepository {
-        environment.dataSourceMode == .mock ? mockEvaluateRepository : remoteEvaluateRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockEvaluateRepository : remoteEvaluateRepository
+        #else
+        return remoteEvaluateRepository
+        #endif
     }
     var spareRepository: any SpareRepository {
-        environment.dataSourceMode == .mock ? mockSpareRepository : remoteSpareRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockSpareRepository : remoteSpareRepository
+        #else
+        return remoteSpareRepository
+        #endif
     }
     var graduateExamRepository: any GraduateExamRepository {
-        environment.dataSourceMode == .mock ? mockGraduateExamRepository : remoteGraduateExamRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockGraduateExamRepository : remoteGraduateExamRepository
+        #else
+        return remoteGraduateExamRepository
+        #endif
     }
     func newsRepository(for mode: DataSourceMode) -> any NewsRepository {
-        mode == .mock ? mockNewsRepository : remoteNewsRepository
+        #if DEBUG
+        return mode == .mock ? mockNewsRepository : remoteNewsRepository
+        #else
+        return remoteNewsRepository
+        #endif
     }
 
     var newsRepository: any NewsRepository {
         newsRepository(for: environment.dataSourceMode)
     }
     var dataCenterRepository: any DataCenterRepository {
-        environment.dataSourceMode == .mock ? mockDataCenterRepository : remoteDataCenterRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockDataCenterRepository : remoteDataCenterRepository
+        #else
+        return remoteDataCenterRepository
+        #endif
     }
 
     init(apiClient: APIClient, environment: AppEnvironment) {
         self.environment = environment
         self.remoteScheduleRepository = RemoteScheduleRepository(apiClient: apiClient)
-        self.mockScheduleRepository = MockScheduleRepository()
         self.remoteGradeRepository = RemoteGradeRepository(apiClient: apiClient)
-        self.mockGradeRepository = MockGradeRepository()
         self.remoteCardRepository = RemoteCardRepository(apiClient: apiClient)
-        self.mockCardRepository = MockCardRepository()
         self.remoteChargeRepository = RemoteChargeRepository(apiClient: apiClient)
-        self.mockChargeRepository = MockChargeRepository()
         self.remoteLibraryRepository = RemoteLibraryRepository(apiClient: apiClient)
-        self.mockLibraryRepository = MockLibraryRepository()
         self.remoteCETRepository = RemoteCETRepository(apiClient: apiClient)
-        self.mockCETRepository = MockCETRepository()
         self.remoteEvaluateRepository = RemoteEvaluateRepository(apiClient: apiClient)
-        self.mockEvaluateRepository = MockEvaluateRepository()
         self.remoteSpareRepository = RemoteSpareRepository(apiClient: apiClient)
-        self.mockSpareRepository = MockSpareRepository()
         self.remoteGraduateExamRepository = RemoteGraduateExamRepository(apiClient: apiClient)
-        self.mockGraduateExamRepository = MockGraduateExamRepository()
         self.remoteNewsRepository = RemoteNewsRepository(apiClient: apiClient)
-        self.mockNewsRepository = MockNewsRepository()
         self.remoteDataCenterRepository = RemoteDataCenterRepository(apiClient: apiClient)
+        #if DEBUG
+        self.mockScheduleRepository = MockScheduleRepository()
+        self.mockGradeRepository = MockGradeRepository()
+        self.mockCardRepository = MockCardRepository()
+        self.mockChargeRepository = MockChargeRepository()
+        self.mockLibraryRepository = MockLibraryRepository()
+        self.mockCETRepository = MockCETRepository()
+        self.mockEvaluateRepository = MockEvaluateRepository()
+        self.mockSpareRepository = MockSpareRepository()
+        self.mockGraduateExamRepository = MockGraduateExamRepository()
+        self.mockNewsRepository = MockNewsRepository()
         self.mockDataCenterRepository = MockDataCenterRepository()
+        #endif
     }
 
     // MARK: - ViewModel Factories

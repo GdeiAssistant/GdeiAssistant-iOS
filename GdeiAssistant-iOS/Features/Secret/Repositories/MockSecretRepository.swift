@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -162,3 +163,4 @@ final class MockSecretRepository: SecretRepository {
         }
     }
 }
+#endif

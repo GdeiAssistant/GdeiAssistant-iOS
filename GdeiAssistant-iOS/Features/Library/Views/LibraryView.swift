@@ -359,8 +359,10 @@ struct BorrowRecordDetailView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         LibraryView(viewModel: LibraryViewModel(repository: MockLibraryRepository()))
     }
 }
+#endif

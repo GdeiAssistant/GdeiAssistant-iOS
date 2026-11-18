@@ -115,8 +115,10 @@ struct GradeView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         GradeView(viewModel: GradeViewModel(repository: MockGradeRepository()))
     }
 }
+#endif

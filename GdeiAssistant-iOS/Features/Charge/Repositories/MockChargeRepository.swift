@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -97,3 +98,4 @@ final class MockChargeRepository: ChargeRepository {
         ]
     }
 }
+#endif

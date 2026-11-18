@@ -153,6 +153,7 @@ struct PostDetailView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -160,3 +161,4 @@ struct PostDetailView: View {
             .environmentObject(container)
     }
 }
+#endif

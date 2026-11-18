@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -46,3 +47,4 @@ final class MockLibraryRepository: LibraryRepository {
         renewedRecordIDs.insert(request.code)
     }
 }
+#endif

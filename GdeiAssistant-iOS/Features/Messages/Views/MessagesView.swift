@@ -600,11 +600,13 @@ private extension View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return MessagesView(viewModel: container.makeMessagesViewModel())
         .environmentObject(container)
 }
+#endif
 
 private struct NotificationIconSpec {
     let systemImage: String

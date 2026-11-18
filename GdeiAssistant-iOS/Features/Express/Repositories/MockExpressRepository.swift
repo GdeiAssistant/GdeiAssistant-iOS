@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -126,3 +127,4 @@ final class MockExpressRepository: ExpressRepository {
         return matched
     }
 }
+#endif

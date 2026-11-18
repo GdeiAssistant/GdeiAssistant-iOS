@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -91,3 +92,4 @@ final class MockDeliveryRepository: DeliveryRepository {
         }
     }
 }
+#endif

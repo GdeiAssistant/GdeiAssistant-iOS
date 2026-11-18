@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -31,3 +32,4 @@ final class MockAuthRepository: AuthRepository {
         return MockFactory.makeUserProfile()
     }
 }
+#endif

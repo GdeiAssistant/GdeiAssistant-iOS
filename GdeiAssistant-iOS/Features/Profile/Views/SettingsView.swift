@@ -104,6 +104,7 @@ struct SettingsView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     NavigationStack {
@@ -112,3 +113,4 @@ struct SettingsView: View {
     .environmentObject(container)
     .environmentObject(container.userPreferences)
 }
+#endif

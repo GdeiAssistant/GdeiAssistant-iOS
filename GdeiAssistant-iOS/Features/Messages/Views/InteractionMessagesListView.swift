@@ -159,6 +159,7 @@ struct InteractionMessagesListView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         InteractionMessagesListView(
@@ -167,3 +168,4 @@ struct InteractionMessagesListView: View {
         .environmentObject(AppContainer.preview)
     }
 }
+#endif

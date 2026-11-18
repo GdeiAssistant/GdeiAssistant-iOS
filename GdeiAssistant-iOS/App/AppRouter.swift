@@ -237,6 +237,7 @@ final class AppContainer: ObservableObject {
     // back-deployment crash on synchronous release (swiftlang/swift#87316).
     nonisolated deinit {}
 
+    #if DEBUG
     @MainActor
     static var preview: AppContainer {
         let suiteName = "gdeiassistant.preview.defaults"
@@ -250,6 +251,7 @@ final class AppContainer: ObservableObject {
         container.sessionState.isRestoringSession = false
         return container
     }
+    #endif
 
     @MainActor
     static var testing: AppContainer {
@@ -278,11 +280,15 @@ final class AppContainer: ObservableObject {
         )
         container.environment.updateNetworkEnvironment(preferences.currentNetworkEnvironment)
         container.environment.updateDataSourceMode(preferences.currentDataSourceMode)
+        #if DEBUG
         if UITestRuntimeOverrides.useAuthenticatedSession {
             container.sessionState.markLoggedIn(user: MockFactory.makeUserProfile())
         } else {
             container.sessionState.markLoggedOut()
         }
+        #else
+        container.sessionState.markLoggedOut()
+        #endif
         container.sessionState.isRestoringSession = false
         return container
     }

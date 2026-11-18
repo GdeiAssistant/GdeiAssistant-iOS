@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 enum MockFactory {
@@ -61,3 +62,4 @@ enum MockFactory {
         MockSeedData.cetDashboard(ticketNumber: ticketNumber, candidateName: candidateName)
     }
 }
+#endif
