@@ -21,24 +21,38 @@ struct ProfileRemoteLocationValueDTO: Decodable {
     let cityCode: String?
 }
 
-struct NicknameUpdateDTO: Encodable {
+struct ProfilePatchDTO: Encodable {
     let nickname: String
-}
-
-struct FacultyUpdateDTO: Encodable {
     let faculty: Int
-}
-
-struct MajorUpdateDTO: Encodable {
-    let major: String
-}
-
-struct EnrollmentUpdateDTO: Encodable {
-    let year: Int?
-}
-
-struct IntroductionUpdateDTO: Encodable {
+    let major: String?
+    let enrollment: Int?
     let introduction: String
+    let birthday: BirthdayUpdateDTO?
+    let location: LocationUpdateDTO?
+    let hometown: LocationUpdateDTO?
+
+    enum CodingKeys: String, CodingKey {
+        case nickname
+        case faculty
+        case major
+        case enrollment
+        case introduction
+        case birthday
+        case location
+        case hometown
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(nickname, forKey: .nickname)
+        try container.encode(faculty, forKey: .faculty)
+        try container.encode(major, forKey: .major)
+        try container.encode(enrollment, forKey: .enrollment)
+        try container.encode(introduction, forKey: .introduction)
+        try container.encode(birthday, forKey: .birthday)
+        try container.encode(location, forKey: .location)
+        try container.encode(hometown, forKey: .hometown)
+    }
 }
 
 struct BirthdayUpdateDTO: Encodable {
@@ -51,6 +65,19 @@ struct LocationUpdateDTO: Encodable {
     let region: String
     let state: String?
     let city: String?
+
+    enum CodingKeys: String, CodingKey {
+        case region
+        case state
+        case city
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(region, forKey: .region)
+        try container.encode(state, forKey: .state)
+        try container.encode(city, forKey: .city)
+    }
 }
 
 struct ProfileLocationCityDTO: Decodable {

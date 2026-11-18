@@ -8,6 +8,8 @@ final class RemoteExpressRepository: ExpressRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchPosts(start: Int, size: Int) async throws -> [ExpressPost] {
         let dtos: [ExpressRemoteDTO] = try await apiClient.get(
             "/express/start/\(max(start, 0))/size/\(max(size, 1))",

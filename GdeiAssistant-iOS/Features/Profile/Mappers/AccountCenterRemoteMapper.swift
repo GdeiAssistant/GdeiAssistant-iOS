@@ -85,14 +85,15 @@ enum AccountCenterRemoteMapper {
     }
 
     nonisolated static func mapLoginRecords(_ dtos: [LoginRecordDTO]) -> [LoginRecordItem] {
-        dtos.map { dto in
+        dtos.compactMap { dto in
+            guard let id = dto.id, id > 0 else { return nil }
             let area = RemoteMapperSupport.firstNonEmpty(
                 dto.area,
                 [dto.country, dto.province, dto.city].compactMap { $0 }.joined(separator: " "),
                 localizedString("loginRecord.unknownArea")
             )
             return LoginRecordItem(
-                id: String(dto.id ?? Int.random(in: 1...999_999)),
+                id: String(id),
                 timeText: RemoteMapperSupport.dateText(dto.time, fallback: localizedString("common.justNow")),
                 ip: RemoteMapperSupport.firstNonEmpty(dto.ip, localizedString("loginRecord.unknownIP")),
                 area: area,

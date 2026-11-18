@@ -2,14 +2,17 @@ import Foundation
 
 enum MessagesRemoteMapper {
     nonisolated static func mapAnnouncementItems(_ items: [AnnouncementRemoteDTO]) -> [AppNotificationItem] {
-        items.map(mapAnnouncement)
+        items.compactMap(mapAnnouncement)
     }
 
     nonisolated static func mapInteractionItems(_ items: [InteractionNotificationRemoteDTO]) -> [AppNotificationItem] {
-        items.map { item in
+        items.compactMap { item in
+            guard let id = RemoteMapperSupport.sanitizedText(item.id) else {
+                return nil
+            }
             let module = normalizedInteractionModule(item.module)
             return AppNotificationItem(
-                id: RemoteMapperSupport.firstNonEmpty(item.id, UUID().uuidString),
+                id: id,
                 category: notificationCategory(item.type),
                 module: module,
                 title: RemoteMapperSupport.firstNonEmpty(item.title, interactionTitle(module: module)),
@@ -24,9 +27,15 @@ enum MessagesRemoteMapper {
         }
     }
 
-    nonisolated static func mapAnnouncementDetail(_ dto: AnnouncementRemoteDTO) -> AnnouncementDetailItem {
-        AnnouncementDetailItem(
-            id: RemoteMapperSupport.firstNonEmpty(dto.id, UUID().uuidString),
+    nonisolated static func mapAnnouncementDetail(
+        _ dto: AnnouncementRemoteDTO,
+        fallbackID: String? = nil
+    ) throws -> AnnouncementDetailItem {
+        guard let id = RemoteMapperSupport.sanitizedText(dto.id) ?? RemoteMapperSupport.sanitizedText(fallbackID) else {
+            throw NetworkError.noData
+        }
+        return AnnouncementDetailItem(
+            id: id,
             title: RemoteMapperSupport.firstNonEmpty(dto.title, localizedString("messages.mapper.announcementTitle")),
             content: RemoteMapperSupport.firstNonEmpty(dto.content, localizedString("messages.mapper.announcementEmptyContent")),
             createdAt: RemoteMapperSupport.dateText(dto.publishTime, fallback: localizedString("common.justNow"))
@@ -38,19 +47,21 @@ enum MessagesRemoteMapper {
         return Festival(name: name, description: dto.description ?? [])
     }
 
-    nonisolated private static func mapAnnouncement(_ announcement: AnnouncementRemoteDTO) -> AppNotificationItem {
-        let targetID = RemoteMapperSupport.sanitizedText(announcement.id)
+    nonisolated private static func mapAnnouncement(_ announcement: AnnouncementRemoteDTO) -> AppNotificationItem? {
+        guard let id = RemoteMapperSupport.sanitizedText(announcement.id) else {
+            return nil
+        }
         return AppNotificationItem(
-            id: RemoteMapperSupport.firstNonEmpty(announcement.id, UUID().uuidString),
+            id: id,
             category: .system,
             module: nil,
             title: RemoteMapperSupport.firstNonEmpty(announcement.title, localizedString("messages.mapper.announcementTitle")),
             message: RemoteMapperSupport.firstNonEmpty(announcement.content, localizedString("messages.mapper.announcementEmptyContent")),
             createdAt: RemoteMapperSupport.dateText(announcement.publishTime, fallback: localizedString("common.justNow")),
             isRead: false,
-            destination: targetID == nil ? nil : .announcement,
+            destination: .announcement,
             targetType: nil,
-            targetID: targetID,
+            targetID: id,
             targetSubID: nil
         )
     }

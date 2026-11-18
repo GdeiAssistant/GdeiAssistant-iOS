@@ -8,6 +8,8 @@ final class RemoteSpareRepository: SpareRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func queryRooms(_ query: SpareQuery) async throws -> [SpareRoomItem] {
         let dto = SpareRemoteMapper.mapQuery(query)
         let response: [SpareRoomRemoteDTO] = try await apiClient.post("/spare/query", body: dto, requiresAuth: true)

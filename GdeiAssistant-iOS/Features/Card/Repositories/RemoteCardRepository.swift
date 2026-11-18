@@ -8,6 +8,8 @@ final class RemoteCardRepository: CardRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchDashboard(on date: Date) async throws -> CampusCardDashboard {
         let infoDTO: CardInfoDTO = try await apiClient.get("/card/info", requiresAuth: true)
 

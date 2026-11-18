@@ -56,11 +56,14 @@ final class ProfileViewModelTests: XCTestCase {
         repository.profile = UserProfile(id: "profile-locale-test", username: "demo", nickname: "Alice / 中國", avatarURL: "", college: "计算机科学系", collegeCode: 11, major: "软件工程", majorCode: "software_engineering", grade: "2023", bio: "我寫嘅內容", location: location.displayName, locationSelection: location, hometown: hometown.displayName, hometownSelection: hometown)
         let viewModel = ProfileViewModel(repository: repository, sessionState: SessionState())
         await viewModel.loadProfile()
+        XCTAssertEqual(viewModel.facultyCode, 11)
+        XCTAssertEqual(viewModel.majorCode, "software_engineering")
+        XCTAssertEqual(viewModel.enrollment, 2023)
         for language in AppLanguage.allCases {
             let locale = language.localeIdentifier
             let faculty = try XCTUnwrap(LocalizedProfileCatalog.catalog(for: locale).defaultOptions.faculties.first(where: { $0.code == 11 }))
-            XCTAssertEqual(viewModel.selectionOptionDisplayName(viewModel.college, localeIdentifier: locale), faculty.label)
-            XCTAssertEqual(viewModel.selectionOptionDisplayName(viewModel.major, localeIdentifier: locale), faculty.majors.first(where: { $0.code == "software_engineering" })?.label)
+            XCTAssertEqual(viewModel.facultyDisplayName(for: viewModel.facultyCode, localeIdentifier: locale), faculty.label)
+            XCTAssertEqual(viewModel.majorDisplayName(for: viewModel.majorCode ?? "", localeIdentifier: locale), faculty.majors.first(where: { $0.code == "software_engineering" })?.label)
         }
         defaults.set("en", forKey: key)
         XCTAssertEqual(viewModel.profileOptions.faculties.first(where: { $0.code == 11 })?.label, "计算机科学系", "The options intentionally remain cached from before the switch")
@@ -71,18 +74,45 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(request.hometown, hometown)
         XCTAssertEqual(request.nickname, "Alice / 中國")
         XCTAssertEqual(request.bio, "我寫嘅內容")
-        XCTAssertEqual(request.college, "Department of Computer Science")
-        XCTAssertEqual(request.major, "Software Engineering")
-        let plan = try ProfileRemoteMapper.makeUpdatePlan(from: request, options: ProfileFormSupport.defaultOptions)
-        XCTAssertEqual(plan.faculty.faculty, 11)
-        XCTAssertEqual(plan.major?.major, "software_engineering")
-        XCTAssertEqual(plan.location?.region, "CN")
-        XCTAssertEqual(plan.location?.state, "44")
-        XCTAssertEqual(plan.location?.city, "1")
-        XCTAssertEqual(plan.hometown?.city, "5")
+        XCTAssertEqual(request.facultyCode, 11)
+        XCTAssertEqual(request.majorCode, "software_engineering")
+        XCTAssertEqual(request.enrollment, 2023)
+        let patchDTO = try ProfileRemoteMapper.makePatchDTO(from: request)
+        XCTAssertEqual(patchDTO.faculty, 11)
+        XCTAssertEqual(patchDTO.major, "software_engineering")
+        XCTAssertEqual(patchDTO.enrollment, 2023)
+        XCTAssertEqual(patchDTO.location?.region, "CN")
+        XCTAssertEqual(patchDTO.location?.state, "44")
+        XCTAssertEqual(patchDTO.location?.city, "1")
+        XCTAssertEqual(patchDTO.hometown?.city, "5")
         await viewModel.loadProfileOptions()
-        XCTAssertEqual(viewModel.college, "Department of Computer Science")
-        XCTAssertEqual(viewModel.major, "Software Engineering")
+        XCTAssertEqual(viewModel.facultyDisplayName(for: viewModel.facultyCode, localeIdentifier: "en"), "Department of Computer Science")
+        XCTAssertEqual(viewModel.majorDisplayName(for: viewModel.majorCode ?? "", localeIdentifier: "en"), "Software Engineering")
+    }
+
+    func testMakePatchDTOEncodesExplicitNullsWhenClearingOptionalFields() throws {
+        let request = ProfileUpdateRequest(
+            nickname: "Demo",
+            facultyCode: 0,
+            majorCode: "unselected",
+            enrollment: nil,
+            bio: "",
+            birthday: "",
+            location: nil,
+            hometown: nil
+        )
+        let dto = try ProfileRemoteMapper.makePatchDTO(from: request)
+        let data = try JSONEncoder().encode(dto)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+
+        XCTAssertEqual(object["nickname"] as? String, "Demo")
+        XCTAssertEqual(object["faculty"] as? Int, 0)
+        XCTAssertEqual(object["introduction"] as? String, "")
+        XCTAssertTrue(object["major"] is NSNull)
+        XCTAssertTrue(object["enrollment"] is NSNull)
+        XCTAssertTrue(object["birthday"] is NSNull)
+        XCTAssertTrue(object["location"] is NSNull)
+        XCTAssertTrue(object["hometown"] is NSNull)
     }
 
     func testMapProfileOptionsReadsStructuredMajorOptions() {
@@ -247,7 +277,7 @@ final class ProfileViewModelTests: XCTestCase {
 
         await viewModel.loadProfile()
 
-        XCTAssertTrue(viewModel.isEnrollmentOptionSelected(ProfileFormSupport.unselectedOption))
+        XCTAssertTrue(viewModel.isEnrollmentOptionSelected(nil))
     }
 
     func testLoadProfileRestoresStructuredLocationSelectionAndMajorCode() async {
@@ -275,7 +305,9 @@ final class ProfileViewModelTests: XCTestCase {
         await viewModel.loadProfileOptions()
         await viewModel.loadProfile()
 
-        XCTAssertEqual(viewModel.major, "软件工程")
+        XCTAssertEqual(viewModel.facultyCode, 11)
+        XCTAssertEqual(viewModel.majorCode, "software_engineering")
+        XCTAssertEqual(viewModel.enrollment, 2023)
         XCTAssertEqual(viewModel.location, "中国 广东 广州")
         let saved = await viewModel.saveProfile()
         XCTAssertTrue(saved)
@@ -291,9 +323,9 @@ final class ProfileViewModelTests: XCTestCase {
         let updatedProfile = try await repository.updateProfile(
             request: ProfileUpdateRequest(
                 nickname: "新昵称",
-                college: "计算机科学系",
-                major: "软件工程",
-                grade: "2024",
+                facultyCode: 11,
+                majorCode: "software_engineering",
+                enrollment: 2024,
                 bio: "新的简介",
                 birthday: "2002-03-04",
                 location: ProfileLocationSelection(
@@ -313,10 +345,257 @@ final class ProfileViewModelTests: XCTestCase {
 
         XCTAssertEqual(updatedProfile.collegeCode, 11)
         XCTAssertEqual(updatedProfile.majorCode, "software_engineering")
+        XCTAssertEqual(updatedProfile.grade, "2024")
         XCTAssertEqual(updatedProfile.locationSelection?.cityCode, "1")
         XCTAssertEqual(updatedProfile.hometownSelection?.cityCode, "5")
     }
 
+    func testRemoteProfileRepositorySendsSingleAtomicProfilePatch() async throws {
+        ProfilePatchURLProtocol.requests = []
+        ProfilePatchURLProtocol.responseStub = { request in
+            let path = request.url?.path ?? ""
+            let body: String
+            if path.hasSuffix("/user/profile") {
+                body = #"{"code":200,"success":true,"message":"","data":{"username":"demo","nickname":"新昵称","facultyCode":11,"majorCode":null,"enrollment":null,"introduction":"","birthday":null,"location":null,"hometown":null}}"#
+            } else {
+                body = #"{"code":200,"success":true,"message":"","data":null}"#
+            }
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, Data(body.utf8))
+        }
+        defer {
+            ProfilePatchURLProtocol.requests = []
+            ProfilePatchURLProtocol.responseStub = nil
+        }
+
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [ProfilePatchURLProtocol.self]
+        let environment = AppEnvironment(
+            networkEnvironment: .prod,
+            dataSourceMode: .remote,
+            isDebug: false,
+            clientType: "IOS"
+        )
+        environment.baseURL = URL(string: "https://test.example.com/api")!
+        let apiClient = APIClient(
+            environment: environment,
+            session: URLSession(configuration: config),
+            tokenProvider: { "token" },
+            onUnauthorized: {}
+        )
+        let repository = RemoteProfileRepository(apiClient: apiClient)
+
+        let updated = try await repository.updateProfile(
+            request: ProfileUpdateRequest(
+                nickname: "新昵称",
+                facultyCode: 11,
+                majorCode: nil,
+                enrollment: nil,
+                bio: "",
+                birthday: "",
+                location: nil,
+                hometown: nil
+            )
+        )
+
+        XCTAssertEqual(updated.nickname, "新昵称")
+        XCTAssertEqual(ProfilePatchURLProtocol.requests.map(\.path), ["/api/profile", "/api/user/profile"])
+        let patchRequest = try XCTUnwrap(ProfilePatchURLProtocol.requests.first)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: patchRequest.bodyData) as? [String: Any])
+        XCTAssertEqual(json["faculty"] as? Int, 11)
+        XCTAssertTrue(json["major"] is NSNull)
+        XCTAssertTrue(json["enrollment"] is NSNull)
+        XCTAssertTrue(json["birthday"] is NSNull)
+        XCTAssertTrue(json["location"] is NSNull)
+        XCTAssertTrue(json["hometown"] is NSNull)
+    }
+
+    func testAccountCenterMapperFiltersLoginRecordsWithoutValidID() {
+        let missingID = LoginRecordDTO(
+            id: nil,
+            ip: "127.0.0.1",
+            area: "广州",
+            country: nil,
+            province: nil,
+            city: nil,
+            network: "iOS",
+            time: RemoteFlexibleString("1704067200")
+        )
+        let zeroID = LoginRecordDTO(
+            id: 0,
+            ip: "127.0.0.2",
+            area: "广州",
+            country: nil,
+            province: nil,
+            city: nil,
+            network: "Web",
+            time: RemoteFlexibleString("1704067200")
+        )
+        let valid = LoginRecordDTO(
+            id: 77,
+            ip: "113.108.18.12",
+            area: "广东 广州",
+            country: nil,
+            province: nil,
+            city: nil,
+            network: "iPhone",
+            time: RemoteFlexibleString("1704067200")
+        )
+
+        let mapped = AccountCenterRemoteMapper.mapLoginRecords([missingID, zeroID, valid])
+
+        XCTAssertEqual(mapped.map(\.id), ["77"])
+        XCTAssertEqual(mapped.first?.timeText, "2024-01-01 08:00")
+    }
+
+    func testSyncDraftPreservesSavedFacultyAndMajorCodesAbsentFromOptions() async {
+        let repository = RecordingProfileRepository()
+        repository.profile = UserProfile(
+            id: "user-legacy",
+            username: "demo",
+            nickname: "Demo",
+            avatarURL: "",
+            college: "旧学院",
+            collegeCode: 99,
+            major: "旧专业",
+            majorCode: "legacy_major",
+            grade: "2022",
+            bio: "bio"
+        )
+        let viewModel = ProfileViewModel(repository: repository, sessionState: SessionState())
+
+        await viewModel.loadProfileOptions()
+        await viewModel.loadProfile()
+
+        XCTAssertEqual(viewModel.facultyCode, 99)
+        XCTAssertEqual(viewModel.majorCode, "legacy_major")
+        XCTAssertEqual(viewModel.facultyDisplayName(for: 99), "旧学院")
+        XCTAssertEqual(viewModel.majorDisplayName(for: "legacy_major"), "旧专业")
+
+        viewModel.nickname = "Updated Nickname"
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertTrue(didSave)
+        XCTAssertEqual(repository.updateRequests.last?.facultyCode, 99)
+        XCTAssertEqual(repository.updateRequests.last?.majorCode, "legacy_major")
+
+        viewModel.selectFaculty(code: 11)
+        XCTAssertNil(viewModel.majorCode)
+    }
+
+    func testProfileViewModelUpdateRepositoryRoutesSubsequentSavesToNewRepository() async {
+        let initialRepository = RecordingProfileRepository()
+        let reboundRepository = RecordingProfileRepository()
+        let viewModel = ProfileViewModel(repository: initialRepository, sessionState: SessionState())
+
+        await viewModel.loadProfile()
+        viewModel.updateRepository(reboundRepository)
+        viewModel.nickname = "Rebound"
+
+        let didSave = await viewModel.saveProfile()
+
+        XCTAssertTrue(didSave)
+        XCTAssertTrue(initialRepository.updateRequests.isEmpty)
+        XCTAssertEqual(reboundRepository.updateRequests.count, 1)
+        XCTAssertEqual(reboundRepository.updateRequests.first?.nickname, "Rebound")
+    }
+
+    func testMapProfileAndPatchPreserveUnknownLocationCodesAbsentFromCatalog() throws {
+        let dto = UserProfileDTO(
+            username: "demo",
+            nickname: "Demo",
+            avatar: nil,
+            facultyCode: 11,
+            majorCode: "software_engineering",
+            enrollment: "2024",
+            location: ProfileRemoteLocationValueDTO(regionCode: "JP", stateCode: "13", cityCode: "99"),
+            hometown: ProfileRemoteLocationValueDTO(regionCode: "CN", stateCode: "99", cityCode: "1"),
+            introduction: "bio",
+            birthday: nil,
+            ipArea: nil,
+            age: nil
+        )
+
+        let mapped = ProfileRemoteMapper.mapProfile(dto)
+
+        XCTAssertEqual(mapped.locationSelection?.regionCode, "JP")
+        XCTAssertEqual(mapped.locationSelection?.stateCode, "13")
+        XCTAssertEqual(mapped.locationSelection?.cityCode, "99")
+        XCTAssertEqual(mapped.hometownSelection?.regionCode, "CN")
+        XCTAssertEqual(mapped.hometownSelection?.stateCode, "99")
+        XCTAssertEqual(mapped.hometownSelection?.cityCode, "1")
+
+        let patch = try ProfileRemoteMapper.makePatchDTO(
+            from: ProfileUpdateRequest(
+                nickname: "Demo",
+                facultyCode: 11,
+                majorCode: "software_engineering",
+                enrollment: 2024,
+                bio: "bio",
+                birthday: "",
+                location: mapped.locationSelection,
+                hometown: mapped.hometownSelection
+            )
+        )
+
+        XCTAssertEqual(patch.location?.region, "JP")
+        XCTAssertEqual(patch.location?.state, "13")
+        XCTAssertEqual(patch.location?.city, "99")
+        XCTAssertEqual(patch.hometown?.region, "CN")
+        XCTAssertEqual(patch.hometown?.state, "99")
+        XCTAssertEqual(patch.hometown?.city, "1")
+    }
+}
+
+private nonisolated struct ProfilePatchCapturedRequest {
+    let path: String
+    let bodyData: Data
+}
+
+private nonisolated final class ProfilePatchURLProtocol: URLProtocol {
+    static nonisolated(unsafe) var requests: [ProfilePatchCapturedRequest] = []
+    static nonisolated(unsafe) var responseStub: ((URLRequest) -> (HTTPURLResponse, Data))?
+
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        Self.requests.append(
+            ProfilePatchCapturedRequest(
+                path: request.url?.path ?? "",
+                bodyData: Self.bodyData(from: request)
+            )
+        )
+        guard let stub = Self.responseStub else {
+            client?.urlProtocol(self, didFailWithError: URLError(.unknown))
+            return
+        }
+        let (response, data) = stub(request)
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: data)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+
+    private static func bodyData(from request: URLRequest) -> Data {
+        if let httpBody = request.httpBody {
+            return httpBody
+        }
+        guard let stream = request.httpBodyStream else { return Data() }
+        stream.open()
+        defer { stream.close() }
+        var data = Data()
+        let bufferSize = 1024
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+        defer { buffer.deallocate() }
+        while stream.hasBytesAvailable {
+            let count = stream.read(buffer, maxLength: bufferSize)
+            if count <= 0 { break }
+            data.append(buffer, count: count)
+        }
+        return data
+    }
 }
 
 @MainActor
@@ -352,18 +631,27 @@ private final class RecordingProfileRepository: ProfileRepository {
             throw updateError
         }
         updateRequests.append(request)
+        let options = ProfileFormSupport.defaultOptions
+        let collegeLabel = options.faculties.first(where: { $0.code == request.facultyCode })?.label ?? ""
+        let majorLabel = request.majorCode.flatMap { code in
+            options.faculties.first(where: { $0.code == request.facultyCode })?.majors.first(where: { $0.code == code })?.label
+        } ?? ""
         profile = UserProfile(
             id: profile.id,
             username: profile.username,
             nickname: request.nickname,
             avatarURL: profile.avatarURL,
-            college: request.college,
-            major: request.major,
-            grade: request.grade,
+            college: collegeLabel,
+            collegeCode: request.facultyCode,
+            major: majorLabel,
+            majorCode: request.majorCode,
+            grade: request.enrollment.map(String.init) ?? "",
             bio: request.bio,
             birthday: request.birthday,
             location: request.location?.displayName ?? "",
+            locationSelection: request.location,
             hometown: request.hometown?.displayName ?? "",
+            hometownSelection: request.hometown,
             ipArea: profile.ipArea
         )
         return profile
@@ -404,18 +692,27 @@ private final class SuspendingProfileRepository: ProfileRepository {
         await withCheckedContinuation { continuation in
             self.continuation = continuation
         }
+        let options = ProfileFormSupport.defaultOptions
+        let collegeLabel = options.faculties.first(where: { $0.code == request.facultyCode })?.label ?? ""
+        let majorLabel = request.majorCode.flatMap { code in
+            options.faculties.first(where: { $0.code == request.facultyCode })?.majors.first(where: { $0.code == code })?.label
+        } ?? ""
         profile = UserProfile(
             id: profile.id,
             username: profile.username,
             nickname: request.nickname,
             avatarURL: profile.avatarURL,
-            college: request.college,
-            major: request.major,
-            grade: request.grade,
+            college: collegeLabel,
+            collegeCode: request.facultyCode,
+            major: majorLabel,
+            majorCode: request.majorCode,
+            grade: request.enrollment.map(String.init) ?? "",
             bio: request.bio,
             birthday: request.birthday,
             location: request.location?.displayName ?? "",
+            locationSelection: request.location,
             hometown: request.hometown?.displayName ?? "",
+            hometownSelection: request.hometown,
             ipArea: profile.ipArea
         )
         return profile

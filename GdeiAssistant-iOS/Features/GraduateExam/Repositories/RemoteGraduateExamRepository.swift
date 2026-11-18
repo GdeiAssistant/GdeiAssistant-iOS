@@ -8,6 +8,8 @@ final class RemoteGraduateExamRepository: GraduateExamRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func queryScore(_ query: GraduateExamQuery) async throws -> GraduateExamScore {
         let dto = GraduateExamRemoteMapper.mapQuery(query)
         let response: GraduateExamScoreRemoteDTO = try await apiClient.post("/graduate-exam/query", body: dto, requiresAuth: true)

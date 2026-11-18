@@ -8,6 +8,8 @@ final class RemoteLibraryRepository: LibraryRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func searchBooks(keyword: String, page: Int) async throws -> [LibraryBook] {
         let dto: BookSearchResponseDTO = try await apiClient.get(
             "/library/search",

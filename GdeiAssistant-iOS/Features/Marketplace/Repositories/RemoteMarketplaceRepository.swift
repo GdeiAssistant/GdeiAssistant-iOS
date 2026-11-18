@@ -8,6 +8,8 @@ final class RemoteMarketplaceRepository: MarketplaceRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchItems(typeID: Int?) async throws -> [MarketplaceItem] {
         let path: String
         if let typeID {

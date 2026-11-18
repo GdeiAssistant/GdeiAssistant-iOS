@@ -8,6 +8,8 @@ final class RemoteCETRepository: CETRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchCaptchaImageBase64() async throws -> String {
         let base64: String = try await apiClient.get("/cet/checkcode", requiresAuth: true)
         return base64

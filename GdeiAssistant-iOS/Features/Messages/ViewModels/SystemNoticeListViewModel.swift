@@ -36,10 +36,10 @@ final class SystemNoticeListViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let page = try await repository.fetchAnnouncementPage(start: 0, size: pageSize)
-            items = page
-            nextStart = page.count
-            canLoadMore = page.count == pageSize
+            let page = try await fetchNextNonEmptyPage(from: 0)
+            items = page.items
+            nextStart = page.nextStart
+            canLoadMore = page.canLoadMore
         } catch {
             items = []
             canLoadMore = false
@@ -48,19 +48,47 @@ final class SystemNoticeListViewModel: ObservableObject {
     }
 
     func loadMoreIfNeeded(currentItem item: AppNotificationItem) async {
-        guard canLoadMore, !isLoadingMore, items.last?.id == item.id else { return }
+        guard items.last?.id == item.id else { return }
+        await loadNextPage()
+    }
+
+    func loadNextPage() async {
+        guard canLoadMore, !isLoading, !isLoadingMore else { return }
 
         isLoadingMore = true
+        errorMessage = nil
         loadMoreErrorMessage = nil
         defer { isLoadingMore = false }
 
         do {
-            let page = try await repository.fetchAnnouncementPage(start: nextStart, size: pageSize)
-            items.append(contentsOf: page)
-            nextStart += page.count
-            canLoadMore = page.count == pageSize
+            let page = try await fetchNextNonEmptyPage(from: nextStart)
+            items.append(contentsOf: page.items)
+            nextStart = page.nextStart
+            canLoadMore = page.canLoadMore
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
+            let message = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
+            if items.isEmpty {
+                errorMessage = message
+            } else {
+                loadMoreErrorMessage = message
+            }
         }
+    }
+
+    private func fetchNextNonEmptyPage(from start: Int) async throws -> (items: [AppNotificationItem], nextStart: Int, canLoadMore: Bool) {
+        var cursor = start
+        var remainingAttempts = 5
+
+        while remainingAttempts > 0 {
+            remainingAttempts -= 1
+            let page = try await repository.fetchAnnouncementBatch(start: cursor, size: pageSize)
+            cursor += page.fetchedCount
+            let hasMore = page.fetchedCount == pageSize
+            if !page.items.isEmpty || !hasMore {
+                return (page.items, cursor, hasMore)
+            }
+        }
+
+        return ([], cursor, true)
     }
 }

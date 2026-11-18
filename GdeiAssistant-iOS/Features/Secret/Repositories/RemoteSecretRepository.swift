@@ -8,6 +8,8 @@ final class RemoteSecretRepository: SecretRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchPosts() async throws -> [SecretPost] {
         let dtos: [SecretPostDTO] = try await apiClient.get("/secret/info/start/0/size/20", requiresAuth: true)
         return SecretRemoteMapper.mapPosts(dtos)

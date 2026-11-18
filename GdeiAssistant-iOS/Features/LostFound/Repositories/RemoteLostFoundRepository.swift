@@ -8,6 +8,8 @@ final class RemoteLostFoundRepository: LostFoundRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchItems() async throws -> [LostFoundItem] {
         async let lostTask: [LostFoundItemDTO] = apiClient.get("/lostandfound/lostitem/start/0", requiresAuth: true)
         async let foundTask: [LostFoundItemDTO] = apiClient.get("/lostandfound/founditem/start/0", requiresAuth: true)
@@ -42,6 +44,9 @@ final class RemoteLostFoundRepository: LostFoundRepository {
             ),
             description: detail.description,
             contactHint: detail.contactHint,
+            qq: detail.qq,
+            wechat: detail.wechat,
+            phone: detail.phone,
             statusText: detail.statusText,
             ownerUsername: detail.ownerUsername,
             ownerNickname: detail.ownerNickname,

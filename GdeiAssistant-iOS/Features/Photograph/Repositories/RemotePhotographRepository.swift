@@ -8,6 +8,8 @@ final class RemotePhotographRepository: PhotographRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchStats() async throws -> PhotographStats {
         async let photos: Int = apiClient.get("/photograph/statistics/photos", requiresAuth: true)
         async let comments: Int = apiClient.get("/photograph/statistics/comments", requiresAuth: true)

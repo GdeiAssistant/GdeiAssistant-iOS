@@ -18,9 +18,10 @@ final class MessagesViewModel: ObservableObject {
     @Published var interactionUnreadCount = 0
     @Published var festival: Festival?
 
-    private let newsRepository: any NewsRepository
-    private let messagesRepository: any MessagesRepository
+    private var newsRepository: any NewsRepository
+    private var messagesRepository: any MessagesRepository
     private let overviewLimit = 3
+    private var repositoryGeneration = 0
 
     init(
         newsRepository: any NewsRepository,
@@ -33,6 +34,26 @@ final class MessagesViewModel: ObservableObject {
     // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
     // back-deployment crash on synchronous release (swiftlang/swift#87316).
     nonisolated deinit {}
+
+    func updateRepositories(
+        newsRepository: any NewsRepository,
+        messagesRepository: any MessagesRepository
+    ) {
+        repositoryGeneration += 1
+        self.newsRepository = newsRepository
+        self.messagesRepository = messagesRepository
+        isNewsLoading = false
+        isSystemLoading = false
+        isInteractionLoading = false
+        newsItems = []
+        systemNoticeItems = []
+        interactionNoticeItems = []
+        newsErrorMessage = nil
+        systemErrorMessage = nil
+        interactionErrorMessage = nil
+        interactionUnreadCount = 0
+        festival = nil
+    }
 
     var isInitialLoading: Bool {
         if hasAnyContent {
@@ -71,44 +92,56 @@ final class MessagesViewModel: ObservableObject {
     }
 
     func refreshNews() async {
+        let generation = repositoryGeneration
         isNewsLoading = true
         newsErrorMessage = nil
-        defer { isNewsLoading = false }
+        defer { if generation == repositoryGeneration { isNewsLoading = false } }
 
         do {
-            newsItems = try await newsRepository.fetchNews(start: 0, size: overviewLimit)
+            let items = try await newsRepository.fetchNews(start: 0, size: overviewLimit)
+            guard generation == repositoryGeneration else { return }
+            newsItems = items
         } catch {
+            guard generation == repositoryGeneration else { return }
             newsItems = []
             newsErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.newsLoadFailed")
         }
     }
 
     func refreshSystemNotices() async {
+        let generation = repositoryGeneration
         isSystemLoading = true
         systemErrorMessage = nil
-        defer { isSystemLoading = false }
+        defer { if generation == repositoryGeneration { isSystemLoading = false } }
 
         do {
-            systemNoticeItems = try await messagesRepository.fetchAnnouncementPage(start: 0, size: overviewLimit)
+            let items = try await messagesRepository.fetchAnnouncementPage(start: 0, size: overviewLimit)
+            guard generation == repositoryGeneration else { return }
+            systemNoticeItems = items
         } catch {
+            guard generation == repositoryGeneration else { return }
             systemNoticeItems = []
             systemErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.systemNoticeLoadFailed")
         }
     }
 
     func refreshInteractionItems() async {
+        let generation = repositoryGeneration
         isInteractionLoading = true
         interactionErrorMessage = nil
-        defer { isInteractionLoading = false }
+        defer { if generation == repositoryGeneration { isInteractionLoading = false } }
 
         do {
             async let itemsTask = messagesRepository.fetchInteractionNotifications(start: 0, size: overviewLimit)
             async let unreadTask = messagesRepository.fetchInteractionUnreadCount()
 
             let items = try await itemsTask
+            let unread = try? await unreadTask
+            guard generation == repositoryGeneration else { return }
             interactionNoticeItems = items
-            interactionUnreadCount = (try? await unreadTask) ?? items.filter { !$0.isRead }.count
+            interactionUnreadCount = unread ?? items.filter { !$0.isRead }.count
         } catch {
+            guard generation == repositoryGeneration else { return }
             interactionNoticeItems = []
             interactionUnreadCount = 0
             interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
@@ -116,33 +149,45 @@ final class MessagesViewModel: ObservableObject {
     }
 
     func refreshFestival() async {
-        festival = try? await messagesRepository.fetchFestival()
+        let generation = repositoryGeneration
+        let loadedFestival = try? await messagesRepository.fetchFestival()
+        guard generation == repositoryGeneration else { return }
+        festival = loadedFestival
     }
 
     func markNotificationRead(notificationID: String) async {
-        guard let index = interactionNoticeItems.firstIndex(where: { $0.id == notificationID && !$0.isRead }) else {
+        guard interactionNoticeItems.contains(where: { $0.id == notificationID && !$0.isRead }) else {
             return
         }
+        let generation = repositoryGeneration
 
         do {
             try await messagesRepository.markNotificationRead(notificationID: notificationID)
+            guard generation == repositoryGeneration,
+                  let index = interactionNoticeItems.firstIndex(where: { $0.id == notificationID && !$0.isRead }) else {
+                return
+            }
             interactionNoticeItems[index] = interactionNoticeItems[index].updatingReadState(true)
             interactionUnreadCount = max(0, interactionUnreadCount - 1)
         } catch {
+            guard generation == repositoryGeneration else { return }
             interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }
 
     func markAllInteractionNotificationsRead() async {
         guard interactionUnreadCount > 0 else { return }
+        let generation = repositoryGeneration
 
         do {
             try await messagesRepository.markAllNotificationsRead()
+            guard generation == repositoryGeneration else { return }
             interactionNoticeItems = interactionNoticeItems.map { item in
                 item.isInteractionItem ? item.updatingReadState(true) : item
             }
             interactionUnreadCount = 0
         } catch {
+            guard generation == repositoryGeneration else { return }
             interactionErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.updateStatusFailed")
         }
     }

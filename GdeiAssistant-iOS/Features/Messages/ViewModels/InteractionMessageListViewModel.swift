@@ -37,14 +37,14 @@ final class InteractionMessageListViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            async let itemsTask = repository.fetchInteractionNotifications(start: 0, size: pageSize)
+            async let itemsTask = fetchNextNonEmptyPage(from: 0)
             async let unreadTask = repository.fetchInteractionUnreadCount()
 
             let page = try await itemsTask
-            items = page
-            interactionUnreadCount = (try? await unreadTask) ?? page.filter { !$0.isRead }.count
-            nextStart = page.count
-            canLoadMore = page.count == pageSize
+            items = page.items
+            interactionUnreadCount = (try? await unreadTask) ?? page.items.filter { !$0.isRead }.count
+            nextStart = page.nextStart
+            canLoadMore = page.canLoadMore
         } catch {
             items = []
             interactionUnreadCount = 0
@@ -54,20 +54,48 @@ final class InteractionMessageListViewModel: ObservableObject {
     }
 
     func loadMoreIfNeeded(currentItem item: AppNotificationItem) async {
-        guard canLoadMore, !isLoadingMore, items.last?.id == item.id else { return }
+        guard items.last?.id == item.id else { return }
+        await loadNextPage()
+    }
+
+    func loadNextPage() async {
+        guard canLoadMore, !isLoading, !isLoadingMore else { return }
 
         isLoadingMore = true
+        errorMessage = nil
         loadMoreErrorMessage = nil
         defer { isLoadingMore = false }
 
         do {
-            let page = try await repository.fetchInteractionNotifications(start: nextStart, size: pageSize)
-            items.append(contentsOf: page)
-            nextStart += page.count
-            canLoadMore = page.count == pageSize
+            let page = try await fetchNextNonEmptyPage(from: nextStart)
+            items.append(contentsOf: page.items)
+            nextStart = page.nextStart
+            canLoadMore = page.canLoadMore
         } catch {
-            loadMoreErrorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
+            let message = (error as? LocalizedError)?.errorDescription ?? localizedString("messages.interactionLoadFailed")
+            if items.isEmpty {
+                errorMessage = message
+            } else {
+                loadMoreErrorMessage = message
+            }
         }
+    }
+
+    private func fetchNextNonEmptyPage(from start: Int) async throws -> (items: [AppNotificationItem], nextStart: Int, canLoadMore: Bool) {
+        var cursor = start
+        var remainingAttempts = 5
+
+        while remainingAttempts > 0 {
+            remainingAttempts -= 1
+            let page = try await repository.fetchInteractionBatch(start: cursor, size: pageSize)
+            cursor += page.fetchedCount
+            let hasMore = page.fetchedCount == pageSize
+            if !page.items.isEmpty || !hasMore {
+                return (page.items, cursor, hasMore)
+            }
+        }
+
+        return ([], cursor, true)
     }
 
     func markNotificationRead(notificationID: String) async {

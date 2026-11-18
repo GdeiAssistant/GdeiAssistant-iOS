@@ -1,9 +1,16 @@
 import Foundation
 
+struct NotificationPage: Equatable {
+    let items: [AppNotificationItem]
+    let fetchedCount: Int
+}
+
 @MainActor
 protocol MessagesRepository {
     func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem]
+    func fetchAnnouncementBatch(start: Int, size: Int) async throws -> NotificationPage
     func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem]
+    func fetchInteractionBatch(start: Int, size: Int) async throws -> NotificationPage
     func fetchInteractionUnreadCount() async throws -> Int
     func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem
     func fetchFestival() async throws -> Festival?
@@ -11,51 +18,14 @@ protocol MessagesRepository {
     func markAllNotificationsRead() async throws
 }
 
-@MainActor
-final class SwitchingMessagesRepository: MessagesRepository {
-    private let environment: AppEnvironment
-    private let remoteRepository: any MessagesRepository
-    private let mockRepository: any MessagesRepository
-
-    init(
-        environment: AppEnvironment,
-        remoteRepository: any MessagesRepository,
-        mockRepository: any MessagesRepository
-    ) {
-        self.environment = environment
-        self.remoteRepository = remoteRepository
-        self.mockRepository = mockRepository
+extension MessagesRepository {
+    func fetchAnnouncementBatch(start: Int, size: Int) async throws -> NotificationPage {
+        let items = try await fetchAnnouncementPage(start: start, size: size)
+        return NotificationPage(items: items, fetchedCount: items.count)
     }
 
-    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] {
-        try await currentRepository.fetchAnnouncementPage(start: start, size: size)
-    }
-
-    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] {
-        try await currentRepository.fetchInteractionNotifications(start: start, size: size)
-    }
-
-    func fetchInteractionUnreadCount() async throws -> Int {
-        try await currentRepository.fetchInteractionUnreadCount()
-    }
-
-    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
-        try await currentRepository.fetchAnnouncementDetail(id: id)
-    }
-
-    func fetchFestival() async throws -> Festival? {
-        try await currentRepository.fetchFestival()
-    }
-
-    func markNotificationRead(notificationID: String) async throws {
-        try await currentRepository.markNotificationRead(notificationID: notificationID)
-    }
-
-    func markAllNotificationsRead() async throws {
-        try await currentRepository.markAllNotificationsRead()
-    }
-
-    private var currentRepository: any MessagesRepository {
-        environment.dataSourceMode == .mock ? mockRepository : remoteRepository
+    func fetchInteractionBatch(start: Int, size: Int) async throws -> NotificationPage {
+        let items = try await fetchInteractionNotifications(start: start, size: size)
+        return NotificationPage(items: items, fetchedCount: items.count)
     }
 }

@@ -5,88 +5,74 @@ import Foundation
 /// lost & found, secret, and dating.
 @MainActor
 struct CommunityAssembly {
-    let communityRepository: any CommunityRepository
-    let topicRepository: any TopicRepository
-    let expressRepository: any ExpressRepository
-    let deliveryRepository: any DeliveryRepository
-    let photographRepository: any PhotographRepository
-    let marketplaceRepository: any MarketplaceRepository
-    let lostFoundRepository: any LostFoundRepository
-    let secretRepository: any SecretRepository
-    let datingRepository: any DatingRepository
+    private let environment: AppEnvironment
+    private let remoteCommunityRepository: RemoteCommunityRepository
+    private let mockCommunityRepository: MockCommunityRepository
+    private let remoteTopicRepository: RemoteTopicRepository
+    private let mockTopicRepository: MockTopicRepository
+    private let remoteExpressRepository: RemoteExpressRepository
+    private let mockExpressRepository: MockExpressRepository
+    private let remoteDeliveryRepository: RemoteDeliveryRepository
+    private let mockDeliveryRepository: MockDeliveryRepository
+    private let remotePhotographRepository: RemotePhotographRepository
+    private let mockPhotographRepository: MockPhotographRepository
+    private let remoteMarketplaceRepository: RemoteMarketplaceRepository
+    private let mockMarketplaceRepository: MockMarketplaceRepository
+    private let remoteLostFoundRepository: RemoteLostFoundRepository
+    private let mockLostFoundRepository: MockLostFoundRepository
+    private let remoteSecretRepository: RemoteSecretRepository
+    private let mockSecretRepository: MockSecretRepository
+    private let remoteDatingRepository: RemoteDatingRepository
+    private let mockDatingRepository: MockDatingRepository
+
+    var communityRepository: any CommunityRepository {
+        environment.dataSourceMode == .mock ? mockCommunityRepository : remoteCommunityRepository
+    }
+    var topicRepository: any TopicRepository {
+        environment.dataSourceMode == .mock ? mockTopicRepository : remoteTopicRepository
+    }
+    var expressRepository: any ExpressRepository {
+        environment.dataSourceMode == .mock ? mockExpressRepository : remoteExpressRepository
+    }
+    var deliveryRepository: any DeliveryRepository {
+        environment.dataSourceMode == .mock ? mockDeliveryRepository : remoteDeliveryRepository
+    }
+    var photographRepository: any PhotographRepository {
+        environment.dataSourceMode == .mock ? mockPhotographRepository : remotePhotographRepository
+    }
+    var marketplaceRepository: any MarketplaceRepository {
+        environment.dataSourceMode == .mock ? mockMarketplaceRepository : remoteMarketplaceRepository
+    }
+    var lostFoundRepository: any LostFoundRepository {
+        environment.dataSourceMode == .mock ? mockLostFoundRepository : remoteLostFoundRepository
+    }
+    var secretRepository: any SecretRepository {
+        environment.dataSourceMode == .mock ? mockSecretRepository : remoteSecretRepository
+    }
+    var datingRepository: any DatingRepository {
+        environment.dataSourceMode == .mock ? mockDatingRepository : remoteDatingRepository
+    }
 
     init(apiClient: APIClient, environment: AppEnvironment) {
-        let remoteCommunityRepository = RemoteCommunityRepository(apiClient: apiClient)
-        let mockCommunityRepository = MockCommunityRepository()
-        self.communityRepository = SwitchingCommunityRepository(
-            environment: environment,
-            remoteRepository: remoteCommunityRepository,
-            mockRepository: mockCommunityRepository
-        )
-
-        let remoteTopicRepository = RemoteTopicRepository(apiClient: apiClient)
-        let mockTopicRepository = MockTopicRepository()
-        self.topicRepository = SwitchingTopicRepository(
-            environment: environment,
-            remoteRepository: remoteTopicRepository,
-            mockRepository: mockTopicRepository
-        )
-
-        let remoteExpressRepository = RemoteExpressRepository(apiClient: apiClient)
-        let mockExpressRepository = MockExpressRepository()
-        self.expressRepository = SwitchingExpressRepository(
-            environment: environment,
-            remoteRepository: remoteExpressRepository,
-            mockRepository: mockExpressRepository
-        )
-
-        let remoteDeliveryRepository = RemoteDeliveryRepository(apiClient: apiClient)
-        let mockDeliveryRepository = MockDeliveryRepository()
-        self.deliveryRepository = SwitchingDeliveryRepository(
-            environment: environment,
-            remoteRepository: remoteDeliveryRepository,
-            mockRepository: mockDeliveryRepository
-        )
-
-        let remotePhotographRepository = RemotePhotographRepository(apiClient: apiClient)
-        let mockPhotographRepository = MockPhotographRepository()
-        self.photographRepository = SwitchingPhotographRepository(
-            environment: environment,
-            remoteRepository: remotePhotographRepository,
-            mockRepository: mockPhotographRepository
-        )
-
-        let remoteMarketplaceRepository = RemoteMarketplaceRepository(apiClient: apiClient)
-        let mockMarketplaceRepository = MockMarketplaceRepository()
-        self.marketplaceRepository = SwitchingMarketplaceRepository(
-            environment: environment,
-            remoteRepository: remoteMarketplaceRepository,
-            mockRepository: mockMarketplaceRepository
-        )
-
-        let remoteLostFoundRepository = RemoteLostFoundRepository(apiClient: apiClient)
-        let mockLostFoundRepository = MockLostFoundRepository()
-        self.lostFoundRepository = SwitchingLostFoundRepository(
-            environment: environment,
-            remoteRepository: remoteLostFoundRepository,
-            mockRepository: mockLostFoundRepository
-        )
-
-        let remoteSecretRepository = RemoteSecretRepository(apiClient: apiClient)
-        let mockSecretRepository = MockSecretRepository()
-        self.secretRepository = SwitchingSecretRepository(
-            environment: environment,
-            remoteRepository: remoteSecretRepository,
-            mockRepository: mockSecretRepository
-        )
-
-        let remoteDatingRepository = RemoteDatingRepository(apiClient: apiClient)
-        let mockDatingRepository = MockDatingRepository()
-        self.datingRepository = SwitchingDatingRepository(
-            environment: environment,
-            remoteRepository: remoteDatingRepository,
-            mockRepository: mockDatingRepository
-        )
+        self.environment = environment
+        self.remoteCommunityRepository = RemoteCommunityRepository(apiClient: apiClient)
+        self.mockCommunityRepository = MockCommunityRepository()
+        self.remoteTopicRepository = RemoteTopicRepository(apiClient: apiClient)
+        self.mockTopicRepository = MockTopicRepository()
+        self.remoteExpressRepository = RemoteExpressRepository(apiClient: apiClient)
+        self.mockExpressRepository = MockExpressRepository()
+        self.remoteDeliveryRepository = RemoteDeliveryRepository(apiClient: apiClient)
+        self.mockDeliveryRepository = MockDeliveryRepository()
+        self.remotePhotographRepository = RemotePhotographRepository(apiClient: apiClient)
+        self.mockPhotographRepository = MockPhotographRepository()
+        self.remoteMarketplaceRepository = RemoteMarketplaceRepository(apiClient: apiClient)
+        self.mockMarketplaceRepository = MockMarketplaceRepository()
+        self.remoteLostFoundRepository = RemoteLostFoundRepository(apiClient: apiClient)
+        self.mockLostFoundRepository = MockLostFoundRepository()
+        self.remoteSecretRepository = RemoteSecretRepository(apiClient: apiClient)
+        self.mockSecretRepository = MockSecretRepository()
+        self.remoteDatingRepository = RemoteDatingRepository(apiClient: apiClient)
+        self.mockDatingRepository = MockDatingRepository()
     }
 
     // MARK: - ViewModel Factories

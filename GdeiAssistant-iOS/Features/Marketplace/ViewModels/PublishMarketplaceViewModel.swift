@@ -23,12 +23,14 @@ final class PublishMarketplaceViewModel: ObservableObject {
     }
 
     var isFormValid: Bool {
-        FormValidationSupport.hasText(title) &&
-        FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") != nil &&
-        FormValidationSupport.hasText(descriptionText) &&
-        FormValidationSupport.hasText(location) &&
-        FormValidationSupport.hasText(qq) &&
-        !images.isEmpty
+        MarketplaceFormValidator.isFormValid(
+            title: title,
+            priceText: priceText,
+            descriptionText: descriptionText,
+            location: location,
+            qq: qq,
+            hasImages: !images.isEmpty
+        )
     }
 
     var failureMessage: String? {
@@ -54,78 +56,42 @@ final class PublishMarketplaceViewModel: ObservableObject {
     }
 
     func buildDraft() -> MarketplaceDraft? {
-        let trimmedTitle = FormValidationSupport.trimmed(title)
-        let trimmedDescription = FormValidationSupport.trimmed(descriptionText)
-        let trimmedLocation = FormValidationSupport.trimmed(location)
-        let trimmedQQ = FormValidationSupport.trimmed(qq)
-        let trimmedPhone = FormValidationSupport.trimmed(phone)
+        switch MarketplaceFormValidator.validate(
+            title: title,
+            priceText: priceText,
+            descriptionText: descriptionText,
+            location: location,
+            qq: qq,
+            phone: phone,
+            hasImages: !images.isEmpty,
+            requireImages: true
+        ) {
+        case .failure(let error):
+            submitState = .failure(error.message)
+            return nil
+        case .success(let fields):
+            let extraTags = tagsText
+                .split(separator: " ")
+                .map { String($0) }
+                .filter { !$0.isEmpty }
+            let typeName = MarketplaceRemoteMapper.displayName(forType: selectedTypeID)
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("marketplace.titleEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedTitle.count > 25 {
-            submitState = .failure(localizedString("marketplace.titleTooLong"))
-            return nil
-        }
-        guard let price = FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") else {
-            submitState = .failure(localizedString("marketplace.invalidPrice"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("marketplace.descEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedDescription.count > 100 {
-            submitState = .failure(localizedString("marketplace.descTooLong"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("marketplace.locationEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedLocation.count > 30 {
-            submitState = .failure(localizedString("marketplace.locationTooLong"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedQQ, message: localizedString("marketplace.qqEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedQQ.count > 20 {
-            submitState = .failure(localizedString("marketplace.qqTooLong"))
-            return nil
-        }
-        if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure(localizedString("marketplace.phoneTooLong"))
-            return nil
-        }
-        if images.isEmpty {
-            submitState = .failure(localizedString("marketplace.imageEmpty"))
-            return nil
-        }
+            submitState = .idle
 
-        let extraTags = tagsText
-            .split(separator: " ")
-            .map { String($0) }
-            .filter { !$0.isEmpty }
-        let typeName = MarketplaceRemoteMapper.displayName(forType: selectedTypeID)
-
-        submitState = .idle
-
-        return MarketplaceDraft(
-            title: trimmedTitle,
-            price: price,
-            summary: RemoteMapperSupport.truncated(trimmedDescription, limit: 28),
-            condition: typeName,
-            description: trimmedDescription,
-            location: trimmedLocation,
-            tags: Array(Set([typeName] + extraTags)),
-            typeID: selectedTypeID,
-            qq: trimmedQQ,
-            phone: trimmedPhone.isEmpty ? nil : trimmedPhone,
-            images: images
-        )
+            return MarketplaceDraft(
+                title: fields.title,
+                price: fields.price,
+                summary: RemoteMapperSupport.truncated(fields.description, limit: 28),
+                condition: typeName,
+                description: fields.description,
+                location: fields.location,
+                tags: Array(Set([typeName] + extraTags)),
+                typeID: selectedTypeID,
+                qq: fields.qq,
+                phone: fields.phone,
+                images: images
+            )
+        }
     }
 }
 
@@ -146,16 +112,10 @@ final class EditMarketplaceViewModel: ObservableObject {
         title = detail.item.title
         priceText = String(format: "%.2f", detail.item.price)
         descriptionText = detail.description
-        selectedTypeID = MarketplaceRemoteMapper.itemTypes.firstIndex(of: detail.condition) ?? 0
+        selectedTypeID = detail.item.typeID ?? 0
         location = detail.item.location
-        qq = Self.extractContactValue(
-            from: detail.contactHint,
-            prefixes: Self.contactPrefixes(for: "marketplace.contactQQPrefix")
-        ) ?? ""
-        phone = Self.extractContactValue(
-            from: detail.contactHint,
-            prefixes: Self.contactPrefixes(for: "marketplace.contactPhonePrefix")
-        ) ?? ""
+        qq = detail.qq ?? ""
+        phone = detail.phone ?? ""
     }
 
     // No actor-bound cleanup. Avoid the iOS 26.2 MainActor isolated-deinit
@@ -167,11 +127,14 @@ final class EditMarketplaceViewModel: ObservableObject {
     }
 
     var isFormValid: Bool {
-        FormValidationSupport.hasText(title) &&
-        FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") != nil &&
-        FormValidationSupport.hasText(descriptionText) &&
-        FormValidationSupport.hasText(location) &&
-        FormValidationSupport.hasText(qq)
+        MarketplaceFormValidator.isFormValid(
+            title: title,
+            priceText: priceText,
+            descriptionText: descriptionText,
+            location: location,
+            qq: qq,
+            hasImages: true
+        )
     }
 
     var failureMessage: String? {
@@ -182,96 +145,31 @@ final class EditMarketplaceViewModel: ObservableObject {
     }
 
     func buildDraft() -> MarketplaceUpdateDraft? {
-        let trimmedTitle = FormValidationSupport.trimmed(title)
-        let trimmedDescription = FormValidationSupport.trimmed(descriptionText)
-        let trimmedLocation = FormValidationSupport.trimmed(location)
-        let trimmedQQ = FormValidationSupport.trimmed(qq)
-        let trimmedPhone = FormValidationSupport.trimmed(phone)
+        switch MarketplaceFormValidator.validate(
+            title: title,
+            priceText: priceText,
+            descriptionText: descriptionText,
+            location: location,
+            qq: qq,
+            phone: phone,
+            hasImages: true,
+            requireImages: false
+        ) {
+        case .failure(let error):
+            submitState = .failure(error.message)
+            return nil
+        case .success(let fields):
+            submitState = .idle
 
-        if let message = FormValidationSupport.requireText(trimmedTitle, message: localizedString("marketplace.titleEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedTitle.count > 25 {
-            submitState = .failure(localizedString("marketplace.titleTooLong"))
-            return nil
-        }
-        guard let price = FormValidationSupport.parsePositiveAmount(priceText, max: 9_999.99, message: "") else {
-            submitState = .failure(localizedString("marketplace.invalidPrice"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedDescription, message: localizedString("marketplace.descEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedDescription.count > 100 {
-            submitState = .failure(localizedString("marketplace.descTooLong"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedLocation, message: localizedString("marketplace.locationEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedLocation.count > 30 {
-            submitState = .failure(localizedString("marketplace.locationTooLong"))
-            return nil
-        }
-        if let message = FormValidationSupport.requireText(trimmedQQ, message: localizedString("marketplace.qqEmpty")) {
-            submitState = .failure(message)
-            return nil
-        }
-        if trimmedQQ.count > 20 {
-            submitState = .failure(localizedString("marketplace.qqTooLong"))
-            return nil
-        }
-        if !trimmedPhone.isEmpty && trimmedPhone.count > 11 {
-            submitState = .failure(localizedString("marketplace.phoneTooLong"))
-            return nil
-        }
-
-        submitState = .idle
-
-        return MarketplaceUpdateDraft(
-            title: trimmedTitle,
-            price: price,
-            description: trimmedDescription,
-            location: trimmedLocation,
-            typeID: selectedTypeID,
-            qq: trimmedQQ,
-            phone: trimmedPhone.isEmpty ? nil : trimmedPhone
-        )
-    }
-
-    private static func extractContactValue(from hint: String, prefixes: [String]) -> String? {
-        hint
-            .split(separator: "/")
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .compactMap { segment in
-                prefixes
-                    .first(where: { segment.hasPrefix($0) })
-                    .map { prefix in
-                        String(segment.dropFirst(prefix.count))
-                    }
-            }
-            .first
-    }
-
-    private static func contactPrefixes(for key: String) -> [String] {
-        var seen = Set<String>()
-        return supportedContactPrefixLocales
-            .map { localizedString(key, locale: $0) }
-            .filter { prefix in
-            seen.insert(prefix).inserted
-        }
-    }
-
-    private static var supportedContactPrefixLocales: [String] {
-        var orderedLocales = [UserPreferences.currentLocale]
-        orderedLocales.append(contentsOf: AppLanguage.supportedLocaleIdentifiers)
-
-        var seen = Set<String>()
-        return orderedLocales.filter { locale in
-            seen.insert(locale).inserted
+            return MarketplaceUpdateDraft(
+                title: fields.title,
+                price: fields.price,
+                description: fields.description,
+                location: fields.location,
+                typeID: selectedTypeID,
+                qq: fields.qq,
+                phone: fields.phone
+            )
         }
     }
 }

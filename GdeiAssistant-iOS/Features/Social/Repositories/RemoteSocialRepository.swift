@@ -10,6 +10,8 @@ final class RemoteSocialRepository: SocialRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchMe() async throws -> SocialUser {
         let dto: SocialUserRemoteDTO = try await apiClient.get("\(pathPrefix)/me")
         return try mapRequired(SocialRemoteMapper.mapUser(dto))

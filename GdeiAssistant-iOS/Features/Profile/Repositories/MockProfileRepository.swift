@@ -27,27 +27,33 @@ final class MockProfileRepository: ProfileRepository {
         try await Task.sleep(nanoseconds: 280_000_000)
 
         let options = ProfileFormSupport.defaultOptions
-        let normalizedCollege = request.college.trimmingCharacters(in: .whitespacesAndNewlines)
-        let normalizedMajor = request.major.trimmingCharacters(in: .whitespacesAndNewlines)
-        let collegeCode = options.facultyCode(for: normalizedCollege) ?? currentProfile.collegeCode
-        let majorCode = options.majorCode(for: normalizedCollege, majorLabel: normalizedMajor) ?? currentProfile.majorCode
+        let selectedFaculty = options.faculties.first(where: { $0.code == request.facultyCode })
+        let normalizedMajorCode = request.majorCode?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let resolvedMajorCode = (normalizedMajorCode?.isEmpty == false && normalizedMajorCode != "unselected")
+            ? normalizedMajorCode
+            : nil
+        let resolvedMajorLabel = resolvedMajorCode.flatMap { code in
+            selectedFaculty?.majors.first(where: { $0.code == code })?.label
+        } ?? ""
+        let resolvedCollegeLabel = request.facultyCode == 0 ? "" : (selectedFaculty?.label ?? "")
+        let resolvedGrade = request.enrollment.map(String.init) ?? ""
 
         currentProfile = UserProfile(
             id: currentProfile.id,
             username: currentProfile.username,
             nickname: request.nickname,
             avatarURL: currentProfile.avatarURL,
-            college: request.college,
-            collegeCode: collegeCode,
-            major: request.major,
-            majorCode: majorCode,
-            grade: request.grade,
+            college: resolvedCollegeLabel,
+            collegeCode: request.facultyCode,
+            major: resolvedMajorLabel,
+            majorCode: resolvedMajorCode,
+            grade: resolvedGrade,
             bio: request.bio,
             birthday: request.birthday,
-            location: request.location?.displayName ?? currentProfile.location,
-            locationSelection: request.location ?? currentProfile.locationSelection,
-            hometown: request.hometown?.displayName ?? currentProfile.hometown,
-            hometownSelection: request.hometown ?? currentProfile.hometownSelection,
+            location: request.location?.displayName ?? "",
+            locationSelection: request.location,
+            hometown: request.hometown?.displayName ?? "",
+            hometownSelection: request.hometown,
             ipArea: currentProfile.ipArea
         )
 

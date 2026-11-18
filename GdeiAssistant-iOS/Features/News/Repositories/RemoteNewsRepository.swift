@@ -9,6 +9,8 @@ final class RemoteNewsRepository: NewsRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchNews(start: Int, size: Int) async throws -> [NewsItem] {
         let safeStart = max(start, 0)
         let safeSize = max(size, 1)

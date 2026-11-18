@@ -8,6 +8,8 @@ final class RemoteGradeRepository: GradeRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchGrades(yearIndex: Int?) async throws -> GradeReport {
         let requestedYear = yearIndex
         let query = requestedYear.map { [URLQueryItem(name: "year", value: String($0))] } ?? []

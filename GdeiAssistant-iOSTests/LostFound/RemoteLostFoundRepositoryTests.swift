@@ -163,4 +163,51 @@ final class RemoteLostFoundRepositoryTests: XCTestCase {
             "fetchDetail() should call /preview fallback when detail has no images"
         )
     }
+
+    func testEditLostFoundViewModelReadsRawContactsAndValidatesSharedFormRules() throws {
+        let detail = LostFoundDetail(
+            item: LostFoundItem(
+                id: "lf_edit_1",
+                title: "校园卡",
+                type: .lost,
+                itemTypeID: 2,
+                summary: "一饭门口遗失",
+                location: "一饭",
+                createdAt: "刚刚",
+                state: .active,
+                previewImageURL: nil
+            ),
+            description: "一饭门口遗失，卡套为蓝色",
+            contactHint: "QQ: legacy",
+            qq: "556677",
+            wechat: "wx_demo",
+            phone: nil,
+            statusText: "寻找中",
+            ownerUsername: nil,
+            ownerNickname: nil,
+            ownerAvatarURL: nil,
+            authorId: nil,
+            imageURLs: []
+        )
+
+        let editVM = EditLostFoundViewModel(detail: detail)
+
+        XCTAssertEqual(editVM.selectedItemTypeID, 2)
+        XCTAssertEqual(editVM.qq, "556677")
+        XCTAssertEqual(editVM.wechat, "wx_demo")
+        XCTAssertEqual(editVM.phone, "")
+        XCTAssertTrue(editVM.isFormValid)
+
+        let draft = try XCTUnwrap(editVM.buildDraft())
+        XCTAssertEqual(draft.itemTypeID, 2)
+        XCTAssertEqual(draft.qq, "556677")
+        XCTAssertEqual(draft.wechat, "wx_demo")
+        XCTAssertNil(draft.phone)
+
+        editVM.qq = ""
+        editVM.wechat = ""
+        XCTAssertFalse(editVM.isFormValid)
+        XCTAssertNil(editVM.buildDraft())
+        XCTAssertNotNil(editVM.failureMessage)
+    }
 }

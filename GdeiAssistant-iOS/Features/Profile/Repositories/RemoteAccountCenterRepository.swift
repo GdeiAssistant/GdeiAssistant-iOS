@@ -8,6 +8,8 @@ final class RemoteAccountCenterRepository: AccountCenterRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchPrivacySettings() async throws -> PrivacySettings {
         let dto: PrivacySettingsDTO = try await apiClient.get("/privacy", requiresAuth: true)
         return AccountCenterRemoteMapper.mapPrivacySettings(dto)

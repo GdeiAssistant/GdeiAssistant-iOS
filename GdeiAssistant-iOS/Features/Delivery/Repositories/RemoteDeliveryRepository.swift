@@ -8,6 +8,8 @@ final class RemoteDeliveryRepository: DeliveryRepository {
         self.apiClient = apiClient
     }
 
+    nonisolated deinit {}
+
     func fetchOrders(start: Int, size: Int) async throws -> [DeliveryOrder] {
         let dtos: [DeliveryOrderRemoteDTO] = try await apiClient.get(
             "/delivery/order/start/\(max(start, 0))/size/\(max(size, 1))",
