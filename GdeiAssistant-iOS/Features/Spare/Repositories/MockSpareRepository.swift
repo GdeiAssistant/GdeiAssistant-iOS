@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -44,3 +45,4 @@ final class MockSpareRepository: SpareRepository {
         ]
     }
 }
+#endif

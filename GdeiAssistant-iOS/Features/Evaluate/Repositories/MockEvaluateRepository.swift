@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -11,3 +12,4 @@ final class MockEvaluateRepository: EvaluateRepository {
         _ = submission
     }
 }
+#endif

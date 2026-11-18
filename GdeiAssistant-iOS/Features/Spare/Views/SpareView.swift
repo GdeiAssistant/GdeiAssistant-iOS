@@ -76,8 +76,10 @@ struct SpareView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         SpareView(viewModel: SpareViewModel(repository: MockSpareRepository()))
     }
 }
+#endif

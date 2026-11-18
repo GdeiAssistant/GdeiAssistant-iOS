@@ -162,6 +162,7 @@ struct AppRootView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return AppRootView()
@@ -171,3 +172,4 @@ struct AppRootView: View {
         .environmentObject(container.sessionState)
         .environmentObject(container.router)
 }
+#endif

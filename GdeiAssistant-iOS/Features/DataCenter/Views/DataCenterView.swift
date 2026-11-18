@@ -265,9 +265,11 @@ private struct YellowPageEntryDetailView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         DataCenterView()
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

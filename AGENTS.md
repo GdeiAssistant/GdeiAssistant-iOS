@@ -45,7 +45,7 @@ python3 Tools/check_localization.py
 ## 命名与文档
 
 - 文档语言按项目读者和现有约定选择，可使用英文、中文或其他语言；通用开发者资料默认优先英文，业务和本地化资料使用目标读者的语言。保持同一文档用语一致，不顺带整篇翻译或新增无维护需求的多语副本。
-- 新增文档文件名小写、`-` 连接，单语文档不加语言后缀；仅中英双语对照副本使用 `.zh-CN.md` / `.en.md`。`README.md`、`AGENTS.md` 等工具约定文件保留固定名称。源码沿用现有语言命名。
+- 新增文档文件名小写、`-` 连接，单语文档不加语言后缀；仅中英双语对照副本使用 `.zh-CN.md` / `.en.md`。`README.md`、`AGENTS.md`、`THIRD_PARTY_NOTICES.md`、`TRADEMARK.md`、`CONTRIBUTING.md`、`SECURITY.md`、`LICENSE`、`NOTICE` 等工具或社区约定文件保留固定名称。源码沿用现有语言命名。
 - 不提交审计报告、复盘、交接单、进度快照、升级计划。要追溯看 commit 历史。
 - 改文件名时同一次提交改完所有引用。
 - 仓库卫生检查统一由共享基线 `GdeiAssistant/.github/actions/repository-hygiene` 执行。

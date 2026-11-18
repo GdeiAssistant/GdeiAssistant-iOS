@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -231,3 +232,4 @@ final class MockPhotographRepository: PhotographRepository {
         comments[postID, default: []].insert(comment, at: 0)
     }
 }
+#endif

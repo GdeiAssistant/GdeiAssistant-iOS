@@ -5,12 +5,18 @@ import Foundation
 struct SocialAssembly {
     private let environment: AppEnvironment
     private let remoteSocialRepository: RemoteSocialRepository
+    #if DEBUG
     private let mockSocialRepository: MockSocialRepository
+    #endif
     let realtimeManager: SocialRealtimeManager
     private let tokenProvider: @MainActor () -> String?
 
     var socialRepository: any SocialRepository {
-        environment.dataSourceMode == .mock ? mockSocialRepository : remoteSocialRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockSocialRepository : remoteSocialRepository
+        #else
+        return remoteSocialRepository
+        #endif
     }
 
     init(
@@ -24,9 +30,11 @@ struct SocialAssembly {
         self.environment = environment
         self.tokenProvider = tokenProvider
         self.remoteSocialRepository = RemoteSocialRepository(apiClient: apiClient)
+        #if DEBUG
         self.mockSocialRepository = MockSocialRepository(
             failFirstImageSend: UITestRuntimeOverrides.failFirstChatImageSend
         )
+        #endif
         self.realtimeManager = SocialRealtimeManager(
             environment: environment,
             tokenProvider: tokenProvider,

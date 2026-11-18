@@ -7,72 +7,112 @@ import Foundation
 struct CommunityAssembly {
     private let environment: AppEnvironment
     private let remoteCommunityRepository: RemoteCommunityRepository
-    private let mockCommunityRepository: MockCommunityRepository
     private let remoteTopicRepository: RemoteTopicRepository
-    private let mockTopicRepository: MockTopicRepository
     private let remoteExpressRepository: RemoteExpressRepository
-    private let mockExpressRepository: MockExpressRepository
     private let remoteDeliveryRepository: RemoteDeliveryRepository
-    private let mockDeliveryRepository: MockDeliveryRepository
     private let remotePhotographRepository: RemotePhotographRepository
-    private let mockPhotographRepository: MockPhotographRepository
     private let remoteMarketplaceRepository: RemoteMarketplaceRepository
-    private let mockMarketplaceRepository: MockMarketplaceRepository
     private let remoteLostFoundRepository: RemoteLostFoundRepository
-    private let mockLostFoundRepository: MockLostFoundRepository
     private let remoteSecretRepository: RemoteSecretRepository
-    private let mockSecretRepository: MockSecretRepository
     private let remoteDatingRepository: RemoteDatingRepository
+    #if DEBUG
+    private let mockCommunityRepository: MockCommunityRepository
+    private let mockTopicRepository: MockTopicRepository
+    private let mockExpressRepository: MockExpressRepository
+    private let mockDeliveryRepository: MockDeliveryRepository
+    private let mockPhotographRepository: MockPhotographRepository
+    private let mockMarketplaceRepository: MockMarketplaceRepository
+    private let mockLostFoundRepository: MockLostFoundRepository
+    private let mockSecretRepository: MockSecretRepository
     private let mockDatingRepository: MockDatingRepository
+    #endif
 
     var communityRepository: any CommunityRepository {
-        environment.dataSourceMode == .mock ? mockCommunityRepository : remoteCommunityRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockCommunityRepository : remoteCommunityRepository
+        #else
+        return remoteCommunityRepository
+        #endif
     }
     var topicRepository: any TopicRepository {
-        environment.dataSourceMode == .mock ? mockTopicRepository : remoteTopicRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockTopicRepository : remoteTopicRepository
+        #else
+        return remoteTopicRepository
+        #endif
     }
     var expressRepository: any ExpressRepository {
-        environment.dataSourceMode == .mock ? mockExpressRepository : remoteExpressRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockExpressRepository : remoteExpressRepository
+        #else
+        return remoteExpressRepository
+        #endif
     }
     var deliveryRepository: any DeliveryRepository {
-        environment.dataSourceMode == .mock ? mockDeliveryRepository : remoteDeliveryRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockDeliveryRepository : remoteDeliveryRepository
+        #else
+        return remoteDeliveryRepository
+        #endif
     }
     var photographRepository: any PhotographRepository {
-        environment.dataSourceMode == .mock ? mockPhotographRepository : remotePhotographRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockPhotographRepository : remotePhotographRepository
+        #else
+        return remotePhotographRepository
+        #endif
     }
     var marketplaceRepository: any MarketplaceRepository {
-        environment.dataSourceMode == .mock ? mockMarketplaceRepository : remoteMarketplaceRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockMarketplaceRepository : remoteMarketplaceRepository
+        #else
+        return remoteMarketplaceRepository
+        #endif
     }
     var lostFoundRepository: any LostFoundRepository {
-        environment.dataSourceMode == .mock ? mockLostFoundRepository : remoteLostFoundRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockLostFoundRepository : remoteLostFoundRepository
+        #else
+        return remoteLostFoundRepository
+        #endif
     }
     var secretRepository: any SecretRepository {
-        environment.dataSourceMode == .mock ? mockSecretRepository : remoteSecretRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockSecretRepository : remoteSecretRepository
+        #else
+        return remoteSecretRepository
+        #endif
     }
     var datingRepository: any DatingRepository {
-        environment.dataSourceMode == .mock ? mockDatingRepository : remoteDatingRepository
+        #if DEBUG
+        return environment.dataSourceMode == .mock ? mockDatingRepository : remoteDatingRepository
+        #else
+        return remoteDatingRepository
+        #endif
     }
 
     init(apiClient: APIClient, environment: AppEnvironment) {
         self.environment = environment
         self.remoteCommunityRepository = RemoteCommunityRepository(apiClient: apiClient)
-        self.mockCommunityRepository = MockCommunityRepository()
         self.remoteTopicRepository = RemoteTopicRepository(apiClient: apiClient)
-        self.mockTopicRepository = MockTopicRepository()
         self.remoteExpressRepository = RemoteExpressRepository(apiClient: apiClient)
-        self.mockExpressRepository = MockExpressRepository()
         self.remoteDeliveryRepository = RemoteDeliveryRepository(apiClient: apiClient)
-        self.mockDeliveryRepository = MockDeliveryRepository()
         self.remotePhotographRepository = RemotePhotographRepository(apiClient: apiClient)
-        self.mockPhotographRepository = MockPhotographRepository()
         self.remoteMarketplaceRepository = RemoteMarketplaceRepository(apiClient: apiClient)
-        self.mockMarketplaceRepository = MockMarketplaceRepository()
         self.remoteLostFoundRepository = RemoteLostFoundRepository(apiClient: apiClient)
-        self.mockLostFoundRepository = MockLostFoundRepository()
         self.remoteSecretRepository = RemoteSecretRepository(apiClient: apiClient)
-        self.mockSecretRepository = MockSecretRepository()
         self.remoteDatingRepository = RemoteDatingRepository(apiClient: apiClient)
+        #if DEBUG
+        self.mockCommunityRepository = MockCommunityRepository()
+        self.mockTopicRepository = MockTopicRepository()
+        self.mockExpressRepository = MockExpressRepository()
+        self.mockDeliveryRepository = MockDeliveryRepository()
+        self.mockPhotographRepository = MockPhotographRepository()
+        self.mockMarketplaceRepository = MockMarketplaceRepository()
+        self.mockLostFoundRepository = MockLostFoundRepository()
+        self.mockSecretRepository = MockSecretRepository()
         self.mockDatingRepository = MockDatingRepository()
+        #endif
     }
 
     // MARK: - ViewModel Factories

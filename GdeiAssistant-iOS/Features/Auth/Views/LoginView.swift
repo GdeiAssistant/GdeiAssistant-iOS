@@ -166,9 +166,11 @@ struct LoginView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return LoginView(viewModel: LoginViewModel(authManager: container.authManager))
         .environmentObject(container.userPreferences)
         .environmentObject(container.environment)
 }
+#endif

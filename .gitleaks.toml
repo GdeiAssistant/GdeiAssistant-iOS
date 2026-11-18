@@ -27,9 +27,3 @@ description = "Explicit placeholder values, never a blanket source-path exclusio
 regexes = [
   '''(?i)^(?:REDACTED|(?:your[_.-])?(?:secret|token|password|appsecret|access[_.-]?key)(?:[_.-](?:here|example|placeholder))?|change[_.-]?me|replace[_.-]?me|<[^>]+>|\$\{[^\r\n]*|x{8,}|0{16,})$''',
 ]
-
-[[allowlists]]
-description = "Synthetic values in established test fixture directories only"
-condition = "AND"
-paths = ['''^GdeiAssistant-iOSTests/''', '''^GdeiAssistant-iOSUITests/''']
-regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']

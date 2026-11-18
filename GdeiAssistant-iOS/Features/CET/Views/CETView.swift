@@ -145,8 +145,10 @@ struct CETView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         CETView(viewModel: CETViewModel(repository: MockCETRepository()))
     }
 }
+#endif

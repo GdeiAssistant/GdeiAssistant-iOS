@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -17,3 +18,4 @@ final class MockGradeRepository: GradeRepository {
                            summary: report.summary, terms: report.terms)
     }
 }
+#endif

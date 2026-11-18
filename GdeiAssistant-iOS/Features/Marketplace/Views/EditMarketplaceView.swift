@@ -87,6 +87,7 @@ struct EditMarketplaceView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -94,3 +95,4 @@ struct EditMarketplaceView: View {
             .environmentObject(container)
     }
 }
+#endif

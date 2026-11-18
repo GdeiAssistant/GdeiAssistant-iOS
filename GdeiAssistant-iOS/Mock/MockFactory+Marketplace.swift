@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 extension MockFactory {
@@ -9,3 +10,4 @@ extension MockFactory {
         MockSeedData.marketplaceDetailsByID
     }
 }
+#endif

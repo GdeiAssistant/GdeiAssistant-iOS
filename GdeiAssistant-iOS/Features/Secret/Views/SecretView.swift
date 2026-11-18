@@ -779,6 +779,7 @@ private struct SecretThemePalette: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return NavigationStack {
@@ -786,3 +787,4 @@ private struct SecretThemePalette: View {
             .environmentObject(container)
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -60,3 +61,4 @@ final class MockProfileRepository: ProfileRepository {
         return currentProfile
     }
 }
+#endif

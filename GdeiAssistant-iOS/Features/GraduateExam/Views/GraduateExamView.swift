@@ -91,8 +91,10 @@ struct GraduateExamView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         GraduateExamView(viewModel: GraduateExamViewModel(repository: MockGraduateExamRepository()))
     }
 }
+#endif

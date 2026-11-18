@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -14,3 +15,4 @@ final class MockGraduateExamRepository: GraduateExamRepository {
         return GraduateExamScore(name: query.name, signupNumber: "K202600889", examNumber: query.examNumber, totalScore: "372", politicsScore: "68", foreignLanguageScore: "74", businessOneScore: "116", businessTwoScore: "114")
     }
 }
+#endif

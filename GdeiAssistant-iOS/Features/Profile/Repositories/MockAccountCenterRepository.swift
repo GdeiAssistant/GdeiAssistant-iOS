@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 @MainActor
@@ -248,3 +249,4 @@ final class MockAccountCenterRepository: AccountCenterRepository {
         return campusCredentialStatus
     }
 }
+#endif

@@ -852,8 +852,10 @@ private struct SocialProfileStatsRow: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return ProfileView(viewModel: ProfileViewModel(repository: MockProfileRepository(), sessionState: container.sessionState))
         .environmentObject(container)
 }
+#endif

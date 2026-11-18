@@ -57,6 +57,7 @@ struct MainTabView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     let container = AppContainer.preview
     return MainTabView(container: container)
@@ -64,3 +65,4 @@ struct MainTabView: View {
         .environmentObject(container.userPreferences)
         .environmentObject(container.router)
 }
+#endif

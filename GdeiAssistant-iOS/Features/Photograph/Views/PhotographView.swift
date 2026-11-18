@@ -618,9 +618,11 @@ private struct PublishPhotographView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         PhotographView(viewModel: PhotographViewModel(repository: MockPhotographRepository()))
             .environmentObject(AppContainer.preview)
     }
 }
+#endif

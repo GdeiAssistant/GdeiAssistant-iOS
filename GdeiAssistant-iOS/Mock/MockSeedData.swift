@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 
 enum MockSeedData {
@@ -695,3 +696,4 @@ extension MockSeedData {
         )
     }
 }
+#endif

@@ -55,8 +55,10 @@ struct EvaluateView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         EvaluateView(viewModel: EvaluateViewModel(repository: MockEvaluateRepository()))
     }
 }
+#endif
