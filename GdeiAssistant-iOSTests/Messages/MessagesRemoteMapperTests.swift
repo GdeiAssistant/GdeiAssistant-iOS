@@ -143,6 +143,73 @@ final class MessagesRemoteMapperTests: XCTestCase {
         XCTAssertEqual(noticeVM.items.map(\.id), ["a26"])
         XCTAssertFalse(noticeVM.canLoadMore)
     }
+
+    @MainActor
+    func testMessagesViewModelIgnoresPendingMarkReadAfterRebindingRepositories() async {
+        let initialRepo = SuspendingMarkReadMessagesStubRepository()
+        let reboundRepo = SuspendingMarkReadMessagesStubRepository()
+        let vm = MessagesViewModel(newsRepository: MockNewsRepository(), messagesRepository: initialRepo)
+
+        await vm.refreshInteractionItems()
+        XCTAssertEqual(vm.interactionNoticeItems.map(\.id), ["i-pending"])
+        XCTAssertEqual(vm.interactionUnreadCount, 1)
+
+        let markTask = Task { @MainActor in
+            await vm.markNotificationRead(notificationID: "i-pending")
+        }
+        await Task.yield()
+
+        vm.updateRepositories(newsRepository: MockNewsRepository(), messagesRepository: reboundRepo)
+        XCTAssertTrue(vm.interactionNoticeItems.isEmpty)
+        XCTAssertEqual(vm.interactionUnreadCount, 0)
+
+        initialRepo.resumeMarkRead()
+        await markTask.value
+
+        XCTAssertTrue(vm.interactionNoticeItems.isEmpty)
+        XCTAssertEqual(vm.interactionUnreadCount, 0)
+        XCTAssertNil(vm.interactionErrorMessage)
+    }
+}
+
+@MainActor
+private final class SuspendingMarkReadMessagesStubRepository: MessagesRepository {
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    func fetchAnnouncementPage(start: Int, size: Int) async throws -> [AppNotificationItem] { [] }
+    func fetchInteractionNotifications(start: Int, size: Int) async throws -> [AppNotificationItem] {
+        [
+            AppNotificationItem(
+                id: "i-pending",
+                category: .comment,
+                module: "topic",
+                title: "t",
+                message: "m",
+                createdAt: "now",
+                isRead: false,
+                destination: .topic,
+                targetType: nil,
+                targetID: "i-pending",
+                targetSubID: nil
+            )
+        ]
+    }
+    func fetchInteractionUnreadCount() async throws -> Int { 1 }
+    func fetchAnnouncementDetail(id: String) async throws -> AnnouncementDetailItem {
+        AnnouncementDetailItem(id: id, title: "t", content: "c", createdAt: "now")
+    }
+    func fetchFestival() async throws -> Festival? { nil }
+    func markNotificationRead(notificationID: String) async throws {
+        await withCheckedContinuation { continuation in
+            self.continuation = continuation
+        }
+    }
+    func markAllNotificationsRead() async throws {}
+
+    func resumeMarkRead() {
+        continuation?.resume()
+        continuation = nil
+    }
 }
 
 @MainActor

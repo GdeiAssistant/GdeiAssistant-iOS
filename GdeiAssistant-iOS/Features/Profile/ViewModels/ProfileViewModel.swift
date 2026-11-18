@@ -25,6 +25,7 @@ final class ProfileViewModel: ObservableObject {
     private let sessionState: SessionState
     private var cancellables = Set<AnyCancellable>()
     private var hasLoadedProfileOptions = false
+    private var repositoryGeneration = 0
     private var locationSelection: ProfileLocationSelection?
     private var hometownSelection: ProfileLocationSelection?
 
@@ -43,8 +44,11 @@ final class ProfileViewModel: ObservableObject {
     nonisolated deinit {}
 
     func updateRepository(_ repository: any ProfileRepository) {
+        repositoryGeneration += 1
         self.repository = repository
         hasLoadedProfileOptions = false
+        isLoading = false
+        isSaving = false
         errorMessage = nil
         saveErrorMessage = nil
     }
@@ -153,25 +157,32 @@ final class ProfileViewModel: ObservableObject {
     }
 
     func loadProfile() async {
+        let generation = repositoryGeneration
         isLoading = true
         errorMessage = nil
 
-        defer { isLoading = false }
+        defer { if generation == repositoryGeneration { isLoading = false } }
 
         do {
             let fetchedProfile = try await repository.fetchProfile()
+            guard generation == repositoryGeneration else { return }
             profile = fetchedProfile
             sessionState.currentUser = fetchedProfile
             syncDraft(with: fetchedProfile)
         } catch {
+            guard generation == repositoryGeneration else { return }
             errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.loadFailed")
         }
     }
 
     func loadLocationRegions() async {
+        let generation = repositoryGeneration
         do {
-            locationRegions = try await repository.fetchLocationRegions()
+            let regions = try await repository.fetchLocationRegions()
+            guard generation == repositoryGeneration else { return }
+            locationRegions = regions
         } catch {
+            guard generation == repositoryGeneration else { return }
             if profile == nil {
                 errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.optionsFailed")
             }
@@ -179,13 +190,17 @@ final class ProfileViewModel: ObservableObject {
     }
 
     func loadProfileOptions() async {
+        let generation = repositoryGeneration
         do {
-            profileOptions = try await repository.fetchProfileOptions()
+            let options = try await repository.fetchProfileOptions()
+            guard generation == repositoryGeneration else { return }
+            profileOptions = options
             hasLoadedProfileOptions = true
             if let displayProfile {
                 syncDraft(with: displayProfile)
             }
         } catch {
+            guard generation == repositoryGeneration else { return }
             if profile == nil {
                 errorMessage = (error as? LocalizedError)?.errorDescription ?? localizedString("profile.optionsFailed")
             }
@@ -261,9 +276,10 @@ final class ProfileViewModel: ObservableObject {
             return false
         }
 
+        let generation = repositoryGeneration
         isSaving = true
         saveErrorMessage = nil
-        defer { isSaving = false }
+        defer { if generation == repositoryGeneration { isSaving = false } }
 
         let request = ProfileUpdateRequest(
             nickname: FormValidationSupport.trimmed(nickname),
@@ -278,11 +294,13 @@ final class ProfileViewModel: ObservableObject {
 
         do {
             let updatedProfile = try await repository.updateProfile(request: request)
+            guard generation == repositoryGeneration else { return false }
             profile = updatedProfile
             sessionState.currentUser = updatedProfile
             syncDraft(with: updatedProfile)
             return true
         } catch {
+            guard generation == repositoryGeneration else { return false }
             if let persistedProfile = displayProfile {
                 syncDraft(with: persistedProfile)
             }
